@@ -1,0 +1,36 @@
+text.usetex: True
+text.latex.preamble: \usepackage{libertine}\usepackage{libertinust1math}\renewcommand*\familydefault{\sfdefault}
+
+font.family: sans-serif
+font.size: 10.0
+
+legend.fontsize: 10.0
+legend.frameon: False
+
+axes.labelsize: 10.0
+axes.titlesize: 10.0
+axes.titleweight: bold
+axes.xmargin: 0
+axes.ymargin: 0
+axes.linewidth: 0.566
+
+axes.spines.left:   True
+axes.spines.bottom: True
+axes.spines.top:    False
+axes.spines.right:  False
+
+xtick.labelsize: 10.0
+xtick.direction: in
+xtick.major.width: 0.566
+
+ytick.labelsize: 10.0
+ytick.direction: in
+ytick.major.width: 0.566
+
+figure.titlesize: 10.0
+figure.titleweight: bold
+figure.dpi: 200
+
+lines.linewidth: 1.132
+
+image.interpolation: nearest

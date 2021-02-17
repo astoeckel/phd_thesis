@@ -1,0 +1,45 @@
+% !TeX spellcheck = en_GB
+\documentclass[letterpaper,oneside,12pt]{memoir}
+
+\title{Harnessing Neural Dynamics:\\Building Blocks for Computational Neuroscience and Machine Learning}
+\author{Andreas Stöckel}
+
+\input{preamble/style}
+\input{preamble/packages}
+
+\addbibresource{../bibliography/bibliography.bib}
+
+%% DRAFT 
+%\usepackage{showframe}
+\usepackage[normalem]{ulem}
+\usepackage{lipsum}
+\usepackage[textsize=small]{todonotes}
+
+\begin{document}
+
+	\frontmatter
+	\input{frontmatter/titlepage}
+	\input{frontmatter/committee}
+	\input{frontmatter/declaration}
+	\input{frontmatter/contributions}
+	\input{frontmatter/abstract}
+	\input{frontmatter/acknowledgements}
+	\input{frontmatter/dedication}
+
+	\tableofcontents*
+	\clearpage
+	\listoffigures
+	\clearpage
+	\listoftables
+
+	\mainmatter
+	\include{chapters/chapter_01_introduction}
+
+	\appendix
+	\chapter{Proofs}
+
+	\backmatter
+
+	\printbibliography
+
+\end{document}
