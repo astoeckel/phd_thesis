@@ -168,4 +168,4 @@ ax.plot(dendrite_voltage_monitor.t / ms, dendrite_voltage_monitor.v[0] / mV)
 for i in np.linspace(0, 999, 3, dtype=int):
     ax.plot(neuron_voltage_monitor.t / ms, neuron_voltage_monitor.v[i] / mV)
 ax.plot(target_voltage_monitor.t / ms, target_voltage_monitor.v[0] / mV)
-fig.savefig(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data/generated/example_neuron_voltage_traces.svg')
+fig.savefig('data/example_neuron_voltage_traces.svg')

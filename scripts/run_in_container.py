@@ -139,10 +139,6 @@ def _docker_import(name, import_source):
 def _docker_run(image_id, repository_dir, cmd, *args):
     if os.path.isfile(os.path.join(repository_dir, cmd)):
         cmd = os.path.join("/work", cmd)
-        workdir = os.path.join("/work", os.path.dirname(cmd))
-        logger.debug("Executing ", cmd, "in", workdir)
-    else:
-        workdir = "/work"
 
     with tempfile.TemporaryDirectory() as home_dir:
         res = subprocess.run([
@@ -152,7 +148,7 @@ def _docker_run(image_id, repository_dir, cmd, *args):
             "-v", "{}:{}:z".format(repository_dir, "/work"),
             "-e", "HOME=/home/user",
             "-e", "USER=user",
-            "-w", workdir, image_id, cmd, *args
+            "-w", "/work", image_id, cmd, *args
         ])
         if res.returncode != 0:
             logger.error("Error while executing the given command!")
@@ -291,7 +287,8 @@ def main(argv):
         logger.info("Entering the Docker environment")
         if len(args.args) == 0:
             raise RuntimeError("Must provide at least one command!")
-        _docker_run(docker_image_id, dir_tmp, args.args[0], *args.args[1:])
+        cmd = args.args[0]
+        _docker_run(docker_image_id, dir_tmp, cmd, *args.args[1:])
 
 
         # List all files that were placed in the data directory
@@ -299,11 +296,22 @@ def main(argv):
 
         # Copy the files to the "data" directory
         for file_src in data_files_after - data_files_before:
+            # Determine the file path relative to the data directory
             file_rel = os.path.relpath(file_src, start=dir_data_tmp)
             file_rel_path, file_rel_name = os.path.split(file_rel)
-            file_tar = os.path.join(dir_data_tar, file_rel_path, target_hash + "_" + file_rel_name)
+
+            # If the command was a file in the repository, use that to assemble
+            # the target directory
+            if cmd.startswith("code/") and os.path.isfile(os.path.join(repository_dir, cmd)):
+                _, tar_dir = os.path.join("generated", os.path.split(os.path.dirname(cmd)))
+            else:
+                tar_dir = "generated"
+
+            file_tar = os.path.join(dir_data_tar, file_rel_path, tar_dir, target_hash + "_" + file_rel_name)
+
             os.makedirs(os.path.dirname(file_tar), exist_ok=True)
             logger.info(f"Copying {file_src} --> {file_tar}")
+
             shutil.copy(file_src, file_tar)
 
 if __name__ == "__main__":

@@ -1,6 +1,7 @@
 private/
 build/
-data/
+data/generated/
+data/cache/
 __pycache__/
 template/
 .ipynb_checkpoints/

@@ -31,4 +31,4 @@ RUN git clone https://github.com/astoeckel/nengo-bio /opt/nengo-bio \
 	&& pip3 install -e .
 
 ENV LD_LIBRARY_PATH=/opt/libbioneuronqp/build/
-
+ENV PYTHON_PATH=/work/code/lib/
