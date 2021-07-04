@@ -247,7 +247,7 @@ def main():
 
         @property
         def rootdir(self):
-            return os.path.abspath(os.path.dirname(__file__))
+            return os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'media'))
 
         @property
         def datadir(self):

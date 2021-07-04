@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import argparse
 import nengo_bio as bio
 import numpy as np
 import multiprocessing
@@ -8,14 +7,6 @@ import scipy.stats
 import scipy.optimize
 from tqdm import tqdm
 import os
-
-parser = argparse.ArgumentParser()
-parser.add_argument('--tar',
-                    type=str,
-                    help='Target filename in the data directory',
-                    default='cerebellum_granule_tuning_curves.npy')
-
-args = parser.parse_args()
 
 def compute_response_curve(constructor, J_min=-20e-12, J_max=100e-12, max_rate=100, dJ=1e-12, dt=1e-3, T=10.0):
     Js, Gs = [], []
@@ -80,7 +71,7 @@ with multiprocessing.Pool(16) as pool:
         Js_lst[i] = Js
         Gs_lst[i] = Gs
 
-fn = os.path.join(os.path.dirname(__file__), '..', '..', 'data', args.tar)
+fn = os.path.join('data', 'granule_cell_response_curves.npy')
 np.save(fn, {
     "Js_lst": Js_lst,
     "Gs_lst": Gs_lst,

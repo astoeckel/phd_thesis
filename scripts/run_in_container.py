@@ -34,7 +34,16 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def _git_rev_parse(repo_dir, commit):
+def file_hash(filename, hasher):
+    with open(filename, 'rb') as f:
+        while True:
+            data = f.read(65536)
+            if not data:
+                break
+            hasher.update(data)
+
+
+def git_rev_parse(repo_dir, commit):
     res = subprocess.run(["git", "rev-parse", commit],
                          capture_output=True,
                          cwd=repo_dir,
@@ -46,7 +55,7 @@ def _git_rev_parse(repo_dir, commit):
     return res.stdout.strip().lower()
 
 
-def _git_top_level(repo_dir):
+def git_top_level(repo_dir):
     res = subprocess.run(["git", "rev-parse", "--show-toplevel"],
                          capture_output=True,
                          cwd=repo_dir,
@@ -56,9 +65,9 @@ def _git_top_level(repo_dir):
     return res.stdout.strip()
 
 
-def _git_clone(repo_dir, tar_dir, commit):
+def git_clone(repo_dir, tar_dir, commit):
     if subprocess.run([
-            "git", "clone", "-q", "--progress", "--no-local", repo_dir, tar_dir
+            "git", "clone", "-q", "--progress", repo_dir, tar_dir
     ]).returncode != 0:
         raise RuntimeError("Cloning the git repository failed.")
     if subprocess.run(["git", "checkout", "-q", "--progress", commit],
@@ -143,12 +152,10 @@ def _docker_run(image_id, repository_dir, cmd, *args):
     with tempfile.TemporaryDirectory() as home_dir:
         res = subprocess.run([
             "docker", "run", "-it", "-u",
-            "{:d}:{:d}".format(os.getuid(), os.getpid()),
-            "-v", "{}:{}:z".format(home_dir, "/home/user"),
-            "-v", "{}:{}:z".format(repository_dir, "/work"),
-            "-e", "HOME=/home/user",
-            "-e", "USER=user",
-            "-w", "/work", image_id, cmd, *args
+            "{:d}:{:d}".format(os.getuid(), os.getpid()), "-v",
+            "{}:{}:z".format(home_dir, "/home/user"), "-v",
+            "{}:{}:z".format(repository_dir, "/work"), "-e", "HOME=/home/user",
+            "-e", "USER=user", "-w", "/work", image_id, cmd, *args
         ])
         if res.returncode != 0:
             logger.error("Error while executing the given command!")
@@ -161,19 +168,6 @@ def _list_all_files(path):
     for (dirpath, dirnames, filenames) in os.walk(path):
         res.extend((os.path.join(dirpath, file) for file in filenames))
     return res
-
-
-def _file_hash(filename, hasher):
-    """
-    Feeds the content of the file with the specified file into the hasher.
-    """
-
-    with open(filename, 'rb') as f:
-        while True:
-            data = f.read(65536)
-            if not data:
-                break
-            hasher.update(data)
 
 
 def _parse_args(argv):
@@ -195,8 +189,14 @@ def _parse_args(argv):
         help=
         'Compute the hash that will be prefixed to the generated data files and print it to stdout'
     )
+    parser.add_argument(
+        '--expected_hash',
+        required=False,
+        default=None,
+        help='Expected target hash computed by some other program. Errors out if the target hash does not match'
+    )
 
-    return parser.parse_args()
+    return parser.parse_args(argv[1:])
 
 
 def main(argv):
@@ -204,11 +204,11 @@ def main(argv):
     args = _parse_args(argv)
 
     # Fetch the root directory
-    dir_root = os.path.abspath(_git_top_level(os.path.dirname(__file__)))
+    dir_root = os.path.abspath(git_top_level(os.path.dirname(__file__)))
     logger.debug(f"Root directory is {dir_root}")
 
     # Resolve the commit id
-    commit = _git_rev_parse(dir_root, args.commit)
+    commit = git_rev_parse(dir_root, args.commit)
     logger.debug(f"Commit resolves to {commit}")
 
     # Derive some more directory names and make sure they exist
@@ -224,7 +224,7 @@ def main(argv):
     with tempfile.TemporaryDirectory() as dir_tmp:
         # Create the target directory
         logger.debug("Cloning the git repository to {dir_tmp}")
-        _git_clone(dir_root, dir_tmp, commit)
+        git_clone(dir_root, dir_tmp, commit)
 
         # Assemble some directories within the temporary checkout
         dir_docker_tmp = os.path.join(dir_tmp, "docker")
@@ -246,7 +246,7 @@ def main(argv):
 
         # Compute the hash that should be used for the docker container
         docker_hash = hashlib.sha256()
-        _file_hash(file_dockerfile, docker_hash)
+        file_hash(file_dockerfile, docker_hash)
         docker_hash = docker_hash.hexdigest()[:16]
         logger.debug(f"Dockerfile hash is {docker_hash}")
 
@@ -254,9 +254,12 @@ def main(argv):
         target_hash = hashlib.sha256()
         target_hash.update(commit.encode('utf-8'))
         target_hash.update(" ".join(args.args).encode("utf-8"))
-        _file_hash(file_dockerfile, target_hash)
+        file_hash(file_dockerfile, target_hash)
         target_hash = target_hash.hexdigest()[:16]
         logger.debug(f"Build artefact prefix is {target_hash}")
+
+        if args.expected_hash and target_hash.lower() != args.expected_hash.lower():
+            raise RuntimeError(f"Expected hash {args.target_hash}, but got {target_hash}!")
 
         # Just return if "--hash" was set
         if args.hash:
@@ -290,7 +293,6 @@ def main(argv):
         cmd = args.args[0]
         _docker_run(docker_image_id, dir_tmp, cmd, *args.args[1:])
 
-
         # List all files that were placed in the data directory
         data_files_after = set(_list_all_files(dir_data_tmp))
 
@@ -302,17 +304,21 @@ def main(argv):
 
             # If the command was a file in the repository, use that to assemble
             # the target directory
-            if cmd.startswith("code/") and os.path.isfile(os.path.join(repository_dir, cmd)):
-                _, tar_dir = os.path.join("generated", os.path.split(os.path.dirname(cmd)))
+            if cmd.startswith("code/") and os.path.isfile(
+                    os.path.join(dir_tmp, cmd)):
+                tar_dir = os.path.join(
+                    "generated", os.path.relpath(os.path.dirname(cmd), "code"))
             else:
                 tar_dir = "generated"
 
-            file_tar = os.path.join(dir_data_tar, file_rel_path, tar_dir, target_hash + "_" + file_rel_name)
+            file_tar = os.path.join(dir_data_tar, file_rel_path, tar_dir,
+                                    target_hash + "_" + file_rel_name)
 
             os.makedirs(os.path.dirname(file_tar), exist_ok=True)
             logger.info(f"Copying {file_src} --> {file_tar}")
 
             shutil.copy(file_src, file_tar)
+
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)

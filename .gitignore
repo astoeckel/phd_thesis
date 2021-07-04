@@ -1,6 +1,7 @@
 private/
 build/
 data/generated/
+data/generated_old/
 data/cache/
 __pycache__/
 template/

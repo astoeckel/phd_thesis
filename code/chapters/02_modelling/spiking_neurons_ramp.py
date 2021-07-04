@@ -112,7 +112,7 @@ spikes = spike_mon.t / ms
 
 import os
 
-np.savez(os.path.join(os.path.dirname(__file__), '..', '..', 'data', args.tar),
+np.savez(os.path.join('data', args.tar),
          ts=ts,
          us=us,
          Js=Js,

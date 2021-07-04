@@ -1,0 +1,31 @@
+["chapters/02_modelling/example_neuron.py"]
+commit = "69b3d5d9"
+dockerfile = "experiments_base"
+generates = ["example_neuron_voltage_traces.svg"]
+
+["chapters/02_modelling/granule_cell_response_curves.py"]
+commit = "69b3d5d9"
+dockerfile = "experiments_base"
+generates = ["granule_cell_response_curves.npy"]
+
+["chapters/02_modelling/spiking_neurons_ramp.py"]
+commit = "69b3d5d9"
+dockerfile = "experiments_base"
+runs = [
+	{
+		args=["--neuron", "HH", "--tar", "hodgkin_huxley_ramp.npz"],
+		generates=["hodgkin_huxley_ramp.npz"]
+	},
+	{
+		args=["--neuron", "HH", "--T", "0.5", "--J", "0.25", "--no_skew", "--tar", "hodgkin_huxley_ramp_short.npz"],
+		generates=["hodgkin_huxley_ramp_short.npz"]
+	},
+	{
+		args=["--neuron", "LIF", "--tar", "lif_ramp.npz"],
+		generates=["lif_ramp.npz"]
+	},
+	{
+		args=["--neuron", "LIF", "--T", "0.5", "--J", "0.25", "--no_skew", "--tar", "lif_ramp_short.npz"],
+		generates=["lif_ramp_short.npz"]
+	}
+]
