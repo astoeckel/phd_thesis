@@ -139,6 +139,7 @@ def _docker_run(image_id, repository_dir, cmd, *args):
     if os.path.isfile(os.path.join(repository_dir, cmd)):
         cmd = os.path.join("/work", cmd)
         workdir = os.path.join("/work", os.path.dirname(cmd))
+        logger.debug("Executing ", cmd, "in", workdir)
     else:
         workdir = "/work"
 
