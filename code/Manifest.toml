@@ -1,15 +1,15 @@
 ["chapters/02_modelling/example_neuron.py"]
-commit = "69b3d5d9"
+commit = "9b706af00454e38184d95e0a47511710007ba1ab"
 dockerfile = "experiments_base"
 generates = ["example_neuron_voltage_traces.svg"]
 
 ["chapters/02_modelling/granule_cell_response_curves.py"]
-commit = "69b3d5d9"
+commit = "9b706af00454e38184d95e0a47511710007ba1ab"
 dockerfile = "experiments_base"
 generates = ["granule_cell_response_curves.npy"]
 
 ["chapters/02_modelling/spiking_neurons_ramp.py"]
-commit = "69b3d5d9"
+commit = "9b706af00454e38184d95e0a47511710007ba1ab"
 dockerfile = "experiments_base"
 runs = [
 	{

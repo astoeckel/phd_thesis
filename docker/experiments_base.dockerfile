@@ -7,6 +7,7 @@ RUN apt-get update \
 		build-essential \
 		python3-numpy python3-scipy python3-matplotlib python3-pip python3-h5py \
 		libgsl-dev \
+		libeigen3-dev \
 		ninja-build
 
 RUN pip3 install meson==0.57.1 pytry==0.9.2 tqdm==4.59.0 nengo==3.1.0 nengo-extras==0.4.0 cython==0.29.22 brian2==2.4.2

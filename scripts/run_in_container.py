@@ -66,9 +66,8 @@ def git_top_level(repo_dir):
 
 
 def git_clone(repo_dir, tar_dir, commit):
-    if subprocess.run([
-            "git", "clone", "-q", "--progress", repo_dir, tar_dir
-    ]).returncode != 0:
+    if subprocess.run(["git", "clone", "-q", "--progress", repo_dir, tar_dir
+                       ]).returncode != 0:
         raise RuntimeError("Cloning the git repository failed.")
     if subprocess.run(["git", "checkout", "-q", "--progress", commit],
                       cwd=tar_dir).returncode != 0:
@@ -145,18 +144,21 @@ def _docker_import(name, import_source):
         raise RuntimeError("Error while importing existing docker image")
 
 
-def _docker_run(image_id, repository_dir, cmd, *args):
+def _docker_run(image_id, repository_dir, cmd, *args, interactive=False):
     if os.path.isfile(os.path.join(repository_dir, cmd)):
         cmd = os.path.join("/work", cmd)
 
     with tempfile.TemporaryDirectory() as home_dir:
-        res = subprocess.run([
-            "docker", "run", "-it", "-u",
-            "{:d}:{:d}".format(os.getuid(), os.getpid()), "-v",
-            "{}:{}:z".format(home_dir, "/home/user"), "-v",
-            "{}:{}:z".format(repository_dir, "/work"), "-e", "HOME=/home/user",
-            "-e", "USER=user", "-w", "/work", image_id, cmd, *args
-        ])
+        args = list(
+            filter(bool, [
+                "docker", "run",
+                "-it" if interactive else None, "-u", "{:d}:{:d}".format(
+                    os.getuid(), os.getpid()), "-v", "{}:{}:z".format(
+                        home_dir, "/home/user"), "-v", "{}:{}:z".format(
+                            repository_dir, "/work"), "-e", "HOME=/home/user",
+                "-e", "USER=user", "-w", "/work", image_id, cmd, *args
+            ]))
+        res = subprocess.run(args)
         if res.returncode != 0:
             logger.error("Error while executing the given command!")
             return False
@@ -193,7 +195,12 @@ def _parse_args(argv):
         '--expected_hash',
         required=False,
         default=None,
-        help='Expected target hash computed by some other program. Errors out if the target hash does not match'
+        help=
+        'Expected target hash computed by some other program. Errors out if the target hash does not match'
+    )
+    parser.add_argument(
+        '--interactive',
+        action='store_true',
     )
 
     return parser.parse_args(argv[1:])
@@ -258,8 +265,10 @@ def main(argv):
         target_hash = target_hash.hexdigest()[:16]
         logger.debug(f"Build artefact prefix is {target_hash}")
 
-        if args.expected_hash and target_hash.lower() != args.expected_hash.lower():
-            raise RuntimeError(f"Expected hash {args.target_hash}, but got {target_hash}!")
+        if args.expected_hash and target_hash.lower(
+        ) != args.expected_hash.lower():
+            raise RuntimeError(
+                f"Expected hash {args.target_hash}, but got {target_hash}!")
 
         # Just return if "--hash" was set
         if args.hash:
@@ -291,7 +300,11 @@ def main(argv):
         if len(args.args) == 0:
             raise RuntimeError("Must provide at least one command!")
         cmd = args.args[0]
-        _docker_run(docker_image_id, dir_tmp, cmd, *args.args[1:])
+        _docker_run(docker_image_id,
+                    dir_tmp,
+                    cmd,
+                    *args.args[1:],
+                    interactive=args.interactive)
 
         # List all files that were placed in the data directory
         data_files_after = set(_list_all_files(dir_data_tmp))
