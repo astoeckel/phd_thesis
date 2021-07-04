@@ -42,6 +42,9 @@ def _parse_args(argv):
     parser.add_argument('--list',
                         action='store_true',
                         help="Checks whether the output files exist")
+    parser.add_argument('--prune',
+                        action='store_true',
+                        help="Deletes no longer required output files")
     parser.add_argument(
         'filter',
         nargs='*',
@@ -175,6 +178,8 @@ def _run_task(run):
 
 def main(argv):
     args = _parse_args(argv)
+    if sum((args.list, args.prune)) > 1:
+            raise RuntimeError("Conflicting modes of operation!")
 
     # Fetch the manifest file
     manifest_file = args.manifest
@@ -194,6 +199,20 @@ def main(argv):
     # If so desired, print a list of all files
     if args.list:
         _print_list(manifest, root=root)
+        return
+
+    # If so desired, prune all unlisted files
+    if args.prune:
+        files_present = set(run_in_container.list_all_files(os.path.join(root, "data", "generated")))
+        files_desired = set()
+        for obj in manifest.values():
+            for run in obj["runs"]:
+                for tar in run["generates"]:
+                    files_desired.add(os.path.abspath(os.path.join(root, tar)))
+                    pass
+        for file in (files_present - files_desired):
+            print("Deleting", file)
+            os.unlink(file)
         return
 
     # Assemble a regular expression from the given files
@@ -234,7 +253,7 @@ def main(argv):
     bin_run_concurrently = list(filter(required, bin_run_concurrently))
     bin_run_serially = list(filter(required, bin_run_serially))
     if len(bin_run_concurrently) == 0 and len(bin_run_serially) == 0:
-        print("No work to be done!")
+        print("Nothing to do!")
         return
 
     with multiprocessing.Pool() as pool:

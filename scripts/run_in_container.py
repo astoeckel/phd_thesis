@@ -165,7 +165,7 @@ def _docker_run(image_id, repository_dir, cmd, *args, interactive=False):
         return True
 
 
-def _list_all_files(path):
+def list_all_files(path):
     res = []
     for (dirpath, dirnames, filenames) in os.walk(path):
         res.extend((os.path.join(dirpath, file) for file in filenames))
@@ -240,7 +240,7 @@ def main(argv):
         os.makedirs(dir_docker_tmp, exist_ok=True)
 
         # Create an inventory of the currently existing data fiels
-        data_files_before = set(_list_all_files(dir_data_tmp))
+        data_files_before = set(list_all_files(dir_data_tmp))
 
         # Assemble the relevant Docker file names
         file_dockerfile = os.path.join(
@@ -307,7 +307,7 @@ def main(argv):
                     interactive=args.interactive)
 
         # List all files that were placed in the data directory
-        data_files_after = set(_list_all_files(dir_data_tmp))
+        data_files_after = set(list_all_files(dir_data_tmp))
 
         # Copy the files to the "data" directory
         for file_src in data_files_after - data_files_before:
