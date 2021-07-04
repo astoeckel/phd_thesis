@@ -11,9 +11,7 @@ RUN apt-get update \
 
 RUN pip3 install meson==0.57.1 pytry==0.9.2 tqdm==4.59.0 nengo==3.1.0 nengo-extras==0.4.0 cython==0.29.22 brian2==2.4.2
 
-RUN mkdir -p /opt \
-    mkdir -p /.cython \
-    chmod 777 /.cython
+RUN mkdir -p /opt
 
 RUN git clone https://github.com/astoeckel/libbioneuronqp /opt/libbioneuronqp \
 	&& cd /opt/libbioneuronqp \

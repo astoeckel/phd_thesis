@@ -27,6 +27,7 @@ import subprocess
 import sys, os
 import tempfile
 import hashlib
+import shutil
 
 import logging
 
@@ -143,16 +144,20 @@ def _docker_run(image_id, repository_dir, cmd, *args):
     else:
         workdir = "/work"
 
-    res = subprocess.run([
-        "docker", "run", "-it", "-u",
-        "{:d}:{:d}".format(os.getuid(), os.getpid()), "-v",
-        "{}:{}:z".format(repository_dir,
-                         "/work"), "-w", workdir, image_id, cmd, *args
-    ])
-    if res.returncode != 0:
-        logger.error("Error while executing the given command!")
-        return False
-    return True
+    with tempfile.TemporaryDirectory() as home_dir:
+        res = subprocess.run([
+            "docker", "run", "-it", "-u",
+            "{:d}:{:d}".format(os.getuid(), os.getpid()),
+            "-v", "{}:{}:z".format(home_dir, "/home/user"),
+            "-v", "{}:{}:z".format(repository_dir, "/work"),
+            "-e", "HOME=/home/user",
+            "-e", "USER=user",
+            "-w", workdir, image_id, cmd, *args
+        ])
+        if res.returncode != 0:
+            logger.error("Error while executing the given command!")
+            return False
+        return True
 
 
 def _list_all_files(path):
@@ -289,12 +294,17 @@ def main(argv):
         _docker_run(docker_image_id, dir_tmp, args.args[0], *args.args[1:])
 
 
-#        # List all files that were placed in the data directory
-#        data_files_after = set(_list_all_files(dir_data_src))
+        # List all files that were placed in the data directory
+        data_files_after = set(_list_all_files(dir_data_tmp))
 
-#        # Copy the files to the "data" directory
-#
-##        print(data_files_before, data_files_after)
+        # Copy the files to the "data" directory
+        for file_src in data_files_after - data_files_before:
+            file_rel = os.path.relpath(file_src, start=dir_data_tmp)
+            file_rel_path, file_rel_name = os.path.split(file_rel)
+            file_tar = os.path.join(dir_data_tar, file_rel_path, target_hash + "_" + file_rel_name)
+            os.makedirs(os.path.dirname(file_tar), exist_ok=True)
+            logger.info(f"Copying {file_src} --> {file_tar}")
+            shutil.copy(file_src, file_tar)
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)

@@ -151,8 +151,8 @@ def main():
             rnd_str = ''.join(random.choice(string.ascii_lowercase) for x in range(10))
 
             fn_base, _ = os.path.splitext(os.path.basename(self.script))
-            fn = self.datafile(os.path.join("cache_" + fn_base, fn_base + "_" + m.hexdigest()[:8] + ".npz"))
-            fn_tmp = self.datafile(os.path.join("cache_" + fn_base, fn_base + "_" + rnd_str + ".npz"))
+            fn = self.datafile(os.path.join("cache", fn_base, fn_base + "_" + m.hexdigest()[:8] + ".npz"))
+            fn_tmp = self.datafile(os.path.join("cache", fn_base, fn_base + "_" + rnd_str + ".npz"))
             os.makedirs(os.path.dirname(fn), exist_ok=True)
 
             if os.path.isfile(fn):
