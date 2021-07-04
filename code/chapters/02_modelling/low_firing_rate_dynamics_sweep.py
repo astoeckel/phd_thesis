@@ -14,7 +14,7 @@ T = 100.0
 bandwidth = 100.0
 
 neuron_types = [
-#    nengo.SpikingRectifiedLinear,
+    nengo.SpikingRectifiedLinear,
     nengo.LIF,
     nengo.AdaptiveLIF,
 ]
@@ -126,15 +126,16 @@ def main():
     N_fs = i1 - i0
 
     # Compute the sweep to perform
-    N_repeat = 5
+    N_repeat = 1 # 5
     N_neuron_types = len(neuron_types)
-    N_rates = 100
+    N_rates = 20 # 100
     rates = np.logspace(np.log10(10), np.log10(200), N_rates)
     params = [(i, j, k, rate) for i in range(N_repeat)
               for j in range(N_neuron_types) for k, rate in enumerate(rates)]
     random.shuffle(params)
 
-    with h5py.File("low_firing_rates_dynamics_sweep.h5", "w") as f:
+    fn = os.path.join("data", "low_firing_rates_dynamics_sweep.h5")
+    with h5py.File(fn, "w") as f:
         f.create_dataset("fs", data=fs[i0:i1])
         f.create_dataset("rates", data=rates)
 
