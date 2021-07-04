@@ -1,13 +1,13 @@
 % !TeX spellcheck = en_GB
-\documentclass[letterpaper,oneside,12pt]{memoir}
+\documentclass[letterpaper,twoside,12pt]{memoir}
 
-\title{Harnessing Neural Dynamics:\\Building Blocks for Computational Neuroscience and Machine Learning}
+\title{Harnessing Neural Dynamics\\as a Computational Resource}%:\\Building Blocks for Computational Neuroscience and Artificial Agents}
 \author{Andreas Stöckel}
 
 \input{preamble/style}
 \input{preamble/packages}
+\input{preamble/math}
 
-\addbibresource{../bibliography/bibliography.bib}
 
 %% DRAFT 
 %\usepackage{showframe}
@@ -15,31 +15,74 @@
 \usepackage{lipsum}
 \usepackage[textsize=small]{todonotes}
 
+\newglossarystyle{symbols}{%
+  \setglossarystyle{long}%
+  \renewenvironment{theglossary}%
+     {\renewcommand{\arraystretch}{1.25}%
+      \begin{longtable}[l]{@{}p{\dimexpr 1cm-\tabcolsep}p{\dimexpr \textwidth-1.25cm}}}
+     {\end{longtable}}%
+ }
+\newglossarystyle{acronyms}{%
+  \setglossarystyle{long}%
+  \renewenvironment{theglossary}%
+     {\renewcommand{\arraystretch}{1.25}%
+      \begin{longtable}[l]{@{}p{\dimexpr 2cm-\tabcolsep}p{\dimexpr \textwidth-2.25cm}}}
+     {\end{longtable}}%
+ }
+
+
+\addbibresource{bibliography.bib}
+
+\makeindex
+
+% Starts creation of a glossary.
+\makeglossaries
+\input{frontmatter/symbols}
+
 \begin{document}
 
 	\frontmatter
-	\input{frontmatter/titlepage}
-	\input{frontmatter/committee}
-	\input{frontmatter/declaration}
-	\input{frontmatter/contributions}
-	\input{frontmatter/abstract}
-	\input{frontmatter/acknowledgements}
-	\input{frontmatter/dedication}
+	%\input{frontmatter/titlepage}
+	%\input{frontmatter/committee}
+	%\input{frontmatter/declaration}
+	%\input{frontmatter/contributions}
+	%\input{frontmatter/abstract}
+	%\input{frontmatter/acknowledgements}
+	%\input{frontmatter/dedication}
 
-	\tableofcontents*
-	\clearpage
-	\listoffigures
-	\clearpage
-	\listoftables
+	%\tableofcontents
+	%\clearpage
+	%\listoffigures
+	%\clearpage
+	%\listoftables
 
 	\mainmatter
-	\include{chapters/chapter_01_introduction}
+	%\include{chapters/chapter_introduction}
+	%\setcounter{chapter}{1}
+	%\include{chapters/chapter_modelling_neurobiological_systems}
+	\setcounter{chapter}{2}
+	\include{chapters/chapter_multi_compartment_lif}
+	%\setcounter{chapter}{3}
+	%TODO
+	%\setcounter{chapter}{4}
+	%\include{chapters/chapter_cerebellum}
 
 	\appendix
-	\chapter{Proofs}
+	%\include{chapters/appendix_mathematics}
+	\setcounter{chapter}{1}
+	\include{chapters/appB_proofs}
+	\setcounter{chapter}{2}
+	\include{chapters/appC_data}
 
 	\backmatter
 
+	%\printglossary[style=acronyms,type=\acronymtype]
+	%\printglossary[style=symbols,title=Symbols]
 	\printbibliography
+
+	%\begingroup
+	%\footnotesize
+	%\printindex
+	%\endgroup
 
 \end{document}

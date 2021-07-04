@@ -1,0 +1,4 @@
+[decoder_cache]
+
+# Enable or disable the cache. (bool)
+enabled = False

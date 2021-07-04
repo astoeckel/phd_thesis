@@ -1,0 +1,42 @@
+% !TeX spellcheck = en_GB
+\chapter{Introduction}
+
+TODO
+
+\section{Notational conventions}
+
+Some effort has been made to be as consistent as possible in the mathematical notation.
+
+\begin{tabular}{r l l}
+	Scalars & $a$, $x$, $\beta$ & Lower-case letters \\
+	Matrices & $\mat A$, $\mat B$, $\mat \Gamma$ & Bold upper-case letters \\
+	Vectors & $\vec x$, $\vec y$ & Blow lower-case letters \\
+	Sets & $\mathbb{R}$, $\mathbb{Q}$ & Double-struck letters
+\end{tabular}
+
+\begin{itemize}
+	\item Moore-Penrose pseudo inverse
+	\item Matrices samples and dimensions order
+	\item Function definitions
+	\begin{align*}
+		f : \mathbb{A} \longrightarrow \mathbb{B}
+	\end{align*}
+	\item Vectors are column vectors, i.e., $\mathbb{R}^{n} = \mathbb{R}^{n \times 1}$.
+	\item Dot product $\langle \vec x, \vec y \rangle = \vec x^T \vec y = \sum_{i = 1}^n x_i y_i$.
+	\item Convolution operation $f, g : \mathbb{R} \longrightarrow \mathbb{R}$, then $\ast : ((\mathbb{R} \longrightarrow \mathbb{R}) \times (\mathbb{R} \longrightarrow \mathbb{R})) \longrightarrow (\mathbb{R} \longrightarrow \mathbb{R})$.
+	\item Accessing a vector or element of a matrix:
+	\begin{align*}
+		\mat A &= \begin{pmatrix}
+			a_{1, 1} & \ldots & a_{1, n} \\
+			\vdots & & \vdots  \\
+			a_{m, 1} & \ldots & a_{m, n}
+		\end{pmatrix} \,, &
+		\big(\mat A\big)_i &= \begin{pmatrix}
+			a_{i, 1} & \ldots &	a_{i, n}
+		\end{pmatrix} \,, &
+		\big(\mat A\big)_{i, j} &= a_{i, j} \,,
+	\end{align*}
+	\item Vector norm $\|\vec x\| = \|\vec x\|_2$.
+	\item Frobenius norm $\|\mat A\|_\mathrm{F}$
+	\item Volume $\vol(\mathbb{X})$
+\end{itemize}

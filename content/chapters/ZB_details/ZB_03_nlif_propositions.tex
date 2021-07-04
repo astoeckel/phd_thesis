@@ -1,0 +1,253 @@
+\section{Proofs for Chapter~3}
+\label{app:neural_network_proofs}
+
+Back in \Cref{sec:dendritic_computation_theory}, when discussing the theoretical aspects of neural networks in general, and dendritic computation in particular, we made several claims that we will proof here.
+
+\subsection{Proof of Theorem~\ref{thm:xor_general}}
+
+In the following, we first restate the theorem and then discuss a lemma that we will use in proving the theorem.
+
+TODO
+
+%
+%\ThmXorGeneral
+%
+%\begin{lemma}
+%\label{lem:bijective_sum}
+%A map $\phi : \mathbb{R}^\ell \longrightarrow \mathbb{R}$ of the form $\phi(x_1, \ldots, x_\ell) = f_1(x_1) + \ldots + f_\ell(x_\ell)$ is not bijective.
+%\end{lemma}
+%
+%\begin{proof}[Proof of Lemma~\ref{lem:bijective_sum}]
+%
+%\end{proof}
+%
+%\begin{proof}[Proof of Theorem~\ref{thm:xor_general}]
+%Suppose that there exists a $\sigma(\xi)$ such that for all $\phi : \mathbb{X} \longrightarrow \mathbb{Y}$ there are $f_1, \ldots, f_\ell$ such that the above property holds.
+%Let $\phi$ be a bijective mapping from $\mathbb{X}$ onto $\mathbb{Y}$, e.g., the inverse of a space-filling curve.
+%According to our assumption, we have
+%\begin{align*}
+%\phi(x_1, \ldots, x_\ell) &= \sigma\bigl(f_1(x_1) + \ldots + f_\ell(x_\ell)\bigr) \,.
+%\end{align*}
+%Notably, $\sigma$ must be surjective for the above mapping to be bijective.
+%Now, construct a new function $\phi'(x_1, \ldots, x_\ell) = \sigma(\phi(x_1, \ldots, x_\ell))$.
+%Evidently, $\phi'$ is a mapping from $\Xrepr$ onto $\mathbb{Y}$.
+%According to our assumption, there must be $f'_1, \ldots, f'_\ell$ such that
+%\begin{align*}
+%	\phi'(x_1, \ldots, x_\ell)
+%		&= \sigma\bigl(\phi(x_1, \ldots, x_\ell)\bigr)
+%		 = \sigma\bigl(f'_1(x_1) + \ldots + f'_\ell(x_\ell)\bigr)
+%\end{align*}
+%Due to bijectivity of $\sigma$, this holds exactly if
+%\begin{align*}
+%	\phi(x_1, \ldots, x_\ell) = f'_1(x_1) + \ldots + f'_\ell(x_\ell) \,,
+%\end{align*}
+%that is, our bijective mapping $\phi$ can be decomposed into a sum of functions.
+%\Lightning (Lemma~\ref{lem:bijective_sum})
+%\end{proof}
+
+
+\subsection{Proof of Theorem~\ref{thm:weak_xor}}
+
+\Citet[Chapter~2]{minsky1987perceptrons} note that the Perceptron cannot compute XOR.
+This notion can be extended to the more general \enquote{additive networks} discussed in \Cref{sec:dendritic_computation_theory}, as well as a weaker notion of the XOR problem (\Cref{def:weak_xor}).
+In particular, we claimed the following:
+
+\ThmWeakXor*
+
+\begin{proof}
+Suppose $\phi(x_1, x_2)$ could solve the weak XOR problem. Substitute $a_0' = f_1(a_0)$, $a_1' = f_1(a_1)$, $b_0' = f_2(b_0)$, $b_1' = f_2(b_1)$, where $a_0$, $a_1$, $b_0$, $b_1$ are from \Cref{def:weak_xor}.
+Further expanding this definition by substituting in our additive network $\phi(x_1, x_2)$ we obtain
+	\begin{align*}
+	&\hphantom{\wedge} \;    \left( \sigma(a_0' + b_0') < \sigma(a_0' + b_1') \right)
+	 \wedge   \left( \sigma(a_1' + b_1') < \sigma(a_1' + b_0') \right) \\
+	&\wedge   \left( \sigma(a_0' + b_0') < \sigma(a_1' + b_0') \right) 
+	 \wedge   \left( \sigma(a_1' + b_1') < \sigma(a_0' + b_1') \right) \,.
+	\end{align*}
+	Assume without loss of generality that $\sigma$ is monotonically increasing (same argument for monotonically decreasing $\sigma$). Then, the first line implies $\big(b_0' < b_1' \big) \wedge \big( b_0' > b_1' \big)$ and the second line $\big(a_0' < a_1' \big) \wedge \big( a_0' > a_1' \big)$. \Lightning
+\end{proof}
+
+\subsection{Proof of Theorem~\ref{thm:multiplication}}
+
+As we discussed in the main text, additive networks are capable of solving the weak XOR problem if we allow a non-monotonic neural nonlinearity $\sigma$.
+However, being able to freely choose $\sigma$ does not mean that we can universally approximate any function; these networks are still severely limited in the kind of functions they can compute.
+An example we gave in \Cref{thm:multiplication} is that of multiplication.
+
+\ThmMultiplication*
+
+\begin{proof}
+Assume that continuous $f_1$, $f_2$, $\sigma$ exist such that $\sigma(f_1(x_1) + f_2(x_2)) = x_1 x_2$.
+Let $\xi_\mathrm{min} \neq \xi_\mathrm{max}$ be the extrema of $f_1$ over $[0, 1]$.
+These extrema exist because $f_1$ is continuous on a compact set; hence, by the Heine-Cantor theorem, $f_1$ is uniformly continuous and not unbounded.
+
+
+\begin{figure}[t]
+	\includegraphics{media/appendix_details/multiplication_theorem.pdf}
+	\caption[Visualisation of the proof of Theorem~\ref{thm:multiplication}]{Visualisation of the proof of Theorem~\ref{thm:multiplication}.
+	We can find a $\delta$ such that the intervals spanned by $f_1(x_1) + f_2(0)$ and $f_1(x_2) + f_2(\delta)$ overlap (hatched region).
+	This should not be possible, given that $\sigma(f(x_1) + f(0)) = 0$ and $\sigma(f_1(x_1) + f_2(\delta)) \neq 0$.
+	Coloured background corresponds to the desired product $x_1 x_2 = \sigma(f_1(x_1) + f_2(x_2))$.
+	This colour should be the same along the horizontals of this diagram.}
+	\label{fig:multiplication_theorem}
+\end{figure}
+
+Consider $x_2 = 0$ and $x_1 \in [0, 1]$.
+The expression $f_1(x_1) + f_2(0)$ covers the interval $[\xi_\mathrm{min} + f_2(0) , \xi_\mathrm{max} + f_2(0)]$.
+Since $f_2$ is continuous, there must be, according to the epsilon-delta definition of continuity, a $\delta \neq 0$ such that $f_2(\delta) - f_2(0) < \xi_\mathrm{max} - \xi_\mathrm{min}$.
+Hence, as illustrated in \Cref{fig:multiplication_theorem}, the following two sets are not disjoint
+\begin{align*}
+	\bigl\{ f_1(x_1) + f_2(0) \mid x_1 \in (0, 1] \bigr\} \cap \bigl\{ f_1(x_1) + f_2(\delta) \mid x_1 \in (0, 1] \bigr\} \neq \emptyset \,.
+\end{align*}
+But, according to our assumption, it should also hold that
+\begin{align*}
+	\sigma\bigl(f_1(x_1) + f_2(0)\bigr) &= x_1 \cdot 0 = 0 \text{ for all } x_1 \in (0, 1] \\
+	\text{and} \quad \sigma\bigl(f_1(x_1) + f_2(\delta)\bigr) &= x_1 \cdot \delta \neq 0 \text{ for all } x_1 \in (0, 1] \,.
+\end{align*}
+However, since the values passed to $\sigma$ overlap in both cases, this is a contradiction. \Lightning
+\end{proof}
+
+
+\subsection{Proof of Theorem~\ref{thm:nlif_product_terms}}
+\label{app:nlif_product_terms}
+
+We mentioned in \Cref{sec:nlif_examples} that the dendritic nonlinearity $H$ of an $n$-LIF neuron only contains product terms between the individual input channels of different compartments, but not between input channels of the same compartment.
+This is a result of input channels only having an effect on the diagonal of $\mat{\tilde A}[\vec g]$, and the effects of matrix inversion on that diagonal.
+
+%So far, it is still unclear in how far using $n$-LIF neurons in a neural network context may potentially provide a computational advantage.
+%The goal of this subsection, is to analyse this in more detail, continuing our discussion from \Cref{sec:dendritic_computation_theory}.
+%
+%As discussed above, single-compartment $n$-LIF neurons linearly combine the input channels.
+%This is independent of whether the channels are current- or conductance-based.
+%Such neurons can thus only be used to construct additive networks (cf.~\Cref{sec:additive_net}).
+%In contrast, $n$-LIF neurons with more than one compartment can be systematically described as a product of rational functions.
+%Both observations are summarised in the following theorem.
+
+\begin{theorem}
+Consider an $n$-LIF neuron where each input channel is connected to a single compartment.
+Let $\vec g$ denote the state of all conductance-based channels and $\vec J$ the state of all conductance-based channels.
+The corresponding dendritic nonlinearity $H$ can be written as follows
+\begin{align*}
+	H(\vec g, \vec J) = \frac{H_b(\vec g, \vec J)}{H_a(\vec g)} + H_0(\vec g, \vec J)
+\end{align*}
+Where each $H_a(\vec g)$, $H_b(\vec g, \vec J)$, $H_0(\vec g, \vec J)$ is a linear combination of products between the individual input channels; however, none of these functions contain product terms between input channels belonging to the same compartment.
+\end{theorem}
+
+\begin{proof}
+The reduced system matrix $\mat{\tilde A}[\vec g]$ and its inverse $\mat{\tilde A}[\vec g]^{-1}$ are block matrices of the form
+\begin{align}
+	\mat{\tilde A}[\vec g] &= \begin{bmatrix}
+		1 & 0 \\
+		0 & {\mat{\tilde C}}[\vec g]
+	\end{bmatrix} \Leftrightarrow
+	\mat{\tilde A}[\vec g]^{-1} = \begin{bmatrix}
+		1 & 0 \\
+		0 & {\mat{\tilde C}}[\vec g]^{-1}
+	\end{bmatrix} \,,
+	&\text{with }
+	\mat{\tilde C}[\vec g] &= \begin{bmatrix}
+	   d_2[\vec g] & -c_{23} & \ldots & -c_{2n} \\
+	-c_{23} & d_3[\vec g] &  & -c_{3n} \\
+	\vdots & & \ddots & \vdots \\
+	-c_{2n} & -c_{3n} & \ldots & d_n[\vec g]
+	\end{bmatrix} \,.
+	\label{eqn:nlif_matrix_blocks}
+\end{align}
+Importantly, by construction of $\mat{\tilde A}[\vec g]$ each diagonal element $d_i[\vec g]$ is an affine function in the conductance-based input channels, and each $(\vec{\tilde b}[\vec g])_i$ is an affine function in both the conductance- and current-based input channels. We have
+\begin{align*}
+	d_i[\vec g] &= \tilde a_0^i + \sum_{k = 1}^{M_i} \tilde a_k^i g_k^i \,, & 
+	(\vec{\tilde b}[\vec g])_i &= \tilde b_0^i + \sum_{k = 1}^{M_i} \tilde b_k^i g_k^i + \sum_{k = 1}^{N_i} \tilde c_k^i J_k^i \,.
+\end{align*}
+
+Now, the linear portion of \cref{eqn:nlif_general_model} trivially follows from multiplication of the first identity \enquote{block} with $(\vec{\tilde b}[\vec g])_1$.
+%In particular, we have $\bigl( \mat{\tilde A}[\vec g]^{-1}  \bigr)_{1, 1} (\vec{\tilde b}[\vec g])_1 = (\vec{\tilde b}[\vec g])_1 = \tilde v^\mathrm{eq}_1$.
+Combine this with \cref{eqn:nlif_eq} to obtain the linear term.
+
+The product of rational functions can be obtained by systematically inverting the second block $\mat{\tilde C}[\vec g]$.
+Remember that the inverse of a matrix can be written as its adjoint of scaled by the inverse of its determinant \citep[e.g.,][Theorem~1.9, p.~366]{hefferon2020linear}.
+%\begin{align*}
+%	\mat{\tilde C}[\vec g]^{-1} &= \frac{1}{\det(\mat{\tilde C[\vec g]})} \adj(\mat{\tilde C}[\vec g]) \,.
+%\end{align*}
+Hence, the denominator in \cref{eqn:nlif_matrix_blocks} is the determinant of $\mat{\tilde C}[\vec g]$.
+Using the permutation expansion of the determinant \citep[e.g.,][Section~4.I.3, p.~337]{hefferon2020linear}, we have
+\begin{align*}
+	\det(\mat{\tilde C[\vec g]})
+		&= \sum_{\pi \in \mathbb{P}} \sign(\pi) \prod_{i=1}^n \bigl( \mat{\tilde C}[\vec g]^{-1} \bigr)_{i, \pi(i) + 1} \,,
+	& \text{where } \mathbb{P} = S({1, \ldots, n - 1}) \,,
+\end{align*}
+and where $S(X)$ denotes the set of permutations of the set $X$, and $\sign(\pi) \in \{-1, 1\}$ is the \enquote{signum} of the permutation $\pi$ (see the above reference).
+Notably, for each permutation $\pi$, the above product term contains the $i$th diagonal entry $d_i[\vec g]$ at most once for each permutation $\pi$.
+Hence, the determinant can be factorised into a products of the form $(a_0^i + d_i[\vec g])$.
+This results in the denominator of the nonlinear term in \cref{eqn:nlif_general_model}.
+
+Lastly, the matrix product between the adjoint of $\mat{\tilde C}[\vec g]$ and $\vec{\tilde b}[\vec g]$ determines the numerator of the nonlinear term in \cref{eqn:nlif_general_model}.
+Notably, the adjoint of a matrix $\mat A$ is a matrix of determinants of $\mat A$ where the $k$th row and the $\ell$th column have been deleted:
+\begin{align*}
+	\bigl(\adj(\mat{\tilde C}[\vec g])\bigr)_{k\ell}
+		&= \sum_{\pi \in \mathbb{P}} \sign(\pi) \prod_{\substack{i=1\\i \neq k}}^n \bigl( \mat{\tilde C}[\vec g]^{-1} \bigr)_{i, \pi(i) + 1} \,,
+	& \text{where } \mathbb{P} = S({1, \ldots, \ell - 1, \ell + 1, n - 1}) \,.
+\end{align*}
+Correspondingly, $(\adj(\mat{\tilde C}[\vec g]))_{k\ell}$ neither contains the term $d_{k}[\vec g]$, nor $d_{\ell}[\vec g]$.
+The product terms in the matrix-vector product between $\adj(\mat{\tilde C}[\vec g])$ and $\vec{\tilde b}[\vec g]$ contain each input channel at most once.
+The inner product in \cref{eqn:nlif_eq} can be factored into the numerator shown in \cref{eqn:nlif_general_model}.
+\end{proof}
+
+\subsection{Proof of Theorem~\ref{thm:two_comp_xor}}
+\label{app:two_comp_xor_proof}
+
+\begin{theorem}[Two-compartment LIF cannot solve XOR]
+The two-compartment LIF nonlinearity $H(g_\mathrm{E}, g_\mathrm{I})$ from \cref{eqn:h_model} cannot solve the weak XOR problem for nonnegative inputs.
+\end{theorem}
+
+\begin{proof}
+For $b_0 \neq 0$, $H$ as given in \cref{eqn:h_model}, can be reparametrized to $H'$
+\begin{align*} 
+	H(g_\mathrm{E}, g_\mathrm{I}) &= H'\left( \dfrac{b_1  g_\mathrm{E}}{| b_0 |}, \dfrac{b_2 g_\mathrm{I}}{| b_0 |} \right) = H'(x, y) = \frac{\pm 1 + x - y}{c_0 + c_1 x + c_2 y} \,,
+\end{align*}
+where $c_0 > 0 \text{ and } c_1, c_2, x, y \geq 0$.
+Assume that $\phi(x, y) = H'(x, y)$ can solve the weak XOR problem. Since the denominator in the above nonlinearity is strictly positive, we can safely cross-multiply with the denominator across the inequalities and apply the above definition
+\begin{align*}
+		&\quad   \left( 0 < \hphantom{-}  x_0 y_0 c_1 + x_0 y_0 c_2 - x_0 y_1 c_1 - x_0 y_1 c_2 + y_0 c_0 \pm y_0 c_2 - y_1 c_0 \mp y_1 c_2 \right) \\
+		&\wedge  \left( 0 <           -   x_1 y_0 c_1 - x_1 y_0 c_2 + x_1 y_1 c_1 + x_1 y_1 c_2 - y_0 c_0 \mp y_0 c_2 + y_1 c_0 \pm y_1 c_2 \right) \\
+		&\wedge  \left( 0 <           -   x_0 y_0 c_1 - x_0 y_0 c_2 + x_1 y_0 c_1 + x_1 y_0 c_2 - x_0 c_0 \pm x_0 c_1 + x_1 c_0 \mp x_1 c_1 \right) \\
+		&\wedge  \left( 0 < \hphantom{-}  x_0 y_1 c_1 + x_0 y_1 c_2 - x_1 y_1 c_1 - x_1 y_1 c_2 + x_0 c_0 \mp x_0 c_1 - x_1 c_0 \pm x_1 c_1 \right) \,.
+\end{align*}
+This can be simplified to
+\begin{align*}
+		&\quad   \left( 0 < \hphantom{-} ((c_1 + c_2) x_0 \pm c_2 + c_0) (y_0 - y_1) \right)
+		 \wedge  \left( 0 <           -  ((c_1 + c_2) x_1 \pm c_2 + c_0) (y_0 - y_1) \right) \\
+		&\wedge  \left( 0 <           -  ((c_1 + c_2) y_0 \mp c_1 + c_0) (x_0 - x_1) \right)
+		 \wedge  \left( 0 < \hphantom{-} ((c_1 + c_2) y_1 \mp c_1 + c_0) (x_0 - x_1) \right) \,.
+\end{align*}
+Due to  the nonnegativity constraints either the first line implies $(y_0 - y_1 > 0) \wedge (y_0 - y_1 < 0)$ (for the \enquote{$+$} branch of the \enquote{$\pm$}), or the second line implies $(x_0 - x_1 < 0) \wedge (x_0 - x_1 > 0)$ (for the \enquote{$+$} branch of the \enquote{$\mp$}), which is a contradiction. The argument for $b_0 = 0$ is similar. Thus, the theorem holds. In contrast to the previous proof no contradiction can be derived for both lines at the same time. In other words, there are valid parameters $c_0$, $c_1$, $c_2$ for which there exist $x_0$, $y_0$, $x_1$, $y_1$ such that two of the four inequalities hold.
+\end{proof}
+
+
+%\subsection{Non-convexity of the Two-Compartment Dendritic Nonlinearity}
+%\label{app:two_comp_lif_non_convex}
+%
+%Generally speaking, the convexity or non-convexity of loss functions determines whether an optimisation problem is (relatively speaking) \enquote{easy} to solve or not.
+%\Citet{rockafellar1993lagrange} summarises this quite succinctly: \enquote{In fact the great
+%watershed in optimization isn't between linearity and nonlinearity, but convexity and
+%nonconvexity.}
+%This comes down to the fact that a local optimum of a convex loss function is equal to its global optimum; generally speaking, no such guarantees can be made for non-convex functions.
+%
+%That being said, and as discussed by \citet[Chapter~2]{sun2016when}, there are classes of non-convex functions for which a global optimiser can be constructed.
+%However, this requires proving that the local optimum is equal to the global optimum, as well as some guarantees regarding the Hessian matrix at saddle points of the function.
+%
+%A thorough analysis our rational approximation problems \cref{eqn:two_comp_optimal_parameters} and \cref{eqn:two_comp_lif_weight_optimisation} is out of scope for this thesis.
+%However, as we demonstrate next, one can easily show that these functions are not convex.
+%First, recall one possible definition of the convexity of a function $f$:
+%
+%\begin{definition}[Convex function]
+%A function $f : \mathbb{R}^n \longrightarrow \mathbb{R}$ is \emph{convex} if the following inequality holds for any two $\vec x, \vec y \in \mathbb{R}^n$ and all $\alpha \in [0, 1]$:
+%\begin{align*}
+%	f\bigl((1 - \alpha) \vec x + \alpha \vec y\bigr) \leq (1 - \alpha) f\bigl(\vec x\bigr) + \alpha f\bigl(\vec y\bigr) \,.
+%\end{align*}
+%\end{definition}
+%
+%Now, instead of proving the non-convexity of \cref{eqn:two_comp_optimal_parameters} and \cref{eqn:two_comp_lif_weight_optimisation} directly, consider this following function, which is corresponds to both optimisation problems for one sample $N = 1$
+%\begin{align}
+%	f(a, b) = \left(J - \frac{b}{a} \right)^2 \quad \quad \text{where } a > 0 \,.
+%	\label{eqn:rational_approx_single}
+%\end{align}
+%Proving non-convexity of this function implies that our loss functions are not convex.
+%Specifically, for one sample ($N = 1$), the parameters $a$, $b$ are linear combinations in either the parameters or the weights. 

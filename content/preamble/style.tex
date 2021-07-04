@@ -1,0 +1,94 @@
+% Setup microtype for pdfLaTex
+\usepackage[final,tracking=true,expansion=true]{microtype}
+
+\usepackage[sb]{libertine} % or \usepackage[sb]{libertinus}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage[scaled=0.81]{beramono}
+\usepackage[lcgreekalpha]{libertinust1math} % slanted integrals, by default
+\usepackage{amsthm} % libertinust1math loads amsmath
+\usepackage[scr=boondoxo,bb=boondox]{mathalfa} %Omit bb=boondox for default libertinus bb
+\usepackage[utf8]{inputenc}
+
+\captionnamefont{\sffamily\small\bfseries}
+\captionstyle{\sffamily\small}
+
+\setlength{\parskip}{0.5em}
+
+% Page layout
+\setlrmarginsandblock{2.83cm}{2.83cm}{*}
+\setheaderspaces{*}{0.75cm}{*}
+\setheadfoot{\baselineskip}{1.25cm}
+%\setulmarginsandblock{4.4cm}{4.5cm}{*}
+\setulmarginsandblock{3.4cm}{3.5cm}{*}
+\setmarginnotes{0.5cm}{2cm}{0em}
+\checkandfixthelayout
+
+%\setsubsecheadstyle{\itshape\raggedright}
+\setsubsecheadstyle{\itshape\large\raggedright}
+\setsecnumdepth{subsection}
+\settocdepth{subsection}
+
+\newcommand{\parahead}[1]{\itshape{{#1}.}\hspace{0.5em}}
+\setparaindent{0em}
+\setbeforeparaskip{\parskip}
+\setafterparaskip{0em}
+\setparaheadstyle{\parahead}
+
+\newcommand{\subsubhead}[1]{\bfseries{{#1}.}\hspace{0.5em}}
+\setsubsubsecindent{0em}
+\setbeforesubsubsecskip{1em}
+\setaftersubsubsecskip{0em}
+\setsubsubsecheadstyle{\subsubhead}
+
+% Header and footer setup
+\nouppercaseheads
+\makeatletter
+\makepagestyle{headings}
+\makepsmarks{headings}{%
+	\createmark{chapter}{left}{shownumber}{\@chapapp\ }{. \ }
+	\createmark{section}{right}{shownumber}{}{. \ }
+	\createplainmark{toc}{both}{\contentsname}
+	\createplainmark{lof}{both}{\listfigurename}
+	\createplainmark{lot}{both}{\listtablename}
+	\createplainmark{bib}{both}{\bibname}
+	\createplainmark{index}{both}{\indexname}
+	\createplainmark{glossary}{both}{\glossaryname}
+}
+\makeatother
+\makeevenhead{headings}{\small\sffamily\leftmark}{}{}
+\makeoddhead{headings}{}{}{\small\sffamily\rightmark}
+\makeevenfoot{headings}{}{\small\sffamily\thepage}{}
+\makeoddfoot{headings}{}{\small\sffamily\thepage}{}
+\pagestyle{headings}
+
+\copypagestyle{chapter}{plain}
+\makeevenfoot{chapter}{}{\small\sffamily\thepage}{}
+\makeoddfoot{chapter}{}{\small\sffamily\thepage}{}
+
+\renewcommand{\contentsname}{Table of Contents}
+
+% See https://stackoverflow.com/a/46767059
+\makeatletter
+\newenvironment{OpeningQuote}{\begingroup\small\raggedleft\begin{minipage}{0.9\textwidth}}{\end{minipage}\\[2em]\endgroup\def\if@endpe{\@doendpe\let\par\@@par\iffalse}}
+\makeatother
+\newcommand{\OpeningQuoteSource}[2]{\par\vspace{0.5em}\raggedleft--- \textsc{#1}\\\textit{#2}}
+
+\newenvironment{PriorPublication}{
+\begin{figure}[b!]
+\rule{\textwidth}{2pt}\\[0.25em]
+\small%
+\sffamily%
+\textbf{Material in this chapter from prior publications}\\[0.25cm]
+}{
+\end{figure}
+}
+
+\newenvironment{Contributions}{
+\begin{figure}[b!]
+\small%
+\sffamily%
+\textbf{Contributions in this chapter}\\[0.25cm]
+}{
+\end{figure}
+}

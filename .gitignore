@@ -1,5 +1,9 @@
+private/
+build/
+data/
 __pycache__/
 template/
+.ipynb_checkpoints/
 *.aux
 *.bbl
 *.bcf

@@ -1,0 +1,120 @@
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[svgnames,table]{xcolor}
+\usepackage{csquotes}
+\usepackage{mathrsfs} % mathscr
+\usepackage{mathtools}
+\usepackage{booktabs}
+\usepackage{xspace}
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{rotating}
+
+\usepackage{marvosym} % Lightning symbol
+
+% Restateable theorems
+\usepackage{thmtools}
+\usepackage{thm-restate}
+
+
+%\usepackage{imakeidx}
+
+\usepackage[toc,acronym]{glossaries} % Glossary.
+%\usepackage{glossary-mcols}
+
+\usepackage[labelfont={small,bf,sf},textfont={small,sf}]{caption}
+\usepackage{subcaption}
+
+\usepackage[a-1b]{pdfx}
+
+% Setup Bibtex
+
+\usepackage[
+	style=authoryear,
+	uniquename=false,
+	mincitenames=1,
+	maxcitenames=2,
+	citetracker=true,
+	natbib=true,
+	sorting=nyt,
+	hyperref=true,
+	backref=false]{biblatex}
+\setlength{\bibnamesep}{0.5em}
+
+
+% See https://tex.stackexchange.com/a/478787
+\makeatletter
+\AtEveryCitekey{%
+  \ifciteseen
+    {}
+    {\defcounter{maxnames}{3}}%
+}
+\makeatother
+
+\usepackage{siunitx}
+
+%\DefineBibliographyStrings{english}{%
+%  backrefpage = {cited on page~},
+%  backrefpages = {cited on pages~},
+%}
+
+\DeclareFieldFormat{citehyperref}{%
+  \DeclareFieldAlias{bibhyperref}{noformat}% Avoid nested links
+  \bibhyperref{#1}}
+
+\DeclareFieldFormat{textcitehyperref}{%
+  \DeclareFieldAlias{bibhyperref}{noformat}% Avoid nested links
+  \bibhyperref{%
+    #1%
+    \ifbool{cbx:parens}
+      {\bibcloseparen\global\boolfalse{cbx:parens}}
+      {}}}
+
+%\savebibmacro{cite}
+%\savebibmacro{textcite}
+%
+%\renewbibmacro*{cite}{%
+%  \printtext[citehyperref]{%
+%    \restorebibmacro{cite}%
+%    \usebibmacro{cite}}}
+%
+%\renewbibmacro*{textcite}{%
+%  \ifboolexpr{
+%    ( not test {\iffieldundef{prenote}} and
+%      test {\ifnumequal{\value{citecount}}{1}} )
+%    or
+%    ( not test {\iffieldundef{postnote}} and
+%      test {\ifnumequal{\value{citecount}}{\value{citetotal}}} )
+%  }
+%    {\DeclareFieldAlias{textcitehyperref}{noformat}}
+%    {}%
+%  \printtext[textcitehyperref]{%
+%    \restorebibmacro{textcite}%
+%    \usebibmacro{textcite}}}
+%
+
+\definecolor{linkBlue}{HTML}{003399}
+\definecolor{linkGreen}{HTML}{2E8B57} % SeaGreen
+
+\usepackage{hyperref} % with basic options
+\hypersetup{
+    pdfborder={0 0 0},
+    plainpages=false,
+    unicode=true,
+    colorlinks=false,
+%    colorlinks=true,
+%    allcolors=linkBlue,
+%    citecolor=linkGreen
+}
+\usepackage{cleveref}
+\renewcommand\thesubfigure{\Alph{subfigure}}
+
+\theoremstyle{theorem}
+\declaretheorem{theorem}
+\declaretheorem[name=Claim]{claim}
+\declaretheorem[name=Lemma]{lemma}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[chapter]

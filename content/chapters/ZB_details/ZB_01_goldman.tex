@@ -1,0 +1,80 @@
+\section{Goldman Equation and the Equivalent Circuit Model}
+\label{app:goldman_equiv_circuit_diff}
+
+When we discussed the electrical circuit model of the cell membrane in \Cref{sec:membrane_potential}, we claimed that this model does not follow from the Goldman equation.
+Since neuroscience textbooks tend to gloss over these subtleties, we feel that some clarifications may be appropriate.
+
+In \cref{eqn:ionic_current}, we assumed that there is a linear relationship between the conductance $g_X$ and the permeability $P_X$, or in other words, that ion channels behave \enquote{ohmically}.
+This is technically incorrect.
+Not only is there no linear mapping between conductances and permeabilities---if there are more than two ion channels, there is no unique mapping between conductances and permeabilities at all.
+
+Intuitively, this is because channel permeabilities and conductances describe different concepts.
+The permeability $P_X$ is proportional to the number of ion channels for a \emph{particular} ion species, while the conductance $g_X$ technically depends on the permeabilities of \emph{all} channels.
+Furthermore, the conductance depends on the ion concentrations.
+If there is no concentration gradient, no ions flow, and the conductance is zero \citep{enderle2011bioelectric}.
+Still, all this being said, for constant ion concentrations, and as demonstrated in \Cref{fig:goldman_vs_circuit_model}, a linear mapping between conductances and permeabilities captures the qualitative behaviour of the system.
+
+\begin{figure}
+	\centering
+	\includegraphics{media/chapter_modelling_neurobiological_systems/goldman_vs_circuit_model.pdf}
+	\caption[Differences between the Goldman equation and the circuit model]{Illustration of the differences between the Goldman equation and the circuit model when using a linear mapping. Solid lines depict the equilibrium potential as predicted by the Goldman equation, dashed lines the equilibrium potential as calculated using the model circuit. In each plot, the permeability (Goldman equation) or conductance (circuit model) of a single channel is multiplied by a factor between zero and two. The unscaled conductances were chosen by minimizing the squared error between the six points marked by circles and assuming that zero permeability implies zero conductance.}
+	\label{fig:goldman_vs_circuit_model}
+\end{figure}
+
+We would now like to mathematically substantiate our statements.
+As a reminder, the Goldman equation and the equivalent circuit model both predict the equilibrium potential $E$ of a cell membrane in the presence of $N$ ion channels.
+Ignoring scaling factors and ion valences for the sake of simplicity, but without loss of generality, these two equations are
+\begin{align*}
+	\tilde E_\mathrm{Goldman} &= \log \left( \frac{\sum_{i=1}^N P_i n_i}{\sum_{i = 1}^N P_i m_i} \right) \,,&
+	\tilde E_\mathrm{Circuit} &= \frac{\sum_{i = 1}^N g_i \tilde E_i }{\sum_{i = 1}^N g_i} \,, &
+	\tilde E_i &= \log \left( \frac{n_i}{m_i} \right) \,.
+\end{align*}
+We make two claims. First, for $N > 1$, there is no mapping between the membrane parameters (permeabilities and ion concentrations) of a \emph{single} ion channel and the conductance of the same ion channel. Second, for $N > 2$, there is no way to uniquely solve the identity $\tilde E_\mathrm{Goldman} = \tilde E_\mathrm{Circuit}$ for conductances $g_1, \ldots, g_N$ that may depend on \emph{all} membrane parameters.
+We express this more formally below.
+
+Importantly though, note that our notion of \enquote{uniquely} allows conductances to be scaled by a common factor, i.e., $\alpha g_1$, $\ldots$, $\alpha g_N$.
+This scaling has no influence on the equilibrium potential, but determines \tauMem once a capacitance is added to the membrane circuit.
+
+\begin{claim}
+Consider the equation
+\begin{align*}
+	 \log \left( \frac{\sum_{i=1}^N P_i n_i}{\sum_{i = 1}^N P_i m_i} \right) = \frac{\sum_{i = 1}^N g_i(\ldots)  \log \left( \frac{n_i}{m_i} \right) }{\sum_{i = 1}^N g_i(\ldots)} \quad\quad \text{for all } n_1, \ldots, n_N, m_1, \ldots, m_N, P_1, \ldots, P_N > 0 \,,
+\end{align*}
+with the additional condition that $n_i / m_i = n_j / m_j \Leftrightarrow i = j$ (no duplicate channels).
+We claim that (a) for $N > 1$ there exist no expressions for the channel conductances of the form
+\begin{align*}
+	g_i(n_i, m_i, P_i) \quad\quad \text{for } i \in \{1, \ldots, N \} \,,
+\end{align*}
+such that the equality holds, and (b) for $N > 2$ there exist no unique (apart from a scaling factor $\alpha > 0$ shared by all $N$ conductances) expressions of the following form fulfilling the equation
+\begin{align*}
+	g_i(n_1, \ldots, n_N, m_1, \ldots, m_N, P_1, \ldots, P_N) \quad\quad \text{for } i \in \{1, \ldots, N \} \,.
+\end{align*}
+\end{claim}
+
+\begin{proof}
+We consider the cases $N = 1$, $N = 2$, and $N \geq 3$.
+
+\paragraph{Case $N = 1$}
+The equality obviously holds for any $g_1 = \alpha$.
+
+\paragraph{Case $N = 2$}
+As the scaling factor $\alpha$ adds a degree of freedom, we can assume without loss of generality that $g_1 + g_2 = 1 \Leftrightarrow g_2 = 1 - g_1$.
+Solving this system of equations and adding the scaling factor $\alpha$ back in, we obtain the following unique solution:
+\begin{align*}
+	g_1 &= \hphantom{-} \alpha \frac{ \log \left( \frac{P_1 n_1 + P_2 n_2}{P_1 m_1 + P_2 m_2} \right)  - \log \left( \frac{n_2}{m_2} \right)}{\log \left( \frac{n_1}{m_1} \right) - \log \left( \frac{n_2}{m_2} \right)}
+	     = \hphantom{-}\alpha \frac{\tilde E_\mathrm{Goldman} -\tilde E_2}{\tilde E_1 - \tilde E_2} \,, \\
+	g_2 &= -\alpha \frac{ \log \left( \frac{P_1 n_1 + P_2 n_2}{P_1 m_1 + P_2 m_2} \right)  - \log \left( \frac{n_1}{m_1} \right)}{\log \left( \frac{n_1}{m_1} \right) - \log \left( \frac{n_2}{m_2} \right)}
+	     = -\alpha \frac{\tilde E_\mathrm{Goldman} - \tilde E_1}{\tilde E_1 - \tilde E_2} \,.
+\end{align*}
+\vspace{-0.05em}Note that $\tilde E_1 \neq \tilde E_2$ since we do not allow duplicate channels.
+The conductances $g_1$ and $g_2$ depend on all membrane parameters, and not just $(n_1, m_1, P_1)$ and $(n_2, m_2, P_2)$, respectively \emph{(a)}.
+
+\paragraph{Case $N \geq 3$}
+For more than two ion channels (again, without loss of generality assuming that $\sum_i g_i = 1$), we get the following solution space:
+\begin{align*}
+	g_1 &= \hphantom{-}\alpha \frac{\tilde E_\mathrm{Goldman} - \left(1 - \sum_{i = 3}^N \beta_{i - 2} \right) \tilde E_2  - \sum_{i = 3}^N \beta_{i - 2} \tilde E_i}{\tilde E_1 - \tilde E_2} \,, \\
+	g_2 &= -\alpha \frac{\tilde E_\mathrm{Goldman}  - \left(1 - \sum_{i = 3}^N \beta_{i - 2} \right) \tilde E_1  - \sum_{i = 3}^N \beta_{i - 2} \tilde E_i}{\tilde E_1 - \tilde E_2} \,, \\
+	g_i &= \hphantom{-}\alpha \beta_{i - 2} \quad \quad \text{for } i \in \{3, \ldots, N \} \,,
+\end{align*}
+where $\beta_1, \ldots, \beta_{N - 2} \geq 0$. Hence, there is no unique solution \emph{(b)}, and either the conductances $g_1$ and $g_2$ depend on all parameters, or---when trying to solve for $\beta_i$ that eliminate these dependencies---the conductances $g_i$ depend on all membrane parameters  \emph{(a)}.
+\end{proof}

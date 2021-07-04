@@ -1,0 +1,61 @@
+\section{Hodgkin-Huxley Model with Traub and Miles Dynamics}
+\label{app:hippocampal_hh}
+
+The original model by \citet{hodgkin1952quantitative} is primarily concerned with action potential generation and propagation in the squid giant axon. It is given as
+\begin{align*}
+	\CMem \dot\vMem(t)
+	&=    g_\mathrm{K^+}(t) \bigl(E_\mathrm{K^+} - \vMem(t)\bigr)
+		+ g_\mathrm{Na^+}(t) \bigl(E_\mathrm{Na^+} - \vMem(t)\bigr)
+		+ g_\mathrm{L} \bigl(\EL - \vMem(t)\bigr) + J(t) \\
+	g_\mathrm{K^+}(t) &= \hat g_\mathrm{K^+} n(t)^4 \,, \\
+	g_\mathrm{Na^+}(t) &= \hat g_\mathrm{Na^+} m(t)^3 h(t) \,, \\
+	\dot m(t) &= \alpha_m\bigl(\vMem(t) - \vTh\bigr) [1 - m(t)]  - \beta_m\bigl(\vMem(t) - \vTh\bigr) m(t)  \,,\\
+	\dot h(t) &= \,\alpha_h\bigl(\vMem(t) - \vTh\bigr) [1 \hspace{0.125em} - \hspace{0.125em} h(t)] - \, \beta_h\bigl(\vMem(t) - \vTh\bigr) h(t) \,,\\
+	\dot n(t) &= \,\alpha_n\bigl(\vMem(t) - \vTh\bigr) [1 \hspace{0.125em} - \hspace{0.125em} n(t)] - \, \beta_n\bigl(\vMem(t) - \vTh\bigr) n(t) \,,
+\end{align*}
+where $m(t)$, $h(t)$, $n(t)$ are \enquote{gating variables} that encode state of the system, and $\vTh$ is a soft \enquote{threshold potential} that determines the zero-point of the original model (originally $\vTh = \EL$).
+
+The same principles can be applied to other species if the rate equations $\alpha_{m, h, n}$ and $\beta_{m, h, n}$ are tuned to match empirical data.
+One popular%
+\footnote{The Traub and Miles model is available in neural simulators, such as NEST \citep{gewaltig2007nest}, and is featured in the paper describing the Brian~2 simulator \citep{stimberg2019brian}. In NEST up to version 2.18, this model has been called \texttt{hh\_cond\_exp\_traub}, later superseded by \texttt{hh\_cond\_beta\_gap\_traub}.}
+set of rate equations is derived from a model of a hippocampal pyramidal cell described by \citet[Chapter 4, p.~92-94]{traub1991neuronal}.
+These equations are given in the following.
+Note that units have been omitted as in the source; the input of the functions is in \si{\milli\volt}, the output in \si{\per\milli\volt\per\milli\second}:
+\begin{align*}
+	\alpha_m(V) &= \frac{0.32(13 - V)}{\exp\left(\frac{13 - V}{4}\right) - 1} \,, &
+	\beta_m(V) &= \frac{0.28(V - 40)}{\exp\left(\frac{V - 40}{5}\right) - 1} \,, \\
+	\alpha_h(V) &= 0.128 \exp\left( \frac{17 - V}{18}\right) \,, &
+	\beta_h(V) &= \frac{4}{ \exp\left( \frac{40 - V}{5}\right) + 1 } \,, \\
+	\alpha_n(V) &= \frac{0.032(15 - V)}{\exp\left(\frac{15 - V}{5}\right) - 1} \,, &
+	\beta_n(V) &= 0.5 \exp\left(\frac{10 - V}{40}\right) \,.
+\end{align*}
+As discussed in more detail by \citet[Chapter~2.3]{izhikevich2007dynamical}, the dynamics of the gating variables can be written in a more intuitive canonical form as
+\begin{align*}
+	\dot m(t) &= \frac{m_\infty\bigl(\vMem(t)\bigr) - m(t)}{\tau_m\bigl(\vMem(t)\bigr)} \,, &
+	\dot h(t) &= \frac{h_\infty\bigl(\vMem(t)\bigr) - h(t)}{\tau_h\bigl(\vMem(t)\bigr)} \,, &
+	\dot n(t) &= \frac{n_\infty\bigl(\vMem(t)\bigr) - n(t)}{\tau_n\bigl(\vMem(t)\bigr)} \,,
+\end{align*}
+where $m_\infty(\vMem)$, $h_\infty(\vMem)$, $n_\infty(\vMem)$ are the equilibrium-points of the gating variables at a certain membrane potential \vMem, and $\tau_m(\vMem)$, $\tau_h(\vMem)$, $\tau_n(\vMem)$ are the corresponding time-constants.
+
+\begin{figure}[t]
+	\centering
+	\includegraphics{media/appendix_details/traub_miles_gating.pdf}%
+	{\phantomsubcaption\label{fig:traub_miles_gating_equilibrium}}%
+	{\phantomsubcaption\label{fig:traub_miles_gating_time_constants}}%
+	\caption[Equilibria and time constants of the Traub and Miles dynamics]{Equilibria and time constants of Traub and Miles dynamics. \textbf{(A)} Voltage-dependent equilibria $m_\infty(\vMem)$, $h_\infty(\vMem)$, $n_\infty(\vMem)$ (solid lines), stable attractors in the gating variable system.
+	Arrows proportional to the time-derivative of the gating variable. \textbf{(B)} Logarithmic plot of the voltage-dependent time-constants $\tau_m(\vMem)^{-1}$, $\tau_h(\vMem)^{-1}$, $\tau_n(\vMem)^{-1}$. Inspired by \citet[Figure~2.13, p.~39]{izhikevich2007dynamical}.	}
+	\label{fig:traub_miles}
+\end{figure} 
+
+\begin{figure}[p]
+	\centering
+	\includegraphics{media/appendix_details/traub_miles_trace.pdf}
+	\caption[State of the Hodgkin-Huxley model during action potential generation]{Traces of all quantities in the Hodgking-Huxley neuron model with Traub and Miles dynamics during action potential generation. See text on the previous page for a more thorough description. These traces are for the following parameters: $E_\mathrm{L} = \SI{-65}{\milli\volt}$, $E_\mathrm{K^+} = \SI{-90}{\milli\volt}$, $E_\mathrm{Na^+} = \SI{50}{\milli\volt}$, $\vTh = \SI{-50}{\milli\volt}$, $\CMem = \SI{200}{\pico\farad}$, $g_\mathrm{L} = \SI{10}{\nano\siemens}$, $\hat g_\mathrm{Na^+} = \SI{20}{\micro\siemens}$, $g_\mathrm{K^+} = \SI{6}{\micro\siemens}$.}
+	\label{fig:traub_miles_trace}
+\end{figure}
+
+As depicted in \Cref{fig:traub_miles_gating_equilibrium}, the gating variables $m(t)$ and $n(t)$ both quickly converge to one for $\vMem > \vTh = \SI{-50}{\milli\volt}$.
+However, as can be seen in \Cref{fig:traub_miles_gating_time_constants}, $m(t)$ is significantly faster, leading to a feedback loop that first drives the membrane potential towards the positive $E_\mathrm{Na^+}$, further increasing $m(t)$.
+For large positive potentials, $h(t)$ quickly converges to zero, in turn shutting off $m(t)$.
+Correspondingly, since $n(t)$ is still close to one, the membrane potential is driven towards the negative $E_\mathrm{K^+}$, which causes the re- and ultimately hyperpolarisation.
+See \Cref{fig:traub_miles_trace} for a complete trace of all state variables throughout the generation of an action potential.
