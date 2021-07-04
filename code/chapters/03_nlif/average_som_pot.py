@@ -44,7 +44,7 @@ def run_experiment(n_pre_spikes=None, repeat=128, dt=1e-5, T=1.0, n_Js=1000):
     random.shuffle(params)
     V_som, V_som_no_ref, Rates = np.zeros((3, repeat, n_Js))
     with env_guard.SingleThreadEnvGuard():
-        with multiprocessing.get_context("spawn").Pool(16) as pool:
+        with multiprocessing.get_context("spawn").Pool() as pool:
             for idx_i, idx_j, v_som, v_som_no_ref, rates in tqdm.tqdm(
                     pool.imap_unordered(run_single_experiment, params),
                     total=n_Js*repeat):
@@ -63,8 +63,7 @@ def main():
     N_REPEAT = 128
     N_BINS = 100
 
-    fn = os.path.join(os.path.dirname(__file__), "..", "..", "data",
-                      "average_som_pot_large.h5")
+    fn = os.path.join("data", "average_som_pot.h5")
     with h5py.File(fn, "w") as f:
         DS_JS = f.create_dataset("Js", (N_JS, ))
         DS_V_SOM = f.create_dataset("v_som", (N_PRE_SPIKES, N_REPEAT, N_JS))

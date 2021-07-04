@@ -118,8 +118,7 @@ def main():
     random.shuffle(params)
 
     with h5py.File(
-            os.path.join(os.path.dirname(__file__), '..', '..', 'data',
-                         'bias_decoding_impact.h5'), 'w') as f:
+            os.path.join('data', 'bias_decoding_impact.h5'), 'w') as f:
         f.create_dataset('N_pres', data=N_pres)
         errs = f.create_dataset('errs', (4, N_smpls, N_repeat))
 

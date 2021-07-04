@@ -75,8 +75,13 @@ def _load_manifest(manifest_file, root):
     manifest_path = os.path.abspath(os.path.dirname(manifest_file))
     manifest_path_rel = os.path.relpath(manifest_path, root)
     for file, obj in manifest.items():
+        if not os.path.isfile(os.path.join(manifest_path, file)):
+            raise RuntimeError(f"Referenced file \"{file}\" does not exist!")
+
         for run in obj["runs"]:
             run["args"] = [os.path.join(manifest_path_rel, file), *run["args"]]
+            if isinstance(run["generates"], str):
+                run["generates"] = [run["generates"]]
 
     # Elaborate the commit IDs
     for file, obj in manifest.items():

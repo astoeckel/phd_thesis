@@ -16,6 +16,10 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+"""
+Manually run this code.
+"""
+
 import sys
 import numpy as np
 import h5py

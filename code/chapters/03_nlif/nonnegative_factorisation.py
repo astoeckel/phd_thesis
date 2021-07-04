@@ -137,7 +137,7 @@ def main():
 
     with h5py.File(
             os.path.join(os.path.dirname(__file__), '..', '..', 'data',
-                         'nonnegative_factorisation_large.h5'), 'w') as f:
+                         'nonnegative_factorisation.h5'), 'w') as f:
         f.create_dataset('p_excs', data=p_excs)
         errs = f.create_dataset('errs', (101, N_smpls, 2, N_fs, N_repeat))
         errs[...] = np.nan

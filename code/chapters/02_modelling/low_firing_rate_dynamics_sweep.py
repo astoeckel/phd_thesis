@@ -126,9 +126,9 @@ def main():
     N_fs = i1 - i0
 
     # Compute the sweep to perform
-    N_repeat = 1 # 5
+    N_repeat = 5
     N_neuron_types = len(neuron_types)
-    N_rates = 20 # 100
+    N_rates = 100
     rates = np.logspace(np.log10(10), np.log10(200), N_rates)
     params = [(i, j, k, rate) for i in range(N_repeat)
               for j in range(N_neuron_types) for k, rate in enumerate(rates)]
@@ -149,7 +149,7 @@ def main():
                 "MKL_NUM_THREADS": "1",
                 "NUMEXPR_NUM_THREADS": "1",
         }) as guard:
-            with multiprocessing.get_context("spawn").Pool(16) as pool:
+            with multiprocessing.get_context("spawn").Pool() as pool:
                 for i, j, k, res in tqdm.tqdm(pool.imap_unordered(
                         run_single_experiment, params),
                                               total=len(params)):

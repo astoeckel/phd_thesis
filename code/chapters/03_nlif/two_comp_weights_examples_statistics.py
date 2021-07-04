@@ -137,8 +137,7 @@ while len(NS) < N_SMPLS:
     NS = np.unique(np.geomspace(1, 300, N_SMPLS + i, dtype=int))
     i += 1
 
-F_DATA = os.path.join(os.path.dirname(__file__), '..', '..', 'data',
-                           'two_comp_weights_examples_statistics.h5')
+F_DATA = os.path.join('data', 'two_comp_weights_examples_statistics.h5')
 
 
 def run_single_experiment(args):
@@ -172,7 +171,7 @@ def main():
         D_N = f.create_dataset("N", data=NS)
 
         with env_guard.SingleThreadEnvGuard():
-            with multiprocessing.get_context('spawn').Pool(16) as pool:
+            with multiprocessing.get_context('spawn').Pool() as pool:
                 for i, j, k, l, WE, WI, E in tqdm.tqdm(
                         pool.imap_unordered(run_single_experiment,
                                             params), total=len(params)):

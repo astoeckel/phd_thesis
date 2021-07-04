@@ -220,8 +220,7 @@ def main():
     random.shuffle(params)
 
     with h5py.File(
-            os.path.join(os.path.dirname(__file__), '..', '..', 'data',
-                         'inhibitory_interneurons.h5'), 'w') as f:
+            os.path.join('data', 'inhibitory_interneurons.h5'), 'w') as f:
 
         xss = f.create_dataset('xss', (N_fs, N_modes, N_repeat, 1001))
         yss = f.create_dataset('yss', (N_fs, N_modes, N_repeat, 1001))

@@ -225,8 +225,7 @@ def main():
     random.shuffle(params)
 
     with h5py.File(
-            os.path.join(os.path.dirname(__file__), '..', '..', 'data',
-                         'nonnegative_sparsity3.h5'), 'w') as f:
+            os.path.join('data', 'nonnegative_sparsity.h5'), 'w') as f:
         f.create_dataset('p_excs', data=p_excs)
         f.create_dataset('p_dropouts', data=p_dropouts)
         f.create_dataset('p_reg_l1s', data=p_reg_l1s)

@@ -139,8 +139,7 @@ def main():
     random.shuffle(params)
 
     with h5py.File(
-            os.path.join(os.path.dirname(__file__), '..', '..', 'data',
-                         'nonnegative_experiment_large5.h5'), 'w') as f:
+            os.path.join('data', 'nonnegative_experiment.h5'), 'w') as f:
         f.create_dataset('p_excs', data=p_excs)
         errs = f.create_dataset('errs', (5, N_smpls, 2, 2, N_fs, N_repeat))
         errs[...] = np.nan

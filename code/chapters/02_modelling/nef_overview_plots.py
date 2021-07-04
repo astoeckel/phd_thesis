@@ -1,8 +1,11 @@
+"""
+Manually run this script using generate_figure.py!
+"""
+
 import nengo
 from nengo.utils.ensemble import sorted_neurons, response_curves, tuning_curves
 
 np.random.seed(49829)
-
 
 def rasterplot(ax, ts, As):
     #cmap = cm.get_cmap('viridis')

@@ -91,8 +91,7 @@ def main():
     random.shuffle(args)
 
     with h5py.File(
-            os.path.join(os.path.dirname(__file__), '..', '..', 'data',
-                         'nef_noise_visualisation.h5'), 'w') as f:
+            os.path.join('data', 'nef_noise_visualisation.h5'), 'w') as f:
         f.create_dataset('NS', data=NS)
         f.create_dataset('DIMS', data=DIMS)
         f.create_dataset('REPEAT', data=REPEAT)

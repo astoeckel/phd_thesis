@@ -64,7 +64,7 @@ n_E_rev_leak = 128
 Js_lst = [None] * n_E_rev_leak
 Gs_lst = [None] * n_E_rev_leak
 E_rev_leaks = np.concatenate(([-64e-3], np.random.normal(p_mu * 1e-3, p_sigma * 1e-3, n_E_rev_leak - 1)))
-with multiprocessing.Pool(16) as pool:
+with multiprocessing.Pool() as pool:
     for i, (Js, Gs) in tqdm(pool.imap_unordered(
             _compute_response_curve_single,
             enumerate(E_rev_leaks)), total=n_E_rev_leak):

@@ -1,15 +1,21 @@
+#
+# Chapter 2 Experiments
+#
+
+# This is used to generate Figure 2.3
 ["chapters/02_modelling/example_neuron.py"]
 commit = "c1b8cbd0e7caf519e1d0e30a0294f5ee9e8d6e5b"
 dockerfile = "experiments_base"
 generates = ["example_neuron_voltage_traces.svg"]
 
 ["chapters/02_modelling/granule_cell_response_curves.py"]
-commit = "c1b8cbd0e7caf519e1d0e30a0294f5ee9e8d6e5b"
+commit = "c1b8cbd0e7caf519e1d0e30a0294f5ee9e8d6e5b" # XXX
 dockerfile = "experiments_base"
 generates = ["granule_cell_response_curves.npy"]
 
 ["chapters/02_modelling/low_firing_rate_dynamics_sweep.py"]
-commit = "c1b8cbd0e7caf519e1d0e30a0294f5ee9e8d6e5b"
+#commit = "0c58889ef3b523c5a7cf1402ab5a5ea2fe19da1b" # Short experiment
+commit = "0c58889ef3b523c5a7cf1402ab5a5ea2fe19da1b" # Long experiment # XXX
 dockerfile = "experiments_base"
 generates = ["low_firing_rates_dynamics_sweep.h5"]
 is_multithreaded = true
@@ -35,4 +41,56 @@ runs = [
 		generates=["lif_ramp_short.npz"]
 	}
 ]
+
+#
+# Chapter 3 Experiments
+#
+
+["chapters/03_nlif/average_som_pot.py"]
+commit = "c1b8cbd0e7caf519e1d0e30a0294f5ee9e8d6e5b" # XXX
+dockerfile = "experiments_base"
+generates = "average_som_pot_large.h5"
+is_multithreaded = true
+
+["chapters/03_nlif/bias_decoding_impact.py"]
+commit = "c1b8cbd0e7caf519e1d0e30a0294f5ee9e8d6e5b" # XXX
+dockerfile = "experiments_base"
+generates = "bias_decoding_impact.h5"
+is_multithreaded = true
+
+["chapters/03_nlif/inhibitory_interneurons.py"]
+commit = "c1b8cbd0e7caf519e1d0e30a0294f5ee9e8d6e5b" # XXX
+dockerfile = "experiments_base"
+generates = "inhibitory_interneurons.h5"
+is_multithreaded = true
+
+["chapters/03_nlif/nef_noise_visualisation.py"]
+commit = "c1b8cbd0e7caf519e1d0e30a0294f5ee9e8d6e5b" # XXX
+dockerfile = "experiments_base"
+generates = "nef_noise_visualisation.h5"
+is_multithreaded = true
+
+["chapters/03_nlif/nonnegative_experiment.py"]
+commit = "c1b8cbd0e7caf519e1d0e30a0294f5ee9e8d6e5b" # XXX
+dockerfile = "experiments_base"
+generates = "nonnegative_experiment.h5"
+is_multithreaded = true
+
+["chapters/03_nlif/nonnegative_factorisation.py"]
+commit = "c1b8cbd0e7caf519e1d0e30a0294f5ee9e8d6e5b" # XXX
+dockerfile = "experiments_base"
+generates = "nonnegative_factorisation.h5"
+is_multithreaded = true
+
+["chapters/03_nlif/nonnegative_sparsity.py"]
+commit = "c1b8cbd0e7caf519e1d0e30a0294f5ee9e8d6e5b" # XXX
+dockerfile = "experiments_base"
+generates = "nonnegative_sparsity.h5"
+is_multithreaded = true
+
+["chapters/03_nlif/two_comp_weights_examples_statistics.py"]
+commit = "c1b8cbd0e7caf519e1d0e30a0294f5ee9e8d6e5b" # XXX
+dockerfile = "experiments_base"
+generates = "two_comp_weights_examples_statistics.h5"
+is_multithreaded = true
 
