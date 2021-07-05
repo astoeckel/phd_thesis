@@ -13,9 +13,6 @@ import lif_utils
 import env_guard
 from nonneg_common import *
 
-import sklearn.linear_model
-
-
 def forkrng(rng=np.random):
     return np.random.RandomState(rng.randint((1 << 31)))
 
@@ -135,8 +132,7 @@ def main():
     random.shuffle(params)
 
     with h5py.File(
-            os.path.join(os.path.dirname(__file__), '..', '..', 'data',
-                         'nonnegative_factorisation.h5'), 'w') as f:
+            os.path.join('data', 'nonnegative_factorisation.h5'), 'w') as f:
         f.create_dataset('p_excs', data=p_excs)
         errs = f.create_dataset('errs', (101, N_smpls, 2, N_fs, N_repeat))
         errs[...] = np.nan
