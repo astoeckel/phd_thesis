@@ -50,7 +50,7 @@ runs = [
 ["chapters/03_nlif/average_som_pot.py"]
 commit = "6fe220ead207f78a2f0ea9f52d501256ab8a19e6"
 dockerfile = "experiments_base"
-generates = "average_som_pot_large.h5"
+generates = "average_som_pot.h5"
 is_multithreaded = true
 
 ["chapters/03_nlif/bias_decoding_impact.py"]
@@ -72,7 +72,7 @@ generates = "nef_noise_visualisation.h5"
 is_multithreaded = true
 
 ["chapters/03_nlif/nonnegative_experiment.py"]
-commit = "6fe220ead207f78a2f0ea9f52d501256ab8a19e6"
+commit = "c6dc3ce127045d8fa26f81f2eba9e6bb9ca080ae"
 dockerfile = "experiments_base"
 generates = "nonnegative_experiment.h5"
 is_multithreaded = true
