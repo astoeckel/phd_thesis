@@ -28,10 +28,32 @@ import sys, os
 import tempfile
 import hashlib
 import shutil
+import posix_ipc
 
 import logging
 
 logger = logging.getLogger(__name__)
+
+
+def ipc_critical_section(name, condition, callback):
+    # Return if the condition is already fulfilled
+    if condition():
+        return
+
+    # Create the semaphore
+    sem = posix_ipc.Semaphore(name, posix_ipc.O_CREAT, initial_value=1)
+
+    # Acquire the semaphore
+    sem.acquire()
+    try:
+        # Once more, make sure that the condition is not already fulfilled!
+        if condition():
+            return
+
+        # Now run the callback without being pestered by others
+        callback()
+    finally:
+        sem.release()
 
 
 def file_hash(filename, hasher):
@@ -280,8 +302,7 @@ def main(argv):
         file_docker_image = os.path.join(dir_docker, 'images',
                                          image_name + ".tar")
 
-        docker_image_id = _docker_image_exists(image_name)
-        if docker_image_id is None:
+        def build_or_load_image():
             if os.path.isfile(file_docker_image):
                 logger.info(f"Reading Docker image from tarball")
                 _docker_import(image_name, file_docker_image)
@@ -289,10 +310,14 @@ def main(argv):
                 logger.info(f"Building Docker image")
                 _docker_build(file_dockerfile, image_name, file_docker_image)
 
-            docker_image_id = _docker_image_exists(image_name)
-            if docker_image_id is None:
-                raise RuntimeError(
-                    "Just built a docker image, but can't find its ID?")
+        ipc_critical_section(
+            image_name, lambda: not _docker_image_exists(image_name) is None,
+            build_or_load_image)
+
+        docker_image_id = _docker_image_exists(image_name)
+        if docker_image_id is None:
+            raise RuntimeError(
+                "Just built a docker image, but can't find its ID?")
 
         logger.info(f"Using docker image {image_name} --> {docker_image_id}")
 
