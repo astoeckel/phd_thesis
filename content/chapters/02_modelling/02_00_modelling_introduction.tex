@@ -1,0 +1,60 @@
+% !TeX spellcheck = en_GB
+
+The desire to understand cognition is by no means a new one---wondering about one's own thought processes has surely been part of the human condition since prehistoric times.
+Today, we know that nerve cells in the brain are the primary functional and structural units that give rise to biological cognition.
+This is referred to as the \emph{neuron doctrine}\index{neuron doctrine}, a view that garnered support through observations made by Santiago Ramón y Cajal\index{Ramón y Cajal, Santiago} and Charles Scott Sherrington\index{Sherrington, Charles Scott} at the turn of the nineteenth century \citep[Chapter~2]{yuste2015neuron,bear2016neuroscience}.
+%Highly debated at the time, an alternative view was that the nervous system is a single entity, comparable to the then well understood network of blood vessels \citep[Chapter~2]{bear2016neuroscience}.
+
+Although the nature of neurons as independent units is undisputed, the neuron doctrine continues to be scrutinised.
+There is an argument to be made that neural circuits are better described from the perspective of neural ensembles\index{neural ensemble} instead of individual neurons \citep{yuste2015neuron,churchland1992computational}---an idea that we revisit in the context of population codes.
+Furthermore, it is still a matter of debate in how far structures such as Glial cells\index{glial cell}, must be taken into account to accurately model brain function \citep[e.g.,][]{verkhratsky2000ion}.
+%Indeed, some scientists take rather extreme stances regarding the influence of Glial cells on high-level cognition \citep[e.g.,][]{agid2021glial}.
+
+%Some fundamental questions, such as what the best abstractions for describing brain function are, or what kind of structures should be included in models, garner little consensus among scientists.
+
+\begin{figure}
+	\centering
+	\includegraphics{media/chapters/02_modelling/levels.pdf}
+	\caption[Illustration of temporal and spatial scales in neuroscience]{Illustration of temporal and spatial scales in neuroscience. Placement of individual concepts is a deliberately coarse estimate and, in some cases, open to debate. Spatial scale and levels of organisation adapted from \citet[Figure~1.4, p.~11]{churchland1992computational}.}
+	\label{fig:spatial_and_temporal_scales}
+	\vspace*{-0.5em}
+\end{figure}
+
+%While some of this dissent is simply due to researchers focusing on different aspects of the brain,
+The fact that,  after more than a century of research, such fundamental debates still persist, illustrates that neuroscience (and by extension the other cognitive sciences) are still in their early days.
+This is not due to a lack of talent or dedication;
+rather, the gaps in our knowledge are a testament to the intrinsic difficulty of understanding complex systems such as the brain.
+
+In some regard, neuroscience may be compared to physics.
+Both study and predict the behaviour of natural systems, and both study phenomena that span vast spatial and temporal scales
+%For example, in neurobiology, understanding neural mechanisms requires an analysis of molecular processes on the scale of nanometres and microseconds, while the behaviour of an organism can span metres and decades
+(cf.~\Cref{fig:spatial_and_temporal_scales}).
+Unlike physics, neuroscience is concerned with the behaviour of living objects consisting of billions of complex elements.%
+\footnote{The human brain has $67$-$86\times10^{9}$ neurons and $\sim$$85\times10^9$ glial cells \citep{vonbartheld2016search}. Each neuron in cerebral cortex possesses $10^3$-$10^4$ synapses \citep[Chapter~6]{braitenberg2013anatomy}.}
+The evolved nature of brains in particular makes it challenging to disentangle structures merely responsible for metabolic function, from those orchestrating behaviour.
+Therefore, as demanded by many in the field \citep[e.g.,][]{marr1982vision,churchland1992computational,eliasmith2003neural}, neuroscience should be guided by predictive computational modelling and theory.%, with the goal to systematically connect mechanisms to behaviour, and to abstract unnecessary detail.
+
+Here, the term \enquote{theory}, refers to overarching concepts applicable to different models \citep[e.g.,][]{stevens2000models}.
+Continuing our physics analogy, successful physical theories such as Newtonian or Lagrangian mechanics, describe phenomena at different scales---from falling apples to solar systems orbiting their galactic centre.
+Translating this to neuroscience, we would like our theories to connect low-level mechanisms (e.g., neurons, synapses, action potentials) to high-level behaviour (e.g.,~motor control, decision making, language).
+As of now, there is no widely accepted theory that accomplishes this \citep{eliasmith2013how}.
+
+All this is not to say that neuroscience has stagnated over the past decades.
+To the contrary.
+New recording methods---such as fMRI (functional magnetic resonance imaging), high-density multi-electrode arrays, calcium imaging, and optogenetics---have widened our perspective on brain function \citep{sejnowski2014putting}. Researchers have mapped out individual brain circuits \citep[e.g.,][]{shepherd2012handbook}, can describe neurons at a molecular level \citep[e.g.,][]{sobolevsky2009xray}, and determined the roles specific brain regions play in cognition \citep[e.g.,][]{kanwisher2006fusiform}.
+
+Paradoxically, recent progress in neuroscience has made finding theories that bridge multiple levels of analysis \emph{more}, and not less important.
+The central challenge is that each dataset on its own is fairly limited, mostly because different recording techniques possess dissimilar temporal and spatial characteristics \citep{sejnowski2014putting}.
+The data we have access to is not detailed enough to directly inform large-scale models, and our theories are not sophisticated enough to combine heterogneous datasets. As already pointed out by \citet{churchland1992computational}, neuroscience has been, and still is, \enquote{data poor \emph{and} theory poor}.
+A major difficulty in modelling brain function hence lies in building models that can be constrained by, and that make predictions compatible with, the different scales at which current recording techniques operate (\cite{eliasmith2003neural}, Chapter~1; \cite{eliasmith2013how}).
+
+There are a few attempts at developing such theories, or, less ostentatiously, \emph{modelling frameworks}, that facilitate describing the nervous systems at different scales.
+Examples include the Neural Engineering Framework (NEF)~\citep{eliasmith2003neural}, Efficient, Balanced Spiking Networks (EBN)~\citep{boerlin2011spikebased,boerlin2013predictive}, and FORCE~\citep{sussillo2009generating,nicola2017supervised}.
+Generally speaking, these approaches describe how to translate dynamical systems---corresponding to some hypothesized behavioral model---into an idealized spiking neural network that adheres to desired neurophysiological constraints, such as neural tuning, firing rate distributions, and population-level connectivity ~\citep{komer2016unified,nicola2017supervised}.
+The resulting networks can then be analysed using the same techniques as biological systems, bridging gap between empirical data and theory.
+
+The goal of the first part of this thesis is to extend the Neural Engineering Framework to better take mechanistic constraints often found in the neuroscience literature into account.
+To this end, we first review of fundamental neuroscientific concept, and continue with a description of the NEF, as well as a list of biological constraints currently not well-captured by the NEF.
+We then, in subsequent chapters, propose extensions to the NEF that alleviate these issues.
+Subsequently, we use some of these techniques to construct a model of eyeblink conditioning in the cerebellum.
+In the second part of this thesis, we then apply the concepts we discussed in the context of modelling neurobiological systems to machine learning.

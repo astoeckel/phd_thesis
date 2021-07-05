@@ -81,9 +81,9 @@ ax01 = fig.add_subplot(gs[1, 0])
 ax10 = fig.add_subplot(gs[0, 1])
 ax11 = fig.add_subplot(gs[1, 1])
 
-do_plot(ax00, ax01, 'lif_ramp_short.npz', 'A', 'LIF neuron')
+do_plot(ax00, ax01, 'generated/chapters/02_modelling/90fb5555c0fee2d1_lif_ramp_short.npz', 'A', 'LIF neuron')
 
-do_plot(ax10, ax11, 'hodgkin_huxley_ramp_short.npz', 'B',
+do_plot(ax10, ax11, 'generated/chapters/02_modelling/037d43b959417bf8_hodgkin_huxley_ramp_short.npz', 'B',
         'Hodgkin-Huxley neuron')
 
 utils.save(fig)
