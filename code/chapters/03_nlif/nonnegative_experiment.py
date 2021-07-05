@@ -23,7 +23,8 @@ def forkrng(rng=np.random):
 
 def single_experiment(N_pre=101,
                       N_post=101,
-                      N_smpls=1001,
+                      N_smpls=102,
+                      N_test=1001,
                       f=lambda x: x,
                       p_exc=0.5,
                       do_dale=True,
