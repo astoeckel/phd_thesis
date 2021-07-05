@@ -89,6 +89,12 @@ def _load_manifest(manifest_file, root):
             raise RuntimeError(f"Missing \"commit\" in entry \"{file}\"")
         obj["commit"] = run_in_container.git_rev_parse(root, obj["commit"])
 
+    # Copy some required data across
+    for file, obj in manifest.items():
+        for run in obj["runs"]:
+            run["commit"] = obj["commit"]
+            run["dockerfile"] = obj["dockerfile"]
+
     return manifest
 
 
@@ -137,6 +143,12 @@ def _compute_target_hashes(manifest, root):
     # Compute the target hashes
     for file, obj in manifest.items():
         for run in obj["runs"]:
+            docker_hash = hashlib.sha256()
+            docker_hash.update(
+                docker_file_contents[obj["commit"]][obj["dockerfile"]])
+            docker_hash = docker_hash.hexdigest()[:16]
+            run["docker_hash"] = docker_hash
+
             target_hash = hashlib.sha256()
             target_hash.update(obj["commit"].encode('utf-8'))
             target_hash.update(" ".join(run["args"]).encode("utf-8"))
@@ -157,11 +169,18 @@ def _compute_target_files(manifest, root):
                 run["exists"][tar] = os.path.isfile(os.path.join(root, tar))
 
 
-def _print_list(manifest, root):
+def _print_list(manifest, expr, root):
     from colored import fg, bg, attr
     for file, obj in manifest.items():
-        sys.stdout.write("{}{}{}\n".format(attr("bold"), file, attr("reset")))
+        first = True
         for run in obj["runs"]:
+            if len(expr.findall(run["args"][0])) == 0:
+                continue
+
+            if first:
+                sys.stdout.write("{}{}{}\n".format(attr("bold"), file, attr("reset")))
+                first = False
+
             sys.stdout.write("{} {} {}\n".format(obj["commit"][:8],
                                                  obj["dockerfile"],
                                                  " ".join(run["args"])))
@@ -173,7 +192,9 @@ def _print_list(manifest, root):
                     sys.stdout.write("\t{}{}✘{}".format(
                         fg("red"), attr("bold"), attr("reset")))
                 sys.stdout.write("\t{}\n\n".format(tar))
-        sys.stdout.write("\n")
+
+        if not first:
+            sys.stdout.write("\n")
 
 
 def _run_task(run):
@@ -201,13 +222,21 @@ def main(argv):
     _compute_target_hashes(manifest, root=root)
     _compute_target_files(manifest, root=root)
 
+    # Assemble a regular expression from the given files
+    if len(args.filter) == 0:
+        expr = ""
+    else:
+        expr = "(" + "|".join(re.escape(x) for x in args.filter) + ")"
+    expr = re.compile(expr)
+
     # If so desired, print a list of all files
     if args.list:
-        _print_list(manifest, root=root)
+        _print_list(manifest, expr=expr, root=root)
         return
 
     # If so desired, prune all unlisted files
     if args.prune:
+        # Delete all obsolete target files
         files_present = set(run_in_container.list_all_files(os.path.join(root, "data", "generated")))
         files_desired = set()
         for obj in manifest.values():
@@ -218,14 +247,21 @@ def main(argv):
         for file in (files_present - files_desired):
             print("Deleting", file)
             os.unlink(file)
-        return
 
-    # Assemble a regular expression from the given files
-    if len(args.filter) == 0:
-        expr = ""
-    else:
-        expr = "(" + "|".join(re.escape(x) for x in args.filter) + ")"
-    expr = re.compile(expr)
+        # Delete all obsolete Docker images
+        files_present = set(run_in_container.list_all_files(os.path.join(root, "docker", "images")))
+        files_desired = set()
+        for obj in manifest.values():
+            for run in obj["runs"]:
+                files_desired.add(os.path.abspath(os.path.join(root, "docker", "images",
+                run["dockerfile"] + "_" + run["docker_hash"] + ".tar")))
+                pass
+        for file in (files_present - files_desired):
+            if file.endswith(".tar"):
+                print("Deleting", file)
+                os.unlink(file)
+
+        return
 
     # Gather experiments to run. Bin experiments into multithreaded and not
     # multithreaded experiments.
@@ -233,10 +269,6 @@ def main(argv):
     bin_run_serially = []
     for obj in manifest.values():
         for run in obj["runs"]:
-            # Copy some required data across
-            run["commit"] = obj["commit"]
-            run["dockerfile"] = obj["dockerfile"]
-
             # Sort the experiment into the concurrent or serial bin
             if len(expr.findall(run["args"][0])):
                 run = json.loads(json.dumps(run))
