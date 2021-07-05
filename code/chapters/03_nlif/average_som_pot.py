@@ -2,8 +2,6 @@
 
 import sys, os
 
-sys.path.append(os.path.join('..', 'lib'))
-
 import numpy as np
 from nef_synaptic_computation.multi_compartment_lif import *
 import multiprocessing

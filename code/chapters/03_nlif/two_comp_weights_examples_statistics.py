@@ -6,8 +6,6 @@ import sys, os
 
 import numpy as np
 
-sys.path.append(os.path.join('..', 'lib'))
-
 import random
 import tqdm
 import h5py

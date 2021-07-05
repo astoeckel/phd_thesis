@@ -8,7 +8,6 @@ import h5py
 import tqdm
 
 import sys, os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'lib'))
 
 import lif_utils
 import env_guard

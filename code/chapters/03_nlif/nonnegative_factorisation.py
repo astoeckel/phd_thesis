@@ -9,7 +9,6 @@ import tqdm
 import numpy as np
 import sys, os
 
-sys.path.append(os.path.join('..', 'lib'))
 import lif_utils
 import env_guard
 from nonneg_common import *

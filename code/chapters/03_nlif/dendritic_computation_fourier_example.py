@@ -11,7 +11,6 @@ import scipy.optimize
 import os
 import sys
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'lib'))
 import env_guard
 
 # Number of basis functions
