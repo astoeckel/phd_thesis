@@ -173,7 +173,7 @@ def _docker_run(image_id, repository_dir, cmd, *args, interactive=False):
     with tempfile.TemporaryDirectory() as home_dir:
         args = list(
             filter(bool, [
-                "docker", "run",
+                "docker", "run", "--rm",
                 "-it" if interactive else None, "-u", "{:d}:{:d}".format(
                     os.getuid(), os.getpid()), "-v", "{}:{}:z".format(
                         home_dir, "/home/user"), "-v", "{}:{}:z".format(
