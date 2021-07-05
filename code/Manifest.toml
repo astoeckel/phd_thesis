@@ -4,25 +4,25 @@
 
 # This is used to generate Figure 2.3
 ["chapters/02_modelling/example_neuron.py"]
-commit = "c1b8cbd0e7caf519e1d0e30a0294f5ee9e8d6e5b"
+commit = "6fe220ead207f78a2f0ea9f52d501256ab8a19e6"
 dockerfile = "experiments_base"
 generates = ["example_neuron_voltage_traces.svg"]
 
 ["chapters/02_modelling/granule_cell_response_curves.py"]
-commit = "d6bc922fd8a96d9f3cda7b973b2ef0894dec836a"
+commit = "6fe220ead207f78a2f0ea9f52d501256ab8a19e6"
 dockerfile = "experiments_base"
 generates = ["granule_cell_response_curves.npy"]
 is_multithreaded = true
 
 ["chapters/02_modelling/low_firing_rate_dynamics_sweep.py"]
 #commit = "0c58889ef3b523c5a7cf1402ab5a5ea2fe19da1b" # Short experiment
-commit = "d6bc922fd8a96d9f3cda7b973b2ef0894dec836a" # Long experiment
+commit = "6fe220ead207f78a2f0ea9f52d501256ab8a19e6" # Long experiment
 dockerfile = "experiments_base"
 generates = ["low_firing_rates_dynamics_sweep.h5"]
 is_multithreaded = true
 
 ["chapters/02_modelling/spiking_neurons_ramp.py"]
-commit = "c1b8cbd0e7caf519e1d0e30a0294f5ee9e8d6e5b"
+commit = "6fe220ead207f78a2f0ea9f52d501256ab8a19e6"
 dockerfile = "experiments_base"
 runs = [
 	{
@@ -48,49 +48,49 @@ runs = [
 #
 
 ["chapters/03_nlif/average_som_pot.py"]
-commit = "d6bc922fd8a96d9f3cda7b973b2ef0894dec836a"
+commit = "6fe220ead207f78a2f0ea9f52d501256ab8a19e6"
 dockerfile = "experiments_base"
 generates = "average_som_pot_large.h5"
 is_multithreaded = true
 
 ["chapters/03_nlif/bias_decoding_impact.py"]
-commit = "d6bc922fd8a96d9f3cda7b973b2ef0894dec836a"
+commit = "6fe220ead207f78a2f0ea9f52d501256ab8a19e6"
 dockerfile = "experiments_base"
 generates = "bias_decoding_impact.h5"
 is_multithreaded = true
 
 ["chapters/03_nlif/inhibitory_interneurons.py"]
-commit = "d6bc922fd8a96d9f3cda7b973b2ef0894dec836a"
+commit = "6fe220ead207f78a2f0ea9f52d501256ab8a19e6"
 dockerfile = "experiments_base"
 generates = "inhibitory_interneurons.h5"
 is_multithreaded = true
 
 ["chapters/03_nlif/nef_noise_visualisation.py"]
-commit = "d6bc922fd8a96d9f3cda7b973b2ef0894dec836a"
+commit = "6fe220ead207f78a2f0ea9f52d501256ab8a19e6"
 dockerfile = "experiments_base"
 generates = "nef_noise_visualisation.h5"
 is_multithreaded = true
 
 ["chapters/03_nlif/nonnegative_experiment.py"]
-commit = "d6bc922fd8a96d9f3cda7b973b2ef0894dec836a"
+commit = "6fe220ead207f78a2f0ea9f52d501256ab8a19e6"
 dockerfile = "experiments_base"
 generates = "nonnegative_experiment.h5"
 is_multithreaded = true
 
 ["chapters/03_nlif/nonnegative_factorisation.py"]
-commit = "d6bc922fd8a96d9f3cda7b973b2ef0894dec836a"
+commit = "6fe220ead207f78a2f0ea9f52d501256ab8a19e6"
 dockerfile = "experiments_base"
 generates = "nonnegative_factorisation.h5"
 is_multithreaded = true
 
 ["chapters/03_nlif/nonnegative_sparsity.py"]
-commit = "d6bc922fd8a96d9f3cda7b973b2ef0894dec836a"
+commit = "6fe220ead207f78a2f0ea9f52d501256ab8a19e6"
 dockerfile = "experiments_base"
 generates = "nonnegative_sparsity.h5"
 is_multithreaded = true
 
 ["chapters/03_nlif/two_comp_weights_examples_statistics.py"]
-commit = "d6bc922fd8a96d9f3cda7b973b2ef0894dec836a"
+commit = "6fe220ead207f78a2f0ea9f52d501256ab8a19e6"
 dockerfile = "experiments_base"
 generates = "two_comp_weights_examples_statistics.h5"
 is_multithreaded = true
