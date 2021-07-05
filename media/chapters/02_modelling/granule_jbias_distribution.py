@@ -5,7 +5,7 @@ import scipy.stats
 np.random.seed(58729)
 
 # Load the tuning curves
-data = np.load(utils.datafile("cerebellum_granule_tuning_curves.npy"),
+data = np.load(utils.datafile("generated/chapters/02_modelling/6a7e3053b2db45ab_granule_cell_response_curves.npy"),
                allow_pickle=True).item()
 Js_lst = data["Js_lst"]
 Gs_lst = data["Gs_lst"]

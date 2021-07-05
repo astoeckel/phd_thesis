@@ -4,9 +4,9 @@
 \title{Harnessing Neural Dynamics\\as a Computational Resource}%:\\Building Blocks for Computational Neuroscience and Artificial Agents}
 \author{Andreas Stöckel}
 
-\input{preamble/style}
-\input{preamble/packages}
-\input{preamble/math}
+\input{content/preamble/style}
+\input{content/preamble/packages}
+\input{content/preamble/math}
 
 
 %% DRAFT 
@@ -37,18 +37,18 @@
 
 % Starts creation of a glossary.
 \makeglossaries
-\input{frontmatter/symbols}
+\input{content/frontmatter/symbols}
 
 \begin{document}
 
-	\frontmatter
-	%\input{frontmatter/titlepage}
-	%\input{frontmatter/committee}
-	%\input{frontmatter/declaration}
-	%\input{frontmatter/contributions}
-	%\input{frontmatter/abstract}
-	%\input{frontmatter/acknowledgements}
-	%\input{frontmatter/dedication}
+	%\frontmatter
+	%\input{content/frontmatter/titlepage}
+	%\input{content/frontmatter/committee}
+	%\input{content/frontmatter/declaration}
+	%\input{content/frontmatter/contributions}
+	%\input{content/frontmatter/abstract}
+	%\input{content/frontmatter/acknowledgements}
+	%\input{content/frontmatter/dedication}
 
 	%\tableofcontents
 	%\clearpage
@@ -57,11 +57,15 @@
 	%\listoftables
 
 	\mainmatter
+
+	%\setcounter{chapter}{0}
 	%\include{chapters/chapter_introduction}
+
 	%\setcounter{chapter}{1}
-	%\include{chapters/chapter_modelling_neurobiological_systems}
-	\setcounter{chapter}{2}
-	\include{chapters/chapter_multi_compartment_lif}
+	%\include{content/chapters/02_modelling/02_modelling}
+
+	%\setcounter{chapter}{2}
+	%\include{chapters/chapter_multi_compartment_lif}
 	%\setcounter{chapter}{3}
 	%TODO
 	%\setcounter{chapter}{4}
@@ -69,10 +73,11 @@
 
 	\appendix
 	%\include{chapters/appendix_mathematics}
+
 	\setcounter{chapter}{1}
-	\include{chapters/appB_proofs}
-	\setcounter{chapter}{2}
-	\include{chapters/appC_data}
+	\include{content/chapters/ZB_details/ZB_details}
+	%\setcounter{chapter}{2}
+	%\include{chapters/appC_data}
 
 	\backmatter
 

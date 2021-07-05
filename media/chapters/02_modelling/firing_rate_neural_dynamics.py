@@ -8,7 +8,7 @@ gs = mpl.gridspec.GridSpec(2,
                            hspace=0.15,
                            wspace=0.3)
 
-with h5py.File(utils.datafile("low_firing_rates_dynamics_sweep.h5"), "r") as f:
+with h5py.File(utils.datafile("generated/chapters/02_modelling/e24e001049840b77_low_firing_rates_dynamics_sweep.h5"), "r") as f:
     rates = f["rates"][()]
     data = f["results"][()]
 

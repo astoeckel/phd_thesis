@@ -9,6 +9,7 @@
 \usepackage{amsthm} % libertinust1math loads amsmath
 \usepackage[scr=boondoxo,bb=boondox]{mathalfa} %Omit bb=boondox for default libertinus bb
 \usepackage[utf8]{inputenc}
+\usepackage[svgnames,table]{xcolor}
 
 \captionnamefont{\sffamily\small\bfseries}
 \captionstyle{\sffamily\small}
@@ -66,21 +67,41 @@
 \makeevenfoot{chapter}{}{\small\sffamily\thepage}{}
 \makeoddfoot{chapter}{}{\small\sffamily\thepage}{}
 
+\makeatletter
+\renewcommand{\chapterheadstart}{\vspace*{\beforechapskip}}
+\renewcommand{\printchaptername}{\chapnamefont \@chapapp}
+\renewcommand{\chapternamenum}{\space}
+\renewcommand{\printchapternum}{\chapnumfont \thechapter}
+\renewcommand{\afterchapternum}{\par\nobreak\vskip \midchapskip}
+\renewcommand{\printchapternonum}{}
+\renewcommand{\printchaptertitle}[1]{\chaptitlefont #1}
+\renewcommand{\afterchaptertitle}{\par\nobreak\vskip \afterchapskip}
+\renewcommand{\chapnamefont}{\sffamily\huge}
+\renewcommand{\chapnumfont}{\sffamily\huge}
+\renewcommand{\chaptitlefont}{\sffamily\huge\bfseries}
+\setlength{\beforechapskip}{0pt}
+\setlength{\midchapskip}{10pt}
+\setlength{\afterchapskip}{20pt}
+\makeatother
+
 \renewcommand{\contentsname}{Table of Contents}
 
 % See https://stackoverflow.com/a/46767059
 \makeatletter
-\newenvironment{OpeningQuote}{\begingroup\small\raggedleft\begin{minipage}{0.9\textwidth}}{\end{minipage}\\[2em]\endgroup\def\if@endpe{\@doendpe\let\par\@@par\iffalse}}
+\newenvironment{OpeningQuote}{\begingroup\small\sffamily\raggedleft\begin{minipage}{0.9\textwidth}}{\end{minipage}\\[30pt]\endgroup\def\if@endpe{\@doendpe\let\par\@@par\iffalse}}
 \makeatother
 \newcommand{\OpeningQuoteSource}[2]{\par\vspace{0.5em}\raggedleft--- \textsc{#1}\\\textit{#2}}
 
+\definecolor{shadecolor}{gray}{0.9}
+
 \newenvironment{PriorPublication}{
 \begin{figure}[b!]
-\rule{\textwidth}{2pt}\\[0.25em]
+\begin{shaded}
 \small%
 \sffamily%
 \textbf{Material in this chapter from prior publications}\\[0.25cm]
 }{
+\end{shaded}
 \end{figure}
 }
 

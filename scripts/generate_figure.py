@@ -37,7 +37,7 @@ def execute_figure_script(utils):
     import json
 
     # Load the correct matplotlibrc
-    mpl.rc_file(os.path.join(utils.rootdir, 'matplotlibrc'))
+    mpl.rc_file(os.path.join(os.path.dirname(__file__), 'matplotlibrc'))
     mpl.rcParams["text.usetex"] = True
     mpl.rcParams["text.latex.preamble"] = r"""
         \usepackage{siunitx}
