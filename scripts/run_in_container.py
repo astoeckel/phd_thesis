@@ -182,9 +182,7 @@ def _docker_run(image_id, repository_dir, cmd, *args, interactive=False):
             ]))
         res = subprocess.run(args)
         if res.returncode != 0:
-            logger.error("Error while executing the given command!")
-            return False
-        return True
+            raise RuntimeError("Error while executing the given command!")
 
 
 def list_all_files(path):
