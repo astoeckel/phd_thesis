@@ -12,6 +12,7 @@ generates = ["example_neuron_voltage_traces.svg"]
 commit = "d6bc922fd8a96d9f3cda7b973b2ef0894dec836a"
 dockerfile = "experiments_base"
 generates = ["granule_cell_response_curves.npy"]
+is_multithreaded = true
 
 ["chapters/02_modelling/low_firing_rate_dynamics_sweep.py"]
 #commit = "0c58889ef3b523c5a7cf1402ab5a5ea2fe19da1b" # Short experiment
