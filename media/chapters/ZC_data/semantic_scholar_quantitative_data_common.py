@@ -235,7 +235,11 @@ cnrg_people = [
 
 
 def analyse_file(fn):
-    publications = json.load(open(fn, 'r'))
+    if fn.endswith(".json"):
+        publications = json.load(open(fn, 'r'))
+    elif fn.endswith(".xz"):
+        import lzma
+        publications = json.load(lzma.open(fn, 'r'))
     publications = list(
         sorted(filter(lambda x: x["year"] and x["year"] > 2003 and not x["id"] in blacklist, publications),
                key=lambda x: x["year"]))

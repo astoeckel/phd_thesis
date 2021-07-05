@@ -1,3 +1,4 @@
+import os
 from semantic_scholar_quantitative_data_common import analyse_file
 
 fig, (ax3, ax1, ax2) = plt.subplots(3, 1, figsize=(7.5, 8.275), gridspec_kw={
@@ -5,8 +6,8 @@ fig, (ax3, ax1, ax2) = plt.subplots(3, 1, figsize=(7.5, 8.275), gridspec_kw={
 })
 
 for key, value in analyse_file(
-        utils.datafile(
-            "semantic_scholar_open_corpus_2021_04_nef_citations.json")).items():
+        utils.datafile(os.path.join("manual", "chapters", "ZC_data",
+            "semantic_scholar_open_corpus_2021_04_nef_citations.json.xz"))).items():
     globals()[key] = value
 
 
@@ -59,8 +60,8 @@ ax3.legend(loc="upper left")
 
 
 for key, value in analyse_file(
-        utils.datafile(
-            "semantic_scholar_open_corpus_2021_04_nef_nengo.json")).items():
+        utils.datafile(os.path.join("manual", "chapters", "ZC_data",
+            "semantic_scholar_open_corpus_2021_04_nef_nengo.json.xz"))).items():
     globals()[key] = value
 
 ax1.bar(years,
@@ -163,4 +164,3 @@ ax2.set_title("\\textbf{Publications with NEF-related keywords in the title or a
 ax2.legend(loc="upper left")
 
 utils.save(fig)
-
