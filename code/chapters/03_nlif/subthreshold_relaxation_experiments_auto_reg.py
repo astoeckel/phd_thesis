@@ -8,7 +8,6 @@ import numpy as np
 
 import random
 
-#import nevergrad as ng
 import scipy.optimize
 
 import lif_utils
@@ -219,10 +218,6 @@ def compute_reg_wrap(params):
         _, nets[idx_net] = make_network(idx_net)
         conns[idx_net] = conn
 
-    #import matplotlib.pyplot as plt
-    #fig, ax = plt.subplots()
-    #ax.set_title(f"{idx_fun} {idx_th} {idx_ratio} {idx_sigma}")
-
     lst_regs = []
     lst_errs = []
 
@@ -258,13 +253,6 @@ def compute_reg_wrap(params):
 
     # Compute the regularisation factor
     reg = scipy.optimize.fminbound(objective_fun, -3, 0, maxfun=N_BUDGET, xtol=1e-3)
-
-    #ax.scatter(lst_regs, lst_errs)
-    #ax.axvline(reg, linestyle='--', color="k")
-    #ax.set_xlabel("Regularisation")
-    #ax.set_ylabel("Error")
-    #fig.savefig(f"explore_{idx_fun}_{idx_th}_{idx_ratio} {idx_sigma}.pdf")
-    #plt.close(fig)
 
     # Return the weights
     return idx_fun, idx_th, idx_ratio, idx_sigma, reg
@@ -315,56 +303,54 @@ def compute_weights_wrap(params):
 
 def main():
     with h5py.File(
-            os.path.join(os.path.dirname(__file__), '..', '..', 'data',
-                         'subthreshold_relaxation_experiment_auto_2.h5'), 'r+') as f:
-#        # Store the parameters
-#        f.create_dataset('ths', data=THS[2:])
-#        f.create_dataset('ratios', data=RATIOS)
-#        f.create_dataset('sigmas', data=SIGMAS)
+            os.path.join('data', 'subthreshold_relaxation_experiment_auto_reg.h5'), 'r') as f:
+        # Store the parameters
+        f.create_dataset('ths', data=THS[2:])
+        f.create_dataset('ratios', data=RATIOS)
+        f.create_dataset('sigmas', data=SIGMAS)
 
-#        # Store the target functions
-#        xs = np.linspace(-1, 1, N_SMPLS_TEST)
-#        f.create_dataset('xs', data=xs)
-#        DS_YS = f.create_dataset('ys', (N_SMPLS_TEST, N_FUNCTIONS),
-#                                 compression="lzf")
-#        for i in range(N_FUNCTIONS):
-#            DS_YS[:, i] = FUNCTIONS[i](xs)
+        # Store the target functions
+        xs = np.linspace(-1, 1, N_SMPLS_TEST)
+        f.create_dataset('xs', data=xs)
+        DS_YS = f.create_dataset('ys', (N_SMPLS_TEST, N_FUNCTIONS),
+                                 compression="lzf")
+        for i in range(N_FUNCTIONS):
+            DS_YS[:, i] = FUNCTIONS[i](xs)
 
-#        # Store the pre-activities and decoders
-#        print("Storing decoders and test pre-activities...")
-#        DS_D = f.create_dataset('D', (N_REPEAT, N_POST), compression="lzf")
-#        DS_AS_TEST_PRE = f.create_dataset('as_test_pre',
-#                                          (N_REPEAT, N_SMPLS_TEST, N_PRE),
-#                                          compression="lzf")
-#        DS_JS_TEST_TAR = f.create_dataset(
-#            'js_test_tar', (N_REPEAT, N_FUNCTIONS, N_SMPLS_TEST, N_POST),
-#            compression="lzf")
-#        with env_guard.SingleThreadEnvGuard():
-#            with multiprocessing.get_context('spawn').Pool() as pool:
-#                for i, net in tqdm.tqdm(pool.imap_unordered(
-#                        make_network, range(N_REPEAT)),
-#                                        total=N_REPEAT):
-#                    DS_D[i] = net['D']
-#                    DS_AS_TEST_PRE[i] = net['As_test_pre']
-#                    DS_JS_TEST_TAR[i] = net['Js_test_tar']
+        # Store the pre-activities and decoders
+        print("Storing decoders and test pre-activities...")
+        DS_D = f.create_dataset('D', (N_REPEAT, N_POST), compression="lzf")
+        DS_AS_TEST_PRE = f.create_dataset('as_test_pre',
+                                          (N_REPEAT, N_SMPLS_TEST, N_PRE),
+                                          compression="lzf")
+        DS_JS_TEST_TAR = f.create_dataset(
+            'js_test_tar', (N_REPEAT, N_FUNCTIONS, N_SMPLS_TEST, N_POST),
+            compression="lzf")
+        with env_guard.SingleThreadEnvGuard():
+            with multiprocessing.get_context('spawn').Pool() as pool:
+                for i, net in tqdm.tqdm(pool.imap_unordered(
+                        make_network, range(N_REPEAT)),
+                                        total=N_REPEAT):
+                    DS_D[i] = net['D']
+                    DS_AS_TEST_PRE[i] = net['As_test_pre']
+                    DS_JS_TEST_TAR[i] = net['Js_test_tar']
 
-#        # Compute the regularisation factors first
-#        DS_REGS = f.create_dataset('regs',
-#                                   (N_FUNCTIONS, N_THS, N_RATIOS, N_SIGMAS),
-#                                   compression="lzf")
+        # Compute the regularisation factors first
+        DS_REGS = f.create_dataset('regs',
+                                   (N_FUNCTIONS, N_THS, N_RATIOS, N_SIGMAS),
+                                   compression="lzf")
 
-#        print('Determining regularisation factors...')
-#        params = list(
-#            itertools.product(range(N_FUNCTIONS), range(N_THS),
-#                              range(N_RATIOS), range(N_SIGMAS)))
-#        random.shuffle(params)
-#        with env_guard.SingleThreadEnvGuard():
-#            with multiprocessing.get_context('spawn').Pool() as pool:
-#                for i, j, k, l, reg in tqdm.tqdm(pool.imap_unordered(
-#                        compute_reg_wrap, params),
-#                                                 total=len(params)):
-#                    DS_REGS[i, j, k, l] = reg
-        DS_REGS = f['regs']
+        print('Determining regularisation factors...')
+        params = list(
+            itertools.product(range(N_FUNCTIONS), range(N_THS),
+                              range(N_RATIOS), range(N_SIGMAS)))
+        random.shuffle(params)
+        with env_guard.SingleThreadEnvGuard():
+            with multiprocessing.get_context('spawn').Pool() as pool:
+                for i, j, k, l, reg in tqdm.tqdm(pool.imap_unordered(
+                        compute_reg_wrap, params),
+                                                 total=len(params)):
+                    DS_REGS[i, j, k, l] = reg
 
         # Compute the connection weights and network evaluations
         params = list(
@@ -376,21 +362,18 @@ def main():
         random.shuffle(params)
 
         print("Computing connection weights and evaluating...")
-#        DS_ES_DEC = f.create_dataset(
-#            'es_dec',
-#            (N_FUNCTIONS, N_THS, N_RATIOS, N_SIGMAS, N_REPEAT, N_NOISE_PASSES),
-#            compression="lzf")
-#        DS_ES_CUR = f.create_dataset(
-#            'es_cur',
-#            (N_FUNCTIONS, N_THS, N_RATIOS, N_SIGMAS, N_REPEAT, N_NOISE_PASSES),
-#            compression="lzf")
-#        DS_WS = f.create_dataset(
-#            'ws',
-#            (N_FUNCTIONS, N_THS, N_RATIOS, N_SIGMAS, N_REPEAT, N_PRE, N_POST),
-#            compression="lzf")
-        DS_ES_DEC = f['es_dec']
-        DS_ES_CUR = f['es_cur']
-        DS_WS = f['ws']
+        DS_ES_DEC = f.create_dataset(
+            'es_dec',
+            (N_FUNCTIONS, N_THS, N_RATIOS, N_SIGMAS, N_REPEAT, N_NOISE_PASSES),
+            compression="lzf")
+        DS_ES_CUR = f.create_dataset(
+            'es_cur',
+            (N_FUNCTIONS, N_THS, N_RATIOS, N_SIGMAS, N_REPEAT, N_NOISE_PASSES),
+            compression="lzf")
+        DS_WS = f.create_dataset(
+            'ws',
+            (N_FUNCTIONS, N_THS, N_RATIOS, N_SIGMAS, N_REPEAT, N_PRE, N_POST),
+            compression="lzf")
         with env_guard.SingleThreadEnvGuard():
             with multiprocessing.get_context('spawn').Pool() as pool:
                 for i, j, k, l, m, res in tqdm.tqdm(pool.imap_unordered(
