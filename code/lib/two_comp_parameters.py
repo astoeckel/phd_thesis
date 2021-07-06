@@ -148,8 +148,8 @@ SOLVER_PARAMS_KEYS = list(SOLVER_PARAMS.keys())
 N_SOLVER_PARAMS = len(SOLVER_PARAMS)
 
 #SOLVER_PARAMS_SWEEP_KEYS = ["linear", "linear_2d", "gc50_no_noise"]
-SOLVER_PARAMS_SWEEP_KEYS = ["linear", "linear_2d", "gc50_no_noise", "gc100_no_noise", "gc200_no_noise"]
-#SOLVER_PARAMS_SWEEP_KEYS = ["linear", "linear_2d", "gc50_no_noise", "gc50_noisy", "gc100_no_noise", "gc100_noisy", "gc200_no_noise", "gc200_noisy"]
+#SOLVER_PARAMS_SWEEP_KEYS = ["linear", "linear_2d", "gc50_no_noise", "gc100_no_noise", "gc200_no_noise"]
+SOLVER_PARAMS_SWEEP_KEYS = ["linear", "linear_2d", "gc50_no_noise", "gc50_noisy", "gc100_no_noise", "gc100_noisy", "gc200_no_noise", "gc200_noisy"]
 
 N_SOLVER_PARAMS_SWEEP = len(SOLVER_PARAMS_SWEEP_KEYS)
 
@@ -165,9 +165,9 @@ SOLVER_REG_MAP = {
 }
 
 #NETWORK_PARAMS_SWEEP_KEYS = ["linear", "linear_2d", "gc50_no_noise", "gc50_noisy"]
-#NETWORK_PARAMS_SWEEP_KEYS = ["linear", "linear_2d", "gc50_no_noise", "gc50_noisy", "gc100_no_noise", "gc100_noisy", "gc200_no_noise", "gc200_noisy"]
+NETWORK_PARAMS_SWEEP_KEYS = ["linear", "linear_2d", "gc50_no_noise", "gc50_noisy", "gc100_no_noise", "gc100_noisy", "gc200_no_noise", "gc200_noisy"]
 #NETWORK_PARAMS_SWEEP_KEYS = ["linear", "linear_2d", "gc50_no_noise", "gc50_noisy", "gc100_no_noise"]
-NETWORK_PARAMS_SWEEP_KEYS = ["gc100_noisy", "gc200_no_noise", "gc200_noisy"]
+#NETWORK_PARAMS_SWEEP_KEYS = ["gc100_noisy", "gc200_no_noise", "gc200_noisy"]
 
 N_NETWORK_PARAMS_SWEEP = len(NETWORK_PARAMS_SWEEP_KEYS)
 
@@ -274,10 +274,10 @@ N_NOISE_TRIALS = 1
 N_SIGMAS = 60
 
 # Number of repetitions
-N_REPEAT = 256
+N_REPEAT = 10
 
 # Number of regularisation factors to try
-N_REGS = 60 #32
+N_REGS = 32 #60
 
 # Sigmas to use
 SIGMAS = np.logspace(np.log10(0.075), 1, N_SIGMAS)[::-1]
@@ -322,7 +322,7 @@ MAX_ITER = 1000
 TOL = 1e-6
 
 # Default iTh
-ITH = -0.05e-9
+ITH = 0.75
 
 # Regularisation factor used to compute the identity decoders
 DECODER_REG = 1e-2
@@ -353,7 +353,7 @@ def in_notebook():
         return False
     return True
 
-#if in_notebook():
-N_SOLVER_THREADS = multiprocessing.cpu_count() // 2
-#else:
-#    N_SOLVER_THREADS = 1 # We're already parallelising over experiments
+if in_notebook():
+    N_SOLVER_THREADS = multiprocessing.cpu_count() // 2
+else:
+    N_SOLVER_THREADS = 1 # We're already parallelising over experiments

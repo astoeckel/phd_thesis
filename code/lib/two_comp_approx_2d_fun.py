@@ -24,7 +24,7 @@ from nef_synaptic_computation.lif_utils import *
 from nef_synaptic_computation.tuning_curves import *
 
 from gen_2d_fun import *
-from parameters import *
+from two_comp_parameters import *
 
 ###############################################################################
 # Helper functions                                                            #

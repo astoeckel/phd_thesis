@@ -25,7 +25,7 @@ from nef_synaptic_computation.lif_utils import *
 from nef_synaptic_computation.tuning_curves import *
 
 from gen_2d_fun import *
-from parameters import *
+from two_comp_parameters import *
 
 # Note: The following function was copied from an old version
 # nengo.utils.functions
@@ -296,7 +296,7 @@ def run_single_spiking_trial(model_name,
     relu_params = p if ("α" in p) and ("β" in p) else None
 
     # Fetch the threshold potential if "mask_negative" is specified
-    iTh = ITH if mask_negative else None
+    iTh = (model.iTh() * ITH) if mask_negative else None
 
     # Alias for the number of neurons
     N = n_neurons
