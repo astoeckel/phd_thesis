@@ -17,7 +17,6 @@
 #
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
 """
 This script wraps the Python scripts generating the figures found in this
 thesis. This script provides some convenient imports and utility functions
@@ -82,7 +81,15 @@ def main():
     # Parse the arguments
     parser = argparse.ArgumentParser(description="Figure generation runner")
     parser.add_argument('script', type=str, nargs='?')
-    parser.add_argument('--script', dest="script2", type=str, help="Figure script")
+    parser.add_argument(
+        '--datafile_cache',
+        default="",
+        type=str,
+        help="If set, reads/writes the datafile table to the given file.")
+    parser.add_argument('--script',
+                        dest="script2",
+                        type=str,
+                        help="Figure script")
     parser.add_argument('--target',
                         type=str,
                         help="File to save the resulting figure to")
@@ -148,11 +155,16 @@ def main():
             m.update(pickle.dumps(args))
             m.update(pickle.dumps(kwargs))
 
-            rnd_str = ''.join(random.choice(string.ascii_lowercase) for x in range(10))
+            rnd_str = ''.join(
+                random.choice(string.ascii_lowercase) for x in range(10))
 
             fn_base, _ = os.path.splitext(os.path.basename(self.script))
-            fn = self.datafile(os.path.join("cache", fn_base, fn_base + "_" + m.hexdigest()[:8] + ".npz"))
-            fn_tmp = self.datafile(os.path.join("cache", fn_base, fn_base + "_" + rnd_str + ".npz"))
+            fn = self.datafile(
+                os.path.join("cache", fn_base,
+                             fn_base + "_" + m.hexdigest()[:8] + ".npz"))
+            fn_tmp = self.datafile(
+                os.path.join("cache", fn_base,
+                             fn_base + "_" + rnd_str + ".npz"))
             os.makedirs(os.path.dirname(fn), exist_ok=True)
 
             if os.path.isfile(fn):
@@ -247,7 +259,8 @@ def main():
 
         @property
         def rootdir(self):
-            return os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'media'))
+            return os.path.abspath(
+                os.path.join(os.path.dirname(__file__), '..', 'media'))
 
         @property
         def datadir(self):
@@ -259,8 +272,28 @@ def main():
                 os.path.join(self.rootdir, "..", "code", "lib"))
 
         def datafile(self, fn):
-            path = os.path.join(self.datadir, fn)
-            path = os.path.relpath(os.path.abspath(path), os.path.abspath(os.path.curdir))
+            import json
+
+            cache_fn = None
+            if args.datafile_cache:
+                cache_fn = os.path.abspath(os.path.join(self.rootdir, '..', args.datafile_cache))
+
+            if cache_fn and os.path.isfile(cache_fn):
+                datafiles = json.load(open(cache_fn, "r"))
+            else:
+                import run_experiments
+                manifest, _, root = run_experiments.load_manifest()
+                datafiles = run_experiments.target_map(manifest, root)
+                if args.datafile_cache:
+                    json.dump(datafiles, open(cache_fn, "w"))
+
+            if fn in datafiles:
+                path = datafiles[fn]
+            else:
+                path = os.path.join(self.datadir, fn)
+                path = os.path.relpath(os.path.abspath(path),
+                                       os.path.abspath(os.path.curdir))
+
             print("Datafile", fn, "->", path)
             return path
 
