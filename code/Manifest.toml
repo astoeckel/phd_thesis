@@ -95,3 +95,9 @@ dockerfile = "experiments_base"
 generates = "two_comp_weights_examples_statistics.h5"
 is_multithreaded = true
 
+["chapters/03_nlif/subthreshold_relaxation_experiments_auto_reg.py"]
+commit = "356193bd5488771169b55b00e721934e3fa81f6f"
+dockerfile = "experiments_base"
+generates = "subthreshold_relaxation_experiment_auto_reg.h5"
+is_multithreaded = true
+
