@@ -174,13 +174,13 @@ def _docker_run(image_id, repository_dir, cmd, *args, interactive=False):
         args = list(
             filter(bool, [
                 "docker", "run", "--rm",
-                "-it" if interactive else None, "-u", "{:d}:{:d}".format(
+                "-it" if interactive else "-t", "-u", "{:d}:{:d}".format(
                     os.getuid(), os.getpid()), "-v", "{}:{}:z".format(
                         home_dir, "/home/user"), "-v", "{}:{}:z".format(
                             repository_dir, "/work"), "-e", "HOME=/home/user",
                 "-e", "USER=user", "-w", "/work", image_id, cmd, *args
             ]))
-        res = subprocess.run(args)
+        res = subprocess.run(args, bufsize=0)
         if res.returncode != 0:
             raise RuntimeError("Error while executing the given command!")
 
