@@ -80,7 +80,7 @@ def do_setup(ax, rs):
     ax.set_ylabel("$\\bar v$ ($\\mathrm{mV}$)")
 
 
-with h5py.File(utils.datafile("average_som_pot_large.h5"), "r") as f:
+with h5py.File(utils.datafile("average_som_pot.h5"), "r") as f:
     Js = f["Js"][()]
     v_som = f["v_som"][()]
     v_som_no_ref = f["v_som_no_ref"][()]

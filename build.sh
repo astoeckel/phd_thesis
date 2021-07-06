@@ -18,7 +18,9 @@ trap "cd ~ && fusermount -u ""$TMP"" && rmdir ""$TMP" EXIT
 
 # Use latexmk to build the document
 cd "$TMP"
+rm -f .datafile_cache.json
 latexmk
+rm -f .datafile_cache.json
 
 # Edit the syntex file to point at the right directory
 for STEX in *.synctex.gz; do

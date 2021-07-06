@@ -1,0 +1,92 @@
+\begin{table}[h!]
+	\fontsize{10pt}{1.25}\selectfont
+	\caption[Fitted two-compartment LIF dendritic nonlinearity model parameters]{Fitted two-compartment LIF dendritic nonlinearity model parameters $b_0$, $b_1$, $b_2$, $a_0$, $a_1$, $a_2$ for \Cref{sec:two_comp_lif_experiment_1}.
+	$J_\mathrm{max}$ and $J_\mathrm{min}$ are the predicted absolute maximum/minimum somatic current (cf.~\cref{eqn:two_comp_lif}).
+	The parameters $\alpha$, $\beta$ characterize the rectified linear unit used as neuron nonlinearity $G[J]$ in the spike noise experiment.}
+	\renewcommand{\arraystretch}{1.2}
+	\small
+	\centering
+	\sffamily
+	\vspace{0.25cm}
+	\begin{tabular}{l l   r r r   r r r   r r r}
+		\toprule
+			& & \multicolumn{3}{c}{\textbf{Before fitting}} & \multicolumn{6}{c}{\textbf{After fitting model parameters}} \\
+		\cmidrule(l){3-5}
+		\cmidrule(l){6-11}
+		& & \multicolumn{3}{c}{Theoretical estimate (i)} &
+		    \multicolumn{3}{c}{No spike noise (ii)} &
+		    \multicolumn{3}{c}{With spike noise (iii)} \\
+		\cmidrule(l){3-5}
+		\cmidrule(l){6-8}
+		\cmidrule(l){9-11}
+		& & \multicolumn{3}{c}{$c_{12}$} &
+		\multicolumn{3}{c}{$c_{12}$} &
+		\multicolumn{3}{c}{$c_{12}$} \\
+		& Unit &
+		$\SI{50}{\nano\siemens}$ &
+		$\SI{100}{\nano\siemens}$ &		
+		$\SI{200}{\nano\siemens}$ &		
+		$\SI{50}{\nano\siemens}$ &
+		$\SI{100}{\nano\siemens}$ &
+		$\SI{200}{\nano\siemens}$ &
+		$\SI{50}{\nano\siemens}$ &
+		$\SI{100}{\nano\siemens}$ &		
+		$\SI{200}{\nano\siemens}$ \\
+		\cmidrule(r){1-2}
+		\cmidrule(l){3-5}
+		\cmidrule(l){6-8}
+		\cmidrule(l){9-11}
+
+		$b_0$ & $\si{\micro\siemens}$ &
+		\num{-4.8} & \num{-4.8} & \num{-4.8} &
+		\num{-19.5} & \num{-18.8} & \num{-17.1} &
+		\num{-26.3} & \num{-20.7} & \num{-17.1}
+		\\
+
+		$b_1$ & &
+		\num{1000.0} & \num{1000.0} & \num{1000.0} &
+		\num{1000.0} & \num{1000.0} & \num{1000.0} &
+		\num{1000.0} & \num{1000.0} & \num{1000.0} \\
+
+		$b_2$ & &
+		\num{-225.8} & \num{-225.8} & \num{-225.8} &
+		\num{-425.5} & \num{-376.0} & \num{-352.3} &
+		\num{-487.5} & \num{-368.3} & \num{-307.6} \\
+
+		$a_0$ & $\si{\per\milli\volt}$ &
+		\num{25.8} & \num{19.4} & \num{16.1} &
+		\num{15.7} & \num{9.0} & \num{8.3} &
+		\num{5.9} & \num{4.2} & \num{5.3} \\
+
+		$a_1$ & $\si{\per\nano\ampere}$ &
+		\num{258.1} & \num{129.0} & \num{64.5} &
+		\num{296.4} & \num{193.0} & \num{113.3} &
+		\num{350.7} & \num{260.6} & \num{185.1} \\
+
+		$a_2$ & $\si{\per\nano\ampere}$ &
+		\num{258.1} & \num{129.0} & \num{64.5} &
+		\num{132.2} & \num{41.6} & \num{18.6} &
+		\num{26.8} & \num{7.0} & \num{17.1} \\[2.5mm]
+
+	
+		$J_\mathrm{max}$ & $\si{\nano\ampere}$ &
+		\num{3.9} & \num{7.8} & \num{15.5} &
+		\num{3.4} & \num{5.2} & \num{8.8} &
+		\num{2.9} & \num{3.8} & \num{5.4} \\
+
+		$J_\mathrm{min}$ & $\si{\nano\ampere}$ &
+		\num{-0.9} & \num{-1.8} & \num{-3.5} &
+		\num{-3.2} & \num{-9.0} & \num{-18.9} &
+		\num{-1.8} &\num{-52.3} & \num{-18.0} \\[2.5mm]
+
+		$\alpha$ & $\si{\per\second\per\nano\ampere}$ &
+		/&/&/&/&/&/&
+		\num{51.3} & \num{51.5} & \num{51.3}
+		\\
+		$\beta$ & $\si{\per\second}$ &
+		/&/&/&/&/&/&
+		\num{-22.8} & \num{-25.1} & \num{-26.5}\\
+		\bottomrule
+	\end{tabular}
+	\label{tbl:two_comp_model_parameters}
+\end{table}

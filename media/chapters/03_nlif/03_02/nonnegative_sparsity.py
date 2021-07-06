@@ -1,8 +1,7 @@
 import os
 import h5py
 
-with h5py.File(os.path.join('..', '..', 'data', 'nonnegative_sparsity3.h5'),
-               'r') as f:
+with h5py.File(utils.datafile('nonnegative_sparsity.h5'), 'r') as f:
     p_dropouts = f['p_dropouts'][()]
     p_excs = f['p_excs'][()]
     p_reg_l1s = f['p_reg_l1s'][()]

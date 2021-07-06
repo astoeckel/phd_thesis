@@ -5,7 +5,7 @@ import scipy.stats
 np.random.seed(58729)
 
 # Load the tuning curves
-data = np.load(utils.datafile("generated/chapters/02_modelling/6a7e3053b2db45ab_granule_cell_response_curves.npy"),
+data = np.load(utils.datafile("granule_cell_response_curves.npy"),
                allow_pickle=True).item()
 Js_lst = data["Js_lst"]
 Gs_lst = data["Gs_lst"]
@@ -81,9 +81,9 @@ xs = np.linspace(-1, 1, 1001)
 Js = (encoders * nef_gains)[None, :] * xs[:, None] + nef_biases[None, :]
 As = lif_utils.lif_detailed_rate(Js, **lif_params)
 
-fig, ((axA, axB, axC), (axD, axE, axF)) = plt.subplots(2, 3, figsize=(7.4, 3.3), gridspec_kw={
+fig, ((axA, axB, axC), (axD, axE, axF)) = plt.subplots(2, 3, figsize=(7.4, 3.0), gridspec_kw={
     "wspace": 0.4,
-    "hspace": 0.85,
+    "hspace": 0.7,
 })
 
 Blue = utils.blues[1]

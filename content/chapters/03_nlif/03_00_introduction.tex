@@ -1,0 +1,51 @@
+As we saw in the previous chapter, individual neurons possess intricate morphologies---a fact, that we mostly ignored for the sake of simplicity.
+Indeed, there has been some work incorporating more detailed multi-compartment neuron models into the Neural Engineering Framework \citep{eliasmith2016biospaun,duggins2017incorporating}.
+However, these studies merely demonstrate that the NEF is \emph{compatible} with this kind of biological detail.
+
+While reassuring, the---perhaps---more important question to ask is what impact more detailed neuron models have on high-level function.
+For example, \citet{duggins2017effects} investigate in how far certain drugs with a known impact on individual neural activity influence the behaviour of entire NEF networks.
+Such experimental paradigms could thus, one day, have applications in understanding and treating brain disorders.
+
+From the perspective of computer science, an interesting question to ask is in how far biological detail affects the computations performed by a neuron.
+
+Empirical and theoretical work suggests that the dendritic tree---and not only the soma---is at least partially responsible for the complex responses observed in some biological neurons, including cortical pyramidal cells~\citep{mel1994information,polsky2004computational}.
+
+\citet{london2005dendritic} argue that in addition to active effects in the dendrites (i.e., dendritic spike generation mechanisms), fundamental passive effects such as shunting inhibition are worth being investigated as computational resources.
+
+
+\begin{itemize}
+	\item Motivation. Why should we care about Multi-Compartment LIF Neurons
+	\begin{itemize}
+		\item Differences to the Bobier attention model and other modeling framework work
+		\item Individual neurons as neural networks (e.g., pyramidal cells in cortex)
+		\item Available on some neuromorphic hardware platforms; local analogue computation, global digital code.
+		\item Multi-channel neurons are useful in general
+		\item Can explore effect of 
+	\end{itemize}
+	\item This we do not model; focus on a viable extension
+	\begin{itemize}
+		\item Neural dynamics
+		\item Dendritic spikes
+	\end{itemize}
+	\item Overview of this chapter
+	\item TODO: How are we harnessing neural dynamics here?
+	\item TODO: Contrast spiking neural networks to the rate-mode approximations used at the beginning of this chapter; similar to the way in which we introduced the NEF.
+\end{itemize}
+
+%A central challenge in theoretical neuroscience is to describe how biological mechanisms ultimately give rise to behaviour.
+%One way to approach this challenge is to build models of neurobiological systems that generate the behaviour of interest to a researcher. Since constructing models that span multiple levels of abstraction is typically difficult, theoretical neuroscientists are working on methods that facilitate mapping high-level behaviour onto neural mechanisms.
+%Such modelling frameworks include the Neural Engineering Framework (NEF)~\citep{eliasmith2003neural,eliasmith2013build}, Efficient, Balanced Spiking Networks (EBN)~\citep{boerlin2011spikebased,boerlin2013predictive}, and FORCE~\citep{sussillo2009generating,nicola2017supervised}.
+%Generally speaking, these approaches describe how to translate dynamical systems---corresponding to some hypothesized behavioral model---into an idealized spiking neural network that adheres to the desired neurophysiological constraints, for example neural tuning, firing rate distributions, and population-level connectivity ~\citep{komer2016unified,nicola2017supervised}.
+%This mechanistic grounding facilitates model validation by enabling a direct comparison of simulation results and empirical data~\citep[e.g.,][]{stewart2012learning,bekolay2014,duggins2017effects,voelker2018improvinga,gosmann2020}.
+%
+%The frameworks mentioned above primarily rely on two biophysical phenomena as computational primitives: synaptic filtering and the nonlinear relationship between somatic input currents and the neural response. Somatic response models range from leaky integrate-and-fire (LIF) to Hodgkin-Huxley type dynamics~\citep{schwemmer2015constructing,eliasmith2016biospaun,duggins2017incorporating}. Crucially however, these approaches typically assume that post-synaptic currents are a linear superposition of filtered pre-synaptic events. Nonlinear interactions between input channels as they may occur when modelling conductance-based synapses or dendritic structures are typically ignored.
+%
+%While some research exists that explores the effect of nonlinear post-synaptic currents within these frameworks \citep{bobier2014unifying,thalmeier2016learning,alemi2018learning}, these nonlinearities are seldom systematically exploited. Yet, empirical and theoretical work suggests that active and passive nonlinear effects within the dendritic tree---and not only the soma---are at least partially responsible for the complex responses observed in some biological neurons, including cortical pyramidal cells~\citep{mel1994information,koch1999biophysics,polsky2004computational}. \cite{london2005dendritic} argue that in addition to voltage-gated ionic currents, fundamental passive effects such as shunting inhibition are worth being investigated as computational resources.
+%
+%Put differently, current functional modelling frameworks only consider a subset of the computational resources available in individual neurons and thus underestimate their computational power. Modellers wishing to multiply two signals might for example be forced to introduce an additional layer of neurons, although---in biology---the interplay between excitation and inhibition within the dendrites of a single neuron layer could have the same effect \citep{koch1999biophysics}. The goal of this paper is to present mathematically tractable methods that allow researchers to take nonlinear post-synaptic currents into account. We demonstrate, as demanded by \cite{london2005dendritic}, that the interactions between passive conductance-based input channels within a single dendritic compartment provide significant computational advantages over standard LIF neurons even within a noisy spiking neural network with low firing rates and small neuron counts.
+%
+%Specifically, we extend the NEF towards systematically exploiting nonlinear post-synaptic currents. The NEF has been applied to various research areas, including low-level modeling of neurobiological systems~\citep{kuo2005integrating,tripp2009search,bobier2014unifying}, and studying large-scale models of cognitive systems grounded in biology~\citep{eliasmith2012largescale,eliasmith2013build,eliasmith2016biospaun}. A software implementation of the NEF is part of the neural simulation package Nengo~\citep{bekolay2014nengo} and has been used as a neural compiler targeting analog and digital neuromorphic hardware~\citep{choudhary2012silicon,mundy2015efficient,berzish2016realtime,blouw2018benchmarking,neckar2019braindrop}.
+%
+%The main contributions of this paper are as follows. First, we present a series of extensions to the NEF that improve its compatibility with more biologically detailed neuron models. We describe how to enforce nonnegative weights in conjunction with Dale's principle and extend the NEF towards nonlinear post-synaptic currents, thereby lifting some long-standing limitations of the NEF.
+%Second, we derive a post-synaptic current model for a two-compartment leaky integrate-and-fire (LIF) neuron that can be interpreted as a simple dendritic nonlinearity.
+%Third, we demonstrate that a single layer of two-compartment LIF neurons can compute a wide variety of functions with an error smaller than or on a par with the accuracy achieved by a comparable two-layer spiking neural network, as long as the target function does not surpass a certain bandwidth.

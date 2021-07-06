@@ -1,9 +1,7 @@
 import os
 import h5py
 
-with h5py.File(
-        os.path.join('..', '..', 'data', 'nonnegative_factorisation_large.h5'),
-        'r') as f:
+with h5py.File(utils.datafile('nonnegative_factorisation.h5'), 'r') as f:
     p_excs = f['p_excs'][()]
     errs = f['errs'][()]
 
