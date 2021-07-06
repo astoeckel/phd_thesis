@@ -309,7 +309,7 @@ SIM_T = 10.0
 SIM_DT = 1e-4
 
 # Simulation subsampling
-SIM_SS = 1
+SIM_SS = 10
 
 #
 # Solver parameters
