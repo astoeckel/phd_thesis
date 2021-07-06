@@ -303,7 +303,7 @@ def compute_weights_wrap(params):
 
 def main():
     with h5py.File(
-            os.path.join('data', 'subthreshold_relaxation_experiment_auto_reg.h5'), 'r') as f:
+            os.path.join('data', 'subthreshold_relaxation_experiment_auto_reg.h5'), 'w') as f:
         # Store the parameters
         f.create_dataset('ths', data=THS[2:])
         f.create_dataset('ratios', data=RATIOS)
