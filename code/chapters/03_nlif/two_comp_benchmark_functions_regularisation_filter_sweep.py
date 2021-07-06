@@ -18,7 +18,7 @@
 
 import os, sys
 
-from sim_2d_fun_network import *
+from two_comp_sim_2d_fun_network import *
 import env_guard
 
 import numpy as np
