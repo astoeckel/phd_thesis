@@ -126,7 +126,7 @@ def main():
     N_fs = i1 - i0
 
     # Compute the sweep to perform
-    N_repeat = 5
+    N_repeat = 50
     N_neuron_types = len(neuron_types)
     N_rates = 100
     rates = np.logspace(np.log10(10), np.log10(200), N_rates)

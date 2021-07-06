@@ -16,7 +16,8 @@ is_multithreaded = true
 
 ["chapters/02_modelling/low_firing_rate_dynamics_sweep.py"]
 #commit = "0c58889ef3b523c5a7cf1402ab5a5ea2fe19da1b" # Short experiment
-commit = "dd02a4eb75cc4d3a3d8da7dd7e12bef3a3be3dcb" # Long experiment
+#commit = "dd02a4eb75cc4d3a3d8da7dd7e12bef3a3be3dcb" # Long experiment
+commit = "c915cb4d474f1880378e00d5e79320364d37a9c9"  # Very long experiment
 dockerfile = "experiments_base"
 generates = ["low_firing_rates_dynamics_sweep.h5"]
 is_multithreaded = true

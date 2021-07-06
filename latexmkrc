@@ -14,7 +14,7 @@ add_cus_dep('py', 'pdf', 0, 'py2pdf');
 sub py2pdf {
         rdb_ensure_file($rule, "scripts/generate_figure.py");
         rdb_ensure_file($rule, "media/matplotlibrc");
-        return system("python3 scripts/generate_figure.py --script \"$_[0].py\" --target \"$_[0].pdf\"");
+        return system("python3 scripts/generate_figure.py --datafile_cache .datafile_cache.json --script \"$_[0].py\" --target \"$_[0].pdf\"");
 }
 
 add_cus_dep('glo', 'gls', 0, 'makeglo2gls');

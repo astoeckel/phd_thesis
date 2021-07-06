@@ -1,8 +1,7 @@
 import os
 from nonneg_common import *
 
-with h5py.File(os.path.join('..', '..', 'data', 'inhibitory_interneurons.h5'),
-               'r') as f:
+with h5py.File(utils.datafile('inhibitory_interneurons.h5'), 'r') as f:
     xss = f['xss'][()]
     yss = f['yss'][()]
     ys_decs = f['ys_decs'][()]

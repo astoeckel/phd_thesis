@@ -24,9 +24,9 @@ def simulate_model(J=1e-9, Toff=0.25e-3, T=2e-3, Tpulse=1e-3, N=200, L=1e-3):
     gL = 5e-4 * brian2.siemens / brian2.cm**2
     EL = -65 * brian2.mV
     eqs = '''
-	Im = gL * (EL - v) : amp/meter**2
-	I : amp (point current)
-	'''
+    Im = gL * (EL - v) : amp/meter**2
+    I : amp (point current)
+    '''
 
     neuron = brian2.SpatialNeuron(morphology=morpho,
                                   model=eqs,

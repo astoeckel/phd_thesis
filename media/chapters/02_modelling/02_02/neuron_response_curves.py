@@ -15,7 +15,7 @@ def load_ramp_data(filename):
 
 # Processes the ramp data into an IF-curve
 def load_and_process_ramp_data(filename, wnd=2, ss=50):
-    ts, us, Js, spikes, dt = load_ramp_data(filename)
+    ts, us, Js, spikes, dt = load_ramp_data(utils.datafile(filename))
 
     # Estimate the rates by computing the inverse of the inter-spike-intervals
     # over wnd spikes
@@ -73,8 +73,8 @@ gs1 = fig.add_gridspec(1, 2, wspace=0.4)
 ax02 = fig.add_subplot(gs1[0])
 ax12 = fig.add_subplot(gs1[1])
 
-do_plot(ax02, 'generated/chapters/02_modelling/4b53a82b4b2fd229_lif_ramp.npz', 'A', 'LIF Neuron', lif_rate)
-do_plot(ax12, 'generated/chapters/02_modelling/c7efd535ee77202b_hodgkin_huxley_ramp.npz', 'B', 'Hodgkin-Huxley neuron')
+do_plot(ax02, 'lif_ramp.npz', 'A', 'LIF Neuron', lif_rate)
+do_plot(ax12, 'hodgkin_huxley_ramp.npz', 'B', 'Hodgkin-Huxley neuron')
 
 Js = np.linspace(-0.5, 2.0, 1000) * 1e-9
 ax02.plot(Js * 1e9, lif_rate(Js), ':', color='white', clip_on=False)

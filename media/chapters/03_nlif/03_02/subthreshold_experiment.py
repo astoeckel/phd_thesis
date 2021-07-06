@@ -71,8 +71,7 @@ def plot_and_setup_ax(ax, data, y0, y1, letter=None):
 
 
 with h5py.File(
-        os.path.join(os.path.dirname(__file__), '..', '..', 'data',
-                     'subthreshold_relaxation_experiment_auto_2.h5'),
+        os.path.join(utils.datafile('subthreshold_relaxation_experiment_auto_reg.h5')),
         'r') as f:
     ths = f["ths"][()]
     ratios = f["ratios"][()]

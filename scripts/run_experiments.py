@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 
 #   Code for the PhD Thesis
-#   "Harnessing Neural Dynamics as a Computational Resource: Building Blocks
-#   for Computational Neuroscience and Artificial Agents"
+#   "Harnessing Neural Dynamics as a Computational Resource"
 #   Copyright (C) 2021  Andreas Stöckel
 #
 #   This program is free software: you can redistribute it and/or modify
@@ -27,6 +26,11 @@ import hashlib
 import re
 import json
 
+import logging
+
+logger = logging.getLogger(__name__)
+
+
 def _parse_args(argv):
     import argparse
 
@@ -45,18 +49,20 @@ def _parse_args(argv):
     parser.add_argument('--prune',
                         action='store_true',
                         help="Deletes no longer required output files")
+    parser.add_argument('--dry',
+                        action='store_true',
+                        help="Do not perform any actions")
     parser.add_argument(
         'filter',
         nargs='*',
-        help="Set of regular expressions applied to the code file names (multiple filters are combined via OR)")
+        help=
+        "Set of regular expressions applied to the code file names (multiple filters are combined via OR)"
+    )
 
     return parser.parse_args(argv[1:])
 
 
-def _load_manifest(manifest_file, root):
-    # Load the TOML file
-    manifest = toml.load(manifest_file)
-
+def _elaborate_manifest(manifest, manifest_file, root):
     # Elaborate all "generates" sections into "runs"
     for file, obj in manifest.items():
         if ("generates" in obj) == ("runs" in obj):
@@ -94,8 +100,6 @@ def _load_manifest(manifest_file, root):
         for run in obj["runs"]:
             run["commit"] = obj["commit"]
             run["dockerfile"] = obj["dockerfile"]
-
-    return manifest
 
 
 def _load_dockerfiles(args):
@@ -162,10 +166,12 @@ def _compute_target_files(manifest, root):
     for file, obj in manifest.items():
         for run in obj["runs"]:
             run["exists"] = {}
+            run["generates_orig"] = [None] * len(run["generates"])
             for i, target in enumerate(run["generates"]):
                 tar = os.path.join("data", "generated", os.path.dirname(file),
                                    run["target_hash"] + "_" + target)
                 run["generates"][i] = tar
+                run["generates_orig"][i] = target
                 run["exists"][tar] = os.path.isfile(os.path.join(root, tar))
 
 
@@ -178,7 +184,8 @@ def _print_list(manifest, expr, root):
                 continue
 
             if first:
-                sys.stdout.write("{}{}{}\n".format(attr("bold"), file, attr("reset")))
+                sys.stdout.write("{}{}{}\n".format(attr("bold"), file,
+                                                   attr("reset")))
                 first = False
 
             sys.stdout.write("{} {} {}\n".format(obj["commit"][:8],
@@ -197,72 +204,119 @@ def _print_list(manifest, expr, root):
             sys.stdout.write("\n")
 
 
-def _run_task(run):
-    args = ["run_in_container.py", "--expected_hash", run["target_hash"], run["commit"], run["dockerfile"], "--", *run["args"]]
-    print(" ".join(args))
-    run_in_container.main(args)
+def _prune_files(manifest, root, dry=False):
+    # Delete all obsolete target files
+    files_present = set(
+        run_in_container.list_all_files(os.path.join(root, "data",
+                                                     "generated")))
+    files_desired = set()
+    for obj in manifest.values():
+        for run in obj["runs"]:
+            for tar in run["generates"]:
+                files_desired.add(os.path.abspath(os.path.join(root, tar)))
+                pass
+    for file in (files_present - files_desired):
+        if not dry:
+            print("Deleting", file)
+            os.unlink(file)
+        else:
+            print("Would delete", file)
 
-def main(argv):
-    args = _parse_args(argv)
-    if sum((args.list, args.prune)) > 1:
-            raise RuntimeError("Conflicting modes of operation!")
+    # Delete all obsolete Docker images
+    files_present = set(
+        run_in_container.list_all_files(os.path.join(root, "docker",
+                                                     "images")))
+    files_desired = set()
+    for obj in manifest.values():
+        for run in obj["runs"]:
+            files_desired.add(
+                os.path.abspath(
+                    os.path.join(
+                        root, "docker", "images", run["dockerfile"] + "_" +
+                        run["docker_hash"] + ".tar")))
+            pass
+    for file in (files_present - files_desired):
+        if file.endswith(".tar"):
+            if not dry:
+                print("Deleting", file)
+                os.unlink(file)
+            else:
+                print("Would delete", file)
+
+
+def _run_task(run, dry=False):
+    args = [
+        "run_in_container.py", "--expected_hash", run["target_hash"],
+        run["commit"], run["dockerfile"], "--", *run["args"]
+    ]
+    print(" ".join(args))
+    try:
+        if not dry:
+            run_in_container.main(args)
+    except RuntimeError:
+        logger.exception("Error while executing the experiment!")
+
+
+def load_manifest(manifest_file="~/code/Manifest.toml", root=None):
+    # Fetch the git top-level directory
+    if root is None:
+        root = os.path.abspath(
+            run_in_container.git_top_level(os.path.dirname(__file__)))
 
     # Fetch the manifest file
-    manifest_file = args.manifest
     if manifest_file.startswith("~/"):
-        manifest_file = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), '..', manifest_file[2:]))
+        manifest_file = os.path.abspath(os.path.join(root, manifest_file[2:]))
 
-    # Fetch the git top-level directory
-    root = os.path.abspath(
-        run_in_container.git_top_level(os.path.dirname(manifest_file)))
+    # Load the TOML file
+    manifest = toml.load(manifest_file)
 
     # Load and elaborate the manifest
-    manifest = _load_manifest(manifest_file, root=root)
+    _elaborate_manifest(manifest, manifest_file, root=root)
     _compute_target_hashes(manifest, root=root)
     _compute_target_files(manifest, root=root)
 
-    # Assemble a regular expression from the given files
-    if len(args.filter) == 0:
-        expr = ""
-    else:
-        expr = "(" + "|".join(re.escape(x) for x in args.filter) + ")"
-    expr = re.compile(expr)
+    return manifest, manifest_file, root
 
-    # If so desired, print a list of all files
-    if args.list:
-        _print_list(manifest, expr=expr, root=root)
-        return
 
-    # If so desired, prune all unlisted files
-    if args.prune:
-        # Delete all obsolete target files
-        files_present = set(run_in_container.list_all_files(os.path.join(root, "data", "generated")))
-        files_desired = set()
-        for obj in manifest.values():
-            for run in obj["runs"]:
-                for tar in run["generates"]:
-                    files_desired.add(os.path.abspath(os.path.join(root, tar)))
-                    pass
-        for file in (files_present - files_desired):
-            print("Deleting", file)
-            os.unlink(file)
+def target_map(manifest, root):
+    # List all files in the "data/generated" directory
+    try:
+        existing_files = run_in_container.list_all_files(os.path.join(root, "data", "generated"))
+    except FileExistsError:
+        existing_files = []
+    existing_files = set(existing_files)
 
-        # Delete all obsolete Docker images
-        files_present = set(run_in_container.list_all_files(os.path.join(root, "docker", "images")))
-        files_desired = set()
-        for obj in manifest.values():
-            for run in obj["runs"]:
-                files_desired.add(os.path.abspath(os.path.join(root, "docker", "images",
-                run["dockerfile"] + "_" + run["docker_hash"] + ".tar")))
-                pass
-        for file in (files_present - files_desired):
-            if file.endswith(".tar"):
-                print("Deleting", file)
-                os.unlink(file)
+    # For each suffix in the set of existing files, list the newest file
+    prefix_re = re.compile("([0-9a-fA-F]*_)?([^/]*)$")
+    newest_files = {}
+    for file in existing_files:
+        mtime = os.stat(file).st_mtime
+        match = prefix_re.match(os.path.basename(file))
+        if match:
+            prefix, suffix = match[1], match[2]
+            if not (suffix in newest_files) or (newest_files[suffix][1] > mtime):
+                newest_files[suffix] = (file, mtime)
 
-        return
+    # Get the desired target files
+    mapped_files = {}
+    for obj in manifest.values():
+        for run in obj["runs"]:
+            for i, tar in enumerate(run["generates"]):
+                mapped_files[run["generates_orig"][i]] = os.path.abspath(os.path.join(root, tar))
 
+    # Potentially look for older files
+    for suffix, file in list(mapped_files.items()):
+        if not file in existing_files:
+            if suffix in newest_files:
+                mapped_files[suffix] = newest_files[suffix][0]
+                logger.warning("Using outdated version of file \"%s\"", suffix)
+            else:
+                del mapped_files[suffix]
+                logger.warning("File \"%s\" does not exist", suffix)
+
+    return mapped_files
+
+def _gather_runs(manifest, expr):
     # Gather experiments to run. Bin experiments into multithreaded and not
     # multithreaded experiments.
     bin_run_concurrently = []
@@ -277,10 +331,10 @@ def main(argv):
                 else:
                     bin_run_concurrently.append(run)
 
-    if len(bin_run_concurrently) == 0 and len(bin_run_serially) == 0:
-        print("Nothing matches the given filters!")
-        return
+    return bin_run_concurrently, bin_run_serially
 
+
+def _filter_runs(bin_run_concurrently, bin_run_serially):
     def required(run):
         for tar in run["generates"]:
             if not run["exists"][tar]:
@@ -289,6 +343,42 @@ def main(argv):
 
     bin_run_concurrently = list(filter(required, bin_run_concurrently))
     bin_run_serially = list(filter(required, bin_run_serially))
+    return bin_run_concurrently, bin_run_serially
+
+
+def main(argv):
+    args = _parse_args(argv)
+    if sum((args.list, args.prune)) > 1:
+        raise RuntimeError("Conflicting modes of operation!")
+
+    # Load the manifest
+    manifest, manifest_file, root = load_manifest(args.manifest)
+
+    # Assemble a regular expression from the given filters
+    if len(args.filter) == 0:
+        expr = ""
+    else:
+        expr = "(" + "|".join(re.escape(x) for x in args.filter) + ")"
+    expr = re.compile(expr)
+
+    # If so desired, print a list of all files
+    if args.list:
+        _print_list(manifest, expr=expr, root=root)
+        return
+
+    # If so desired, prune all unlisted files
+    if args.prune:
+        _prune_files(manifest, root=root, dry=args.dry)
+        return
+
+    # Gather experiments
+    bin_run_concurrently, bin_run_serially = _gather_runs(manifest, expr)
+    if len(bin_run_concurrently) == 0 and len(bin_run_serially) == 0:
+        print("Nothing matches the given filters!")
+        return
+
+    bin_run_concurrently, bin_run_serially = _filter_runs(
+        bin_run_concurrently, bin_run_serially)
     if len(bin_run_concurrently) == 0 and len(bin_run_serially) == 0:
         print("Nothing to do!")
         return
@@ -297,11 +387,10 @@ def main(argv):
         list(pool.imap_unordered(_run_task, bin_run_concurrently))
 
     for run in bin_run_serially:
-        _run_task(run)
-
-    pass
+        _run_task(run, dry=args.dry)
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
     main(sys.argv)
 
