@@ -256,14 +256,15 @@ def run_single_spiking_trial(model_name,
                              n_samples=N_SAMPLES,
                              tau_syn_e=TAU_SYN_E,
                              tau_syn_i=TAU_SYN_I,
-                             weights=None):
+                             weights=None,
+                             tar_filt=None):
 
     # Variable declarations. Looks weird. Because... Python.
     model, p, ws, Px, Py, Pint, Ptar, Jtar, Jint, Apre, Aint, data_in, data_tar,\
     pre_types, int_types, iTh, WE, WI, WE_int, WI_int, Emodel, Emodel_int, Enet, ts,\
-    xs, ys, Opre, Jpre_x, Jpre_y, Oint, Otar, tar, tar_filt, tar_shift, tar_dec, tar_dec_filt,\
+    xs, ys, Opre, Jpre_x, Jpre_y, Oint, Otar, tar, tar_shift, tar_dec, tar_dec_filt,\
     Jtar_opt, Jint_opt, Atar_opt, Aint_opt,\
-    Tpre, Tpost, w_per_neuron, w_per_neuron_int = [None] * 44
+    Tpre, Tpost, w_per_neuron, w_per_neuron_int = [None] * 43
 
     #
     # Setup
@@ -497,20 +498,21 @@ def run_single_spiking_trial(model_name,
                 tau_syn_avg = 0.5 * (tau_syn_e + tau_syn_i)
 
                 # Filter according ot the synaptic time constant
-                if apply_syn_flt_to_tar:
-                    tar_filt = nengo.Lowpass(tau_syn_avg).filt(tar, dt=dt * ss)
-                    if intermediate:
-                        tar_filt = nengo.Lowpass(tau_syn_avg).filt(tar_filt,
-                                                                   dt=dt * ss)
-                else:
-                    n_phase = int(
-                        (tau_syn_avg * (2 if intermediate else 1)) / (dt * ss))
-                    tar_shift = np.concatenate(
-                        (np.zeros(n_phase), tar[:-n_phase]))
-                    tar_filt = tar_shift
+                if tar_filt is None:
+                    if apply_syn_flt_to_tar:
+                        tar_filt = nengo.Lowpass(tau_syn_avg).filt(tar, dt=dt * ss)
+                        if intermediate:
+                            tar_filt = nengo.Lowpass(tau_syn_avg).filt(tar_filt,
+                                                                       dt=dt * ss)
+                    else:
+                        n_phase = int(
+                            (tau_syn_avg * (2 if intermediate else 1)) / (dt * ss))
+                        tar_shift = np.concatenate(
+                            (np.zeros(n_phase), tar[:-n_phase]))
+                        tar_filt = tar_shift
 
-                # Final filter
-                tar_filt = nengo.Lowpass(tau_filt).filt(tar_filt, dt=dt * ss)
+                    # Final filter
+                    tar_filt = nengo.Lowpass(tau_filt).filt(tar_filt, dt=dt * ss)
 
                 # Compute the error
                 tar_dec = (Otar @ Ptar["D"])[:, 0]

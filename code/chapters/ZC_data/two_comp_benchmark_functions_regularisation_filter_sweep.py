@@ -48,10 +48,7 @@ def run_single_experiment(idcs):
     f = lambda x, y: 0.5 * (x + 1.0) * (y + 1.0) - 1.0
 
     # Fetch the regularisation factor
-    if p_key.startswith("linear"):
-        reg = REGS_FLT_SWEEP_LINEAR[i_reg]
-    else:
-        reg = REGS_FLT_SWEEP_COND[i_reg]
+    reg = REGS_FLT_SWEEP_MAP[(p_key, bool(i_subth))][i_reg]
 
     # Run each experiment twice: once with mask_negative set to true, once with
     # mask_negative set to false
@@ -65,6 +62,7 @@ def run_single_experiment(idcs):
 
     # Compute all network weights in the first pass
     weights = None
+    tar_filt = None
 
     # The result is a matrix
     E = np.zeros((N_TAU_PRE_FILTS, 2))
@@ -77,11 +75,13 @@ def run_single_experiment(idcs):
         res = run_single_spiking_trial(**kwargs,
                                        tau_pre_filt=tau_pre_filt,
                                        weights=weights,
+                                       tar_filt=tar_filt,
                                        rng=rng,
                                        mask_negative=bool(i_subth))
 
-        # Re-use the weights we computed
+        # Re-use the weights and signals we computed
         weights = res["weights"]
+        tar_filt = res["tar_filt"]
 
         # Store the computed errors
         E[i_pre_filt] = res["errors"]["Enet"], res["errors"]["Emodel"]
@@ -100,9 +100,6 @@ def main():
     with h5py.File(fn, 'w') as h5f:
         # Write all target information
         h5f.create_dataset("network", data=True)
-        h5f.create_dataset("regs_linear", data=REGS_FLT_SWEEP_LINEAR)
-        h5f.create_dataset("regs_cond", data=REGS_FLT_SWEEP_COND)
-        h5f.create_dataset("tau_pre_filts", data=TAU_PRE_FILTS)
         h5f.create_dataset("params_keys",
                            data="\n".join(NETWORK_PARAMS_SWEEP_KEYS))
 
@@ -123,8 +120,8 @@ def main():
                 for ((i, j, k, l),
                      E) in tqdm.tqdm(pool.imap_unordered(run_single_experiment, args),
                                      total=n_total):
-                    h5f["errs"][i, j, :, k, l] = E
-                    h5f.flush()
+            h5f["errs"][i, j, :, k, l] = E
+            h5f.flush()
 
     print("Done!")
 

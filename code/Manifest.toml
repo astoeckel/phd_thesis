@@ -102,7 +102,7 @@ dockerfile = "experiments_base"
 generates = "subthreshold_relaxation_experiment_auto_reg.h5"
 is_multithreaded = true
 
-["chapters/03_nlif/two_comp_benchmark_functions_regularisation_filter_sweep.py"]
+["chapters/ZC_data/two_comp_benchmark_functions_regularisation_filter_sweep.py"]
 commit = "0994f1aa41a28b4d1874cd6776eb58ab0ce203b0"
 dockerfile = "experiments_base"
 generates = "two_comp_benchmark_functions_regularisation_filter_sweep.h5"

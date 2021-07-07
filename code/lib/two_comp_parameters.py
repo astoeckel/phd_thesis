@@ -274,10 +274,10 @@ N_NOISE_TRIALS = 1
 N_SIGMAS = 60
 
 # Number of repetitions
-N_REPEAT = 10
+N_REPEAT = 1 #10
 
 # Number of regularisation factors to try
-N_REGS = 32 #60
+N_REGS = 32
 
 # Sigmas to use
 SIGMAS = np.logspace(np.log10(0.075), 1, N_SIGMAS)[::-1]
@@ -289,8 +289,29 @@ SIGMA_REG_EST = 1.0
 REGS = np.logspace(-3, 3, N_REGS)
 
 # Regularisation factors to use in the filter/regularisation network sweep
-REGS_FLT_SWEEP_LINEAR = np.logspace(-1, 3, N_REGS)
-REGS_FLT_SWEEP_COND = np.logspace(-3, 0, N_REGS)
+REGS_FLT_SWEEP1 = np.logspace(-1, 3, N_REGS)
+REGS_FLT_SWEEP2 = np.logspace(-3, 0, N_REGS)
+
+REGS_FLT_SWEEP_MAP = {
+    ("linear", True): REGS_FLT_SWEEP1,
+    ("linear_2d", True): REGS_FLT_SWEEP1,
+    ("linear", False): REGS_FLT_SWEEP1,
+    ("linear_2d", False): REGS_FLT_SWEEP1,
+
+    ("gc50_no_noise", True): REGS_FLT_SWEEP2,
+    ("gc100_no_noise", True): REGS_FLT_SWEEP2,
+    ("gc200_no_noise", True): REGS_FLT_SWEEP2,
+    ("gc50_no_noise", False): REGS_FLT_SWEEP2,
+    ("gc100_no_noise", False): REGS_FLT_SWEEP2,
+    ("gc200_no_noise", False): REGS_FLT_SWEEP2,
+
+    ("gc50_noisy", True): REGS_FLT_SWEEP2,
+    ("gc100_noisy", True): REGS_FLT_SWEEP1,
+    ("gc200_noisy", True): REGS_FLT_SWEEP1,
+    ("gc50_noisy", False): REGS_FLT_SWEEP2,
+    ("gc100_noisy", False): REGS_FLT_SWEEP2,
+    ("gc200_noisy", False): REGS_FLT_SWEEP1,
+}
 
 # Number of pre-filters to try in the pre-filter sweep experiment
 N_TAU_PRE_FILTS = 33
