@@ -120,8 +120,8 @@ def main():
                 for ((i, j, k, l),
                      E) in tqdm.tqdm(pool.imap_unordered(run_single_experiment, args),
                                      total=n_total):
-            h5f["errs"][i, j, :, k, l] = E
-            h5f.flush()
+                    h5f["errs"][i, j, :, k, l] = E
+                    h5f.flush()
 
     print("Done!")
 
