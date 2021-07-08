@@ -8,7 +8,6 @@ def do_plot(subth=True):
                 "two_comp_benchmark_functions_regularisation_filter_sweep.h5")
     ) as f:
         network = bool(f["network"][()])
-        tau_pre_filts = f["tau_pre_filts"][()]
         param_keys = str(f["params_keys"][()], "utf-8").split("\n")
         errs = f["errs"][()]
 
@@ -49,7 +48,7 @@ def do_plot(subth=True):
 
     def plot_contour(ax, i, key, cax=None):
         regs = REGS_FLT_SWEEP_MAP[(key, bool(subth))]
-        flts = tau_pre_filts
+        flts = TAU_PRE_FILTS
         E = np.median(errs[i, :, :, int(subth), :, 0], axis=-1)
         Elog = np.log10(E)
         vmin, vmax = np.log10(0.03), np.log10(0.4)

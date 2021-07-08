@@ -326,15 +326,17 @@ def main():
                      ha="center",
                      va="center",
                      fontdict=None,
-                     zorder=None):
+                     zorder=None,
+                     color="k"):
             ax.plot([x0, x1], [y0, y1],
-                    color='k',
+                    color=color,
                     linewidth=0.5,
                     linestyle=(0, (1, 1)),
                     clip_on=False,
                     zorder=zorder)
             ax.plot([x0], [y0],
-                    'ko',
+                    'o',
+                    color=color,
                     markersize=1,
                     clip_on=False,
                     zorder=zorder)
