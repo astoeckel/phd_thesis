@@ -103,7 +103,7 @@ generates = "subthreshold_relaxation_experiment_auto_reg.h5"
 is_multithreaded = true
 
 ["chapters/ZC_data/two_comp_benchmark_functions_regularisation_filter_sweep.py"]
-commit = "ff949951361dba867e7a1bcc636f368960dc021f"
+commit = "e68c291667996e632acd61452f38f73af971727b"
 dockerfile = "experiments_base"
 generates = "two_comp_benchmark_functions_regularisation_filter_sweep.h5"
 is_multithreaded = true
