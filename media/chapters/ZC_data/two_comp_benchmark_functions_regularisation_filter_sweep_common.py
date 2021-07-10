@@ -2,6 +2,8 @@ import h5py
 import scipy.interpolate
 from two_comp_parameters import *
 
+optimal_points = {}
+
 def do_plot(subth=True):
     with h5py.File(
             utils.datafile(
@@ -65,7 +67,8 @@ def do_plot(subth=True):
     #                       vmin=vmin,
     #                       vmax=vmax)
     #        cax.set_xscale("log")
-            cax.pcolormesh(C.levels, [0, 1], np.array((C.levels, C.levels)), shading="nearest", vmin=vmin, vmax=vmax)
+            pcol = cax.pcolormesh(C.levels, [0, 1], np.array((C.levels, C.levels)), shading="nearest", vmin=vmin, vmax=vmax)
+            pcol.set_edgecolor('face')
             cax.set_yticks([])
             cax.spines["left"].set_visible(False)
             utils.outside_ticks(cax)
@@ -77,12 +80,12 @@ def do_plot(subth=True):
                    levels=C.levels,
                    colors=['white'],
                    linestyles=['--'],
-                   linewidths=[0.7])
+                   linewidths=[1.0])
         ax.set_title(param_keys_subtitle_map[key])
         ax.set_xscale("log")
         ax.set_yscale("log")
         ax.set_xlabel("Filter time-constant $\\tau$")
-        ax.set_ylabel("Regularisation $\\lambda$")
+        ax.set_ylabel("Regularisation $\\sigma$")
 
         regsp, fltsp, Ep = interpolate_in_log_space(regs, flts, E)
         iregp, ifltp = np.unravel_index(np.argmin(Ep, axis=None), Ep.shape)
@@ -115,8 +118,6 @@ def do_plot(subth=True):
                        fontdict={"size": 8},
                        color="white")
 
-        print(key, f"\n\tWith pre-filter: lambda = {regsp[iregp]:0.2e}, tau = {fltsp[ifltp]:0.2e}")
-
         iregp2 = np.argmin(Ep[:, 0], axis=None)
         ax.scatter([fltsp[0]], [regsp[iregp2]],
                    marker='+',
@@ -135,21 +136,29 @@ def do_plot(subth=True):
         dist = np.sqrt(np.square(iregp2 - iregp) + np.square(ifltp))
         if dist > 10.0:
             flipx = False
-            flipy = 4 * iregp2 > 3 * Ep.shape[1]
-            ifltp = 0
-            iregp = iregp2
+            flipy = (4 * iregp2 > 3 * Ep.shape[1]) == (dist > 50.0) # XOR
             utils.annotate(ax,
-                           fltsp[ifltp] * (1.0 / 1.2 if flipx else 1.2),
-                           regsp[iregp] * (1.0 / 1.2 if flipy else 1.2),
-                           fltsp[ifltp] * (1.0 / ox if flipx else ox),
-                           regsp[iregp] * (1.0 / oy if flipy else oy),
-                           "$E = {:0.2f}\\%$".format(Ep[iregp, ifltp] * 100.0),
+                           fltsp[0] * (1.0 / 1.2 if flipx else 1.2),
+                           regsp[iregp2] * (1.0 / 1.2 if flipy else 1.2),
+                           fltsp[0] * (1.0 / ox if flipx else ox),
+                           regsp[iregp2] * (1.0 / oy if flipy else oy),
+                           "$E = {:0.2f}\\%$".format(Ep[iregp2, 0] * 100.0),
                            ha="right" if flipx else "left",
                            va="top" if flipy else "bottom",
                            fontdict={"size": 8},
                            color="white")
 
-        print(f"\tWithout pre-filter: lambda = {regsp[iregp2]:0.2e}")
+        optimal_points[key] = {
+            "with_pre_filter": {
+                "lambda": regsp[iregp],
+                "tau": fltsp[ifltp],
+                "err": Ep[iregp, ifltp],
+            },
+            "without_pre_filter": {
+                "lambda": regsp[iregp2],
+                "err": Ep[iregp2, 0],
+            }
+        }
 
         ax.set_xlim(flts[0], flts[-1])
         ax.set_ylim(regs[0], regs[-1])
@@ -158,7 +167,7 @@ def do_plot(subth=True):
     #for i, key in enumerate(param_keys):
     #    ax =
 
-    fig = plt.figure(figsize=(6.35, 7.0))
+    fig = plt.figure(figsize=(6.25, 7.0))
 
     y0s = np.linspace(0, 1, 4)[1:][::-1]
     y1s = y0s - 0.2
@@ -186,9 +195,9 @@ def do_plot(subth=True):
                          bottom=y1s[2],
                          wspace=0.5),
     ]
-    cgs = fig.add_gridspec(1, 1, left=0.05, right=0.95, top=0.05, bottom=0.04)
+    cgs = fig.add_gridspec(1, 1, left=0.05, right=0.95, top=0.05, bottom=0.03)
     cax = fig.add_subplot(cgs[0, 0])
-    cax.set_xlabel("Network error $\\log_{10}(E_\\mathrm{net})$")
+    cax.set_xlabel("Median network error $\\log_{10}(E_\\mathrm{net})$")
 
     axs = np.array([
         [fig.add_subplot(gss[0][0, 0]),
@@ -228,7 +237,9 @@ def do_plot(subth=True):
 
     for i, key in enumerate(param_keys):
         ax = axs[param_keys_idx_map[key]]
+        utils.outside_ticks(ax)
         plot_contour(ax, i, key, cax=cax if i == 0 else None)
 
-    utils.save(fig)
+    print(json.dumps(optimal_points, indent=4))
 
+    utils.save(fig)
