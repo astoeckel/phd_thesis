@@ -19,12 +19,6 @@
 import os, sys
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'lib'))
 
-# Try to disable detrimental numpy multithreading
-os.environ["NUMEXPR_NUM_THREADS"] = "1"
-os.environ["OPENBLAS_NUM_THREADS"] = "1"
-os.environ["OMP_NUM_THREADS"] = "1"
-os.environ["MKL_NUM_THREADS"] = "1"
-
 from two_comp_approx_2d_fun import *
 
 import numpy as np
@@ -32,6 +26,7 @@ import multiprocessing
 import time
 import random
 
+import env_guard
 import h5py
 import tqdm
 
@@ -49,28 +44,31 @@ def run_single_experiment(idcs):
     reg = (SOLVER_REG_MAP[p_key, True], SOLVER_REG_MAP[p_key, False])
     return (idcs, *run_single_experiment_common(sigma, reg, p_key, i_repeat))
 
+def main():
+    print("Running spatial frequency experiments...")
+    args = [(param, sigma, repeat) for param in range(N_SOLVER_PARAMS_SWEEP)
+            for sigma in range(N_SIGMAS) for repeat in range(N_REPEAT)]
+    random.shuffle(args)
 
-print("Running spatial frequency experiments...")
-args = [(param, sigma, repeat) for param in range(N_SOLVER_PARAMS_SWEEP)
-        for sigma in range(N_SIGMAS) for repeat in range(N_REPEAT)]
-random.shuffle(args)
+    with env_guard.SingleThreadEnvGuard():
+        with multiprocessing.get_context('spawn').Pool(N_CPUS) as pool:
+            errs = np.zeros((N_SOLVER_PARAMS, N_SIGMAS, N_REPEAT, 2))
+            for ((i, j, k), e1,
+                 e2) in tqdm.tqdm(pool.imap_unordered(run_single_experiment, args),
+                                  total=len(args)):
+                errs[i, j, k, 0] = e1
+                errs[i, j, k, 1] = e2
 
-with multiprocessing.Pool(N_CPUS) as pool:
-    errs = np.zeros((N_SOLVER_PARAMS, N_SIGMAS, N_REPEAT, 2))
-    for ((i, j, k), e1,
-         e2) in tqdm.tqdm(pool.imap_unordered(run_single_experiment, args),
-                          total=len(args)):
-        errs[i, j, k, 0] = e1
-        errs[i, j, k, 1] = e2
+    print("Writing results to disk...")
+    fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data', 'two_comp_2d_frequency_sweep.h5')
+    os.makedirs(os.path.dirname(fn), exist_ok=True)
+    with h5py.File(fn, 'w') as f:
+        f.create_dataset("network", data=False)
+        f.create_dataset("sigmas", data=SIGMAS)
+        f.create_dataset("params_keys", data="\n".join(SOLVER_PARAMS_SWEEP_KEYS))
+        f.create_dataset("errs", data=errs)
 
-print("Writing results to disk...")
-fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data', 'two_comp_2d_frequency_sweep.h5')
-os.makedirs(os.path.dirname(fn), exist_ok=True)
-with h5py.File(fn, 'w') as f:
-    f.create_dataset("network", data=False)
-    f.create_dataset("sigmas", data=SIGMAS)
-    f.create_dataset("params_keys", data="\n".join(SOLVER_PARAMS_SWEEP_KEYS))
-    f.create_dataset("errs", data=errs)
+    print("Done!")
 
-print("Done!")
-
+if __name__ == "__main__":
+    main()
