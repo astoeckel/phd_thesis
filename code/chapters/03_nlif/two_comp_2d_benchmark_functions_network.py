@@ -24,6 +24,7 @@ from two_comp_sim_2d_fun_network import *
 import numpy as np
 import multiprocessing
 import time
+import random
 
 import env_guard
 import h5py
@@ -115,6 +116,8 @@ def main():
         if n_completed > 0:
             print("Continuing from {} already completed tasks...".format(
                 n_completed))
+
+        random.shuffle(args)
 
         with env_guard.SingleThreadEnvGuard():
             with multiprocessing.get_context('spawn').Pool(N_CPUS) as pool:
