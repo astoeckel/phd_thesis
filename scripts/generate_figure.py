@@ -294,7 +294,7 @@ def main():
                 path = os.path.relpath(os.path.abspath(path),
                                        os.path.abspath(os.path.curdir))
 
-            print("Datafile", fn, "->", path)
+            print("Datafile", fn, "->", os.path.abspath(path))
             return path
 
         @property
