@@ -188,13 +188,18 @@ def approximate_function(ws,
     Apre1_train = Apre1[idx_train].T
     Apre2_train = Apre2[idx_train].T
 
+    if hasattr(reg, '__len__'):
+        reg_subth, reg_nosubth = reg
+    else:
+        reg_subth, reg_nosubth = reg, reg
+
     # Solve for weights WE, WI
-    fws = solve(f_tar_train, Apre1_train, Apre2_train, ws, reg=reg, iTh=0.0)
+    fws = solve(f_tar_train, Apre1_train, Apre2_train, ws, reg=reg_subth, iTh=0.0)
     fws_no_mask_negative = solve(f_tar_train,
                                  Apre1_train,
                                  Apre2_train,
                                  ws,
-                                 reg=reg)
+                                 reg=reg_nosubth)
 
     # Calculate and return the error
     errs, errs_no_mask_negative = np.zeros((2, n_noise_trials))

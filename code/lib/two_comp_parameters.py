@@ -152,14 +152,22 @@ SOLVER_PARAMS_SWEEP_KEYS = ["linear", "linear_2d", "gc50_no_noise", "gc50_noisy"
 N_SOLVER_PARAMS_SWEEP = len(SOLVER_PARAMS_SWEEP_KEYS)
 
 SOLVER_REG_MAP = {
-    "linear": 80.0,
-    "linear_2d": 2.0,
-    "gc50_no_noise": 0.01,
-    "gc100_no_noise": 0.01,
-    "gc200_no_noise": 0.01,
-    "gc50_noisy": 0.01,
-    "gc100_noisy": 0.01,
-    "gc200_noisy": 0.01,
+    ('gc100_no_noise', False): 0.001,
+    ('gc100_no_noise', True): 0.0775825016856679,
+    ('gc100_noisy', False): 0.0029678431503900376,
+    ('gc100_noisy', True): 0.0964388379154446,
+    ('gc200_no_noise', False): 0.0011149209970080915,
+    ('gc200_no_noise', True): 0.04503428864545838,
+    ('gc200_noisy', False): 0.001,
+    ('gc200_noisy', True): 0.062413076493974616,
+    ('gc50_no_noise', False): 0.050209673996144656,
+    ('gc50_no_noise', True): 0.11987818459583773,
+    ('gc50_noisy', False): 0.029145192568009907,
+    ('gc50_noisy', True): 0.11987818459583773,
+    ('linear', False): 81.91922344953684,
+    ('linear', True): 22.205302450155354,
+    ('linear_2d', False): 4.842162612301507,
+    ('linear_2d', True): 4.842162612301507
 }
 
 #NETWORK_PARAMS_SWEEP_KEYS = ["linear", "linear_2d", "gc50_no_noise", "gc50_noisy"]
@@ -296,7 +304,7 @@ N_NOISE_TRIALS = 1
 N_SIGMAS = 60
 
 # Number of repetitions
-N_REPEAT = 32
+N_REPEAT = 1000
 
 # Number of regularisation factors to try
 N_REGS = 128
