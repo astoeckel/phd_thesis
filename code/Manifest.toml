@@ -103,7 +103,7 @@ generates = "subthreshold_relaxation_experiment_auto_reg.h5"
 is_multithreaded = true
 
 ["chapters/03_nlif/two_comp_2d_frequency_sweep.py"]
-commit = "f6c36662ec65eb87016830a7db04815fe5f56b68"
+commit = "a4de81d3f32301a75aacfc85c6b58b75b1d5e2a9"
 dockerfile = "experiments_base"
 generates = "two_comp_2d_frequency_sweep.h5"
 is_multithreaded = true
