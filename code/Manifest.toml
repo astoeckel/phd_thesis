@@ -109,7 +109,7 @@ generates = "two_comp_benchmark_functions_regularisation_filter_sweep.h5"
 is_multithreaded = true
 
 ["chapters/ZC_data/two_comp_2d_regularisation_sweep.py"]
-commit = "aff48641510958c5e26d9ba55a1ef48ac3891b46"
+commit = "2fd36947437edb7318c136bb2486f059d3fef58c"
 dockerfile = "experiments_base"
 generates = "two_comp_2d_regularisation_sweep.h5"
 is_multithreaded = true
