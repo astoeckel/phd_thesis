@@ -65,7 +65,7 @@ with multiprocessing.Pool(N_CPUS) as pool:
         errs[i, j, k, 1] = e2
 
 print("Writing results to disk...")
-fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data', 'two_comp_2d_frequency_sweep.h5')
+fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data', 'two_comp_2d_regularisation_sweep.h5')
 os.makedirs(os.path.dirname(fn), exist_ok=True)
 with h5py.File(fn, 'w') as f:
     f.create_dataset("regs", data=REGS)
