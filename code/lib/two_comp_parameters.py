@@ -147,8 +147,6 @@ SOLVER_PARAMS_KEYS = list(SOLVER_PARAMS.keys())
 
 N_SOLVER_PARAMS = len(SOLVER_PARAMS)
 
-#SOLVER_PARAMS_SWEEP_KEYS = ["linear", "linear_2d", "gc50_no_noise"]
-#SOLVER_PARAMS_SWEEP_KEYS = ["linear", "linear_2d", "gc50_no_noise", "gc100_no_noise", "gc200_no_noise"]
 SOLVER_PARAMS_SWEEP_KEYS = ["linear", "linear_2d", "gc50_no_noise", "gc50_noisy", "gc100_no_noise", "gc100_noisy", "gc200_no_noise", "gc200_noisy"]
 
 N_SOLVER_PARAMS_SWEEP = len(SOLVER_PARAMS_SWEEP_KEYS)
@@ -301,7 +299,7 @@ N_SIGMAS = 60
 N_REPEAT = 32
 
 # Number of regularisation factors to try
-N_REGS = 32
+N_REGS = 10
 
 # Sigmas to use
 SIGMAS = np.logspace(np.log10(0.075), 1, N_SIGMAS)[::-1]
