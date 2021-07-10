@@ -133,7 +133,6 @@ def approximate_function(ws,
                          pre_config="split",
                          rng=None,
                          res=RES,
-                         iTh=ITH,
                          noise_a_pre=NOISE_A_PRE,
                          n_smpls=N_SAMPLES,
                          n_noise_trials=N_NOISE_TRIALS,
@@ -190,7 +189,7 @@ def approximate_function(ws,
     Apre2_train = Apre2[idx_train].T
 
     # Solve for weights WE, WI
-    fws = solve(f_tar_train, Apre1_train, Apre2_train, ws, reg=reg, iTh=iTh)
+    fws = solve(f_tar_train, Apre1_train, Apre2_train, ws, reg=reg, iTh=0.0)
     fws_no_mask_negative = solve(f_tar_train,
                                  Apre1_train,
                                  Apre2_train,
