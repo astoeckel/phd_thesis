@@ -1,6 +1,6 @@
 import nengo_extras.plot_spikes
 
-from sim_2d_fun_network import *
+from two_comp_sim_2d_fun_network import *
 
 def reduce_spike_train(A, ss):
     res = np.zeros((A.shape[0] // ss, A.shape[1]))
@@ -99,10 +99,10 @@ n_inh_2 = int(Opre2I.shape[1])
 Otar = pp(res["Otar"])
 
 p1 = mpl.patches.Rectangle([0.0, 0.5], 10.0, n_inh_1, color=utils.reds[1], alpha=0.2, linewidth=0)
-ax2.imshow(reduce_spike_train(Opre1, 100).T,
+ax2.imshow(reduce_spike_train(Opre1, 10).T,
            cmap='Greys',
            vmin=0.0,
-           vmax=10000.0,
+           vmax=1000.0,
            extent=[0, 10, 0.5, Opre1.shape[1] + 0.5],
            origin='lower',
            interpolation='none',
@@ -111,20 +111,20 @@ ax2.add_artist(p1)
 ax2.set_ylabel("Neuron index")
 
 p2 = mpl.patches.Rectangle([0.0, 0.5], 10.0, n_inh_2, color=utils.reds[1], alpha=0.2, linewidth=0)
-ax3.imshow(reduce_spike_train(Opre2, 100).T,
+ax3.imshow(reduce_spike_train(Opre2, 10).T,
            cmap='Greys',
            vmin=0.0,
-           vmax=10000.0,
+           vmax=1000.0,
            extent=[0, 10, 0.5, Opre2.shape[1] + 0.5],
            origin='lower',
            interpolation='none')
 ax3.add_artist(p2)
 ax3.set_ylabel("Neuron index")
 
-ax1.imshow(reduce_spike_train(Otar, 100).T,
+ax1.imshow(reduce_spike_train(Otar, 10).T,
            cmap='Greys',
            vmin=0.0,
-           vmax=10000.0,
+           vmax=1000.0,
            extent=[0, 10, 0.5, Otar.shape[1] + 0.5],
            origin='lower',
            interpolation='none')
