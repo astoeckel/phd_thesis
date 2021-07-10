@@ -102,6 +102,12 @@ dockerfile = "experiments_base"
 generates = "subthreshold_relaxation_experiment_auto_reg.h5"
 is_multithreaded = true
 
+["chapters/03_nlif/two_comp_2d_frequency_sweep.py"]
+commit = "f6c36662ec65eb87016830a7db04815fe5f56b68"
+dockerfile = "experiments_base"
+generates = "two_comp_2d_frequency_sweep.h5"
+is_multithreaded = true
+
 ["chapters/ZC_data/two_comp_benchmark_functions_regularisation_filter_sweep.py"]
 commit = "e68c291667996e632acd61452f38f73af971727b"
 dockerfile = "experiments_base"
