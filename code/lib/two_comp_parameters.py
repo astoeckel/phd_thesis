@@ -399,8 +399,7 @@ def in_notebook():
 if in_notebook():
     N_SOLVER_THREADS = multiprocessing.cpu_count() // 2
 else:
-    import multiprocessing
-    if multiprocessing.parent_process() is None:
+    if hasattr(multiprocessing, "parent_process") and (multiprocessing.parent_process() is None):
         N_SOLVER_THREADS = multiprocessing.cpu_count() // 2
     else:
         N_SOLVER_THREADS = 1 # We're already parallelising over experiments
