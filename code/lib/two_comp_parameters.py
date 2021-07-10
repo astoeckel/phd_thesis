@@ -170,10 +170,7 @@ SOLVER_REG_MAP = {
     ('linear_2d', True): 4.842162612301507
 }
 
-#NETWORK_PARAMS_SWEEP_KEYS = ["linear", "linear_2d", "gc50_no_noise", "gc50_noisy"]
 NETWORK_PARAMS_SWEEP_KEYS = ["linear", "linear_2d", "gc50_no_noise", "gc50_noisy", "gc100_no_noise", "gc100_noisy", "gc200_no_noise", "gc200_noisy"]
-#NETWORK_PARAMS_SWEEP_KEYS = ["linear", "linear_2d", "gc50_no_noise", "gc50_noisy", "gc100_no_noise"]
-#NETWORK_PARAMS_SWEEP_KEYS = ["gc100_noisy", "gc200_no_noise", "gc200_noisy"]
 
 N_NETWORK_PARAMS_SWEEP = len(NETWORK_PARAMS_SWEEP_KEYS)
 
@@ -246,10 +243,7 @@ BENCHMARK_FUNCTIONS = {
     "shunting": lambda x, y: (1 + x) / (2 + 2 * y),
     "norm": lambda x, y: np.sqrt(x * x + y * y) / np.sqrt(2.0),
     "arctan": lambda x, y: 2.0 * np.arctan2(y, x) / np.pi,
-#    "softmax": lambda x, y:
-#        (x - y) * (np.exp(5 * x) / (np.exp(5 * x) + np.exp(5 * y))) + y,
     "max": lambda x, y: np.max((x, y), axis=0),
-#    "bell": lambda x, y: np.exp(-((x - 0.5)**2 + (y - 0.5)**2) / 0.125),
 }
 
 N_BENCHMARK_FUNCTIONS = len(BENCHMARK_FUNCTIONS)
