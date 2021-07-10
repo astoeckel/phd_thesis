@@ -44,7 +44,7 @@ def mk_2d_flt(sigma, res, cutoff=1e-3):
 
     # Compute the actual filter
     xs_flt = np.linspace(-x_max, x_max, res_ext)
-    flt = np.exp(-xs_flt ** 2 / sigma ** 2)
+    flt = np.exp(-(xs_flt ** 2) / (sigma ** 2))
     flt = flt / np.sum(flt)
 
     return flt
@@ -92,7 +92,7 @@ def _spiral(nrow, ncol):
         return spiral_ccw(np.arange(nrow * ncol).reshape(nrow, ncol))[::-1]
 
     A = np.arange(0, nrow * ncol).reshape(nrow, ncol)
-    B = np.empty_like(A)
+    B = np.zeros_like(A)
     B.flat[base_spiral(*A.shape)] = A.flat
     return B
 
