@@ -298,7 +298,7 @@ N_NOISE_TRIALS = 1
 N_SIGMAS = 60
 
 # Number of repetitions
-N_REPEAT = 1000
+N_REPEAT = 100
 
 # Number of regularisation factors to try
 N_REGS = 128
