@@ -124,7 +124,7 @@ def main():
     # Number of basis functions
     d = args.d
 
-    N_REPEAT = 10
+    N_REPEAT = 1000
     N_TRIALS = 60
     SIGMAS = np.logspace(-1, 1, N_TRIALS)
     #    MUS = np.linspace(0, 3, N_TRIALS)
