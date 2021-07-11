@@ -115,7 +115,7 @@ generates = "two_comp_2d_benchmark_functions_network.h5"
 is_multithreaded = true
 
 ["chapters/03_nlif/dendritic_computation_fourier_example.py"]
-commit = "ead9f697a827df93b9e6a3ddc5fd037f960fda74"
+commit = "601bdc70bfa11c6372304fb0bc8ee71a0a22d00e"
 dockerfile = "experiments_base"
 runs = [
 	{
