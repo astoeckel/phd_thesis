@@ -132,7 +132,7 @@ runs = [
 	},
 	{
 		args=["--d", "11"],
-		generates=["dendritic_computation_fourier_example_d9.h5"]
+		generates=["dendritic_computation_fourier_example_d11.h5"]
 	},
 ]
 is_multithreaded = true
