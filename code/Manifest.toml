@@ -115,9 +115,18 @@ generates = "two_comp_2d_benchmark_functions_network.h5"
 is_multithreaded = true
 
 ["chapters/03_nlif/dendritic_computation_fourier_example.py"]
-commit = "8ab66eae786a62f6f84ab40407c430f55da2da09"
+commit = "ead9f697a827df93b9e6a3ddc5fd037f960fda74"
 dockerfile = "experiments_base"
-generates = "dendritic_computation_fourier_example.h5"
+runs = [
+	{
+		args=["--d", "5"],
+		generates=["dendritic_computation_fourier_example_d5.h5"]
+	},
+	{
+		args=["--d", "7"],
+		generates=["dendritic_computation_fourier_example_d7.h5"]
+	},
+]
 is_multithreaded = true
 
 ["chapters/ZC_data/two_comp_benchmark_functions_regularisation_filter_sweep.py"]
