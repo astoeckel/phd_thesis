@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
-import dlop_ldn_function_bases as bases
+import os, sys
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "lib"))
+
 import numpy as np
 import random
 import h5py
@@ -8,38 +10,40 @@ import multiprocessing
 import tqdm
 import scipy.optimize
 
-import os
-import sys
-
+import function_bases as bases
 import env_guard
+import gen_2d_fun
 
 # Number of basis functions
-d = 16
+d = 7
 
 # Number of samples
-N = 32
+N = 63
+
+REG = 1e-3
 
 # Generate the basis
-A = bases.mk_fourier_basis(d, N) * np.sqrt(0.5 * N)
+A = bases.mk_dlop_basis(d, N) * np.sqrt(0.5 * N)
 A2D = np.einsum('ij,kl->ikjl', A, A)
 A1D = np.concatenate((
     A2D[0, :].reshape(d, -1),
     A2D[:, 0].reshape(d, -1),
 )).T
+A2D_flat = A2D.reshape(d, d, N * N).T.reshape(N * N, d * d)
 
-
-def lstsq(A, Y, sigma=1e-2):
+def lstsq(A, Y):
     if Y.ndim == 1:
         Y = Y.reshape(-1, 1)
     n, m = A.shape
     d = Y.shape[1]
-    ATA = A.T @ A + n * np.square(sigma) * np.eye(m)
+    ATA = A.T @ A + n * REG * np.eye(m)
     D = np.zeros((m, d))
     for i in range(d):
         D[:, i] = np.linalg.solve(ATA, A.T @ Y[:, i])
     return D
 
-def solve_additive(basis, tar):
+
+def solve_additive(basis, tar, rng):
     return basis @ lstsq(basis, tar)
 
 
@@ -49,7 +53,7 @@ def solve_multiplicative(basis, tar, rng):
         return (basis @ w1) * (basis @ w2)
 
     def E(w):
-        return np.mean(np.square(f(w) - tar)) + 1e-1 * np.mean(np.square(w))
+        return np.mean(np.square(f(w) - tar)) + np.sqrt(REG) * np.mean(np.square(w))
 
 
     Ds, Es = [[None] * 10 for _ in range(2)]
@@ -60,7 +64,7 @@ def solve_multiplicative(basis, tar, rng):
     return f(Ds[np.argmin(Es)])
 
 
-def solve_mlp(Ys, N_neurons=1000, rng=np.random):
+def solve_mlp(Ys, N_neurons=100, rng=np.random):
 
     max_rates = rng.uniform(0.5, 1.0, N_neurons)
     x_intercepts = rng.uniform(-1.0, 1.0, N_neurons)
@@ -85,44 +89,31 @@ def solve_mlp(Ys, N_neurons=1000, rng=np.random):
     return As @ D
 
 
-def coeffs(d, sigma, mu=0.0, rng=np.random):
-    ds = np.arange(0, d)
-    mask = np.exp(-np.square(ds - mu) / np.square(sigma + 1e-3))
-    mask2d = np.outer(mask, mask)
-    mask2d /= np.sum(mask2d)
-    res = rng.normal(0, 1, (d, d)) * mask2d
-    res /= d * np.sqrt(np.mean(np.square(res)))
-    return res
-
-
 def run_single(args):
     i, j, sigma = args
-    #i, j, mu = args
 
     rng = np.random.RandomState(34891 * j + 480)
-    #X = np.einsum('ij,ijkl->kl', coeffs(d, 1.0, mu, rng), A2D)
-    X = np.einsum('ij,ijkl->kl', coeffs(d, sigma, rng=rng), A2D)
-    rms = np.sqrt(np.mean(np.square(X)))
+    X = gen_2d_fun.gen_2d_fun(gen_2d_fun.mk_2d_flt(sigma, N), N, rng)
 
-    Y1 = solve_additive(A1D, X.reshape(-1)).reshape(N, N)
+    Y1 = solve_additive(A1D, X.reshape(-1), rng=rng).reshape(N, N)
 
     rng = np.random.RandomState(34891 * j + 481)
     Y2 = solve_multiplicative(A1D, X.reshape(-1), rng=rng).reshape(N, N)
 
     rng = np.random.RandomState(34891 * j + 482)
-    Y3 = solve_mlp(X.reshape(-1), rng=rng).reshape(N, N)
+    Y3 = solve_additive(A2D_flat, X.reshape(-1), rng=rng).reshape(N, N)
 
-    E1 = np.sqrt(np.mean(np.square(X - Y1))) / rms
-    E2 = np.sqrt(np.mean(np.square(X - Y2))) / rms
-    E3 = np.sqrt(np.mean(np.square(X - Y3))) / rms
+    E1 = np.sqrt(np.mean(np.square(X - Y1)))
+    E2 = np.sqrt(np.mean(np.square(X - Y2)))
+    E3 = np.sqrt(np.mean(np.square(X - Y3)))
 
     return i, j, (E1, E2, E3)
 
 
 def main():
-    N_REPEAT = 10
-    N_TRIALS = 20
-    SIGMAS = np.logspace(-0.4, 1, N_TRIALS)
+    N_REPEAT = 1000
+    N_TRIALS = 60
+    SIGMAS = np.logspace(-1, 1, N_TRIALS)
     #    MUS = np.linspace(0, 3, N_TRIALS)
 
     #args = [(i, j, mu) for j in range(N_REPEAT) for i, mu in enumerate(MUS)]
@@ -130,7 +121,7 @@ def main():
     random.shuffle(args)
 
     with h5py.File(
-            os.path.join(os.path.dirname(__file__), '..', '..', 'data',
+            os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data',
                          'dendritic_computation_fourier_example.h5'),
             'w') as f:
         f.create_dataset('SIGMAS', data=SIGMAS)
