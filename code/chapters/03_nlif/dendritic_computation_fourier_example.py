@@ -14,22 +14,25 @@ import function_bases as bases
 import env_guard
 import gen_2d_fun
 
-# Number of basis functions
-d = 7
-
 # Number of samples
 N = 63
 
 REG = 1e-3
 
-# Generate the basis
-A = bases.mk_dlop_basis(d, N) * np.sqrt(0.5 * N)
-A2D = np.einsum('ij,kl->ikjl', A, A)
-A1D = np.concatenate((
-    A2D[0, :].reshape(d, -1),
-    A2D[:, 0].reshape(d, -1),
-)).T
-A2D_flat = A2D.reshape(d, d, N * N).T.reshape(N * N, d * d)
+CACHE = {}
+
+def mk_basis(d):
+    if not d in CACHE:
+        # Generate the basis
+        A = bases.mk_dlop_basis(d, N) * np.sqrt(0.5 * N)
+        A2D = np.einsum('ij,kl->ikjl', A, A)
+        A1D = np.concatenate((
+            A2D[0, :].reshape(d, -1),
+            A2D[:, 0].reshape(d, -1),
+        )).T
+        A2D_flat = A2D.reshape(d, d, N * N).T.reshape(N * N, d * d)
+        CACHE[d] = (A2D, A1D, A2D_flat)
+    return CACHE[d]
 
 def lstsq(A, Y):
     if Y.ndim == 1:
@@ -55,7 +58,7 @@ def solve_multiplicative(basis, tar, rng):
     def E(w):
         return np.mean(np.square(f(w) - tar)) + np.sqrt(REG) * np.mean(np.square(w))
 
-
+    d = basis.shape[1] // 2
     Ds, Es = [[None] * 10 for _ in range(2)]
     for i in range(len(Ds)):
         w = rng.randn(4 * d)
@@ -90,7 +93,9 @@ def solve_mlp(Ys, N_neurons=100, rng=np.random):
 
 
 def run_single(args):
-    i, j, sigma = args
+    i, j, sigma, d = args
+
+    (A2D, A1D, A2D_flat) = mk_basis(d)
 
     rng = np.random.RandomState(34891 * j + 480)
     X = gen_2d_fun.gen_2d_fun(gen_2d_fun.mk_2d_flt(sigma, N), N, rng)
@@ -111,18 +116,26 @@ def run_single(args):
 
 
 def main():
-    N_REPEAT = 1000
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--d', type=int, default=5)
+    args = parser.parse_args()
+
+    # Number of basis functions
+    d = args.d
+
+    N_REPEAT = 10
     N_TRIALS = 60
     SIGMAS = np.logspace(-1, 1, N_TRIALS)
     #    MUS = np.linspace(0, 3, N_TRIALS)
 
     #args = [(i, j, mu) for j in range(N_REPEAT) for i, mu in enumerate(MUS)]
-    args = [(i, j, sigma) for j in range(N_REPEAT) for i, sigma in enumerate(SIGMAS)]
+    args = [(i, j, sigma, d) for j in range(N_REPEAT) for i, sigma in enumerate(SIGMAS)]
     random.shuffle(args)
 
     with h5py.File(
             os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data',
-                         'dendritic_computation_fourier_example.h5'),
+                         f'dendritic_computation_fourier_example_d{d}.h5'),
             'w') as f:
         f.create_dataset('SIGMAS', data=SIGMAS)
         #f.create_dataset('MUS', data=MUS)
@@ -132,8 +145,7 @@ def main():
         Es_mlp = f.create_dataset("Es_mlp", (N_TRIALS, N_REPEAT))
 
         with env_guard.SingleThreadEnvGuard() as guard:
-            with multiprocessing.get_context("spawn").Pool(
-                    multiprocessing.cpu_count() // 2) as pool:
+            with multiprocessing.get_context("spawn").Pool() as pool:
                 for (i, j,
                      (E1, E2,
                       E3)) in tqdm.tqdm(pool.imap_unordered(run_single, args),
