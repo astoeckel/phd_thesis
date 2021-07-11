@@ -114,6 +114,12 @@ dockerfile = "experiments_base"
 generates = "two_comp_2d_benchmark_functions_network.h5"
 is_multithreaded = true
 
+["chapters/03_nlif/dendritic_computation_fourier_example.py"]
+commit = "8ab66eae786a62f6f84ab40407c430f55da2da09"
+dockerfile = "experiments_base"
+generates = "dendritic_computation_fourier_example.h5"
+is_multithreaded = true
+
 ["chapters/ZC_data/two_comp_benchmark_functions_regularisation_filter_sweep.py"]
 commit = "e68c291667996e632acd61452f38f73af971727b"
 dockerfile = "experiments_base"
