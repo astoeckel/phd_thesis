@@ -171,9 +171,9 @@ def main():
                      (E1, E2,
                       E3)) in tqdm.tqdm(pool.imap_unordered(run_single, args),
                                         total=len(args)):
-                    Es_add[i, j] = E1
-                    Es_mul[i, j] = E2
-                    Es_mlp[i, j] = E3
+                    Es_add[i, j, k] = E1
+                    Es_mul[i, j, k] = E2
+                    Es_mlp[i, j, k] = E3
 
 
 if __name__ == "__main__":
