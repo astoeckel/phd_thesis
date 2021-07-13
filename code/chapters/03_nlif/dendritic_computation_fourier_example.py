@@ -93,7 +93,7 @@ def solve_mlp(Ys, N_neurons=100, rng=np.random):
 
 
 def run_single(args):
-    i, j, sigma, d = args
+    i, j, k, sigma, d = args
 
     (A2D, A1D, A2D_flat) = mk_basis(d)
 
@@ -112,25 +112,37 @@ def run_single(args):
     E2 = np.sqrt(np.mean(np.square(X - Y2)))
     E3 = np.sqrt(np.mean(np.square(X - Y3)))
 
-    return i, j, (E1, E2, E3)
+    return i, j, k, (E1, E2, E3)
 
 
 def main():
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('--d', type=int, default=5)
+    parser.add_argument('--d', type=int, default=None)
+    parser.add_argument('--rho', type=float, default=None)
     args = parser.parse_args()
 
+    if (args.d != None) and (args.rho != None):
+        raise RuntimeError("Either d or rho must be set!")
+
     # Number of basis functions
-    d = args.d
+    d = 5 if args.d is None else args.d
 
-    N_REPEAT = 1000
-    N_TRIALS = 60
-    SIGMAS = np.logspace(-1, 1, N_TRIALS)
-    #    MUS = np.linspace(0, 3, N_TRIALS)
+    # If rho is not given, perform a sweep over rho/sigma, otherwise sweep over
+    # rho.
+    if args.rho is None:
+        N_REPEAT = 1000
+        SIGMAS = np.logspace(-1, 1, 60)
+        DS = [d]
+    elif args.d is None:
+        N_REPEAT = 100
+        SIGMAS = [args.rho]
+        DS = np.arange(1, 12, dtype=np.int)
 
-    #args = [(i, j, mu) for j in range(N_REPEAT) for i, mu in enumerate(MUS)]
-    args = [(i, j, sigma, d) for j in range(N_REPEAT) for i, sigma in enumerate(SIGMAS)]
+    N_SIGMAS = len(SIGMAS)
+    N_DS = len(DS)
+
+    args = [(i, j, k, sigma, d) for k in range(N_REPEAT) for j, d in enumerate(DS) for i, sigma in enumerate(SIGMAS)]
     random.shuffle(args)
 
     with h5py.File(
@@ -138,15 +150,15 @@ def main():
                          f'dendritic_computation_fourier_example_d{d}.h5'),
             'w') as f:
         f.create_dataset('SIGMAS', data=SIGMAS)
-        #f.create_dataset('MUS', data=MUS)
+        f.create_dataset('DS', data=DS)
         f.create_dataset('REPEAT', data=N_REPEAT)
-        Es_add = f.create_dataset("Es_add", (N_TRIALS, N_REPEAT))
-        Es_mul = f.create_dataset("Es_mul", (N_TRIALS, N_REPEAT))
-        Es_mlp = f.create_dataset("Es_mlp", (N_TRIALS, N_REPEAT))
+        Es_add = f.create_dataset("Es_add", (N_SIGMAS, N_DS, N_REPEAT))
+        Es_mul = f.create_dataset("Es_mul", (N_SIGMAS, N_DS, N_REPEAT))
+        Es_mlp = f.create_dataset("Es_mlp", (N_SIGMAS, N_DS, N_REPEAT))
 
         with env_guard.SingleThreadEnvGuard() as guard:
             with multiprocessing.get_context("spawn").Pool() as pool:
-                for (i, j,
+                for (i, j, k,
                      (E1, E2,
                       E3)) in tqdm.tqdm(pool.imap_unordered(run_single, args),
                                         total=len(args)):
