@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os, sys
+
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "lib"))
 
 import numpy as np
@@ -21,6 +22,7 @@ REG = 1e-3
 
 CACHE = {}
 
+
 def mk_basis(d):
     if not d in CACHE:
         # Generate the basis
@@ -33,6 +35,7 @@ def mk_basis(d):
         A2D_flat = A2D.reshape(d, d, N * N).T.reshape(N * N, d * d)
         CACHE[d] = (A2D, A1D, A2D_flat)
     return CACHE[d]
+
 
 def lstsq(A, Y):
     if Y.ndim == 1:
@@ -56,7 +59,8 @@ def solve_multiplicative(basis, tar, rng):
         return (basis @ w1) * (basis @ w2)
 
     def E(w):
-        return np.mean(np.square(f(w) - tar)) + np.sqrt(REG) * np.mean(np.square(w))
+        return np.mean(
+            np.square(f(w) - tar)) + np.sqrt(REG) * np.mean(np.square(w))
 
     d = basis.shape[1] // 2
     Ds, Es = [[None] * 10 for _ in range(2)]
@@ -97,15 +101,15 @@ def run_single(args):
 
     (A2D, A1D, A2D_flat) = mk_basis(d)
 
-    rng = np.random.RandomState(34891 * j + 480)
+    rng = np.random.RandomState(34891 * k + 480)
     X = gen_2d_fun.gen_2d_fun(gen_2d_fun.mk_2d_flt(sigma, N), N, rng)
 
     Y1 = solve_additive(A1D, X.reshape(-1), rng=rng).reshape(N, N)
 
-    rng = np.random.RandomState(34891 * j + 481)
+    rng = np.random.RandomState(34891 * k + 481)
     Y2 = solve_multiplicative(A1D, X.reshape(-1), rng=rng).reshape(N, N)
 
-    rng = np.random.RandomState(34891 * j + 482)
+    rng = np.random.RandomState(34891 * k + 482)
     Y3 = solve_additive(A2D_flat, X.reshape(-1), rng=rng).reshape(N, N)
 
     E1 = np.sqrt(np.mean(np.square(X - Y1)))
@@ -132,14 +136,15 @@ def main():
     # rho.
     if args.rho is None:
         fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data',
-                         f'dendritic_computation_fourier_example_d{d}.h5')
+                          f'dendritic_computation_fourier_example_d{d}.h5')
         N_REPEAT = 1000
         SIGMAS = np.logspace(-1, 1, 60)
         DS = [d]
     elif args.d is None:
         rho_str = f"{args.rho:0.2f}".replace('.', '')
-        fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data',
-                          f'dendritic_computation_fourier_example_rho{rho_str}.h5')
+        fn = os.path.join(
+            os.path.dirname(__file__), '..', '..', '..', 'data',
+            f'dendritic_computation_fourier_example_rho{rho_str}.h5')
 
         N_REPEAT = 100
         SIGMAS = [args.rho]
@@ -148,7 +153,8 @@ def main():
     N_SIGMAS = len(SIGMAS)
     N_DS = len(DS)
 
-    args = [(i, j, k, sigma, d) for k in range(N_REPEAT) for j, d in enumerate(DS) for i, sigma in enumerate(SIGMAS)]
+    args = [(i, j, k, sigma, d) for k in range(N_REPEAT)
+            for j, d in enumerate(DS) for i, sigma in enumerate(SIGMAS)]
     random.shuffle(args)
 
     with h5py.File(fn, 'w') as f:
