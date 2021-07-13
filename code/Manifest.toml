@@ -127,7 +127,7 @@ runs = [
 		generates=["dendritic_computation_fourier_example_d9.h5"]
 	},
 	{
-		commit="1a1b5c212c8ac209ee260f0bc9a11056cb2d224f",
+		commit="8f27e1674732f828b3bceb8bf0133e568c12d6e6",
 		args=["--rho", "0.5"],
 		generates=["dendritic_computation_fourier_example_rho05.h5"]
 	},
