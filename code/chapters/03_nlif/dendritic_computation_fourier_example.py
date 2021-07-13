@@ -137,7 +137,7 @@ def main():
         SIGMAS = np.logspace(-1, 1, 60)
         DS = [d]
     elif args.d is None:
-        rho_str = f"{0.2f:args.rho}".replace('.', '')
+        rho_str = f"{args.rho:0.2f}".replace('.', '')
         fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data',
                           f'dendritic_computation_fourier_example_rho{rho_str}.h5')
 
