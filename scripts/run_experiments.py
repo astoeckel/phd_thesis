@@ -89,17 +89,25 @@ def _elaborate_manifest(manifest, manifest_file, root):
             if isinstance(run["generates"], str):
                 run["generates"] = [run["generates"]]
 
-    # Elaborate the commit IDs
-    for file, obj in manifest.items():
-        if not "commit" in obj:
-            raise RuntimeError(f"Missing \"commit\" in entry \"{file}\"")
-        obj["commit"] = run_in_container.git_rev_parse(root, obj["commit"])
-
-    # Copy some required data across
+    # Merge some required data into the individual runs
     for file, obj in manifest.items():
         for run in obj["runs"]:
-            run["commit"] = obj["commit"]
-            run["dockerfile"] = obj["dockerfile"]
+            if (not "commit" in run) and ("commit" in obj):
+                run["commit"] = obj["commit"]
+            if (not "dockerfile" in run) and ("dockerfile" in obj):
+                run["dockerfile"] = obj["dockerfile"]
+
+    # Elaborate the commit IDs
+    commit_cache = {}
+    for file, obj in manifest.items():
+        for run in obj["runs"]:
+            if not "commit" in run:
+                raise RuntimeError(f"Missing \"commit\" in entry \"{file}\"")
+            if not "dockerfile" in run:
+                raise RuntimeError(f"Missing \"dockerfile\" in entry \"{file}\"")
+            if not run["commit"] in commit_cache:
+                commit_cache[run["commit"]] = run_in_container.git_rev_parse(root, run["commit"])
+            run["commit"] = commit_cache[run["commit"]]
 
 
 def _load_dockerfiles(args):
@@ -127,14 +135,10 @@ def _compute_target_hashes(manifest, root):
     # Fetch all commit-dockerfile pairs
     manifest_by_commits = {}
     for file, obj in manifest.items():
-        if not "commit" in obj:
-            raise RuntimeError(f"Missing \"commit\" in entry \"{file}\"")
-        if not "dockerfile" in obj:
-            raise RuntimeError(f"Missing \"dockerfile\" in entry \"{file}\"")
-
-        if not obj["commit"] in manifest_by_commits:
-            manifest_by_commits[obj["commit"]] = set()
-        manifest_by_commits[obj["commit"]].add(obj["dockerfile"])
+        for run in obj["runs"]:
+            if not run["commit"] in manifest_by_commits:
+                manifest_by_commits[run["commit"]] = set()
+            manifest_by_commits[run["commit"]].add(run["dockerfile"])
 
     # Load all docker files in parallel
     docker_file_contents = {}
@@ -149,15 +153,15 @@ def _compute_target_hashes(manifest, root):
         for run in obj["runs"]:
             docker_hash = hashlib.sha256()
             docker_hash.update(
-                docker_file_contents[obj["commit"]][obj["dockerfile"]])
+                docker_file_contents[run["commit"]][run["dockerfile"]])
             docker_hash = docker_hash.hexdigest()[:16]
             run["docker_hash"] = docker_hash
 
             target_hash = hashlib.sha256()
-            target_hash.update(obj["commit"].encode('utf-8'))
+            target_hash.update(run["commit"].encode('utf-8'))
             target_hash.update(" ".join(run["args"]).encode("utf-8"))
             target_hash.update(
-                docker_file_contents[obj["commit"]][obj["dockerfile"]])
+                docker_file_contents[run["commit"]][run["dockerfile"]])
             target_hash = target_hash.hexdigest()[:16]
             run["target_hash"] = target_hash
 
@@ -188,8 +192,8 @@ def _print_list(manifest, expr, root):
                                                    attr("reset")))
                 first = False
 
-            sys.stdout.write("{} {} {}\n".format(obj["commit"][:8],
-                                                 obj["dockerfile"],
+            sys.stdout.write("{} {} {}\n".format(run["commit"][:8],
+                                                 run["dockerfile"],
                                                  " ".join(run["args"])))
             for tar in run["generates"]:
                 if run["exists"][tar]:
