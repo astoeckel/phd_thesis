@@ -131,10 +131,16 @@ def main():
     # If rho is not given, perform a sweep over rho/sigma, otherwise sweep over
     # rho.
     if args.rho is None:
+        fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data',
+                         f'dendritic_computation_fourier_example_d{d}.h5')
         N_REPEAT = 1000
         SIGMAS = np.logspace(-1, 1, 60)
         DS = [d]
     elif args.d is None:
+        rho_str = str(rho).replace('.', '')
+        fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data',
+                          f'dendritic_computation_fourier_example_rho{rho_str}.h5')
+
         N_REPEAT = 100
         SIGMAS = [args.rho]
         DS = np.arange(1, 12, dtype=np.int)
@@ -145,10 +151,7 @@ def main():
     args = [(i, j, k, sigma, d) for k in range(N_REPEAT) for j, d in enumerate(DS) for i, sigma in enumerate(SIGMAS)]
     random.shuffle(args)
 
-    with h5py.File(
-            os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data',
-                         f'dendritic_computation_fourier_example_d{d}.h5'),
-            'w') as f:
+    with h5py.File(fn, 'w') as f:
         f.create_dataset('SIGMAS', data=SIGMAS)
         f.create_dataset('DS', data=DS)
         f.create_dataset('REPEAT', data=N_REPEAT)
