@@ -86,7 +86,7 @@ def run_single(args):
 N_ORDER = 20
 N_SMPLS_TRAIN = 1000
 N_SMPLS_TEST = 1000
-N_REPEAT = 10
+N_REPEAT = 100
 N_DIMS = 3
 
 N_NEURONS = np.unique(np.geomspace(10, 1000, 60, dtype=np.int))
