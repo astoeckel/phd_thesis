@@ -127,11 +127,17 @@ runs = [
 		generates=["dendritic_computation_fourier_example_d9.h5"]
 	},
 	{
-		commit="f6412375519c597bbb31e0710b8d0048a5de9976",
+		commit="9dbacb10bba9813c7c874c1566ba93e0e8cb81f7",
 		args=["--rho", "0.5"],
 		generates=["dendritic_computation_fourier_example_rho050.h5"]
 	},
 ]
+is_multithreaded = true
+
+["chapters/03_nlif/decode_basis_functions.py"]
+commit = "ac295d81b5839148829fd0c15aeb43f92562aeb3"
+dockerfile = "experiments_base"
+generates = "decode_basis_functions.h5"
 is_multithreaded = true
 
 ["chapters/ZC_data/two_comp_benchmark_functions_regularisation_filter_sweep.py"]
