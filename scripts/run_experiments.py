@@ -184,7 +184,7 @@ def _print_list(manifest, expr, root):
     for file, obj in manifest.items():
         first = True
         for run in obj["runs"]:
-            if len(expr.findall(run["args"][0])) == 0:
+            if len(expr.findall(" ".join(run["args"]))) == 0:
                 continue
 
             if first:
@@ -328,7 +328,7 @@ def _gather_runs(manifest, expr):
     for obj in manifest.values():
         for run in obj["runs"]:
             # Sort the experiment into the concurrent or serial bin
-            if len(expr.findall(run["args"][0])):
+            if len(expr.findall(" ".join(run["args"]))):
                 run = json.loads(json.dumps(run))
                 if obj["is_multithreaded"]:
                     bin_run_serially.append(run)
