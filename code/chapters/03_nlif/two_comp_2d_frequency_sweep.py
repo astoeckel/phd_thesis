@@ -31,12 +31,6 @@ import h5py
 import tqdm
 
 
-def update_symlink(src, tar):
-    if os.path.lexists(tar):
-        os.unlink(tar)
-    os.symlink(src, tar)
-
-
 def run_single_experiment(idcs):
     i_param, i_sweep, i_repeat = idcs
     p_key = SOLVER_PARAMS_SWEEP_KEYS[i_param]
