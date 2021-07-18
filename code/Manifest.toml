@@ -108,6 +108,12 @@ dockerfile = "experiments_base"
 generates = "two_comp_2d_frequency_sweep.h5"
 is_multithreaded = true
 
+["chapters/03_nlif/two_comp_2d_frequency_sweep_network.py"]
+commit = "404b176846516c031841cebd293a0b99b14e5965"
+dockerfile = "experiments_base"
+generates = "two_comp_2d_frequency_sweep_network.h5"
+is_multithreaded = true
+
 ["chapters/03_nlif/two_comp_2d_benchmark_functions_network.py"]
 commit = "e6362d1031b43c252404b151edfa70b14e900b00"
 dockerfile = "experiments_base"
