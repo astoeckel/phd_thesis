@@ -146,6 +146,12 @@ dockerfile = "experiments_base"
 generates = "decode_basis_functions.h5"
 is_multithreaded = true
 
+["chapters/03_nlif/nlif_parameter_optimisation_comparison.py"]
+commit = "c08d5794b8ffe6527444f2adcaec79ecbc7ba747"
+dockerfile = "experiments_base"
+generates = "nlif_parameter_optimisation_comparison.h5"
+is_multithreaded = true
+
 ["chapters/ZC_data/two_comp_benchmark_functions_regularisation_filter_sweep.py"]
 commit = "e68c291667996e632acd61452f38f73af971727b"
 dockerfile = "experiments_base"
