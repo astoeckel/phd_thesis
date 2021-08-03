@@ -278,7 +278,7 @@ def optimise_trust_region(reduced_sys,
                           alpha3=1e-6,
                           reg1=1e-9,
                           reg2=1e-9,
-                          eta=0.9,
+                          gamma=0.9,
                           progress=True,
                           debug=False,
                           parallel_compile=True):
@@ -289,7 +289,7 @@ def optimise_trust_region(reduced_sys,
     # Instantiate the optimiser and perform the actual optmisation
     solver = Solver(debug=debug, parallel_compile=parallel_compile)
     for i in tqdm.tqdm(range(N_epochs)) if progress else range(N_epochs):
-        scale = np.power(eta, i)
+        scale = np.power(gamma, i)
         stuff["reduced_sys"] = solver.nlif_solve_parameters_iter(
             stuff["reduced_sys"],
             stuff["gs_train"],
@@ -306,8 +306,4 @@ def optimise_trust_region(reduced_sys,
         return stuff["reduced_sys"], stuff["errs_train"]
     else:
         return stuff["reduced_sys"], stuff["errs_train"], stuff["errs_test"]
-
-
-#def optimise_lstsq_trust_region(reduced_sys, v_som, gs_train, Js_train, gs_test, Js_test, N_epochs, alpha=0.0):
-#
 
