@@ -1,52 +1,32 @@
+% !TeX spellcheck = en_GB
+
 \section{Proofs for Chapter~3}
 \label{app:neural_network_proofs}
 
-Back in \Cref{sec:dendritic_computation_theory}, when discussing the theoretical aspects of neural networks in general, and dendritic computation in particular, we made several claims that we will proof here.
+In this section, we provide proofs for the claims made in \Cref{chp:nlif}, where we discussed theoretical aspects of neural networks in general, and dendritic computation in particular.
 
-\subsection{Proof of Theorem~\ref{thm:xor_general}}
+\subsection{Proof of \Cref{thm:xor_general}}
 
-In the following, we first restate the theorem and then discuss a lemma that we will use in proving the theorem.
+The theorem as stated above posits that there are always functions $f$ that cannot be approximated using an additive network with a fixed nonlinearity $\sigma$.
+We can prove this by constructing an $f$ that is constant along the sides of a rectangle, but takes on a different value inside.
 
-TODO
+\ThmXorGeneral*
 
-%
-%\ThmXorGeneral
-%
-%\begin{lemma}
-%\label{lem:bijective_sum}
-%A map $\phi : \mathbb{R}^\ell \longrightarrow \mathbb{R}$ of the form $\phi(x_1, \ldots, x_\ell) = f_1(x_1) + \ldots + f_\ell(x_\ell)$ is not bijective.
-%\end{lemma}
-%
-%\begin{proof}[Proof of Lemma~\ref{lem:bijective_sum}]
-%
-%\end{proof}
-%
-%\begin{proof}[Proof of Theorem~\ref{thm:xor_general}]
-%Suppose that there exists a $\sigma(\xi)$ such that for all $\phi : \mathbb{X} \longrightarrow \mathbb{Y}$ there are $f_1, \ldots, f_\ell$ such that the above property holds.
-%Let $\phi$ be a bijective mapping from $\mathbb{X}$ onto $\mathbb{Y}$, e.g., the inverse of a space-filling curve.
-%According to our assumption, we have
-%\begin{align*}
-%\phi(x_1, \ldots, x_\ell) &= \sigma\bigl(f_1(x_1) + \ldots + f_\ell(x_\ell)\bigr) \,.
-%\end{align*}
-%Notably, $\sigma$ must be surjective for the above mapping to be bijective.
-%Now, construct a new function $\phi'(x_1, \ldots, x_\ell) = \sigma(\phi(x_1, \ldots, x_\ell))$.
-%Evidently, $\phi'$ is a mapping from $\Xrepr$ onto $\mathbb{Y}$.
-%According to our assumption, there must be $f'_1, \ldots, f'_\ell$ such that
-%\begin{align*}
-%	\phi'(x_1, \ldots, x_\ell)
-%		&= \sigma\bigl(\phi(x_1, \ldots, x_\ell)\bigr)
-%		 = \sigma\bigl(f'_1(x_1) + \ldots + f'_\ell(x_\ell)\bigr)
-%\end{align*}
-%Due to bijectivity of $\sigma$, this holds exactly if
-%\begin{align*}
-%	\phi(x_1, \ldots, x_\ell) = f'_1(x_1) + \ldots + f'_\ell(x_\ell) \,,
-%\end{align*}
-%that is, our bijective mapping $\phi$ can be decomposed into a sum of functions.
-%\Lightning (Lemma~\ref{lem:bijective_sum})
-%\end{proof}
-
+\begin{proof}
+Since $\mathbb{X}$ is a compact set with dimensionality $\dim(\mathbb{X}) = \ell$, there must be a rectangular subset of the following form
+$[a_0, a_1] \times [b_0, b_1] \times \{c_1\} \times \ldots \times \{c_{\ell - 2}\} \subseteq \mathbb{X}$.
+Now, consider an $f$ with
+\begin{align*}
+				     &f(a_0, x_2, c_1, \ldots, c_{\ell - 2}) = d \quad \text{for all } x_1 \in [a_0, a_1] \,, \\
+	\text{and} \quad &f(x_1, b_0, c_1, \ldots, c_{\ell - 2}) = d \quad \text{for all } x_2 \in [b_0, b_1] \,, \\
+	\text{and} \quad &f(x_1, x_2, c_1, \ldots, c_{\ell - 2}) \neq d \quad \text{for all } x_1 \in (a_0, a_1] \text{ and } x_2 \in (b_0, b_1] \,.
+\end{align*}
+Since $\sigma$ is continuous, the functions $f_1(x_1)$, $f_2(x_2)$ must be constant for all $x_1 \in [a_0, a_1]$ and $x_2 \in [b_0, b_1]$, otherwise the first two conditions cannot be met.
+However, with $f_1$ and $f_2$ being constant over the indicated intervals, the second condition cannot be met. Hence, $f$ is a function that cannot be computed using additive networks, independent of $\sigma$.
+\end{proof}
 
 \subsection{Proof of Theorem~\ref{thm:weak_xor}}
+\label{app:thm_weak_xor}
 
 \Citet[Chapter~2]{minsky1987perceptrons} note that the Perceptron cannot compute XOR.
 This notion can be extended to the more general \enquote{additive networks} discussed in \Cref{sec:dendritic_computation_theory}, as well as a weaker notion of the XOR problem (\Cref{def:weak_xor}).
@@ -63,14 +43,16 @@ Further expanding this definition by substituting in our additive network $\phi(
 	&\wedge   \left( \sigma(a_0' + b_0') < \sigma(a_1' + b_0') \right) 
 	 \wedge   \left( \sigma(a_1' + b_1') < \sigma(a_0' + b_1') \right) \,.
 	\end{align*}
-	Assume without loss of generality that $\sigma$ is monotonically increasing (same argument for monotonically decreasing $\sigma$). Then, the first line implies $\big(b_0' < b_1' \big) \wedge \big( b_0' > b_1' \big)$ and the second line $\big(a_0' < a_1' \big) \wedge \big( a_0' > a_1' \big)$. \Lightning
+	Assume without loss of generality that $\sigma$ is monotonically increasing. Then, the first line implies $\big(b_0' < b_1' \big) \wedge \big( b_0' > b_1' \big)$ and the second line $\big(a_0' < a_1' \big) \wedge \big( a_0' > a_1' \big)$. \Lightning
 \end{proof}
 
-\subsection{Proof of Theorem~\ref{thm:multiplication}}
+\subsection{Proof of \Cref{thm:multiplication}}
+\label{app:thm_multiplication}
 
-As we discussed in the main text, additive networks are capable of solving the weak XOR problem if we allow a non-monotonic neural nonlinearity $\sigma$.
-However, being able to freely choose $\sigma$ does not mean that we can universally approximate any function; these networks are still severely limited in the kind of functions they can compute.
+Additive networks are capable of solving the weak XOR problem if we allow a non-monotonic neural nonlinearity $\sigma$.
+However, as we already saw in \Cref{thm:xor_general}, being able to freely choose $\sigma$ does not mean that we can universally approximate any function.
 An example we gave in \Cref{thm:multiplication} is that of multiplication.
+While this is merely a special case of the kind of function used to prove \Cref{thm:xor_general}, we provide an alternative proof below.
 
 \ThmMultiplication*
 
@@ -106,149 +88,305 @@ But, according to our assumption, it should also hold that
 However, since the values passed to $\sigma$ overlap in both cases, this is a contradiction. \Lightning
 \end{proof}
 
+\subsection{Discussion of of \Cref{thm:two_layer_universal}}
+\label{app:thm_two_layer_universal}
 
-\subsection{Proof of Theorem~\ref{thm:nlif_product_terms}}
-\label{app:nlif_product_terms}
+\begin{figure}
+	\centering
+	\includegraphics{media/chapters/ZB_details/universality_proof.pdf}%
+	{\phantomsubcaption\label{fig:universality_proof_a}}%
+	{\phantomsubcaption\label{fig:universality_proof_b}}%
+	\caption[Illustration of \Cref{thm:two_layer_universal}]{Illustration of \Cref{thm:two_layer_universal}. \textbf{(A)} 1D ensemble with step activation function. Lines are tuning curves, black arrows the encoder. For $n \to \infty$ neurons, every point on the $x$-axis is enclosed by two neighboring tuning-curves. Subtracting and scaling these two tuning curves appropriately, we can assign a value $f(x)$ to all $x \in [0, 1]$.
+	For example, the two highlighted tuning curves, enclose a small region on the $x$-axis (blue highlight).
+	\textbf{(B)} 2D ensemble with step activation. Lines are the intercept of an individual neuron, arrows the encoder.
+	The tuning curves can be linearly combined such that any convex region in the space is assigned a relatively large value.
+	The depicted weighting encloses the region marked by the cross. Blue corresponds to positive, red to negative decoded values. The highlighted intercepts correspond to the neurons with the largest weights.}
+\end{figure}
 
-We mentioned in \Cref{sec:nlif_examples} that the dendritic nonlinearity $H$ of an $n$-LIF neuron only contains product terms between the individual input channels of different compartments, but not between input channels of the same compartment.
-This is a result of input channels only having an effect on the diagonal of $\mat{\tilde A}[\vec g]$, and the effects of matrix inversion on that diagonal.
+\Cref{thm:two_layer_universal} claims that a single NEF ensemble, i.e., a multi-layer network with a single hidden layer, is a universal function approximator.
+More precisely, we stated the following:
 
-%So far, it is still unclear in how far using $n$-LIF neurons in a neural network context may potentially provide a computational advantage.
-%The goal of this subsection, is to analyse this in more detail, continuing our discussion from \Cref{sec:dendritic_computation_theory}.
-%
-%As discussed above, single-compartment $n$-LIF neurons linearly combine the input channels.
-%This is independent of whether the channels are current- or conductance-based.
-%Such neurons can thus only be used to construct additive networks (cf.~\Cref{sec:additive_net}).
-%In contrast, $n$-LIF neurons with more than one compartment can be systematically described as a product of rational functions.
-%Both observations are summarised in the following theorem.
+\ThmTwoLayerUniversal*
 
-\begin{theorem}
-Consider an $n$-LIF neuron where each input channel is connected to a single compartment.
-Let $\vec g$ denote the state of all conductance-based channels and $\vec J$ the state of all conductance-based channels.
-The corresponding dendritic nonlinearity $H$ can be written as follows
+This universality of two-layer networks of this form is a well known fact, and has, in a more general form, first been proved by \citet{hornik1989multilayer}.
+In the terminology of the authors, the above equation describes a $\Sigma$-network, and $\sigma$ is a \enquote{squashing function}.
+A notable difference to our theorem is that Hornik et al., define $\alpha_i \langle \vec e_i, \vec x \rangle + \beta_i$ to be all possible affine functions mapping from $\mathbb{R}^\ell$ onto $\mathbb{R}$, while we limit the affine functions to those required to cover the unit-ball $\mathbb{B}^\ell$.
+
+A complete proof of this theorem is out of scope for this thesis, and we kindly direct the reader at \citet{hornik1989multilayer}.
+However, we would like to provide some geometric intuition as for why this theorem holds.
+Consider the case where $\sigma$ is a step-function, i.e., $\sigma(\xi) = 1$ if $\xi > 0$, otherwise $\sigma(\xi) = 0$.
+In the case of a one-dimensional network, and as is depicted in \Cref{fig:universality_proof_a}, it is apparent that as the number of neurons $n$ goes to infinity, we can enclose any point on the $x$-axis with arbitrary precision by subtracting two appropriate neuron tuning curves with equal encoder.
+By scaling the two tuning curves, we can hence assign a value $f(x)$ to each represented value $x$.
+
+Similarly, for higher-dimensional representations, we can linearly combine tuning curves such that any convex region enclosed by the neural intercepts is assigned an arbitrary value $f(\vec x)$, while all other regions are assigned values close to zero (cf.~\Cref{fig:universality_proof_b}).
+As we increase the number of neurons, and if the conditions stated in the theorem are met, the enclosed regions converge to individual points.
+We can approximate any function $f(\vec x)$ by scaling and summing the individual decodings.
+
+\subsection{Proof of \Cref{thm:nlif_convergence}}
+\label{app:thm_nlif_convergence}
+
+Back in \Cref{sec:nlif_subth_properties} we claimed that the feedback matrix of the \nlif dynamical system is stable and does not possess any oscillatory behaviour.
+To prove this, we first show the following lemma concerning the Laplacian quadratic form (cf.~\cite[Section~18.3.2]{spielman2012spectral}):
+\begin{lemma}
+\label{lem:laplacian_quadratic}
+Let $\mat L$ be the Laplacian of a positively weighted connected graph with weights $c_{ij}$ and edges $E$.
+Then $\vec x = \alpha \vec{1}$ with $\alpha \in \mathbb{R}$ is the only root (besides $\vec x = \vec{0}$) of the Laplacian quadratic form
 \begin{align*}
-	H(\vec g, \vec J) = \frac{H_b(\vec g, \vec J)}{H_a(\vec g)} + H_0(\vec g, \vec J)
+	\vec x^T \mat L \vec x = \sum_{(i, j) \in E} c_{ij} (x_i - x_j)^2 \,.
 \end{align*}
-Where each $H_a(\vec g)$, $H_b(\vec g, \vec J)$, $H_0(\vec g, \vec J)$ is a linear combination of products between the individual input channels; however, none of these functions contain product terms between input channels belonging to the same compartment.
-\end{theorem}
-
+\end{lemma}
 \begin{proof}
-The reduced system matrix $\mat{\tilde A}[\vec g]$ and its inverse $\mat{\tilde A}[\vec g]^{-1}$ are block matrices of the form
-\begin{align}
-	\mat{\tilde A}[\vec g] &= \begin{bmatrix}
-		1 & 0 \\
-		0 & {\mat{\tilde C}}[\vec g]
-	\end{bmatrix} \Leftrightarrow
-	\mat{\tilde A}[\vec g]^{-1} = \begin{bmatrix}
-		1 & 0 \\
-		0 & {\mat{\tilde C}}[\vec g]^{-1}
-	\end{bmatrix} \,,
-	&\text{with }
-	\mat{\tilde C}[\vec g] &= \begin{bmatrix}
-	   d_2[\vec g] & -c_{23} & \ldots & -c_{2n} \\
-	-c_{23} & d_3[\vec g] &  & -c_{3n} \\
-	\vdots & & \ddots & \vdots \\
-	-c_{2n} & -c_{3n} & \ldots & d_n[\vec g]
-	\end{bmatrix} \,.
-	\label{eqn:nlif_matrix_blocks}
-\end{align}
-Importantly, by construction of $\mat{\tilde A}[\vec g]$ each diagonal element $d_i[\vec g]$ is an affine function in the conductance-based input channels, and each $(\vec{\tilde b}[\vec g])_i$ is an affine function in both the conductance- and current-based input channels. We have
+Because of all $c_{ij}$ being positive, the quadratic form is clearly non-negative. In other words, $\mat L$ is positive semidefinite and all its eigenvalues are nonnegative.
+Since $\mat L$ is symmetric, its eigen-decomposition is $\mat Q \mat \Lambda \mat Q^T$, where $\mat Q$ is orthogonal.
+Let $\vec y = \mat Q^T \vec x$.
+It holds
 \begin{align*}
-	d_i[\vec g] &= \tilde a_0^i + \sum_{k = 1}^{M_i} \tilde a_k^i g_k^i \,, & 
-	(\vec{\tilde b}[\vec g])_i &= \tilde b_0^i + \sum_{k = 1}^{M_i} \tilde b_k^i g_k^i + \sum_{k = 1}^{N_i} \tilde c_k^i J_k^i \,.
+	\vec x^T \mat L \vec x = \vec y^T \mat \Lambda \vec y = \sum_{i = 1}^n y_i^2 \lambda_i = 0 \Leftrightarrow \mat \Lambda \vec y = \vec 0 \text{ since } \lambda_i \geq 0\,.
 \end{align*}
+Since $\mat Q$ is orthogonal, it must be full-rank.
+This implies that its null-space only contains the zero-vector.
+Correspondingly, $\vec x^T \mat Q \mat \Lambda \mat Q^T \vec x = 0$ exactly if $\mat Q \mat \Lambda \mat Q^T \vec x = \mat L \vec x = \vec 0$, or, put differently, $\vec x$ is in the null-space of $\mat L$.
 
-Now, the linear portion of \cref{eqn:nlif_general_model} trivially follows from multiplication of the first identity \enquote{block} with $(\vec{\tilde b}[\vec g])_1$.
-%In particular, we have $\bigl( \mat{\tilde A}[\vec g]^{-1}  \bigr)_{1, 1} (\vec{\tilde b}[\vec g])_1 = (\vec{\tilde b}[\vec g])_1 = \tilde v^\mathrm{eq}_1$.
-Combine this with \cref{eqn:nlif_eq} to obtain the linear term.
-
-The product of rational functions can be obtained by systematically inverting the second block $\mat{\tilde C}[\vec g]$.
-Remember that the inverse of a matrix can be written as its adjoint of scaled by the inverse of its determinant \citep[e.g.,][Theorem~1.9, p.~366]{hefferon2020linear}.
-%\begin{align*}
-%	\mat{\tilde C}[\vec g]^{-1} &= \frac{1}{\det(\mat{\tilde C[\vec g]})} \adj(\mat{\tilde C}[\vec g]) \,.
-%\end{align*}
-Hence, the denominator in \cref{eqn:nlif_matrix_blocks} is the determinant of $\mat{\tilde C}[\vec g]$.
-Using the permutation expansion of the determinant \citep[e.g.,][Section~4.I.3, p.~337]{hefferon2020linear}, we have
-\begin{align*}
-	\det(\mat{\tilde C[\vec g]})
-		&= \sum_{\pi \in \mathbb{P}} \sign(\pi) \prod_{i=1}^n \bigl( \mat{\tilde C}[\vec g]^{-1} \bigr)_{i, \pi(i) + 1} \,,
-	& \text{where } \mathbb{P} = S({1, \ldots, n - 1}) \,,
-\end{align*}
-and where $S(X)$ denotes the set of permutations of the set $X$, and $\sign(\pi) \in \{-1, 1\}$ is the \enquote{signum} of the permutation $\pi$ (see the above reference).
-Notably, for each permutation $\pi$, the above product term contains the $i$th diagonal entry $d_i[\vec g]$ at most once for each permutation $\pi$.
-Hence, the determinant can be factorised into a products of the form $(a_0^i + d_i[\vec g])$.
-This results in the denominator of the nonlinear term in \cref{eqn:nlif_general_model}.
-
-Lastly, the matrix product between the adjoint of $\mat{\tilde C}[\vec g]$ and $\vec{\tilde b}[\vec g]$ determines the numerator of the nonlinear term in \cref{eqn:nlif_general_model}.
-Notably, the adjoint of a matrix $\mat A$ is a matrix of determinants of $\mat A$ where the $k$th row and the $\ell$th column have been deleted:
-\begin{align*}
-	\bigl(\adj(\mat{\tilde C}[\vec g])\bigr)_{k\ell}
-		&= \sum_{\pi \in \mathbb{P}} \sign(\pi) \prod_{\substack{i=1\\i \neq k}}^n \bigl( \mat{\tilde C}[\vec g]^{-1} \bigr)_{i, \pi(i) + 1} \,,
-	& \text{where } \mathbb{P} = S({1, \ldots, \ell - 1, \ell + 1, n - 1}) \,.
-\end{align*}
-Correspondingly, $(\adj(\mat{\tilde C}[\vec g]))_{k\ell}$ neither contains the term $d_{k}[\vec g]$, nor $d_{\ell}[\vec g]$.
-The product terms in the matrix-vector product between $\adj(\mat{\tilde C}[\vec g])$ and $\vec{\tilde b}[\vec g]$ contain each input channel at most once.
-The inner product in \cref{eqn:nlif_eq} can be factored into the numerator shown in \cref{eqn:nlif_general_model}.
+By Theorem~13.1.1 in \citet[Chapter~13]{godsil2001algebraic}, the multiplicity of the eigenvalue zero in the Laplacian $\mat L$ is one, with eigenvector $\vec 1$.
+Hence, the null-space of $\mat L$ is $\alpha \vec 1$.
 \end{proof}
 
-\subsection{Proof of Theorem~\ref{thm:two_comp_xor}}
-\label{app:two_comp_xor_proof}
+Given this Lemma, we can now show the original theorem.
 
-\begin{theorem}[Two-compartment LIF cannot solve XOR]
-The two-compartment LIF nonlinearity $H(g_\mathrm{E}, g_\mathrm{I})$ from \cref{eqn:h_model} cannot solve the weak XOR problem for nonnegative inputs.
-\end{theorem}
+\ThmNlifConvergence*
 
 \begin{proof}
-For $b_0 \neq 0$, $H$ as given in \cref{eqn:h_model}, can be reparametrized to $H'$
+The feedback matrix $\mat A[\vec g] \diag(\vCm)^{-1}$ has the following form:
+\begin{align*}
+	\mat A[\vec g] \diag(\vCm)^{-1}
+	&= -\bigl( \mat L + \diag(\vec a' + \mat A' \vec g) \bigr) \diag(\vCm)^{-1} 
+	 = -\bigl( \mat L + \diag(\vec \epsilon) \bigr) \diag(\vCm)^{-1}  \,,
+\end{align*}
+where $\mat L$ is the graph Laplacian, $\vCm$ is a positive vector of membrane capacitances, and $\vec \epsilon$ is, by the conditions specified in the theorem (i.e., there being at least one conductance-based channel), a non-negative vector with $\vec \epsilon \neq \vec 0$.
+Eliminating the minus sign, the following must hold to ensure negative definiteness:
+\begin{align*}
+	 \vec x^T \mat L' \vec x 
+	 	= \vec x^T \bigl( \mat L + \diag(\vec \epsilon) \bigr) \diag(\vec \vCm)^{-1} \vec x
+	 	> 0 \quad\quad \text{for all} \quad \vec x \neq 0 \,.
+\end{align*}
+Note that multiplication with $\diag(\vCm)^{-1}$ (i.e., scaling each row of the Laplacian by the inverse of the corresponding \gls{Cm}) turns the undirected graph into a directed graph.
+However, we can still expand this expression using the Laplacian quadratic form \citep[cf.][Section~18.3.5]{spielman2012spectral}.
+Again, let $E$ be the set of edges and $c_{ij}$ the connection weights.
+We get
+\begin{align*}
+	\vec x^T \mat L' \vec x
+	&= \vec x^T \bigl( \mat L + \diag(\vec \epsilon) \bigr) \diag(\vCm)^{-1} \vec x
+	 = \vec x^T \mat L \diag(\vCm)^{-1} \vec x
+	 + \vec x^T \diag(\vec \epsilon) \diag(\vCm)^{-1} \vec x \\
+	&= \sum_{(i, j) \in E} c_{ij} \CmiInv (x_i - x_j)^2 + \sum_{i = 1}^n \epsilon_i \CmiInv x_i^2 \,.
+\end{align*}
+This expression is obviously non-negative due to $c_{ij}$, \CmiInv being positive and $\epsilon_i$ being non-negative.
+However, to show strict positivity, and correspondingly, negative definiteness of our original expression, consider the conditions under which $\vec x^T \mat L' \vec x$ could be zero:
+\begin{enumerate}[(i)]
+	\item The sum over $c_{ij} \CmiInv (x_i - x_j)^2$ is zero exactly if there are no edges in the graph (since the graph is connected, this is only possible for $n = 1$), or, under the conditions listed in \Cref{lem:laplacian_quadratic}, that is $\vec x = \alpha \vec{1}$, or, put differently, $x_i = x_j$ for all $i$, $j$.
+	\item The sum over $\epsilon_i \CmiInv x_i^2$ is zero exactly if $\epsilon_i \neq 0$ implies that $x_i = 0$.
+\end{enumerate}
+
+Crucially, \Cref{lem:laplacian_quadratic} still applies in \emph{(i)} despite the multiplication with $\CmiInv$.
+This is because $\CmiInv$ and $c_{ij}$ are strictly positive, and we know that the only way for $c_{ij} (x_i - x_j)^2$ to evaluate to zero is that all summands evaluate to zero.
+
+To complete the proof, first consider $n = 1$, as suggested by \emph{(i)}.
+In this case, since $\vec x \neq \vec{0}$ it follows $x_1 \neq 0$. Furthermore $\epsilon_1 > 0$.
+Hence, $\epsilon_i x_i^2 > 0$ and $\vec x \mat L' \vec x^T$ is strictly positive.
+
+Now assume that $n > 1$. Since $\vec x \neq \vec{0}$, and at least one $\epsilon_i$ is non-zero, this, by \emph{(ii)}, implies that the corresponding $x_i = 0$.
+By \emph{(i)}, $\vec x \mat L' \vec x^T$ can only evaluate to zero if $\vec x = \vec{0}$, which we excluded.
+Hence, $\vec x \mat L' \vec x^T > 0$ for all $\vec x \neq 0$ and $\mat L'$ is positive definite.
+This implies that all eigenvalues of $\mat L'$ are non-zero and that $\mat L'$ is non-singular.
+Our original claim follows trivially.
+\end{proof}
+
+%To prove this, we will make use of the following lemmas, that, in similar form, can be found in the literature on graph theory; see the provided references for more information.
+%
+%\begin{lemma}
+%The Laplacian $\mat L$ of a positively weighted connected graph is positive semi-definite---all eigenvalues are real and non-negative.
+%The smallest eigenvalue is zero with multiplicity one.
+%\end{lemma}
+%
+%\begin{proof}
+%Multiplicity of the eigenvalue zero follows from \citet[Chapter~13, Theorem~13.1.1]{godsil2001algebraic}.
+%There is one connected component in the graph, hence the rank of the Laplacian $\mat L$ is $n - 1$ and there must be exactly one eigenvalue zero.
+%Positive semi-definiteness directly follows from the quadratic form of the Laplacian \citep[Section~18.3.2]{spielman2012spectral}:
+%\begin{align*}
+%	\vec x \mat L \vec x^T &= \sum_{(i, j) \in E} c_{ij} (x_i - x_j)^2 \geq 0 \,,
+%\end{align*}
+%where $\vec x \in \mathbb{R}^n$, $E$ are the edges in the graph, and $c_{ij}$ are the connection weights; nonnegativity holds because of $c_{ij}$ being nonnegative.
+%This is the definition of \enquote{positive semidefinite}.
+%Since $\mat L$ is symmetric, \enquote{positive semidefinite} is equivalent to \enquote{all eigenvalues are non-negative}.
+%\end{proof}
+%
+%\begin{lemma}
+%Let $\mat L$ the Laplacian of a positively weighted connected graph. Then $\mat L' = \mat L + \diag(\vec{\epsilon})$ is non-singular for any non-negative $\vec{\epsilon} \in \mathbb{R}^n \setminus \{\vec{0}\}$.
+%\end{lemma}
+
+%\begin{proof}
+%Non-singularity is equivalent to the null-space of $\mat L'$ only containing the zero-vector.
+%Assume that $\vec x \neq \vec{0}$ such that $(\mat L' \vec x)_i = 0$ for all $i$.
+%By definition of the graph Laplacian we have
+%\begin{align*}
+%	\bigl( \mat L' \vec x \bigr)_i &= \sum_{j = 1}^n c_{ij} x_i - \sum_{j = 1}^n c_{ij} x_j + \epsilon_i x_i = 0 \quad \text{for all } i \,.
+%\end{align*}
+%Correspondingly, the sum over all $i$ should be zero as well.
+%Exploiting the symmetry of the undirected graph (i.e., $c_{ij} = c_{ji}$) we obtain
+%\begin{align*}
+%	\sum_{i = 1}^n \bigl( \mat L' \vec x \bigr)_i
+%		&= \sum_{i = 1}^n \left( \sum_{j = 1}^n c_{ij} x_i - \sum_{j = 1}^n c_{ij} x_j + \epsilon_i x_i \right)
+%		 = \left( \sum_{i = 1}^n \sum_{j = 1}^n c_{ij} x_i \right)
+%		 - \left( \sum_{i = 1}^n \sum_{j = 1}^n c_{ji} x_j \right)
+%		 + \sum_{i = 1}^n \epsilon_i x_i \\
+%		&= \left( \sum_{i = 1}^n \sum_{j = 1}^n c_{ij} x_i \right)
+%		 - \left( \sum_{j = 1}^n \sum_{i = 1}^n c_{ij} x_i \right)
+%		 + \sum_{i = 1}^n \epsilon_i x_i
+%		 = \langle \vec x, \vec \epsilon \rangle
+%		 = 0 \,.
+%\end{align*}
+%This equality can only hold if $\vec x$ is orthogonal to $\vec{\epsilon}$, i.e., $\langle \vec x, \vec \epsilon \rangle = 0$.
+%\end{proof}
+
+\pagebreak
+
+\subsection{Proof of \Cref{thm:nlif_product_terms}}
+\label{app:nlif_product_terms}
+
+We stated in \Cref{sec:nlif_examples} that the dendritic nonlinearity $H$ of an $n$-LIF neuron only contains product terms between the input channels of different compartments, but not between input channels of the same compartment.
+In particular, we claimed the following:
+
+\ThmNlifProductTerms*
+
+\begin{proof}
+We first prove claim \emph{(A)}, followed by both \emph{(B)} and \emph{(C)}.
+However, to do so, we first need to lay out the problem at hand in more detail.
+First, note that all $\ell$ branches of the neuron, including the soma itself, form block matrices $\mat{\tilde C}_m[\vec g]$ within the reduced system matrix $\mat{\tilde A}[\vec g]$. 
+In other words, the reduced system matrix and its inverse are given as
+\begin{align}
+\mat{\tilde A}[\vec g] =
+\NiceMatrixOptions{renew-dots,renew-matrix}
+\begin{bmatrix}
+	1	   & 0                        & \cdots & 0 \\
+	0      & \mat{\tilde C}_1[\vec g] & \ddots & \vdots \\
+	\vdots & \ddots                   & \ddots & 0 \\
+    0      & \cdots                   & 0      & \mat{\tilde C}_\ell[\vec g]
+\end{bmatrix}
+\quad\quad
+&\Leftrightarrow
+\quad\quad
+\mat{\tilde A}[\vec g]^{-1} =
+\NiceMatrixOptions{renew-dots,renew-matrix}
+\begin{bmatrix}
+	1	   & 0                             & \cdots & 0 \\
+	0      & \mat{\tilde C}_1[\vec g]^{-1} & \ddots & \vdots \\
+	\vdots & \ddots                        & \ddots & 0 \\
+    0      & \cdots                        & 0      & \mat{\tilde C}_\ell[\vec g]^{-1}
+\end{bmatrix} \,,
+\label{eqn:h_model_blocks}
+\end{align}
+To simplify writing out the block matrix $\mat{\tilde C}_\ell[\vec g]$, let $r = i_{m - 1} + 1$ be the index of the first compartment in each branch, and $s = i_m$  be the index of the last compatment in each branch. Each block matrix is of the form
+\begin{align*}
+\mat{\tilde C}_m[\vec g] =
+\NiceMatrixOptions{renew-dots,renew-matrix}
+\begin{bmatrix}
+	 d_{r}[\vec g] & -c_{r, r + 1} & \cdots            & -c_{r, s} \\
+	-c_{r + 1, r}  & \ddots        & \ddots            & \vdots \\
+	\vdots         & \ddots        & \ddots            & -c_{s - 1, r} \\
+    -c_{s, r}      & \cdots        & -c_{s, r - 1}     & d_{s}[\vec g]
+\end{bmatrix} \,,
+\end{align*}
+where, by construction of $\mat{\tilde A}[\vec g]$, each diagonal element $d_i[\vec g]$ is an affine function in the conductance-based input channels.
+At the same time, each entry in the input vector $(\vec{\tilde b}[\vec g])_i$ is an affine function in both the conductance- and current-based input channels targeting this channel.
+We have
+\begin{align*}
+	d_i[\vec g] &= \tilde a_0^i + \sum_{j = 1}^{k} \tilde a_j^i g_j^i \,, & 
+	(\vec{\tilde b}[\vec g])_i &= \tilde b_0^i + \sum_{j = 1}^{k} \tilde b_j^i g_j^i + \sum_{k = 1}^{k} \tilde c_j^i J_j^i \,,
+\end{align*}
+where $\tilde a^i_j$, $\tilde b^i_j$, $\tilde c^i_j$ are the corresponding system matrix entries.
+Finally, recall \cref{eqn:h_model}, i.e., the mapping between the input $\vec g$ and the predicted somatic current:
+\begin{align}
+	H(\vec g) &\approx \sum_{i = 1}^n \tilde c_i (\tilde v^\mathrm{eq}_i - \vSom) \,,
+	\quad\quad \text{where} \quad \vec{\tilde v}^\mathrm{eq} = -{\mat{\tilde A}}[\vec g]^{-1} \vec{\tilde b}[\vec g] \,.
+	\label{eqn:h_model_app}
+\end{align}
+
+\paragraph{Claim (A)}
+The first claim (i.e., the structure of the affine function $H_0$) trivially follows from multiplying the inverse of the first \enquote{somatic block} of the reduced system matrix $\mat{\tilde A}[\vec g]$ (i.e., the identity) with the first entry of the reduced input vector $(\vec{\tilde b}[\vec g])_1$.
+This results in first entry of $\vec{\tilde v}^\mathrm{eq}$; further combining this with \cref{eqn:h_model_app} yields an affine function $H_0(g_1^1, \ldots, g_k^1, J_1^1, \ldots, J_k^1)$.
+
+\paragraph{Claims (B) and (C)}
+The last two claims, i.e., the somatic current model $H$ being a sum of rational functions with the given structural constraints, can be obtained by systematically inverting the individual block matrices $\mat{\tilde C}_m[\vec g]$.
+
+In particular, note that the sum-of-rational-functions structure directly follows from plugging $\mat{\tilde A}[\vec g]^{-1}$ from \cref{eqn:h_model_blocks} into \cref{eqn:h_model_app}.
+As we will become apparent in a moment, the product between the inverted block matrix $\mat{\tilde C}_m[\vec g]$ for branch $m$ and the corresponding section of the input vector $\vec{\tilde b}[\vec g]$ form the individual rational functions.
+By construction, this rational function can only depend on the input channels targeting the branch $m$.
+That is, each sum term $m$ can only depend on the variables $g_1^{r}, \ldots, g_k^{s}, J_1^{r}, \ldots, J_k^{s}$, where $r$, $s$ are as defined above.
+
+To see that the product between the inverted block matrix and the input vector forms a rational function, remember that the inverse of a matrix can be written as its adjoint scaled by the inverse of its determinant \citep[e.g.,][Theorem~1.9, p.~366]{hefferon2020linear}:
+\begin{align*}
+	\mat{\tilde C}_m[\vec g]^{-1} &= \frac{1}{\det(\mat{\tilde C}_m[\vec g])} \adj(\mat{\tilde C}_m[\vec g]) \,.
+\end{align*}
+Crucially, the determinant fully determines the denominator $H^A_m$ of each rational function.
+The division by the determinant is the only division in each product between the inverted block-matrix $\mat{\tilde C}_m[\vec g]^{-1}$ and the corresponding portion of the input vector $\vec{\tilde b}[\vec g]$.
+
+In addition to the properties listed above, claim \emph{(B)} states that $H^A_m$ only depends on the conductance-based inputs, and that it only contains products between inputs targeting different compartments.
+The first statement follows from $\mat{\tilde A}[\vec g]$ only containing conductance-based inputs by construction.
+The second statement follows from the permutation expansion of the determinant \citep[e.g.,][Section~4.I.3, p.~337]{hefferon2020linear}, we have
+\begin{align*}
+	H^A_m(g_1^I, \ldots, g_k^J) = \det( \mat{\tilde C}_m[\vec g] )
+		&= \sum_{\pi \in \mathbb{P}} \sign(\pi) \prod_{i=1}^n \bigl(\mat{\tilde C}_m[\vec g]\bigr)_{i, \pi(i) + 1} \,,
+	& \text{where } \mathbb{P} = S({1, \ldots, n - 1}) \,.
+\end{align*}
+Here, $S(X)$ denotes the set of permutations of the set $X$, and $\sign(\pi) \in \{-1, 1\}$ is the \enquote{signum} of the permutation $\pi$.
+Importantly, each product in the determinant only contains each diagonal element $d_i[\vec g]$ exactly once and there are no product-terms between inputs targeting the same compartment $i$.
+
+Finally, claim \emph{(C)} states that the numerators $H_m^B$ only contains product terms between inputs targeting different compartments, and that each product term features at most one current-based input.
+The second statement is a result of $\mat{\tilde A}[\vec g]$ only depending on conductance-based inputs, and all current-based inputs only influencing $\vec{\tilde b}[\vec g]$.
+Multiplications with current-based inputs are a result of the final matrix-vector product between $\mat{\tilde A}^{-1}[\vec g]^{-1}$ and the input matrix $\vec{\tilde b}[\vec g]$ and there can be only one current-based input per product term.
+
+The first statement follows from the structure of adjoint.
+The numerator $H_m^B$ is determined by the matrix product between the adjoint of $\mat{\tilde C}_m[\vec g]$ and the corresponding portion of $\vec{\tilde b}[\vec g]$.
+Notably, the adjoint of a matrix $\mat A$ is a matrix of determinants of $\mat A$ where the $k$th row and the $\ell$th column have been deleted:
+\begin{align*}
+	\bigl(\adj(\mat{\tilde C}_m[\vec g])\bigr)_{k\ell}
+		&= \sum_{\pi \in \mathbb{P}} \sign(\pi) \prod_{\substack{i=1\\i \neq k}}^n \bigl( \mat{\tilde C}_m[\vec g] \bigr)_{i, \pi(i) + 1} \,,
+	& \text{where } \mathbb{P} = S({1, \ldots, \ell - 1, \ell + 1, n - 1}) \,.
+\end{align*}
+Hence, the entry $(\adj(\mat{\tilde C}[\vec g]))_{k\ell}$ neither contains the term $d_{k}[\vec g]$, nor $d_{\ell}[\vec g]$, and the product-terms formed by computing the matrix-vector product between $\adj(\mat{\tilde C}_m[\vec g])$ and $\vec{\tilde b}[\vec g]$ contain each input channel at most once.
+This concludes our proof.
+\end{proof}
+
+\subsection{Proof of \Cref{thm:two_comp_xor}}
+\label{app:thm_two_comp_xor}
+
+We noted in \Cref{sec:nlif_examples} that the two-compartment LIF nonlinearity cannot be used to solve the weak XOR problem.
+More precisely, we stated the following:
+
+\ThmTwoCompXor*
+
+The proof for this is analogous to the proof that additive networks cannot solve the XOR problem (cf.~\Cref{app:thm_weak_xor}).
+Particularly, we rely on the denominator being strictly positive.
+
+\begin{proof}
+For $b_0 \neq 0$, $H$ as given in the above theorem can be reparametrized to $H'$ as follows
 \begin{align*} 
 	H(g_\mathrm{E}, g_\mathrm{I}) &= H'\left( \dfrac{b_1  g_\mathrm{E}}{| b_0 |}, \dfrac{b_2 g_\mathrm{I}}{| b_0 |} \right) = H'(x, y) = \frac{\pm 1 + x - y}{c_0 + c_1 x + c_2 y} \,,
 \end{align*}
 where $c_0 > 0 \text{ and } c_1, c_2, x, y \geq 0$.
 Assume that $\phi(x, y) = H'(x, y)$ can solve the weak XOR problem. Since the denominator in the above nonlinearity is strictly positive, we can safely cross-multiply with the denominator across the inequalities and apply the above definition
 \begin{align*}
-		&\quad   \left( 0 < \hphantom{-}  x_0 y_0 c_1 + x_0 y_0 c_2 - x_0 y_1 c_1 - x_0 y_1 c_2 + y_0 c_0 \pm y_0 c_2 - y_1 c_0 \mp y_1 c_2 \right) \\
-		&\wedge  \left( 0 <           -   x_1 y_0 c_1 - x_1 y_0 c_2 + x_1 y_1 c_1 + x_1 y_1 c_2 - y_0 c_0 \mp y_0 c_2 + y_1 c_0 \pm y_1 c_2 \right) \\
-		&\wedge  \left( 0 <           -   x_0 y_0 c_1 - x_0 y_0 c_2 + x_1 y_0 c_1 + x_1 y_0 c_2 - x_0 c_0 \pm x_0 c_1 + x_1 c_0 \mp x_1 c_1 \right) \\
-		&\wedge  \left( 0 < \hphantom{-}  x_0 y_1 c_1 + x_0 y_1 c_2 - x_1 y_1 c_1 - x_1 y_1 c_2 + x_0 c_0 \mp x_0 c_1 - x_1 c_0 \pm x_1 c_1 \right) \,.
+		&\hphantom{\wedge}\;\,  \bigl( 0 < \hphantom{-}  x_0 y_0 c_1 + x_0 y_0 c_2 - x_0 y_1 c_1 - x_0 y_1 c_2 + y_0 c_0 \pm y_0 c_2 - y_1 c_0 \mp y_1 c_2 \bigr) \\
+		&\wedge  \bigl( 0 <           -   x_1 y_0 c_1 - x_1 y_0 c_2 + x_1 y_1 c_1 + x_1 y_1 c_2 - y_0 c_0 \mp y_0 c_2 + y_1 c_0 \pm y_1 c_2 \bigr) \\
+		&\wedge  \bigl( 0 <           -   x_0 y_0 c_1 - x_0 y_0 c_2 + x_1 y_0 c_1 + x_1 y_0 c_2 - x_0 c_0 \pm x_0 c_1 + x_1 c_0 \mp x_1 c_1 \bigr) \\
+		&\wedge  \bigl( 0 < \hphantom{-}  x_0 y_1 c_1 + x_0 y_1 c_2 - x_1 y_1 c_1 - x_1 y_1 c_2 + x_0 c_0 \mp x_0 c_1 - x_1 c_0 \pm x_1 c_1 \bigr) \,.
 \end{align*}
 This can be simplified to
 \begin{align*}
-		&\quad   \left( 0 < \hphantom{-} ((c_1 + c_2) x_0 \pm c_2 + c_0) (y_0 - y_1) \right)
-		 \wedge  \left( 0 <           -  ((c_1 + c_2) x_1 \pm c_2 + c_0) (y_0 - y_1) \right) \\
-		&\wedge  \left( 0 <           -  ((c_1 + c_2) y_0 \mp c_1 + c_0) (x_0 - x_1) \right)
-		 \wedge  \left( 0 < \hphantom{-} ((c_1 + c_2) y_1 \mp c_1 + c_0) (x_0 - x_1) \right) \,.
+		&\hphantom{\wedge}\;\, \bigl( 0 < \hphantom{-} ((c_1 + c_2) x_0 \pm c_2 + c_0) (y_0 - y_1) \bigr)
+		 \wedge  \bigl( 0 <           -  ((c_1 + c_2) x_1 \pm c_2 + c_0) (y_0 - y_1) \bigr) \\
+		&\wedge  \bigl( 0 <           -  ((c_1 + c_2) y_0 \mp c_1 + c_0) (x_0 - x_1) \bigr)
+		 \wedge  \bigl( 0 < \hphantom{-} ((c_1 + c_2) y_1 \mp c_1 + c_0) (x_0 - x_1) \bigr) \,.
 \end{align*}
 Due to  the nonnegativity constraints either the first line implies $(y_0 - y_1 > 0) \wedge (y_0 - y_1 < 0)$ (for the \enquote{$+$} branch of the \enquote{$\pm$}), or the second line implies $(x_0 - x_1 < 0) \wedge (x_0 - x_1 > 0)$ (for the \enquote{$+$} branch of the \enquote{$\mp$}), which is a contradiction. The argument for $b_0 = 0$ is similar. Thus, the theorem holds. In contrast to the previous proof no contradiction can be derived for both lines at the same time. In other words, there are valid parameters $c_0$, $c_1$, $c_2$ for which there exist $x_0$, $y_0$, $x_1$, $y_1$ such that two of the four inequalities hold.
 \end{proof}
-
-
-%\subsection{Non-convexity of the Two-Compartment Dendritic Nonlinearity}
-%\label{app:two_comp_lif_non_convex}
-%
-%Generally speaking, the convexity or non-convexity of loss functions determines whether an optimisation problem is (relatively speaking) \enquote{easy} to solve or not.
-%\Citet{rockafellar1993lagrange} summarises this quite succinctly: \enquote{In fact the great
-%watershed in optimization isn't between linearity and nonlinearity, but convexity and
-%nonconvexity.}
-%This comes down to the fact that a local optimum of a convex loss function is equal to its global optimum; generally speaking, no such guarantees can be made for non-convex functions.
-%
-%That being said, and as discussed by \citet[Chapter~2]{sun2016when}, there are classes of non-convex functions for which a global optimiser can be constructed.
-%However, this requires proving that the local optimum is equal to the global optimum, as well as some guarantees regarding the Hessian matrix at saddle points of the function.
-%
-%A thorough analysis our rational approximation problems \cref{eqn:two_comp_optimal_parameters} and \cref{eqn:two_comp_lif_weight_optimisation} is out of scope for this thesis.
-%However, as we demonstrate next, one can easily show that these functions are not convex.
-%First, recall one possible definition of the convexity of a function $f$:
-%
-%\begin{definition}[Convex function]
-%A function $f : \mathbb{R}^n \longrightarrow \mathbb{R}$ is \emph{convex} if the following inequality holds for any two $\vec x, \vec y \in \mathbb{R}^n$ and all $\alpha \in [0, 1]$:
-%\begin{align*}
-%	f\bigl((1 - \alpha) \vec x + \alpha \vec y\bigr) \leq (1 - \alpha) f\bigl(\vec x\bigr) + \alpha f\bigl(\vec y\bigr) \,.
-%\end{align*}
-%\end{definition}
-%
-%Now, instead of proving the non-convexity of \cref{eqn:two_comp_optimal_parameters} and \cref{eqn:two_comp_lif_weight_optimisation} directly, consider this following function, which is corresponds to both optimisation problems for one sample $N = 1$
-%\begin{align}
-%	f(a, b) = \left(J - \frac{b}{a} \right)^2 \quad \quad \text{where } a > 0 \,.
-%	\label{eqn:rational_approx_single}
-%\end{align}
-%Proving non-convexity of this function implies that our loss functions are not convex.
-%Specifically, for one sample ($N = 1$), the parameters $a$, $b$ are linear combinations in either the parameters or the weights. 

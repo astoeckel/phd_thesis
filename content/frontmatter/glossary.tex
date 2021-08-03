@@ -1,0 +1,325 @@
+% !TeX spellcheck = en_GB
+
+%\newcommand{\NewGlossaryEntryWithAcr}[4]{
+%	\newglossaryentry{#1}{
+%		name={#2},
+%		text={#2\glsadd{#1-acr}},
+%		long={#3},
+%		description={#4}
+%	}
+%	\newglossaryentry{#1-acr}{
+%		type=\acronymtype,
+%		name={#2},
+%		description={\glsdisp{#1}{#3}}
+%	}
+%	\expandafter\newcommand\csname #2\endcsname{\gls{#1}\xspace}
+%}
+
+\newcommand{\NewGlossaryEntryWithAcr}[4]{
+	\newglossaryentry{#1}{
+		name={#3},
+		text={#2\glsadd{#1-acr}},
+		long={#2},
+		description={#4}
+	}
+	\newglossaryentry{#1-acr}{
+		type=\acronymtype,
+		name={#2},
+		description={\glsdisp{#1}{#3}}
+	}
+	\expandafter\newcommand\csname #2\endcsname{\gls{#1}\xspace}
+}
+
+\NewGlossaryEntryWithAcr{lif}{LIF}{leaky integrate-and-fire neuron}{
+	A fundamental spiking neuron model consisting of a leaky integrator and an artificial spike mechanism.
+}
+
+\NewGlossaryEntryWithAcr{sgd}{SGD}{stochastic gradient descent}{
+	A na\"ive function optimisation method.
+	The idea is to compute the gradient of the loss function $E(\vec x, \vec t; \vec \theta)$ over a random (hence \enquote{stochastic}) subset of the training data (called a \enquote{batch}) with respect to parameters $\vec \theta$, and to update $\theta$ by following the gradient in a downwards direction:
+	\begin{align*}
+		\vec \theta^{t+1} = \vec \theta^{t} - \eta \frac{1}N \sum_{k = 1}^N \nabla_{\vec \theta} E(\vec x_k, \vec t_k; \vec \theta^{t}) \,,
+	\end{align*}
+	where $\eta$ is a learning rate and $N$ is the batch-size.
+	This method is used to great success in machine learning \citep{lecun2015deep}. 
+	At the time of writing, the most popular gradient descent optimiser is Adam \citep{kingma2015adam}.
+	\emph{See also \Cref{sec:neural_networks}, \Cref{sec:nlif_opt}, \cite[Section~3.1.3]{bishop2006pattern}, and \citet[Section~5.9]{goodfellow2016deep}}.
+}
+
+
+\newcommand{\nlif}{\gls{nlif}\xspace}
+\newglossaryentry{nlif}{
+	name={n-LIF},
+	text={$n$-LIF},
+	sort={nlif0},
+	long={written as $n$-LIF},
+	sort={nlif},
+	description={
+		An extension of the \LIF neuron with $n$ separate compartments.
+		\emph{See also \Cref{sec:nlif_description}}.
+	}
+}
+
+\newcommand{\mC}{\glsdisp{coupling_conductance}{\ensuremath{\mat{C}}}\xspace}
+\newcommand{\cij}{\glsdisp{coupling_conductance}{\ensuremath{c_{ij}}}\xspace}
+\newglossaryentry{coupling_conductance}{
+	name={coupling conductance},
+	long={$c_{ij}$, $\mat C$},
+	description={
+		Conductance value describing how closely two neuron compartments are linked together.
+		The current flowing from compartment $i$ to compartment $j$ is given as $c_{ij} (\vMemi - \vMemj)$.
+		We denote the matrix of coupling conductances as $\mat C$.
+		\emph{See also \Cref{sec:comp}}.
+	}
+}
+
+\newcommand{\mnLR}{\ensuremath{\mat{L}}\xspace}
+\newcommand{\mnL}{\glsdisp{laplacian}\mnLR\xspace}
+\newglossaryentry{laplacian}{
+	name={Laplacian matrix},
+	text={Laplacian},
+	long={\mnLR, $\ell_{ij}$},
+	description={
+		In some contexts also referred to as \emph{Kirchhoff matrix}.
+		The Laplacian matrix \mnLR is the difference between the degree and the weight matrix (or adjacency matrix) of a graph:
+		\begin{align*}
+			(\mnLR)_{ij} = \ell_{ij} &= \begin{cases}
+				\sum_{k}^n w_{ik} & \text{if } i = j \,,\\
+				-w_{ij} & \text{otherwise} \,,
+			\end{cases}
+		\end{align*}
+		where the $w_{ij}$ are the individual weights.
+		We usually have $w_{ij} = \cij$, where \cij is the \gls{coupling_conductance} between neural compartments.
+		This matrix arises naturally when modelling electrical networks (cf.~\cite{bollobas1998modern}, Chapter~II; \cite{spielman2012spectral}, Section~18.3) and is used in our matrix-description of the \nlif neuron.
+	}
+}
+
+\newcommand{\mnAR}{\ensuremath{\mat{A}}\xspace}
+\newcommand{\vnbR}{\ensuremath{\vec{b}}\xspace}
+\newcommand{\vngR}{\ensuremath{\vec{g}}\xspace}
+\newcommand{\vnapR}{\ensuremath{\vec{a}'}\xspace}
+\newcommand{\vnbpR}{\ensuremath{\vec{b}'}\xspace}
+\newcommand{\mnApR}{\ensuremath{\mat{A}'}\xspace}
+\newcommand{\mnBpR}{\ensuremath{\mat{B}'}\xspace}
+
+\newcommand{\mnA}{\glsdisp{nlifSys}\mnAR\xspace}
+\newcommand{\vnb}{\glsdisp{nlifSys}\vnbR\xspace}
+\newcommand{\vng}{\glsdisp{nlifSys}\vngR\xspace}
+\newcommand{\mnAp}{\glsdisp{nlifSys}\mnApR\xspace}
+\newcommand{\mnBp}{\glsdisp{nlifSys}\mnBpR\xspace}
+\newcommand{\vnap}{\glsdisp{nlifSys}\vnapR\xspace}
+\newcommand{\vnbp}{\glsdisp{nlifSys}\vnbpR\xspace}
+
+\newglossaryentry{nlifSys}{
+	name={n-LIF system matrices},
+	text={$n$-LIF system matrices},
+	sort={nlif1},
+	long={$\mnAR[\vngR]$, $\vnbR[\vngR]$, \mnApR, \mnBpR, \vnapR, \vnbpR, \mnLR},
+	description={
+		The subthreshold dynamics of the \nlif neuron are described by a set of matrices (cf.~eq.~\ref{eqn:nlif_matrix}).
+		The feedback matrix $\mnAR[\vngR]$ is composed of the \glsdisp{laplacian}{graph Laplacian} \mnL, the static feedback diagonal \vnapR, and the linear input matrix \mnApR.
+		The input vector $\vnbR[\vngR]$ is composed into a static input term \vnbpR, and a linear input term \mnBpR.
+		\emph{See also \Cref{sec:nlif_description}; \gls{nlifSysRed}}.
+	}
+}
+
+\newcommand{\mrAR}{\ensuremath{\mat{\tilde A}}\xspace}
+\newcommand{\vrbR}{\ensuremath{\vec{\tilde b}}\xspace}
+\newcommand{\vrapR}{\ensuremath{\vec{\tilde a}'}\xspace}
+\newcommand{\vrbpR}{\ensuremath{\vec{\tilde b}'}\xspace}
+\newcommand{\mrApR}{\ensuremath{\mat{\tilde A}'}\xspace}
+\newcommand{\mrBpR}{\ensuremath{\mat{\tilde B}'}\xspace}
+\newcommand{\mrLR}{\ensuremath{\mat{\tilde L}}\xspace}
+\newcommand{\vrcR}{\ensuremath{\vec{\tilde c}}\xspace}
+\newcommand{\vrciR}{\ensuremath{{\tilde c}_i}\xspace}
+
+\newcommand{\mrA}{\glsdisp{nlifSysRed}\mrAR\xspace}
+\newcommand{\vrb}{\glsdisp{nlifSysRed}\vrbR\xspace}
+\newcommand{\mrAp}{\glsdisp{nlifSysRed}\mrApR\xspace}
+\newcommand{\mrBp}{\glsdisp{nlifSysRed}\mrBpR\xspace}
+\newcommand{\vrap}{\glsdisp{nlifSysRed}\vrapR\xspace}
+\newcommand{\vrbp}{\glsdisp{nlifSysRed}\vrbpR\xspace}
+\newcommand{\mrL}{\glsdisp{nlifSysRed}\mrLR\xspace}
+\newcommand{\vrc}{\glsdisp{nlifSysRed}\vrcR\xspace}
+\newcommand{\vrci}{\glsdisp{nlifSysRed}\vrciR\xspace}
+
+\newglossaryentry{nlifSysRed}{
+	name={n-LIF reduced system matrices},
+	sort={nlif2},
+	text={$n$-LIF reduced system matrices},
+	long={$\mrAR[\vngR]$, $\vrbR[\vngR]$, \mrApR, \mrBpR, \vrapR, \vrbpR, \mrLR},
+	description={
+		The reduced \nlif system matrices describe an \nlif dynamical system where the soma has been clamped to the \gls{vSom} \vSom.
+		These matrices form the basis of the \nlif surrogate dendritc nonlinearity.
+		\emph{See also \Cref{sec:nlif_derive_h}}.
+	}
+}
+
+\newcommand{\vneqR}{\ensuremath{\vec{v}^\mathrm{eq}}\xspace}
+\newcommand{\vneqiR}{\ensuremath{v_i^\mathrm{eq}}\xspace}
+\newcommand{\vreqR}{\ensuremath{\vec{\tilde v}^\mathrm{eq}}\xspace}
+\newcommand{\vreqiR}{\ensuremath{{\tilde v}_i^\mathrm{eq}}\xspace}
+\newcommand{\vreqkR}{\ensuremath{\vec{\tilde v}_k^\mathrm{eq}}\xspace}
+\newcommand{\vneq}{\glsdisp{nlifSys}\vneqR\xspace}
+\newcommand{\vneqi}{\glsdisp{nlifSys}\vneqiR\xspace}
+\newcommand{\vreq}{\glsdisp{nlifSysRed}\vreqR\xspace}
+\newcommand{\vreqi}{\glsdisp{nlifSysRed}\vreqiR\xspace}
+
+\NewGlossaryEntryWithAcr{nef}{NEF}{Neural Engineering Framework}{
+	A collection of mathematical methods for constructing spiking neural networks originally proposed by \citet{eliasmith2003neural}.
+	\emph{See also \Cref{sec:nef}}.
+}
+
+\NewGlossaryEntryWithAcr{relu}{ReLU}{rectified linear unit}{
+	Also referred to as \enquote{rectifier}.
+	Defined as $\sigma(\xi) = \max\{0, \xi\}$.
+	While this type of artificial neuron has been used since the early days of neural networks, it has recently been popularised in context of \enquote{deep learning} by \citet{glorot2011deep}.
+}
+
+\NewGlossaryEntryWithAcr{rms}{RMS}{root mean square}{
+	Used to characterise the power of a signal or a set of samples. As the name suggests, this measure is defined as the square-root of the mean of the squared signal.
+%	In the continuous domain, this measure is defined as
+%	$$\sqrt{\frac{1}{|\Xrepr|} \int_{\Xrepr} f(\vec x)^2 \,d\vec x} \,.$$
+}
+
+\NewGlossaryEntryWithAcr{rmse}{RMSE}{root mean square error}{
+	The \RMS of the difference between a target signal $f$ and a measured signal $\hat f$.
+%	In the continous domain, this metric is defined as
+%	$$\sqrt{\frac{1}{|\Xrepr|} \int_{\Xrepr} \big( f(\vec x) - \hat f(\vec x) \big)^2 \,d\vec x} \,.$$
+}
+
+\NewGlossaryEntryWithAcr{nrmse}{NRMSE}{normalised root mean square error}{
+	Characterises the power of the difference between a target signal $f$ and an actual signal $\hat f$ relative to the \RMS of the target signal $\hat f$.
+%	$$\left( \sqrt{\frac{1}{|\Xrepr|} \int_{\Xrepr} \big( f(\vec x) - \hat f(\vec x) \big)^2 \,d\vec x} \right) \left( \sqrt{\frac{1}{|\Xrepr|} \int_{\Xrepr} \big( f(\vec x) \big)^2 \,d\vec x} \right)^{-1} \,.$$
+	This measure is preferred to the \RMSE when comparing different target functions $f$. An error of one implies that $\hat f$ is no better than a constant value of zero.
+}
+
+\newglossaryentry{twocomp}{
+	name={two-compartment LIF neuron},
+	description={
+		A particular \nlif neuron with separate dendritic and somatic compartments.
+		Conductance-based shunting in the dendritic compartment can be systematically exploited to approximate multivariate functions.
+		\emph{See also \Cref{sec:nlif_examples,sec:two_comp_lif}}.
+	}
+}
+\newcommand{\twocomplif}{\glsdisp{twocomp}{two-compartment LIF}\xspace}
+
+\newglossaryentry{dennonlin}{
+	name={dendritic nonlinearity},
+	long={$H$, $H_\mathrm{cond}$, $H_\mathrm{cur}$},
+	description={
+		The dendritic nonlinearity $H(g_1, \ldots, g_\ell)$ as defined in \cref{eqn:def_h} maps input channel states $g_1, \ldots, g_\ell$ onto an average somatic current.
+		Since it is typically not possible to find a closed form expression for $H$, we instead use a nonlinearity \emph{model}.
+		$H_\mathrm{cond}(g_\mathrm{E}, g_\mathrm{I})$ refers to the nonlinearity model for \glspl{twocomp} with conductance-based synapses, $H_\mathrm{cur}(J_\mathrm{E}, J_\mathrm{I})$ to the \enquote{nonlinearity} model describing standard \LIF neurons with separate excitatory and inhibitory current-based synapses.
+		\emph{See also \Cref{sec:nef_nonlinear}}.
+	}
+}
+\newcommand{\Hden}{\glsdisp{dennonlin}{\ensuremath{H}}\xspace}
+\newcommand{\Hcond}{\glsdisp{dennonlin}{\ensuremath{H_\mathrm{cond}}}\xspace}
+\newcommand{\Hcur}{\glsdisp{dennonlin}{\ensuremath{H_\mathrm{cur}}}\xspace}
+
+\NewGlossaryEntryWithAcr{xor}{XOR}{exclusive or}{
+	A binary boolean function returning \enquote{true} exactly if the two input arguments are not equal.
+	\Citet[originally published 1969]{minsky1987perceptrons} prove that the \enquote{Perceptron} single-layer neural network cannot compute this seemingly innocuous function.
+}
+
+\NewGlossaryEntryWithAcr{qp}{QP}{quadratic program}{
+	A generalisation of linear least-squares problems and linear programming. A quadratic program is defined as a quadratic loss function with an arbitrary set of equality and inequality constraints. \emph{See also \Cref{def:qp}}.
+}
+\newcommand{\qprog}{\glsdisp{qp}{quadratic program}\glsadd{qp-acr}\xspace}
+\newcommand{\qprogpl}{\glsdisp{qp}{quadratic programs}\glsadd{qp-acr}\xspace}
+
+\newglossaryentry{subrelax}{
+	name={subthreshold relaxation},
+	description={
+		A technique used to modify the weight optimisation problem such that target currents below some threshold current $J_\mathrm{th}$ are only penalised in the loss function if the decoded current is larger than $J_\mathrm{th}$.
+		\emph{See also \Cref{sec:nef_subthreshold}}.
+	}
+}
+
+\newglossaryentry{dales_principle}{
+	name={Dale's principle},
+	description={
+		All pre-synapses embedded in a neuron release neurotransmitter molecules of the same chemical composition \citep{strata1999dale,eccles1986chemical}.
+		As a simplification, we can interpret this as individual neurons typically acting either excitatorily or inhibitorily on their post-synapses.
+		\emph{See also \Cref{sec:synaptic_transmission}}.
+	}
+}
+
+\newglossaryentry{spatial_lowpass}{
+	name={spatial lowpass filter width},
+	long={$\rho$, ${\rho^{-1}}$},
+	description={
+		The scalar $\rho$ is the standard-deviation of a two-dimensional Gaussian filter kernel used to filter the randomly generated functions in \Cref{sec:dendritic_computation_theory_numerical} and \Cref{sec:two_comp_lif_experiment_2,sec:two_comp_lif_experiment_3}.
+		The larger $\rho$, the smaller the bandwidth of the generated function, i.e., the generated function contains fewer high frequencies.
+		We correspondingly use $\rho^{-1}$ as a proxy for the \enquote{complexity} of the generated functions.
+		Functions with small $\rho^{-1}$ are almost linear, whereas functions with large $\rho^{-1}$ contain high-frequency detail.
+		\emph{See \Cref{fig:2d_functions_overview} for an overview}.
+	}
+}
+\newcommand{\slw}{\glsdisp{spatial_lowpass}{\ensuremath{\rho}}\xspace}
+\newcommand{\slc}{\glsdisp{spatial_lowpass}{\ensuremath{\rho^{-1}}}\xspace}
+
+
+\newcommand{\tauRef}{\glsdisp{tauRef}{\ensuremath{\tau_\mathrm{ref}}}\xspace}
+\newglossaryentry{tauRef}{
+	name={refractory time constant},
+	long={$\tau_\mathrm{ref}$},
+	description={
+		Absolute refractoriness in neurons refers to neurons not being excitable for a short period of time whenever the neuron has just produced an action potential.
+		The refractory time constant is used in simple neuron models such as the LIF model to explicitly clamp the mambrane potential to the reset potential, making it impossible for the neuron to reach the threshold.
+	}
+}
+
+\newcommand{\vMem}{\glsdisp{vmem}{\ensuremath{v}}\xspace}
+\newcommand{\vMemi}{\glsdisp{vmem}{\ensuremath{v_i}}\xspace}
+\newcommand{\vMemj}{\glsdisp{vmem}{\ensuremath{v_j}}\xspace}
+\newcommand{\vvMem}{\glsdisp{vmem}{\ensuremath{\vec{v}}}\xspace}
+\newglossaryentry{vmem}{
+	name={membrane potential},
+	long={$v$, $v_i$, $\vec v$},
+	description={
+		Membrane potential\index{membrane potential} of a cell.
+		This is the electrical potential measured in volt between the intra- and extracellular fluid of a cell, also referred to as \emph{transmembrane} potential.
+		We are focusing on the membrane potential of neurons; typical neural membrane potentials range from about \SI{-85}{\milli\volt} (hyperpolarisation) to \SI{20}{\milli\volt} (depolarisation)
+		We use the symbol $v_i$ to refer to the potential of the $i$th neuron compartment in a multi-compartment model, and $\vec v$ to refer to all membrane potentials at the same time.
+		\emph{See also \Cref{sec:neuron_membrane_potential}}.
+	}
+}
+
+\newcommand{\tauMem}{\glsdisp{tauMem}{\ensuremath{\tau_\mathrm{m}}}\xspace}
+\newglossaryentry{tauMem}{
+	name={membrane time constant},
+	long={$\tau_\mathrm{m}$},
+	description={
+		Membrane time constant, sometimes also referred to as $\tau_\mathrm{RC}$ (due to the membrane forming a resistor-capacitance circuit; \emph{see also \gls{Cm}}).
+		In general, this is the time required to discharge a capacitor of capacitance $C$ over a resistor of value $R$ from an initial potential $u_0$ to the voltage $u_0 e^{-1}$. Conveniently, $\tau_\mathrm{RC}$ is just the product between the resistance and the capacitance, i.e., $\tau_\mathrm{RC} = RC$.
+		We use this symbol to denote the membrane time-constant of a point neuron or a neural compartment. In this case, $\tau_\mathrm{m}$ is just given as $\tau_\mathrm{m} = C_\mathrm{m} g_\mathrm{L}^{-1}$.
+	}
+}
+
+\newcommand{\Cm}{\glsdisp{Cm}{\ensuremath{C_\mathrm{m}}}\xspace}
+\newcommand{\Cmi}{\glsdisp{Cm}{\ensuremath{C_{\mathrm{m}, i}}}\xspace}
+\newcommand{\CmiInv}{\glsdisp{Cm}{\ensuremath{C_{\mathrm{m}, i}^{-1}}}\xspace}
+\newcommand{\vCm}{\glsdisp{Cm}{\ensuremath{{\vec C}_\mathrm{m}}}\xspace}
+\newglossaryentry{Cm}{
+	name={membrane capacitance},
+	long={$C_\mathrm{m}$, $C_{\mathrm{m}, i}$, $\vec C_\mathrm{m}$},
+	description={
+		Capacitance of the capacitor formed by separating the intra- and extra-cellular electrolytes through the cell-membrane.
+		The membrane capacitance is measured in farad, with typical values in the pico- to nano-farad range.
+		We use the symbol $C_\mathrm{m}$ to denote the membrane capacitance of a single compartment, $C_{\mathrm{m}, i}$ to denote the capacitance of a particular compartment in a multi-compartment model, and $\vec C_\mathrm{m}$ to denote the vector of membrane capacitances in an entire neuron model.
+	}
+}
+
+\newcommand{\vSom}{\glsdisp{vSom}{\ensuremath{{\bar v}}}\xspace}
+\newcommand{\vvSom}{\glsdisp{vSom}{\ensuremath{{\vec {\bar v}}}}\xspace}
+\newglossaryentry{vSom}{
+	name={average somatic potential},
+	long={${\bar v}_\mathrm{som}$, ${\vec {\bar v}}_\mathrm{som}$},
+	description={
+		In order to derive the surrogate dendritic nonlinearity model \Hden for the \nlif neuron model, we assume that the somatic compartment, on average, possess the potential ${\bar v}_\mathrm{som}$.
+		We use the symbol ${\vec{\bar v}}_\mathrm{som}$ to denote the vector ${\bar v}_\mathrm{som} \vec{1}$.
+		\emph{See also \Cref{sec:nlif_derive_h}}.	
+	}
+}

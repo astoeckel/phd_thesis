@@ -24,3 +24,5 @@ __pycache__/
 bibliography.bib
 *.blend1
 .datafile_cache.json
+.gdb_history
+

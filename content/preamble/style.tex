@@ -7,7 +7,7 @@
 \usepackage[scaled=0.81]{beramono}
 \usepackage[lcgreekalpha]{libertinust1math} % slanted integrals, by default
 \usepackage{amsthm} % libertinust1math loads amsmath
-\usepackage[scr=boondoxo,bb=boondox]{mathalfa} %Omit bb=boondox for default libertinus bb
+
 \usepackage[utf8]{inputenc}
 \usepackage[svgnames,table]{xcolor}
 
@@ -56,11 +56,12 @@
 	\createplainmark{index}{both}{\indexname}
 	\createplainmark{glossary}{both}{\glossaryname}
 }
+\newcommand{\draftmark}{\tiny\texttt{\color{gray} DRAFT (\today)}}
 \makeatother
 \makeevenhead{headings}{\small\sffamily\leftmark}{}{}
 \makeoddhead{headings}{}{}{\small\sffamily\rightmark}
-\makeevenfoot{headings}{}{\small\sffamily\thepage}{}
-\makeoddfoot{headings}{}{\small\sffamily\thepage}{}
+\makeevenfoot{headings}{\draftmark}{\small\sffamily\thepage}{}
+\makeoddfoot{headings}{}{\small\sffamily\thepage}{\draftmark}
 \pagestyle{headings}
 
 \copypagestyle{chapter}{plain}

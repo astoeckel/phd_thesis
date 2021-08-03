@@ -1,23 +1,156 @@
+% !TeX spellcheck = en_GB
+
 \section{Additional Data for Chapter~3}
+\label{app:data_chp3}
 
-This appendix lists additional experimental data and parameters used in Chapter~3.
-In most cases, please consult the main text for a more thorough description of what is being shown.
-
-\subsection{Model parameters}
-
-\Cref{tbl:two_comp_neuron_parameters} lists the overall neuron parameters used throughout Section~3.4.
+This section contains additional tables and figures for the experiments conducted in Chapter~3.
+\Cref{tbl:two_comp_neuron_parameters} lists neuron parameters used throughout \Cref{sec:two_comp_lif} unless explicitly stated differently.
+The model parameters derived in \Cref{sec:two_comp_lif_experiment_1} are given in \Cref{tbl:two_comp_model_parameters}; functions used in the two-compartment LIF network experiment are given in \Cref{tbl:two_comp_functions}.
 
 \input{content/chapters/ZC_data/ZC_02_tbl_neuron_parameters}
+
 \input{content/chapters/ZC_data/ZC_02_tbl_model_parameters}
 
-\subsection{Results}
-\label{app:two_comp_lif_results}
+\input{content/chapters/ZC_data/ZC_02_tbl_functions}
 
-Error values correspond to the normalised RMSE (relative to the RMS/standard deviation of the target function). $E_\mathrm{model}$ is the static (i.e.~without spike noise) decoding error assuming the dendritic and somatic models are accurate. $E_\mathrm{net}$ is the decoding error after passing the input through the entire network.
-
-Error values correspond to the normalised RMSE (relative to the RMS/standard deviation of the target function). $E_\mathrm{model}$ is the static (i.e.~without spike noise) decoding error assuming the dendritic and somatic models are accurate. $E_\mathrm{net}$ is the decoding error after passing the input through the entire network.
+Extended results for our two-compartment LIF network experiments are provided in \Cref{tbl:function_approximations_complete}.
+All error values correspond to the NRMSE (relative to the RMS of the target function).
+The error $E_\mathrm{model}$ corresponds to the static decoding errors assuming the dendritic model is accurate;
+the error $E_\mathrm{net}$ is the decoding error after passing the input through the entire network.
+The given errors are the mean and standard deviation over $N = 100$ experiments.
+Also refer to \Cref{tbl:function_approximations} for a more detailed legend.
 
 \input{content/chapters/ZC_data/ZC_02_tbl_two_comp_results}
+
+\subsection{Regularisation Factor and Pre-filter Sweep}
+\label{app:two_comp_regularisation_factor_sweep}
+
+The regularisation factors $\lambda$ used in the theoretical analysis of the two-compartment LIF nonlinearity (\Cref{sec:two_comp_lif_experiment_2}) were determined by performing a parameter sweep with a spatial low-pass filter coefficient of $\rho^{-1} = 0.5$.
+Results of this sweep are depicted in \Cref{fig:two_comp_2d_regularisation_sweep}.
+\begin{figure}
+	\centering
+	\includegraphics{media/chapters/ZC_data/two_comp_2d_regularisation_sweep.pdf}
+	%TODO Make sure the regularisation factors are called lambda everywhere; double-check the equations
+	\caption[Regularisation sweep for the theoretical analysis of the two-compartment LIF nonlinearity]{Regularisation sweep for the theoretical analysis of the two-compartment LIF nonlinearity (\Cref{sec:two_comp_lif_experiment_2}). Depicted lines are the median error over $N=128$ experiments for random 2D-functions with spatial filter $\rho^{-1} = 0.5$.
+	%Black crosses correspond to the minimum error for each curve.
+	\textbf{(A)} Is without subthreshold relaxation, \textbf{(B)} with subthreshold relaxation.}
+	\label{fig:two_comp_2d_regularisation_sweep}
+\end{figure}
+
+Similarly, the regularisation factors used in the network experiment (\Cref{sec:two_comp_lif_experiment_3}) were determined independently for each network setup by sweeping over the regularisation factor $\lambda$, and choosing the $\lambda$ that minimises the network error $E_\mathrm{net}$ when computing multiplication.
+We combine this sweep with the \enquote{pre-filter experiment} described below; results can be found in \Cref{fig:regularization_parameter_sweep_nosubth,fig:regularization_parameter_sweep_subth}.
+The final parameters used in \Cref{sec:two_comp_lif_experiment_3} are listed in \Cref{tbl:regularization_paremteters}.
+
+The purpose of the pre-filter experiment is the following.
+As mentioned in the main text, the dendritic compartment in the \gls{twocomp} model can be interpreted as an additional first order low-pass filter with time constant $C_\mathrm{m} g_\mathrm{L}^{-1}$ (cf.~\Cref{tbl:two_comp_neuron_parameters}).
+This low-pass filter reduces the amplitude of high-frequency transients in the input signal and may thus contribute to the reduction of the final approximation error $E_\mathrm{net}$.
+
+To explore the effects of low-pass filters in the network, we perform an additional experiment in which we introduced a first-order low-pass filter (the \enquote{pre-filter}) located at the input of the target population (for single-layer networks) or the input of the intermediate population (in the case of the two-layer network).
+By optimising both the regularisation factor $\lambda$ and the filter time-constant $\tau$, each network setup has the chance to include an additional, optimal low-pass filter.
+This rules out that the positive effects of the two-compartment neuron are primarily due to the low-pass filter behaviour of the dendritic compartment.
+Notably, this low-pass filter is not included in the filter-chain for the target signal used to compute the estimation error.
+Hence, the chosen filter time-constant must balance between suppressing noise in the input and not dampening high-frequency components in the target signal.
+
+As depicted in \Cref{fig:regularization_parameter_sweep_nosubth,fig:regularization_parameter_sweep_subth}, the pre-filter does not result in any appreciable improvement in error for single layer networks with standard LIF neurons.
+For both the two-layer LIF network, and the two-compartment LIF neurons without noise model, the error is minimized for a filter coefficient of about \SIrange{10}{20}{\milli\second}.
+As one would expect, when using the two-compartment LIF noise model, adding a pre-filter is more detrimental than useful.
+
+Function approximation errors are given in (cf.~\Cref{tbl:function_approximations_pre_filter}).
+Again, we provide the mean and standard deviation of the model and network errors for $N = 100$ samples; see above for a complete description of the table.
+The pre-filter reduces the error by only about $1$-$2\%$ across all network setups, which is far less than the observed reduction in error when using the \gls{twocomp} model compared to the standard LIF neuron model.
+We conclude that, while additional low-pass filters in the network can help to reduce the overall error, the reduction in error is too small to be an explanation for the smaller errors produced by the \gls{twocomp} model.
+
+\begin{figure}[p]
+	\includegraphics{media/chapters/ZC_data/two_comp_benchmark_functions_regularisation_filter_sweep_nosubth.pdf}
+	\caption[Regularisation factor and pre-filter time-constant sweeps without subthreshold relaxation]{Regularisation factor and pre-filter time-constant sweeps without subthreshold relaxation. Contour plots are based on the median network error $E_\mathrm{net}$ over 32 samples on a $32 \times 33$ grid. Blue and orange crosses indicate the point with minimum error with and without pre-filter, respectively.}
+	\label{fig:regularization_parameter_sweep_nosubth}
+\end{figure}
+
+\begin{figure}[p]
+	\includegraphics{media/chapters/ZC_data/two_comp_benchmark_functions_regularisation_filter_sweep_subth.pdf}
+	\caption[Regularisation factor and pre-filter time-constant sweep with subthreshold relaxation]{Regularisation factor and pre-filter time-constant sweep with subthreshold relaxation. Contour plots are based on the median network error $E_\mathrm{net}$ over 32 samples on a $32 \times 33$ grid. Blue and orange crosses indicate the point with minimum error with and without pre-filter, respectively.}
+	\label{fig:regularization_parameter_sweep_subth}
+\end{figure}
+
+\begin{table}
+	\caption[Regularisation factors and pre-filter time-constants.]{Regularisation factors and pre-filter time-constants for the two-compartment LIF network experiments. See text for a description.
+	\textsuperscript{\dag}With subthreshold relaxation.
+	}
+	\label{tbl:regularization_paremteters}
+	\centering
+	\small
+	\sffamily
+	\begin{tabular}{r r l r l r r}
+		\toprule
+		\multicolumn{2}{c}{\textbf{Experiment setup}} &
+		\multicolumn{2}{c}{\textbf{No pre-filter}} &
+		\multicolumn{3}{c}{\textbf{With pre-filter}} \\
+		\cmidrule{1-2}\cmidrule(l){3-4}\cmidrule(l){5-7}
+		& & $\sigma$ & $E_\mathrm{net}$ & $\sigma$ & $\tau$ & $E_\mathrm{net}$ \\
+		\midrule
+		%--------------------
+		\multirow{4}{2.7cm}[-0.5em]{\raggedleft LIF}
+			& standard
+			& $9.4 \times 10^{1}$ & $25.5\%$
+			& $3.8 \times 10^{1}$ & $\SI{36.5}{\milli\second}$ & $25.0\%$ \\
+			& standard\textsuperscript{\dag}
+			& $6.8 \times 10^{1}$ & $15.4\%$
+			& $3.8 \times 10^{1}$ & $\SI{20.6}{\milli\second}$ & $14.7\%$ \\
+		\cmidrule{2-7}
+			& two layers
+			& $1.6 \times 10^{1}$ & $9.2\%$
+			& $8.8 \times 10^{0}$ & $\SI{11.6}{\milli\second}$ & $8.4\%$ \\
+			& two layers\textsuperscript{\dag}
+			& $1.2 \times 10^{1}$ & $9.1\%$
+			& $8.5 \times 10^{0}$ & $\SI{11.6}{\milli\second}$ & $8.4\%$ \\
+		\midrule
+		\multirow{4}{2.7cm}[-0.5em]{\raggedleft Two comp. LIF $c_{12} = \SI{50}{\nano\siemens}$}
+			& standard
+			& $1.2 \times 10^{-2}$ & $6.2\%$
+			& $1.0 \times 10^{-3}$ & $\SI{13.5}{\milli\second}$ & $4.9\%$ \\
+			& standard\textsuperscript{\dag}
+			& $1.1 \times 10^{-1}$ & $4.3\%$
+			& $1.5 \times 10^{-3}$ & $\SI{11.6}{\milli\second}$ & $3.5\%$ \\
+		\cmidrule{2-7}
+			& noise model
+			& $1.2 \times 10^{-3}$ & $5.4\%$
+			& $1.2 \times 10^{-3}$ & $\SI{1.0}{\milli\second}$ & $5.4\%$ \\
+			& noise model\textsuperscript{\dag}
+			& $1.0 \times 10^{-3}$ & $4.7\%$
+			& $1.0 \times 10^{-3}$ & $\SI{1.0}{\milli\second}$ & $4.7\%$ \\
+		\midrule
+		\multirow{4}{2.7cm}[-0.5em]{\raggedleft Two comp. LIF $c_{12} = \SI{100}{\nano\siemens}$}
+			& standard
+			& $5.5 \times 10^{-2}$ & $7.0\%$
+			& $1.0 \times 10^{-3}$ & $\SI{15.3}{\milli\second}$ & $4.8\%$ \\
+			& standard\textsuperscript{\dag}
+			& $1.7 \times 10^{-1}$ & $5.2\%$
+			& $4.8 \times 10^{-3}$ & $\SI{13.3}{\milli\second}$ & $4.0\%$ \\
+		\cmidrule{2-7}
+			& noise model
+			& $1.0 \times 10^{-3}$ & $8.0\%$
+			& $1.0 \times 10^{-3}$ & $\SI{1.0}{\milli\second}$ & $8.0\%$ \\
+			& noise model\textsuperscript{\dag}
+			& $8.5 \times 10^{0}$ & $6.8\%$
+			& $8.5 \times 10^{0}$ & $\SI{1.8}{\milli\second}$ & $6.8\%$ \\
+		\midrule
+		\multirow{4}{2.7cm}[-0.5em]{\raggedleft Two comp. LIF $c_{12} = \SI{200}{\nano\siemens}$}
+			& standard
+			& $3.6 \times 10^{-2}$ & $8.9\%$
+			& $1.0 \times 10^{-3}$ & $\SI{23.7}{\milli\second}$ & $7.0\%$ \\
+			& standard\textsuperscript{\dag}
+			& $4.4 \times 10^{-2}$ & $7.0\%$
+			& $3.2 \times 10^{-1}$ & $\SI{17.9}{\milli\second}$ & $5.7\%$ \\
+		\cmidrule{2-7}
+			& noise model
+			& $2.0 \times 10^{0}$ & $14.3\%$
+			& $2.0 \times 10^{0}$ & $\SI{1.0}{\milli\second}$ & $14.3\%$ \\
+			& noise model\textsuperscript{\dag}
+			& $8.5 \times 10^{0}$ & $9.1\%$
+			& $8.8 \times 10^{0}$ & $\SI{17.6}{\milli\second}$ & $9.0\%$ \\
+		%------------------
+		\bottomrule
+	\end{tabular}
+\end{table}
+
 \input{content/chapters/ZC_data/ZC_02_tbl_two_comp_pre_filter_results}
-
-

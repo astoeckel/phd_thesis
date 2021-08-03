@@ -1,3 +1,5 @@
+% !TeX spellcheck = en_GB
+
 \section{Goldman Equation and the Equivalent Circuit Model}
 \label{app:goldman_equiv_circuit_diff}
 
@@ -35,7 +37,7 @@ We express this more formally below.
 Importantly though, note that our notion of \enquote{uniquely} allows conductances to be scaled by a common factor, i.e., $\alpha g_1$, $\ldots$, $\alpha g_N$.
 This scaling has no influence on the equilibrium potential, but determines \tauMem once a capacitance is added to the membrane circuit.
 
-\begin{claim}
+\begin{proposition}
 Consider the equation
 \begin{align*}
 	 \log \left( \frac{\sum_{i=1}^N P_i n_i}{\sum_{i = 1}^N P_i m_i} \right) = \frac{\sum_{i = 1}^N g_i(\ldots)  \log \left( \frac{n_i}{m_i} \right) }{\sum_{i = 1}^N g_i(\ldots)} \quad\quad \text{for all } n_1, \ldots, n_N, m_1, \ldots, m_N, P_1, \ldots, P_N > 0 \,,
@@ -49,7 +51,7 @@ such that the equality holds, and (b) for $N > 2$ there exist no unique (apart f
 \begin{align*}
 	g_i(n_1, \ldots, n_N, m_1, \ldots, m_N, P_1, \ldots, P_N) \quad\quad \text{for } i \in \{1, \ldots, N \} \,.
 \end{align*}
-\end{claim}
+\end{proposition}
 
 \begin{proof}
 We consider the cases $N = 1$, $N = 2$, and $N \geq 3$.

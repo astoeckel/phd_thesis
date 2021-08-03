@@ -82,30 +82,45 @@ with h5py.File(utils.datafile("two_comp_2d_regularisation_sweep.h5"),
     params_keys = str(f["params_keys"][()], "utf-8").split("\n")
     errs = f["errs"][()]
 
-fig, axs = plt.subplots(1, 2, figsize=(7.4, 3.0))
+fig, axs = plt.subplots(1, 2, figsize=(7.35, 3.0), gridspec_kw={
+    "wspace": 0.3,
+})
 
 optimal_points = {}
 
-for j, ax in enumerate(axs.flat):
+for k, ax in enumerate(axs.flat):
+    j = 1 - k
     for i, key in enumerate(params_keys):
+        style = dict(styles[key])
+        if "linestyle" in style:
+            del style["linestyle"]
+        style_1 = dict(style)
+        style_2 = dict(style)
+        style_2["label"] = None
+        style_2["zorder"] = 100
+
         Es = np.median(errs[i, :, :, j], axis=-1)
-        ax.loglog(regs, Es, **styles[key], clip_on=False, zorder=100)
+
+        ax.loglog(regs, Es, markeredgecolor="k", clip_on=False, linestyle='-', **style_1)
+        ax.loglog(regs, Es, markeredgecolor="k", clip_on=False, linestyle='', **style_2)
+
         imin = np.argmin(Es)
-        ax.scatter(regs[imin], Es[imin], marker='+', s=60, color='white', zorder=101, linewidth=4.0)
-        ax.scatter(regs[imin], Es[imin], marker='+', s=40, color='k', zorder=102, linewidth=2.0)
+        ax.scatter(regs[imin], Es[imin], marker='+', s=40, color='white', zorder=101, linewidth=3.0)
+        ax.scatter(regs[imin], Es[imin], marker='+', s=20, color='k', zorder=102, linewidth=1.5)
         ax.plot([regs[imin], regs[imin]], [1e-2, Es[imin]], 'k--', linewidth=0.5)
         optimal_points[(key, [True, False][j])] = regs[imin]
-    if j == 0:
+    if k == 0:
         ax.legend(ncol=(len(styles) + 1) // 2,
                   loc="upper center",
-                  bbox_to_anchor=(1.05, 1.3))
-        ax.set_ylabel('Median NRMSE $E$')
+                  bbox_to_anchor=(1.15, 1.35))
+    ax.set_ylabel('Median NRMSE $E$')
     ax.set_xlabel('Regularisation factor $\\lambda$')
     ax.set_xlim(1e-3, 1e3)
     ax.set_ylim(1e-2, 5e-1)
     ax.set_title("\\textbf{{{}}}".format(
         ["With subthreshold relaxation",
          "Without subthreshold relaxation"][j]))
+    ax.text(-0.175, 1.019, "\\textbf{{{}}}".format(chr(ord('A') + k)), size=12, va="bottom", ha="left", transform=ax.transAxes)
 
 import pprint
 pprint.PrettyPrinter(indent=4).pprint(optimal_points)

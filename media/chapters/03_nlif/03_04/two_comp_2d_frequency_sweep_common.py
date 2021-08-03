@@ -1,6 +1,6 @@
 import h5py
 
-def plot_files(files, letter=None, mark_sigmas=[]):
+def plot_files(files, title, letter=None, figsize=(7.45, 3), mark_sigmas=[]):
     params_keys = []
     errs = None
     for file in files:
@@ -109,7 +109,7 @@ def plot_files(files, letter=None, mark_sigmas=[]):
                     perc_75 = np.percentile(errs[i_param, :, :, col], 75, axis=1)
                     ax.fill_between(lbls, perc_25, perc_75, color=style["color"], alpha=0.4, lw=0)
     #    ax.set_title(title)
-        ax.set_xlabel('Spatial lowpass filter coefficient $1/\\mathrm{\\sigma}$')
+        ax.set_xlabel('Spatial lowpass filter coefficient $\\rho^{-1}$')
         ax.set_ylabel('NRMSE')
         ax.set_xscale('log')
         ax.set_yscale('log')
@@ -117,9 +117,9 @@ def plot_files(files, letter=None, mark_sigmas=[]):
         if network:
             ax.set_ylim(3e-2, 1)
         else:
-            ax.set_ylim(5e-3, 1)
+	        ax.set_ylim(5e-3, 1)
 
-    fig, ax = plt.subplots(figsize=(7.45, 3))
+    fig, ax = plt.subplots(figsize=figsize)
     #ax.set_title("\\textbf{Current function $f_\\sigma(x_1, x_2)$ superthreshold decoding error}")
     do_plot(1, labels=False, linewidth=0.5, ax=ax, linestyle='--')
     do_plot(0, ax=ax)
@@ -130,5 +130,34 @@ def plot_files(files, letter=None, mark_sigmas=[]):
     for x in mark_sigmas:
         ax.axvline(x, color='grey', linewidth=0.5, linestyle=':', zorder=-1)
 
+    y_cen = -0.1175 * (3.0 / figsize[1])
+    arrow_width = 0.015
+
+    ax.add_patch(
+        mpl.patches.Polygon([(0.0, y_cen), (arrow_width, y_cen - 0.02),
+                             (arrow_width, y_cen + 0.02)],
+                            facecolor='k',
+                            transform=ax.transAxes,
+                            clip_on=False))
+    ax.add_patch(
+        mpl.patches.Polygon([(1.0, y_cen), (1.0 - arrow_width, y_cen - 0.02),
+                             (1.0 - arrow_width, y_cen + 0.02)],
+                            facecolor='k',
+                            transform=ax.transAxes,
+                            clip_on=False))
+    ax.text(1.5 * arrow_width,
+            y_cen - 0.005,
+            'Lower frequencies',
+            va='center',
+            ha='left',
+            transform=ax.transAxes)
+    ax.text(1.0 - 1.5 * arrow_width,
+            y_cen - 0.005,
+            'Higher frequencies',
+            va='center',
+            ha='right',
+            transform=ax.transAxes)
+
+    ax.set_title("\\textbf{{{}}}".format(title))
     utils.save(fig)
 

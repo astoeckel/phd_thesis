@@ -56,11 +56,10 @@ Whether a pre-neuron acts excitatorily or inhibitorily on a post-neuron depends 
 For example, the Gamma-Aminobutyric acid (GABA) neurotransmitter is primarily inhibitory (via GABA\textsubscript{A} or GABA\textsubscript{B} receptors), whereas Glutamic acid (Glutamate) is mostly excitatory (via AMPA or NMDA receptors; \cite{kandel2012principles}, Chapter~10).
 
 Importantly, the mixture of neurotransmitters is the same across all axonal branches of a neuron.
-This is known as \emph{Dale's principle}\index{Dale's principle} \citep{strata1999dale,eccles1986chapter}.
+This is known as \emph{\gls{dales_principle}} \citep{strata1999dale,eccles1986chemical}.
 Put simply, individual neurons typically either act excitatorily or inhibitorily on their post-neurons.%
-\footnote{This characterisation of Dale's principle is useful, but technically incorrect. For example, a pre-synapse releasing glutamate typically excites post-neurons, but inhibits special neurons with inhibitory glutamate receptors \citep{cleland1996inhibitory}.
+\footnote{This characterisation of \gls{dales_principle} is useful, but technically incorrect. For example, a pre-synapse releasing glutamate typically excites post-neurons, but inhibits special neurons with inhibitory glutamate receptors \citep{cleland1996inhibitory}.
 Additionally, synapses could release both excitatory and inhibitory neurotransmitters.
-%Furthermore, Dale's principle solely states that the \emph{mixture} of neurotransmitters is uniform within the axonal branches of a neuron \citep{strata1999dale,eccles1986chapter}. In theory, the pre-synapse could release both excitatory and inhibitory neurotransmitters.
 }
 We hence refer to neurons---and not just individual synapses---as being excitatory or inhibitory.
 
@@ -282,7 +281,7 @@ A qualitatively equivalent form of the LIF neuron is given by normalising the vo
 	\label{eqn:lif_simplified}
 \end{align}
 The primary advantage of this form is the reduction in mathematical operations compared to \cref{eqn:lif}.
-This simplification (among other optimisations) is thu exploited by the neural network simulator \enquote{Nengo} to support large-scale spiking neural network simulations \citep{bekolay2014nengo}.
+This simplification (among other optimisations) is exploited by the neural network simulator \enquote{Nengo} to support large-scale spiking neural network simulations \citep{bekolay2014nengo}.
 The downside is a reduced interpretability of the now unit-less $v(t)$ and $J(t)$.
 
 \subsubsection{Current-based synapse models}
@@ -302,7 +301,7 @@ We compare conductance- and current-based synapse models in more detail in the n
 \pagebreak
 
 \subsection{Spiking Neural Networks}
-\label{sec:neural_codes}
+\label{sec:neural_networks}
 
 \begin{figure}
 	\centering
@@ -338,7 +337,7 @@ To actually simulate an SNN, we feed an external input (e.g., a set of currents 
 There are numerous general-purpose simulator software packages that do this efficiently, e.g., NEST \citep{gewaltig2007nest}, Brian \citep{stimberg2019brian}, GeNN \citep{yavuz2016genn}, or Nengo \citep{bekolay2014nengo}.
 
 The most important question---and one that we pursue for the remainder of this thesis---is how to ultimately select $\mat W$.
-For the artificial neural networks (ANNs) used in machine learning (\Cref{fig:neural_networks_c}), the astoundingly successful answer is to use stochastic gradient descent on a loss function $E$, i.e., $\dot{\mat W} = -\eta \nabla_{\mat W} E(\vec a_k, \vec {\hat a_k})$, where $\eta$ is a learning rate, $\vec a_k$ is the desired output activity for an input sample $\vec x_k$, and $\vec{\hat a_k}$ is the actual output \citep{lecun2015deep}.
+For the artificial neural networks (ANNs) used in machine learning (\Cref{fig:neural_networks_c}), the astoundingly successful answer is to use \glsdisp{sgd}{stochastic gradient descent} on a loss function $E$, i.e., $\dot{\mat W} = -\eta \nabla_{\mat W} E(\vec a_k, \vec {\hat a_k})$, where $\eta$ is a learning rate, $\vec a_k$ is the desired output activity for an input sample $\vec x_k$, and $\vec{\hat a_k}$ is the actual output \citep{lecun2015deep}.
 For example, one common choice for the loss function is $E(\vec a_k, \vec {\hat a_k}) = \|\vec a_k - \vec{\hat a}_k\|^2$.
 
 Similar gradient-descent global optimisation methods can be applied in the context of SNNs as well.

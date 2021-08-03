@@ -1,0 +1,54 @@
+\begin{table}
+\caption[Functions analysed in the two-compartment LIF network experiment]{Functions analysed in the two-compartment LIF network experiment (cf.~\Cref{sec:two_comp_lif_experiment_3}). The functions $f(x_1, x_2)$ are defined over the interval $(x_1, x_2) \in [0, 1]^2$ and re-scaled such that they map onto the interval $[-1, 1]$ for $(x_1, x_2) \in [-1, 1]^2$. Contour plots and RMS values are for the re-scaled functions. Red corresponds to negative values, blue to positive values.}
+\vspace{0.25cm}
+\label{tbl:two_comp_functions}
+\sffamily
+\centering
+\small
+\begin{tabular}{r l l l}
+	\toprule
+	\raggedleft \textbf{Name} & \textbf{Function} & \textbf{RMS} & \textbf{Contour}\\
+	\cmidrule(r){1-4}
+	\raggedleft Addition
+	& $\displaystyle f(x, y) = \frac{1}2 (x + y)$
+	& $\displaystyle f_\mathrm{RMS} = \frac{\sqrt{6}}{6} \approx 0.4082$
+	& \raisebox{-0.9cm}{\includegraphics{media/chapters/ZC_data/functions/addition.pdf}} \\
+	\cmidrule(r){1-4}
+	\raggedleft Multiplication
+	& $\displaystyle f(x, y) = x y$
+	& $\displaystyle f_\mathrm{RMS} = \frac{2}3 \approx 0.6667$
+	& \raisebox{-0.9cm}{\includegraphics{media/chapters/ZC_data/functions/multiplication.pdf}}\\
+	\cmidrule(r){1-4}
+	\raggedleft Multiplication with square root
+	& $\displaystyle f(x, y) = \sqrt{x y}$
+	& $\displaystyle f_\mathrm{RMS} = \frac{\sqrt{2}}3 \approx 0.4714$
+	& \raisebox{-0.9cm}{\includegraphics{media/chapters/ZC_data/functions/sqrt_multiplication.pdf}}\\
+	\cmidrule(r){1-4}
+	\raggedleft Squared multiplication
+	& $\displaystyle f(x, y) = x^2 y^2$
+	& $\displaystyle f_\mathrm{RMS} = \frac{\sqrt{161}}{15} \approx 0.8459$
+	& \raisebox{-0.9cm}{\includegraphics{media/chapters/ZC_data/functions/sqr_multiplication.pdf}}\\
+	\cmidrule(r){1-4}
+	\raggedleft Controlled shunting
+	& $\displaystyle f(x, y) = \frac{1 + x}{2(1 + y)}$
+	& $\displaystyle f_\mathrm{RMS} \approx 0.2953$
+	& \raisebox{-0.9cm}{\includegraphics{media/chapters/ZC_data/functions/shunting.pdf}}\\
+	\cmidrule(r){1-4}
+	\raggedleft Norm
+	& $\displaystyle f(x, y) = \sqrt{\frac{1}2 \big( x^2 + y^2 \big) }$
+	& $\displaystyle f_\mathrm{RMS} \approx 0.4111$
+	& \raisebox{-0.9cm}{\includegraphics{media/chapters/ZC_data/functions/norm.pdf}}\\
+	\cmidrule(r){1-4}
+	\raggedleft Arctan
+	& $\displaystyle f(x, y) = \frac{2}{\pi} \mathrm{arctan}\left(\frac{y}x\right)$
+	& $\displaystyle f_\mathrm{RMS} \approx 0.5293$
+	& \raisebox{-0.9cm}{\includegraphics{media/chapters/ZC_data/functions/arctan.pdf}}\\
+	\cmidrule(r){1-4}
+	\raggedleft Maximum
+	& $\displaystyle f(x, y) = \max\{x, y\}$
+	& $\displaystyle f_\mathrm{RMS} = \frac{\sqrt{3}}3 \approx 0.5774$
+	& \raisebox{-0.9cm}{\includegraphics{media/chapters/ZC_data/functions/max.pdf}}
+	\\
+	\bottomrule
+\end{tabular}
+\end{table}

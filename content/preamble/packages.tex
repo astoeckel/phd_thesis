@@ -10,6 +10,9 @@
 \usepackage{longtable}
 \usepackage{multirow}
 \usepackage{rotating}
+\usepackage{nicematrix}
+\usepackage{algpseudocode}
+\usepackage[chapter]{algorithm}
 
 \usepackage{marvosym} % Lightning symbol
 
@@ -20,10 +23,11 @@
 
 %\usepackage{imakeidx}
 
-\usepackage[toc,acronym]{glossaries} % Glossary.
-%\usepackage{glossary-mcols}
+\usepackage[toc,acronyms,symbols,nopostdot]{glossaries} % Glossary.
+\usepackage{glossaries-extra}
 
 \usepackage[labelfont={small,bf,sf},textfont={small,sf}]{caption}
+\DeclareCaptionStyle{ruled}{labelfont={small,bf,sf},textfont={small,sf}}
 \usepackage{subcaption}
 
 \usepackage[a-1b]{pdfx}
@@ -71,49 +75,28 @@
       {\bibcloseparen\global\boolfalse{cbx:parens}}
       {}}}
 
-%\savebibmacro{cite}
-%\savebibmacro{textcite}
-%
-%\renewbibmacro*{cite}{%
-%  \printtext[citehyperref]{%
-%    \restorebibmacro{cite}%
-%    \usebibmacro{cite}}}
-%
-%\renewbibmacro*{textcite}{%
-%  \ifboolexpr{
-%    ( not test {\iffieldundef{prenote}} and
-%      test {\ifnumequal{\value{citecount}}{1}} )
-%    or
-%    ( not test {\iffieldundef{postnote}} and
-%      test {\ifnumequal{\value{citecount}}{\value{citetotal}}} )
-%  }
-%    {\DeclareFieldAlias{textcitehyperref}{noformat}}
-%    {}%
-%  \printtext[textcitehyperref]{%
-%    \restorebibmacro{textcite}%
-%    \usebibmacro{textcite}}}
-%
 
 \definecolor{linkBlue}{HTML}{003399}
 \definecolor{linkGreen}{HTML}{2E8B57} % SeaGreen
+\definecolor{linkPink}{HTML}{FF1493} % SeaGreen
 
 \usepackage{hyperref} % with basic options
 \hypersetup{
     pdfborder={0 0 0},
     plainpages=false,
     unicode=true,
-    colorlinks=false,
-%    colorlinks=true,
-%    allcolors=linkBlue,
-%    citecolor=linkGreen
+%    colorlinks=false,
+    colorlinks=true,
+    allcolors=linkPink,
+    citecolor=linkGreen
 }
 \usepackage{cleveref}
 \renewcommand\thesubfigure{\Alph{subfigure}}
 
-\theoremstyle{theorem}
-\declaretheorem{theorem}
-\declaretheorem[name=Claim]{claim}
-\declaretheorem[name=Lemma]{lemma}
+\declaretheorem[numberwithin=chapter]{theorem}
+\declaretheorem[name=Claim,sibling=theorem]{claim}
+\declaretheorem[name=Conjecture,sibling=theorem]{conjecture}
+\declaretheorem[name=Proposition,sibling=theorem]{proposition}
+\declaretheorem[name=Lemma,sibling=theorem]{lemma}
 
-\theoremstyle{definition}
-\newtheorem{definition}{Definition}[chapter]
+\declaretheorem[name=Definition,numberwithin=chapter]{definition}

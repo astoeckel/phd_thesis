@@ -1,0 +1,252 @@
+% !TeX spellcheck = en_GB
+
+\section{Weight-Optimisation for Arbitrary Dendritic Trees}
+\label{sec:nlif_opt}
+
+We are now able to integrate two-compartment LIF neurons, the simplest non-trival \nlif neuron, into NEF networks.
+As we discussed in \Cref{sec:nlif_theory}, this neuron type only provides \emph{divisive}, but not \emph{multiplicative} interaction between input channels.
+Perhaps surprisingly, we nonetheless observed a substantial computational advantage over standard LIF neurons, and, in some cases, even two-layer networks.
+
+The goal of this section is to open avenues toward integrating arbitrary \nlif neurons into NEF networks.
+We focus on the three-compartment neuron depicted in \Cref{fig:nlif_d}, as this neuron features all possible nonlinear interactions between input channels (cf.~\Cref{sec:nlif_theory}).
+Still, our derivations are not limited to this neuron type and can be applied to any \nlif neuron.
+
+Crucially, and in contrast to the two-compartment LIF neurons, where we were able to replace our originally non-convex loss functions with convex ones while maintaining a good solution, this is not possible for $n$-LIF models with more than two compartments and conductance-based input channels.
+
+Unfortunately, non-convex optimisation is, in general, much harder than convex optimisation.
+Whereas finding a local optimum in a convex problem guarantees global optimality, this, with some exceptions, not the case in non-convex problems.%
+\footnote{\citet{rockafellar1993lagrange} famously writes \enquote{In fact the great watershed in optimization isn't between linearity and nonlinearity, but convexity and
+nonconvexity}.
+Of course, as for example discussed in detail in \citet{sun2016when}, there are some non-convex functions where the global optimum is equal to the local optimum.
+However, this is unfortunately not the case in our application.
+}
+Correspondingly, there is no guarantee that a weight or parameter solver will converge to a globally optimal solution.
+Still, as we demonstrate in the following, we are able to exploit the structure of the surrogate nonlinearity model $H$ to outperform brute-force methods such as \glsdisp{sgd}{stochastic gradient descent}.
+
+\subsection{Solving for $n$-LIF Surrogate Model Parameters}
+
+Similarly to what we discussed in the context of integrating the two-compartment neuron into the NEF, our first step toward using arbitrary \nlif neurons is to calibrate our surrogate nonlinearity model $\Hden$ to ground-truth somatic current measurements $J_k$ given input $\vec g_k$.
+
+Recall from \Cref{sec:nlif_derive_h}---specifically \cref{eqn:nlif_eq,eqn:h_model}---that the surrogate dendritic nonlinearity model $\Hden(\vng)$ for an arbitrary \nlif neuron is described in terms of the reduced system matrices $\mrA[\vng]$, $\vrb[\vng]$, which in turn can be decomposed into matrices \mrL, \vrap, \mrAp, \vrbp, \mrBp, \vrc.
+\begin{align*}
+	\Hden(\vec g)
+		&\approx \sum_{i = 1}^n \vrci (\vreqi(\vng) - \vSom) \,,
+		& \text{where } \vreq(\vng)
+			&= -{\mrA}[\vng]^{-1} \vrb[\vng]
+			 = \bigl[\mrL + \diag\bigl(\vrap + \mrAp \vng\bigr) \bigr]^{-1} \bigl[ \vrbp + \mrBp \vng \bigr] \,.
+\end{align*}
+In the following, we assume that this system has been preconditioned as described in \Cref{app:nlif_conditioning}.
+This implies that, effectively, $\vSom = 0$ and $\vrci \in \{0, 1\}$.
+In addition to simplifying our equations a little, preconditioning is crucial for the performance of our optimisation algorithms.
+
+As we discussed in \Cref{sec:nlif_description}, the vectors $\vrap$ and $\vrbp$, as well as the entries of \mrAp and \mrBp associated with an input channel should be seen as free parameters that must be tuned to sampled neuron activities.
+Specifically, we would like to minimise the following loss over \vrap, \mrAp, \vrbp, \mrBp:
+\begin{align}
+	\begin{aligned}
+	E %= \sum_{k = 1}^N \bigl( H(\vec g_k) - J_k \bigr)^2
+	  &= \sum_{k = 1}^N \bigl(
+	   	   	\bigl\langle
+	   	   		\vreq[\vec g_k],
+	   	   		\vrc
+	   	   	\bigr\rangle
+	   	   	 - J_k \bigr)^2
+	  = \sum_{k = 1}^N \bigl(
+	   	\bigl\langle
+	   		\bigl(\mrL + \diag(\vrap + \mrAp \vec g_k) \bigr)^{-1} \bigl(\vrbp + \mrBp \vec g_k  \bigr),
+	   		\vrc
+	   	\bigr\rangle
+	   	 - J_k \bigr)^2 \,.
+	\end{aligned}
+	\label{eqn:nlif_param_opt}	
+\end{align}
+Minimising this equation is difficult because of the highly nonlinear matrix inverse~$\mrA[\vng]^{-1}$.
+Below, we discuss two methods for minimising this loss function: stochastic gradient descent and trust-region based iterative non-negative least squares.
+
+\subsubsection{Gradient-based optimisation}
+A straightforward way to optimise the parameters is via \glsdisp{sgd}{stochastic gradient descent} (\SGD; e.g., \cite{bishop2006pattern}~Section~3.1.3; \cite{goodfellow2016deep}, Section~5.9).
+As of writing, a popular variant of stochastic gradient descent is the \enquote{Adam optimiser}.
+Adam adapts the learning rate $\eta$ of each parameter based on an estimate of the mean and variance of the gradients (i.e., the first and second moment; \cite{kingma2015adam}).
+
+To perform stochastic gradient descent, we must compute the partial differential of \cref{eqn:nlif_param_opt} with respect to all parameters.
+To this end, we use the fact that the matrix differential of the matrix inverse $\mat{X}^{-1}$ is simply the Kronecker product (denoted as \enquote{$\otimes$}) of the inverse matrices, resulting in a tensor of order four (see \cite[Section~10.6, eq.~1, p.~198]{lutkepohl1997handbook}):
+\begin{align*}
+	\frac{\partial \mat{X}^{-1}}{\partial \mat X}
+		= (\mat{X}^T)^{-1} \otimes \mat{X}^{-1}
+	\quad \quad \Leftrightarrow \quad \quad
+	\left( \frac{\partial \mat{X}^{-1}}{\partial \bigl(\mat X\bigr)_{rs}} \right)_{ij} =
+		\bigl((\mat{X}^T)^{-1}\bigr)_{ir} \bigl(\mat{X}^{-1}\bigr)_{sj} \,.
+\end{align*}
+Using this equation we obtain the following gradients with respect to the individual parameters:
+\begin{align}
+	\frac{\partial E}{\partial (\vrap)_{r}} &=
+	-2 \sum_{k = 1}^N
+	\Bigl(H(\vec g_k) - J_k \Bigr)
+   	\Bigl(
+   	\sum_{i = 1}^n \sum_{j = 1}^n \bigl( \mrA[\vec g_k]^{-1} \bigr)_{ir} \bigl( \mrA[\vec g_k]^{-1} \bigr)_{r j} \bigl( \vrb[\vec g_k] \bigr)_j \bigl(\vrc\bigr)_i
+   	\Bigr) \label{eqn:nlif_parm_grad_a}\\%
+%
+	\frac{\partial E}{\partial (\mrAp)_{rs}} &=
+	-2 \sum_{k = 1}^N
+	\Bigl(H(\vec g_k) - J_k \Bigr)
+   	\Bigl(
+   	\sum_{i = 1}^n \sum_{j = 1}^n \bigl( \mrA[\vec g_k]^{-1} \bigr)_{i r} \bigl( \mrA[\vec g_k]^{-1} \bigr)_{r j}  \bigl(\vec g_k\bigr)_s \bigl( \vrb[\vec g_k] \bigr)_j \bigl(\vrc\bigr)_i
+   	\Bigr) \label{eqn:nlif_parm_grad_A}\\%
+%
+	\frac{\partial E}{\partial (\vrbp)_{r}} &=
+	-2 \sum_{k = 1}^N
+	\Bigl(H(\vec g_k) - J_k \Bigr)
+   	\Bigl(
+   	\sum_{i=1}^n 
+   	 \bigl( \mrA[\vec g_k]^{-1} \bigr)_{ir} \bigl(\vrc\bigr)_i
+   	\Bigr) \label{eqn:nlif_parm_grad_b}\\%
+%
+	\frac{\partial E}{\partial (\mrBp)_{rs}} &=
+	-2 \sum_{k = 1}^N
+	\Bigl(H(\vec g_k) - J_k \Bigr)
+   	\Bigl(
+   	\sum_{i=1}^n 
+   	 \bigl( \mrA[\vec g_k]^{-1} \bigr)_{ir} \bigl( \vec g_k \bigr)_s \bigl(\vrc\bigr)_i
+   	\Bigr) \label{eqn:nlif_parm_grad_B}\,.
+\end{align}
+Keep in mind that \vrap and \mrAp must be non-negative; otherwise it is not guaranteed that $\mrA[\vng]$ is non-singular (see \Cref{sec:nlif_subth_properties} and \Cref{app:thm_nlif_convergence}).
+This can be ensured by clipping \vrap and \mrAp to zero after every update step.
+
+\subsubsection{Soft trust-region based optimisation}
+As we mentioned above, minimising \cref{eqn:nlif_param_opt} is difficult because of the matrix inverse.
+However, at least conceptually, we can split this equation into two separate optimisation problems with $N$ auxiliary variables $\vec v_k \in \mathbb{R}^k$.
+In doing so, we can effectively eliminate the matrix inverse.
+
+Let $\vec \theta$ summarise all parameters that we would like to optimise.
+We first need to find $\vec v_k$ such that $(\langle \vec v_k, \vrc \rangle - J_k)^2$ is minimised, and second, find $\vec \theta$ such that $\mrA[\vec g_k; \vec \theta]^{-1} \vrb[\vec g_k; \vec \theta] = \vec v_k$.
+This idea is roughly expressed in the following loss function over both the auxiliary variables $\vec v_k$ and our desired parameters $\vec \theta$:%
+\footnote{
+The loss function may seem rather na\"ive, given that we do not enforce the equality of $\mrA[\vec g_k; \vec \theta]^{-1} \vrb[\vec g_k; \vec \theta] = \vec v_k$.
+This could for example be accomplished using Lagrange multipliers \citep[e.g.,][Section~5.1]{boyd2004convex}.
+There are multiple reasons why we do not do this. In order of importance:
+\emph{(1)} We eventually would have to linearise the Lagrange multipliers to obtain a convex optimisation problem; it is then no longer guaranteed that the equality constraints are fulfilled.
+\emph{(2)} Adding Lagrange multipliers to the loss function would further increase the number of variables that need to be optimised, making the problem even more complex.
+\emph{(3)} The author tried, but failed to improve the optimisation problem by including Lagrange multipliers.
+}%
+\begin{align}
+	E &= \alpha_1 E_1 + \alpha_2 E_2 \,, &
+	E_1 &=  \sum_{k = 1}^N \bigl( \big\langle \vec v_k, \vrc \big\rangle - J_k \bigr)^2 \,, &
+	E_2 &= \sum_{k = 1}^N \bigl\| -\mrA[\vec g_k; \vec \theta]^{-1} \vrb[\vec g_k; \vec \theta] - \vec v_k \bigr\|_2^2 \,,
+\end{align}
+%TODO gls: hyperparameter
+where the hyperparameters $\alpha_1$, $\alpha_2$ determine the \enquote{importance} of each optimisation problem.
+
+Note that similarly to our \enquote{trick} in \Cref{sec:two_comp_lif_fit_model}, where we multiplied with the denominator of a rational function, we can multiply with $-\mrA[\vec g_k; \vec \theta]$ inside the sum to eliminate the inverse.
+While this does not change the optimal solution for each individual sample, doing so implicitly  reweighs the system, just as we discussed above.
+Blissfully ignoring this we obtain
+\begin{align*}
+	E_2' &= \sum_{k = 1}^N \bigl\| \mrA[\vec g_k; \vec \theta] \vec v_k + \vrb[\vec g_k; \vec \theta] \bigr\|_2^2
+	   = \sum_{k = 1}^N
+	   \bigl\|
+	   \bigl(\mrL + \diag(\vrap[\vec \theta] + \mrAp[\vec \theta] \vec g_k) \bigr) \vec v_k -
+	  	  	        \bigl(\vrbp[\vec \theta] + \mrBp[\vec \theta] \vec g_k  \bigr)
+	  \bigr\|_2^2 \\
+	  &= \sum_{k = 1}^N
+	  	   \bigl\|
+	  	     \mrL \vec v_k
+	  	   - \vrbp[\vec \theta] 
+	  	   - \mrBp[\vec \theta] \vec g_k
+	  	   + \vrap[\vec \theta] \, \circ \, \vec v_k
+	  	   + \mrAp[\vec \theta] \vec g_k \, \circ \, \vec v_k
+ 	  \bigr\|_2^2 \,,
+\end{align*}
+where \enquote{$\circ$} denotes elementwise multiplication.
+This is not quite a convex optimisation problem---note the product terms including both $\vec \theta$ and $\vec v_k$.
+We work around this by performing a first-order Taylor expansion.
+Specifically, for elementwise multiplication we have
+\begin{align*}
+	\vec x \, \circ \, \vec y
+	\approx \vec x_0 \, \circ \, \vec y_0 + (\vec x - \vec x_0) \, \circ \, \vec y_0 + \vec x_0 \, \circ \, (\vec y - \vec y_0)
+	= \vec x \, \circ \, \vec y_0 + \vec x_0 \, \circ \, \vec y - \vec x_0 \, \circ \, \vec y_0 \,.
+\end{align*}
+This is guaranteed to be a good approximation close to the expansion points $\vec x_0$ and $\vec y_0$.
+
+Now, choose $\vec \theta_0$ and $\vec v_{k, 0}$ as expansion points of our loss function.
+The parameters $\vec \theta_0$ could, for example, be the initial estimate from \Cref{sec:nlif_derive_h} and the $\vec v_{k, 0}$ the computed equilibrium potentials.
+Performing a Taylor expansion of the individual terms inside the vector norm, we obtain
+\begin{align}
+	\begin{aligned}
+	E_2'' &= \sum_{k = 1}^N
+	\bigl\|
+		  \mrL \vec v_k
+	    - \vrbp[\vec \theta]
+		- \mrBp[\vec \theta] \vec g_k
+	    + \vrap[\vec \theta] \, \circ \, \vec v_{k, 0} \hspace{1.1em}
+	    + \vrap[\vec \theta_0] \, \circ \, \vec v_{k} \hspace{1.1em}\,
+	    - \vrap[\vec \theta_0] \, \circ \, \vec v_{k, 0} \\[-0.33em]
+	&\hspace{4.675cm}
+		+ \mrAp[\vec \theta] \vec g_k \, \circ \, \vec v_{k, 0}
+		+ \mrAp[\vec \theta_0] \vec g_k \, \circ \, \vec v_{k}
+		- \mrAp[\vec \theta_0] \vec g_k \, \circ \, \vec v_{k, 0}
+	\bigr\|_2^2 \,.
+	\end{aligned}
+\end{align}
+While our modified loss $\alpha_1 E_1 + \alpha_2 E_2''$ is now in linear least-squares form, we must still account for the Taylor expansion only yielding a good approximation in a small region surrounding the extension points.
+To this end, we add a third term $E_3$ to our loss function
+\begin{align}
+	E' &= \alpha_1 E_1 + \alpha_2 E''_2 + \alpha_3 E_3 + \lambda_1 N \|\vec \theta\|_2^2 + \lambda_2 \sum_{k = 1}^N \vec \| \vec v_{k} \|_2^2 \,,
+	&
+	E_3 &= N \| \vec \theta - \vec \theta_0 \|_2^2 + \sum_{k=1}^N \| \vec v_k - \vec v_{k, 0} \|_2^2 \,.
+\end{align}
+Note the additional $L_2$ regularisation terms with regularisation factors $\lambda_1$, $\lambda_2$.
+The regularisation factor $\lambda_1$, as well as the first term of $E_3$ must be scaled by $N$, since all other terms are sums with $N$ elements; without the scaling factor the impact of these terms would go to zero as $N$ increases.
+
+This function establishes what we call a \enquote{soft trust region} around our expansion point $(\vec \theta_0, \vec v_{k, 0})$ and forces the solution to be close to our initial estimate.
+
+Trust region based optimisation has been originally proposed by ?? and is, for example, used successfully in reinforcement learning ??.
+
+\begin{figure}[p]
+	\centering
+	\includegraphics{media/chapters/03_nlif/03_05/trust_region_illustration.pdf}
+	\caption[Illustration of gradient descent using a soft trust-region]{Illustration of gradient descent using a soft trust-region.
+	In this example, we approximate a loss function $E$ (contour lines in the background; darker colours correspond to larger values) using a first-order Taylor approximation at $\vec x_0$ (black cross) with an added soft trust-region term, i.e., $E' = (\langle \vec x - \vec x_0,  \nabla E \rangle - y_\mathrm{min})^2 + \|\vec x - \vec x_0\|_2^2$ (dotted black contour lines).
+	Repeatedly minimising $E'$ over $\vec x$ results in a gradient-descent-like algorithm.
+	Note that convergence to the local minimum (orange circle) tends to be slow towards the end.
+	Keep in mind that our \nlif parameter optimisation algorithm is not purely based on a linear approximation of the loss function as is done for illustration purposes here; hence the surperior performance to na\"ive gradient descent.
+	}
+	\label{fig:trust_region}
+\end{figure}
+
+While we now have a convex loss function, the optimum of this loss function is no longer reasonably good due to the linear Taylor expansion.
+To (hopefully) find a local optimum of our original loss function, this optimisation scheme must be applied iteratively.
+That is, the solution $\vec \theta$ from one iteration becomes the expansion point $\vec \theta_0$ for the next iteration.
+The auxiliary variables $\vec v_{k, 0} = \mrAp[\vec g_k; \vec \theta_0]^{-1} \vrbp[\vec \theta_0]$ are recomputed before each iteration.
+We also suggest reducing the hyperparameter ratios $\alpha_1 / \alpha_3$, $\alpha_2 / \alpha_3$ over time to enforce convergence.
+
+\begin{algorithm}[p]
+	\caption{Soft trust-region parameter optimisation for \nlif neurons.
+	Reasonable values for the hyperparameters are $\alpha_1 = \alpha_2 = 1$, $\alpha_3 = 10^{-6}$, $\lambda_1 = \lambda_2 = 10^{-9}$, $\gamma = 0.99$, $n_\mathrm{epochs} = 100$.
+	}
+	\label{alg:nlif_tr_parameters}
+	\begin{algorithmic}\sffamily\small
+	\Require $N$ training samples $\vec g_k$, $J_k$
+	\Require Hyperparameters $\alpha_1$, $\alpha_2$, $\alpha_3$, $\lambda_1$, $\lambda_2, \eta$
+	\Require Initial parameter estimate $\vec \theta$
+	\For{$i \in \{1, \ldots n_\mathrm{epochs} \}$}
+		\State $\vec \theta_0 \gets \vec \theta$
+		\For{$k \in {1, \ldots, N}$}
+			\State $\vec v_{k, 0} \gets -\mrA[\vec g_k; \vec \theta]^{-1} \vrb[\vec g_k; \vec \theta]$
+		\EndFor
+		\State $
+			\vec \theta \gets
+			\arg_{\vec \theta}\min_{\vec \theta, \vec v_1, \ldots, \vec v_N}
+				\bigl( \hphantom{+} \alpha_1 E_1(\vec v_1, \ldots, \vec v_{N})
+			+ \alpha_2 E_2''(\vec \theta, \vec v_1, \ldots, \vec v_N; \vec \theta_0, \vec v_{1,0}, \ldots, \vec v_{N, 0})$
+		\State $\hspace{8.9em} + \alpha_3 \gamma^{-i} E_3(\vec \theta, \vec v_1, \ldots, \vec v_N; \vec \theta_0, \vec v_{1,0}, \ldots, \vec v_{N, 0}) + \lambda_1 N \|\vec \theta\|_2^2 + \lambda_2 \sum_{k = 1}^N \| \vec v_{k} \|_2^2 \bigr)$
+	\EndFor
+	\end{algorithmic}
+\end{algorithm}
+
+With some patience, this problem can be converted into a \glsdisp{qp}{quadratic program} with nonnegativity constraints for the parameters \vrap and \mrAp.%
+\footnote{
+Formally stating the quadratic program is a rather tedious exercise.
+In particular, the parameter matrices and vectors $\mrAp[\vec g_k; \vec \theta]$, $\vrap[\vec g_k; \vec \theta]$, $\mrBp[\vec g_k; \vec \theta]$, $\vrbp[\vec g_k; \vec \theta]$ linearly in $\vec \theta$ must be split into linear sub-expressions dependent and independent of $\vec \theta$.
+Readers interested in these technicalities are directed at the C++ source-code implementing this function in \texttt{libnlif}, specifically \texttt{nlif\_solver.cpp}.
+}
+We provide the final algorithm in \Cref{alg:nlif_tr_parameters}.
+
+\subsubsection{Experiments}

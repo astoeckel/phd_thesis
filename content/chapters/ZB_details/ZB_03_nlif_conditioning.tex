@@ -1,0 +1,173 @@
+% !TeX spellcheck = en_GB
+
+\section{Conditioning the $n$-LIF system}
+\label{app:nlif_conditioning}
+
+We mentioned in \Cref{sec:nlif_description} that the reduced $n$-LIF system is notoriously ill-conditioned.
+In fact, the weight and parameter optimisation methods presented in \Cref{sec:nlif_opt} do not work properly without preconditioning the reduced system.
+We first describe our preconditioning procedure, followed by an example that highlights the importance of conditioning.
+
+\subsection{Suggested Preconditioning Procedure}
+
+We suggest the following series of transformations as a preconditioning step.
+Apart from the final scaling step, this transformation does not alter the current predicted by \Hden in any way.
+
+\subsubsection{Step 1}
+Offset all voltages such that $\vSom = 0$.
+This is accomplished by updating $\vec{\tilde b}'$ and $\mat{\tilde B}'$:
+\begin{align*}
+	\vec{\tilde b}' &\gets \vec{\tilde b}' - \bigl(\mat{\tilde L}' + \diag(\mat{\tilde a}') \bigr) \vvSom \,, &
+	\mat{\tilde B}' &\gets \mat{\tilde B}' - \mat{\tilde A}' \vvSom \,.
+\end{align*}
+This rule follows from applying an offset $\vec o$ to the equilibrium state of the \nlif system:
+\begin{align*}
+	  -\mat{\tilde A}[\vec g]^{-1} \vec{\tilde b}[\vec g] + \vec o
+	= -\mat{\tilde A}[\vec g]^{-1} \bigl(\vec{\tilde b}[\vec g] - \mat{\tilde A}[\vec g] \vec o \bigr) \,.
+\end{align*}
+Expanding $\mat{\tilde A}[\vec g] \vec o$ with $\vec o = -\vvSom$ yields the above equations.
+
+\subsubsection{Step 2}
+Scale all voltages such that $\tilde c_i \in \{1, 0\}$ or $\tilde a_i' = 1$.
+Together with $\vvSom = \vec{0}$, this implies that the equilibrium state of each compartment connected to the soma directly expresses the current flowing into the soma.
+To this end, we first assemble a positive vector of scaling factors $\vec{\alpha} \in \mathbb{R}^n$ and update $\mat{\tilde L}'$, $\vec{\tilde a}'$, $\mat{\tilde A}'$, $\vec{\tilde c}$ as follows:
+\begin{align*}
+	\begin{aligned}
+	\alpha_i &= \begin{cases}
+		{\tilde c}_i & \text{if } {\tilde c}_i > 0 \,, \\
+		{\tilde a}'_i & \text{if } {\tilde a}'_i > 0 \text{ and } {\tilde c}_i = 0 \,, \\
+		1 & \text{otherwise} \,,
+	\end{cases}
+	\end{aligned}
+	\quad
+	\quad
+	\begin{aligned}
+	\mat{\tilde L} &\gets \mat{\tilde L} \diag(\vec{\alpha})^{-1} \,, &
+	\vec{\tilde a}' &\gets \diag(\vec{\alpha})^{-1} \vec{\tilde a}' \,, \\
+	\mat{\tilde A}' &\gets \diag(\vec{\alpha})^{-1} \mat{\tilde A}' \,, &
+	\vec{\tilde c} &\gets \diag(\vec{\alpha})^{-1} \vec{\tilde c} \,.
+	\end{aligned}
+\end{align*}
+This update rule follows from scaling the equilibrium state of the \nlif system:
+\begin{align*}
+	- \diag(\vec\alpha) \mat{\tilde A}[\vec g]^{-1} \vec{\tilde b}[\vec g]
+	= - \bigl( \mat{\tilde A}[\vec g] \diag(\vec\alpha)^{-1} \bigr)^{-1} \vec{\tilde b}[\vec g] \,.
+\end{align*}
+Again, expanding $\mat{\tilde A}[\vec g] \diag(\vec\alpha)^{-1}$ yields the first three update equations.
+Scaling $\vec{\tilde c}$ is necessary to preserve the correct output current.
+In general, if $\vvSom \neq \vec{0}$, then $\vvSom$ must be multiplied by $\diag(\vec \alpha)$.
+
+\subsubsection{Step 3}
+Scale the system input and output.
+Inputs to the \nlif system are typically in the microsiemens ($\si{\micro\siemens}$) or nanoampere ($\si{\nano\ampere}$) range, while outputs are usually single-digit nanoampere values.
+We hence suggest scaling all inputs by $\alpha_\mathrm{in} = 10^6$ (before passing them into the system) and all outputs by $\alpha_\mathrm{out} = 10^9$.
+Given that $\vSom = 0$, we can adapt the system as follows:
+\begin{align*}
+	\mat{\tilde A}' &\gets \mat{\tilde A}' \frac{1}{\alpha_\mathrm{in}} \,, &
+	\vec{\tilde b}' &\gets \vec{\tilde b}' \alpha_\mathrm{out} \,, &
+	\mat{\tilde B}' &\gets \mat{\tilde B}' \frac{\alpha_\mathrm{out}}{\alpha_\mathrm{in}} \,.
+\end{align*}
+
+\subsection{Impact of Conditioning in Practice}
+Consider the three-compartment neuron depicted in \Cref{fig:nlif_d}.
+Using the parameters in \Cref{tbl:two_comp_neuron_parameters} and coupling conductances $c_\mathrm{12} = \SI{50}{\nano\siemens}$, $c_\mathrm{23} = \SI{200}{\nano\siemens}$, we get the following system:
+\begin{align*}
+	\vec{\tilde a}' &= \begin{bmatrix}
+		1 \\
+		100 \times 10^{-9} \\
+		50 \times 10^{-9}
+	\end{bmatrix} \,,
+	&
+	\mat{\tilde A}' &= \begin{bmatrix}
+		0 & 0 & 0 & 0 \\
+		0 & 0 & 1 & 1 \\
+		1 & 1 & 0 & 0
+	\end{bmatrix} \,,
+	&
+	\vec{\tilde b}' &= \begin{bmatrix}
+		-57.5 \times 10^{-3} \\
+		-6.125 \times 10^{-9} \\
+		-3.25 \times 10^{-9}
+	\end{bmatrix} \,,
+	&
+	\vec{\tilde c} &=
+	\begin{bmatrix}
+		1 \\
+		50 \times 10^{-9} \\
+		0
+	\end{bmatrix} \,,
+\end{align*}\vspace*{-0.125em}
+\begin{align*}
+	\vec{\tilde B}' &=
+	\begin{bmatrix}
+		0 & 0 & 0 & 0 \\
+		0 & 0 & 20 \times 10^{-3} & -75 \times 10^{-3} \\
+		20 \times 10^{-3} & -75 \times 10^{-3} & 0 & 0 \\
+	\end{bmatrix} \,,
+	&
+	\mat{\tilde L} &=
+	\begin{bmatrix}
+		0 & 0 & 0 \\
+		0 & 200 \times 10^{-9} & -200 \times 10^{-9} \\
+		0 & -200 \times 10^{-9} & 200 \times 10^{-9} \\
+	\end{bmatrix} \,.
+\end{align*}
+The condition number $\kappa$ of $\mat{\tilde A}[\vec{0}] = \mat{\tilde L} $ is approximately $\kappa \approx 10^7$.
+As pointed out by \citet[Section~8.4, p.~406]{cheney2012numerical} this implies that we lose about seven digits of precision when computing $\mat{\tilde A}[\vec g]^{-1} \vec{\tilde b}$.
+In contrast, the conditioned system has a condition number of $\kappa \approx 10^1$:
+\begin{align*}
+	\vec{\tilde a}' &= \begin{bmatrix}
+		1 \\
+		2 \\
+		1
+	\end{bmatrix} \,,
+	&
+	\mat{\tilde A}' &= \begin{bmatrix}
+		0 & 0 & 0 & 0 \\
+		0 & 0 & 20 & 20 \\
+		20 & 20 & 0 & 0
+	\end{bmatrix} \,,
+	&
+	\vec{\tilde b}' &= \begin{bmatrix}
+		0 \\
+		-0.375 \\
+		-0.375
+	\end{bmatrix} \,,
+	&
+	\vec{\tilde c} &=
+	\begin{bmatrix}
+		1 \\
+		1 \\
+		0
+	\end{bmatrix} \,,
+\end{align*}\vspace*{-0.125em}
+\begin{align*}
+	\vec{\tilde B}' &=
+	\begin{bmatrix}
+		0 & 0 & 0 & 0 \\
+		0 & 0 & 57.5 & -17.5 \\
+		57.5 & -17.5 & 0 & 0 \\
+	\end{bmatrix} \,,
+	&
+	\mat{\tilde L} &=
+	\begin{bmatrix}
+		0 & 0 & 0 \\
+		0 & 4 & -4 \\
+		0 & -4 & 4 \\
+	\end{bmatrix} \,.
+\end{align*}
+
+
+\begin{figure}
+	\includegraphics{media/chapters/ZB_details/gradient_descent_conditioning.pdf}
+	\caption[Impact of conditioning on gradient-based model parameter optimisation]{Impact of conditioning on gradient-based model parameter optimisation.
+	Example of parameter optimisation for the neuron model described below.
+	Data for $N = 1000$ training and test samples $\vec g_k \in [\SI{0}{\micro\siemens}, \SI{1}{\micro\siemens}]^4$.
+	\textbf{(A)} is without conditioning, \textbf{(B)} is with conditioning.
+	Learning rates $\alpha$ are as large as possible without introducing major instabilities; $\alpha = 3 \times 10^{-7}$ in \emph{(A)}, $\alpha = 10^{-2}$ in \emph{(B)}.}
+	\label{fig:gradient_descent_conditioning}
+\end{figure}
+
+Conditioning significantly impacts the weight and parameter optimisation schemes discussed in \Cref{sec:nlif_opt}.
+For example, the parameter gradients from \cref{eqn:nlif_parm_grad_a,eqn:nlif_parm_grad_A,eqn:nlif_parm_grad_b,eqn:nlif_parm_grad_B} vary by ten orders of magnitude in the unconditioned system.
+This can make gradient-based optimisation less efficient, as illustrated in \Cref{fig:gradient_descent_conditioning}.
+

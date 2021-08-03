@@ -65,7 +65,7 @@ Invertebrate unipolar cells only possess a single branch that protrudes from the
 This branch is referred to as \enquote{axon} although it carries both input and output \citep[Chapter~2]{kandel2012principles}.}
 Dendrites are tree-like structures protruding out of the cell body, typically less than two millimetres long \citep[Chapter~1]{bear2016neuroscience}.
 They are usually classified according to their location relative to the cell body.
-For example, in pyramidal cells (cf.~\Cref{fig:neuron_sketches_pyramidal}) dendrites directly connected to the soma are called \emph{basal}\index{dendrite!basal^}; dendrites indirectly connected to the soma through longer projections are called \emph{apical}\index{dendrite!apical}.
+For example, in pyramidal cells (cf.~\Cref{fig:neuron_sketches_pyramidal}) dendrites directly connected to the soma are called \emph{basal}\index{dendrite!basal}; dendrites indirectly connected to the soma through longer projections are called \emph{apical}\index{dendrite!apical}.
 Apical dendrites are sometimes additionally divided---using standard anatomical terminology---into parts referred to as \emph{proxmial} or \emph{distal}; that is, they are either closer or father away from the soma \citep[e.g.,][Figure~5]{seamans1997contributions}.
 
 Synapses form the coupling sites between neurons and---in the case of chemical synapses discussed below---establish a unidirectional flow of information.
@@ -453,6 +453,7 @@ A detailed description of the superthreshold dynamics is provided in \Cref{app:h
 An even more thorough discussion of the dynamics of Hodgkin-Huxley-like neurons may be found in \citet{izhikevich2007dynamical}.
 
 \subsection{Compartmental Neuron Models}
+\label{sec:comp}
 
 \begin{figure}
 	\centering
@@ -471,13 +472,11 @@ As we saw at the beginning of this section, neurons possess intricate morphologi
 Up to this point, we have minimised this fact and instead summarised neural electrophysiology in terms of a single membrane potential over time, $\vMem(t)$.
 Models based on this assumption are referred to as \emph{point neurons} or \emph{single compartment models}.
 
-The spatial organization of a neuron can have a significant impact on its function.
-This is because the intracellular fluid is not a particularly good electrical
-conductor.
-Hence, in combination with the capacitive properties of the membrane, we can, at a single point in time, measure different membrane potentials throughout the neuron.
+As we discuss in more detail in \Cref{chp:nlif}, the spatial organization of a neuron can have a significant impact on its function.
+This is because the intracellular fluid is not a particularly good electrical conductor.
+Combined with the capacitive properties of the membrane, we can, at a single point in time, measure different membrane potentials throughout the neuron.
 These voltage differences cause currents injected at different points of the neuron to interact nonlinearly, which supports computation.
 Perhaps confusingly, the neural \emph{dynamics} we describe here are mostly linear, but the \emph{average effect over time} is nonlinear.
-We discuss this in more detail in the next chapter.
 
 \begin{figure}
 	\includegraphics{media/chapters/02_modelling/02_01/cylinder.pdf}
@@ -501,7 +500,7 @@ However, for most network-level research, compartments can often be joined into 
 Depending on the modelling assumptions, compartments may either be \emph{active} or \emph{passive}.
 Active compartments---such as the \enquote{somatic} compartment in \Cref{fig:compartments_circuit}---model superthreshold dynamics and are capable of producing spikes, for example by including voltage-dependent Hodgkin-Huxley type models.
 In contrast, passive compartments are typically modelled as the simple linear subthreshold RC-circuit.
-A more detailed description of such models, including the passive dendritic trees we discuss later, is given by \citet[Chapter~3]{koch1999biophysics}.
+A more detailed description of such models, including the passive dendritic trees we discuss later, can be found in \citet[Chapter~3]{koch1999biophysics} and \citet[Chapter~2]{gerstner2002spiking}.
 
 If we assume that individual neural compartments are resistively coupled, the current $J_i(t)$ flowing into the $i$th compartment is, according to Kirchhoff's circuit laws, given as
 \begin{align}

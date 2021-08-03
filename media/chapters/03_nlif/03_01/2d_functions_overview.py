@@ -13,9 +13,10 @@ for ax in axs.flat:
 for ax in axs[0]:
     utils.remove_frame(ax)
 
-res = 64
+res = 65
 
-cmap = "RdBu"
+cmap = "inferno"
+cmap2 = "RdBu"
 
 ic = axs.shape[1] // 2
 flt = gen_2d_fun.mk_2d_flt(sigma=1e-3, res=res)
@@ -37,11 +38,12 @@ for i, sigma in enumerate(np.logspace(-1, 1, axs.shape[1])):
          len(flt) / res,
         -len(flt) / res,
          len(flt) / res,
-    ], interpolation='bilinear', cmap=cmap, vmin=-np.max(np.square(flt)))
+    ], interpolation='bilinear', cmap=cmap2, vmin=-np.max(np.square(flt)))
     axs[1, i].set_xlim(-1.0, 1.0)
     axs[1, i].set_ylim(-1.0, 1.0)
     axs[1, i].set_xticks([-1, 0, 1])
     axs[1, i].set_yticks([-1, 0, 1])
+
 #    if i == 0:
 #        axs[1, i].set_ylabel("$x_2$")
 #    else:
@@ -49,10 +51,13 @@ for i, sigma in enumerate(np.logspace(-1, 1, axs.shape[1])):
 #    axs[1, i].set_xlabel("$x_1$", labelpad=0.0)
 #    axs[1, i].set_ylabel("$x_2$", labelpad=0.0)
 
-    axs[1, i].set_title("$\\sigma^{{-1}} = {:0.2f}$".format(sigma))
+    axs[1, i].set_title("$\\rho^{{-1}} = {:0.2f}$".format(sigma))
 
     img = gen_2d_fun.gen_2d_fun(flt=flt, res=res, rng=rng())
     axs[2, i].imshow(img, vmin=-2.5, vmax=2.5, interpolation='bilinear', extent=[-1, 1, -1, 1], cmap=cmap)
+
+    xs = np.linspace(-1, 1, res)
+    axs[2, i].contour(xs, xs, np.flipud(img), colors=['white'], linestyles=['--'], linewidths=[0.7])
 #    axs[2, i].set_xlabel("$x_1$", labelpad=0.0)
 #    axs[2, i].set_ylabel("$x_2$", labelpad=0.0)
 

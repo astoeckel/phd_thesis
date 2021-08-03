@@ -1,6 +1,9 @@
+% !TeX spellcheck = en_GB
+
 \newcommand*{\Reals}{\gls{Reals}\xspace}
 \newglossaryentry{Reals}{
 	name=\ensuremath{\mathbb{R}},
+	type=symbols,
 	sort=Reals,
 	description={The real number-line, i.e., all values of a scalar magnitude},
 }
@@ -8,6 +11,7 @@
 \newcommand*{\Ball}{\gls{Ball}\xspace}
 \newglossaryentry{Ball}{
 	name=\ensuremath{\mathbb{B}},
+	type=symbols,
 	sort=Ball,
 	description={A hyperball, the set of all $d$ dimensional vectors within radius $r$ of the coordinate origin, in other words
 	$r \mathbb{B}^d = \{ \vec x \in \mathbb{R}^d \mid \, \|x\|_2 \leq r \}$,
@@ -19,6 +23,7 @@
 \newcommand*{\Normal}{\gls{Normal}\xspace}
 \newglossaryentry{Normal}{
 	name=\ensuremath{\mathcal{N}},
+	type=symbols,
 	sort=Normal,
 	description={The normal distribution. The notation $\nu \sim \mathcal{N}(\mu, \sigma)$ indicates that $\nu$ is a normal-distributed random variable with mean $\mu$ and standard deviation $\sigma$},
 }
@@ -26,6 +31,7 @@
 \newcommand*{\Dec}{\gls{Dec}\xspace}
 \newglossaryentry{Dec}{
 	name=\ensuremath{\mat{D}},
+	type=symbols,
 	sort=Dec,
 	description={A decoding matrix of shape $\mathbb{R}^{d \times \Npop}$. Decoding matrices are used within the Neural Engineering Framework to either reconstruct the value represented by a population of neurons (the identity decoder) or to decode a specific function. In the latter case, we sometimes write $\mat{D}^f$ to denote the function that is being decoded.},
 }
@@ -33,6 +39,7 @@
 \newcommand*{\Npop}{\gls{Npop}\xspace}
 \newglossaryentry{Npop}{
 	name=\ensuremath{n},
+	type=symbols,
 	sort=npop,
 	description={Number of neurons in a neuron population.
 	This determines the dimensionality of the associated activity vector $\vec a$},
@@ -41,6 +48,7 @@
 \newcommand*{\Nsmpls}{\gls{Nsmpls}\xspace}
 \newglossaryentry{Nsmpls}{
 	name=\ensuremath{N},
+	type=symbols,
 	sort=Nsmpls,
 	description={This symbol is typically used to indicate the number of samples in an optimization problem},
 }
@@ -48,6 +56,7 @@
 \newcommand*{\Ndim}{\gls{Ndim}\xspace}
 \newglossaryentry{Ndim}{
 	name=\ensuremath{d},
+	type=symbols,
 	sort=Ndim,
 	description={Number of dimensions represented by a neuron population},
 }
@@ -55,22 +64,16 @@
 \newcommand*{\Xrepr}{\gls{Xrepr}\xspace}
 \newglossaryentry{Xrepr}{
 	name=\ensuremath{\mathbb{X}},
+	type=symbols,
 	sort=Xrepre,
 	description={Set of possible values represented by a neuron population. We assume that this is a compact set with finite volume, i.e., $\vol(\mathbb{X})$},
 }
 
 
-\newcommand*{\vMem}{\gls{vMem}\xspace}
-\newglossaryentry{vMem}{
-	name=\ensuremath{v},
-	sort=v,
-	description={Membrane potential\index{membrane potential} of a cell. This is the electrical potential measured in volt between the intra- and extracellular fluid of a cell. We are focusing on the membrane potential of neurons; typical neural membrane potentials range from about \SI{-85}{\milli\volt} (hyperpolarisation) to \SI{20}{\milli\volt} (depolarisation)}
-	% TODO check potentials
-}
-
 \newcommand*{\vRest}{\gls{vRest}\xspace}
 \newglossaryentry{vRest}{
 	name=\ensuremath{v_\mathrm{rest}},
+	type=symbols,
 	sort=vrest,
 	description={Resting potential\index{resting potential} of a neuron.
 	This is the membrane potential that can be measured in a neuron when no input is applied.
@@ -82,6 +85,7 @@
 \newcommand*{\vReset}{\gls{vReset}\xspace}
 \newglossaryentry{vReset}{
 	name=\ensuremath{v_\mathrm{reset}},
+	type=symbols,
 	sort=vreset,
 	description={Reset potential. TODO}
 	% TODO check potentials
@@ -91,17 +95,9 @@
 \newcommand*{\vTh}{\gls{vTh}\xspace}
 \newglossaryentry{vTh}{
 	name=\ensuremath{v_\mathrm{th}},
+	type=symbols,
 	sort=vth,
 	description={Threshold potential. TODO}
-	% TODO check potentials
-}
-
-
-\newcommand*{\vSom}{\gls{vSom}\xspace}
-\newglossaryentry{vSom}{
-	name=\ensuremath{{\bar v}},
-	sort=vSom,
-	description={Average somatic potential.}
 	% TODO check potentials
 }
 
@@ -109,6 +105,7 @@
 \newcommand*{\CMem}{\gls{CMem}\xspace}
 \newglossaryentry{CMem}{
 	name=\ensuremath{C_\mathrm{m}},
+	type=symbols,
 	sort=Cm,
 	description={Membrane capacitance. TODO}
 }
@@ -116,6 +113,7 @@
 \newcommand*{\EL}{\gls{EL}\xspace}
 \newglossaryentry{EL}{
 	name=\ensuremath{E_\mathrm{L}},
+	type=symbols,
 	sort=EL,
 	description={Leak potential. In contrast to the resting potential \vRest, which is an empirical measurement, the leak potential $E_\mathrm{L}$ is the reversal potential of a so-called \enquote{leak-channel}.
 	The leak-channel merely a modelling convenience that summarises the state of multiple ion channels of the neuron at rest}
@@ -125,6 +123,7 @@
 \newcommand*{\gL}{\gls{gL}\xspace}
 \newglossaryentry{gL}{
 	name=\ensuremath{g_\mathrm{L}},
+	type=symbols,
 	sort=gL,
 	description={Leak conductance. TODO}
 }
@@ -133,6 +132,7 @@
 \newcommand*{\gE}{\gls{gE}\xspace}
 \newglossaryentry{gE}{
 	name=\ensuremath{g_\mathrm{E}},
+	type=symbols,
 	sort=gE,
 	description={Excitatory conductance. TODO}
 }
@@ -140,20 +140,8 @@
 \newcommand*{\gI}{\gls{gI}\xspace}
 \newglossaryentry{gI}{
 	name=\ensuremath{g_\mathrm{I}},
+	type=symbols,
 	sort=gI,
 	description={Inhibitory conductance. TODO}
 }
 
-\newcommand*{\tauRef}{\gls{tauRef}\xspace}
-\newglossaryentry{tauRef}{
-	name=\ensuremath{\tau_\mathrm{ref}},
-	sort=tauRef,
-	description={Refractory time constant. Refractoriness in neurons refers to neurons not being excitable for a short period of time whenever the neuron has just produced an action potential. The refractory time constant is used in simple neuron models such as the LIF model to explicitly clamp the mambrane potential to the reset potential, making it impossible for the neuron to reach the threshold.´}
-}
-
-\newcommand*{\tauMem}{\gls{tauMem}\xspace}
-\newglossaryentry{tauMem}{
-	name=\ensuremath{\tau_\mathrm{m}},
-	sort=tauMem,
-	description={Membrane time constant, sometimes also referred to as $\tau_\mathrm{RC}$ (due to the membrane forming a resistor-capacitance circuit). In general, this is the time required to discharge a capacitor of capacitance $C$ over a resistor of value $R$ from an initial potential $u_0$ to the voltage $u_0 e^{-1}$. Conveniently, $\tau_\mathrm{RC}$ is just the product between the resistance and the capacitance, i.e., $\tau_\mathrm{RC} = RC$. We use this symbol to denote the membrane time-constant of a point neuron or a neural compartment. In this case, $\tau_\mathrm{m}$ is just given as $\tau_\mathrm{m} = C_\mathrm{m} g_\mathrm{L}^{-1}$}
-}
