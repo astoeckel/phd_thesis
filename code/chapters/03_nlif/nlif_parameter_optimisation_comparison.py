@@ -158,10 +158,10 @@ def main():
 
         errs = f.create_dataset(
             'errs',
-            (N_NEURONS, N_OPTIMISERS, N_PARAMS, N_REPEAT, 2, 2, N_EPOCHS + 1))
+            (N_NEURONS, N_OPTIMISERS, N_PARAMS, 2, N_REPEAT, 2, N_EPOCHS + 1))
 
         smpls = f.create_dataset(
-            'smpls', (N_NEURONS, N_OPTIMISERS, N_PARAMS, N_REPEAT, 2, 2))
+            'smpls', (N_NEURONS, N_OPTIMISERS, N_PARAMS, 2, N_REPEAT, 2))
 
         with env_guard.SingleThreadEnvGuard():
             with multiprocessing.get_context('spawn').Pool() as pool:
