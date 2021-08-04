@@ -67,7 +67,7 @@ PARAMS = [
     [5e-2],
 ]
 
-N_REPEAT = 100
+N_REPEAT = 1000
 
 N_EPOCHS = 400
 N_SMPLS = 300
