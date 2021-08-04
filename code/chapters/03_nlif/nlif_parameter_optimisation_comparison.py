@@ -94,8 +94,8 @@ def run_single(args):
     As_train = assm.rate_empirical(gs_train, progress=False)
     As_test = assm.rate_empirical(gs_test, progress=False)
 
-    valid_train = random_selection(100, As_train > 12.5)
-    valid_test = random_selection(101, As_test > 12.5)
+    valid_train = random_selection(100, As_train > 12.5, rng=rng)
+    valid_test = random_selection(101, As_test > 12.5, rng=rng)
 
     Js_train = assm.lif_rate_inv(As_train)
     Js_test = assm.lif_rate_inv(As_test)
