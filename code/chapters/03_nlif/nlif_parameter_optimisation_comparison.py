@@ -69,9 +69,16 @@ PARAMS = [
 
 N_REPEAT = 100
 
-N_EPOCHS = 500
+N_EPOCHS = 400
 N_SMPLS = 300
 
+def random_selection(count, valid, rng=np.random):
+    N = valid.shape[0]
+    idcs = np.arange(N, dtype=int)[valid]
+    rng.shuffle(idcs)
+    valid_new = np.zeros(N, dtype=bool)
+    valid_new[idcs[:min(count, len(idcs))]] = True
+    return valid_new
 
 def run_single(args):
     i, j, k, l = args
@@ -84,11 +91,14 @@ def run_single(args):
     gs_train = rng.uniform(0, 1000e-9, (N_SMPLS, assm.n_inputs))
     gs_test = rng.uniform(0, 1000e-9, (N_SMPLS + 1, assm.n_inputs))
 
-    Js_train = assm.isom_empirical_from_rate(gs_train, progress=False)
-    Js_test = assm.isom_empirical_from_rate(gs_test, progress=False)
+    As_train = assm.rate_empirical(gs_train)
+    As_test = assm.rate_empirical(gs_test)
 
-    valid_train = Js_train > 1e-9
-    valid_test = Js_test > 1e-9
+    valid_train = random_selection(100, As_train > 12.5)
+    valid_test = random_selection(101, As_test > 12.5)
+
+    Js_train = assm.lif_rate_inv(As_train)
+    Js_test = assm.lif_rate_inv(As_test)
 
     sys = assm.reduced_system().condition()
 
