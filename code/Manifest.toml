@@ -147,7 +147,7 @@ generates = "decode_basis_functions.h5"
 is_multithreaded = true
 
 ["chapters/03_nlif/nlif_parameter_optimisation_comparison.py"]
-commit = "50eaed13d6f7773d99fbb78a12250bf58123f7ec"
+commit = "30e6b6a0052136adc4f159d42e7a1af4ebcdcee0"
 dockerfile = "experiments_base"
 generates = "nlif_parameter_optimisation_comparison.h5"
 is_multithreaded = true
