@@ -140,8 +140,8 @@ def run_single(args):
     except:
         errs_train, errs_test = np.ones((2, N_EPOCHS + 1)) * np.nan
 
-    return i, j, k, l, (errs_train, errs_test), (sum(valid_train),
-                                                 sum(valid_test))
+    return i, j, k, l, m, (errs_train, errs_test), (sum(valid_train),
+                                                    sum(valid_test))
 
 
 def main():
