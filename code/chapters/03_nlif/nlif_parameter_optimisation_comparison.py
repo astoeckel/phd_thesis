@@ -67,7 +67,7 @@ PARAMS = [
     [5e-2],
 ]
 
-N_REPEAT = 100
+N_REPEAT = 1000
 
 N_EPOCHS = 400
 N_SMPLS = 300
@@ -106,12 +106,12 @@ def run_single(args):
 
     # Perform random initialisation if l is one
     if l == 1:
-        sys.a_const[sys.a_const_mask] = np.random.uniform(
+        sys.a_const[sys.a_const_mask] = rng.uniform(
             0, 1, len(sys.a_const[sys.a_const_mask]))
-        sys.b_const[sys.b_const_mask] = np.random.uniform(
+        sys.b_const[sys.b_const_mask] = rng.uniform(
             -1, 1, len(sys.b_const[sys.b_const_mask]))
-        sys.A[sys.A_mask] = np.random.uniform(0, 10, len(sys.A[sys.A_mask]))
-        sys.B[sys.B_mask] = np.random.uniform(-10, 10, len(sys.B[sys.B_mask]))
+        sys.A[sys.A_mask] = rng.uniform(0, 10, len(sys.A[sys.A_mask]))
+        sys.B[sys.B_mask] = rng.uniform(-10, 10, len(sys.B[sys.B_mask]))
 
     try:
         if j == 0:
