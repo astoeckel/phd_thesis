@@ -153,7 +153,7 @@ generates = "nlif_parameter_optimisation_comparison.h5"
 is_multithreaded = true
 
 ["chapters/03_nlif/nlif_parameter_contours.py"]
-commit = "50eaed13d6f7773d99fbb78a12250bf58123f7ec"
+commit = "06cf287010e476c6bc3619541c2c48a930f19c24"
 dockerfile = "experiments_base"
 generates = [
 	"nlif_params_contour_two_comp_lif.npz",
