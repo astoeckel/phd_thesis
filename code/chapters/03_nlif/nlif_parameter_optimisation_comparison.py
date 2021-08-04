@@ -91,8 +91,8 @@ def run_single(args):
     gs_train = rng.uniform(0, 1000e-9, (N_SMPLS, assm.n_inputs))
     gs_test = rng.uniform(0, 1000e-9, (N_SMPLS + 1, assm.n_inputs))
 
-    As_train = assm.rate_empirical(gs_train)
-    As_test = assm.rate_empirical(gs_test)
+    As_train = assm.rate_empirical(gs_train, progress=False)
+    As_test = assm.rate_empirical(gs_test, progress=False)
 
     valid_train = random_selection(100, As_train > 12.5)
     valid_test = random_selection(101, As_test > 12.5)
