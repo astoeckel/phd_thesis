@@ -91,24 +91,26 @@ np.savez(
                    two_comp_lif_neuron.g_E,
                    two_comp_lif_neuron.g_I,
                    c10=0.045e-6,
-                   c21=0.825e-6))
-np.savez(
-    fn("nlif_params_contour_three_comp_lif_1"),
-    **run_analysis(three_comp_lif_neuron,
-                   three_comp_lif_neuron.g_E2,
-                   three_comp_lif_neuron.g_I2,
-                   c10=0.1e-6,
-                   c11=0.5e-6,
-                   c21=0.3e-6))
+                   c11=0.85e-6,
+                   c21=1.0e-6))
 
 np.savez(
-    fn("nlif_params_contour_three_comp_lif_2"),
+    fn("nlif_params_contour_three_comp_lif_1"),
     **run_analysis(three_comp_lif_neuron,
                    three_comp_lif_neuron.g_E1,
                    three_comp_lif_neuron.g_I2,
                    c10=0.05e-6,
                    c11=0.2e-6,
                    c21=1e-6))
+
+np.savez(
+    fn("nlif_params_contour_three_comp_lif_2"),
+    **run_analysis(three_comp_lif_neuron,
+                   three_comp_lif_neuron.g_E2,
+                   three_comp_lif_neuron.g_I2,
+                   c10=0.1e-6,
+                   c11=0.6e-6,
+                   c21=0.55e-6))
 
 np.savez(
     fn("nlif_params_contour_four_comp_lif_1"),
@@ -133,7 +135,7 @@ np.savez(
     **run_analysis(four_comp_lif_neuron,
                    four_comp_lif_neuron.g_E3,
                    four_comp_lif_neuron.g_I3,
-                   c10=0.5e-6,
+                   c10=0.175e-6,
                    c11=1e-6,
-                   c21=0.5e-6))
+                   c21=0.55e-6))
 
