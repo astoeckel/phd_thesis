@@ -144,6 +144,12 @@ typedef struct {
  */
 typedef struct {
 	/**
+	 * If true, uses the Sananthan-Koerner iteration to re-weight the individual
+	 * samples.
+	 */
+	bool use_sanathanan_koerner;
+
+	/**
 	 * Sets the absolute and relative abortion criteria (eps_rel and eps_abs
 	 * in osqp).
 	 */

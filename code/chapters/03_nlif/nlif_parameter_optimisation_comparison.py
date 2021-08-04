@@ -32,23 +32,23 @@ import env_guard
 # Setup some parameters
 
 two_comp_lif_neuron = nlif.TwoCompLIFCond()
-three_comp_lif_neuron = nlif.ThreeCompLIFCond(g_c2=200e-9)
+three_comp_lif_neuron = nlif.ThreeCompLIFCond(g_c1=100e-9, g_c2=200e-9)
 with nlif.Neuron() as four_comp_lif_neuron:
     with nlif.Soma() as soma:
         nlif.CondChan(E_rev=-65e-3, g=50e-9)
     with nlif.Compartment() as comp1:
         nlif.CondChan(E_rev=-65e-3, g=50e-9)
-        nlif.CondChan(E_rev=0e-3)
-        nlif.CondChan(E_rev=-75e-3)
+        four_comp_lif_neuron.g_E1 = nlif.CondChan(E_rev=0e-3)
+        four_comp_lif_neuron.g_I1 = nlif.CondChan(E_rev=-75e-3)
     with nlif.Compartment() as comp2:
         nlif.CondChan(E_rev=-65e-3, g=50e-9)
-        nlif.CondChan(E_rev=0e-3)
-        nlif.CondChan(E_rev=-75e-3)
+        four_comp_lif_neuron.g_E2 = nlif.CondChan(E_rev=0e-3)
+        four_comp_lif_neuron.g_I2 = nlif.CondChan(E_rev=-75e-3)
     with nlif.Compartment() as comp3:
         nlif.CondChan(E_rev=-65e-3, g=50e-9)
-        nlif.CondChan(E_rev=0e-3)
-        nlif.CondChan(E_rev=-75e-3)
-    nlif.Connection(soma, comp1)
+        four_comp_lif_neuron.g_E3 = nlif.CondChan(E_rev=0e-3)
+        four_comp_lif_neuron.g_I3 = nlif.CondChan(E_rev=-75e-3)
+    nlif.Connection(soma, comp1, g_c=100e-9)
     nlif.Connection(comp1, comp2, g_c=200e-9)
     nlif.Connection(comp2, comp3, g_c=500e-9)
 
@@ -67,7 +67,7 @@ PARAMS = [
     [5e-2],
 ]
 
-N_REPEAT = 1000
+N_REPEAT = 100
 
 N_EPOCHS = 500
 N_SMPLS = 300

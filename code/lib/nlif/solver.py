@@ -81,6 +81,7 @@ PNlifParameterProblem = ctypes.POINTER(NlifParameterProblem)
 
 class NlifSolverParameters(ctypes.Structure):
     _fields_ = [
+        ("use_sanathanan_koerner", c_ubyte),
         ("tolerance", c_double),
         ("max_iter", c_int),
         ("progress", NlifProgressCallback),
@@ -254,6 +255,7 @@ class Solver:
                                    reg2=1e-3,
                                    tol=1e-6,
                                    return_objective_val=False,
+                                   use_sanathanan_koerner=False,
                                    progress_callback=default_progress_callback,
                                    warning_callback=default_warning_callback,
                                    n_threads=0,
@@ -358,6 +360,7 @@ class Solver:
                 return True
 
             params = NlifSolverParameters()
+            params.use_sanathanan_koerner = use_sanathanan_koerner
             params.tolerance = tol
             params.max_iter = max_iter
             params.progress = NlifProgressCallback(progress_callback_wrapper)

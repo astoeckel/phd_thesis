@@ -137,6 +137,29 @@ private:
 	}
 
 	/**
+	 * Computes that weights for the Sananthan-Koerner iteration by computing
+	 * the determinant of each A[g_k] matrix.
+	 */
+	VectorXd compute_sanathanan_koerner_weights()
+	{
+		// Initialise the result vector
+		VectorXd weights = VectorXd::Zero(N);
+
+		// Solve for the equilibrium potential for each parameter set and write
+		// that to the parameter vector
+		for (int i = 0; i < N; i++) {
+			VectorXd g = g_in.row(i);
+			MatrixXd Ai = (a_const + A * g).asDiagonal();
+			Ai += L;
+
+			weights[i] = 1.0 / Ai.determinant();
+		}
+
+		return double(N) * (weights / weights.sum());
+	}
+
+
+	/**
 	 * Distributes the parameter dimensions in theta back into the reduced
 	 * system matrices.
 	 */
@@ -267,6 +290,7 @@ private:
 		std::cout << "reg1 = " << problem.reg1 << std::endl;
 		std::cout << "reg2 = " << problem.reg2 << std::endl;
 
+		std::cout << "use_sanathanan_koerner = " << params.use_sanathanan_koerner << std::endl;
 		std::cout << "tol = " << params.tolerance << std::endl;
 	}
 #endif
@@ -345,6 +369,7 @@ public:
 		// Step 2: Compute the initial parameter vector for the trust region
 		//
 		VectorXd theta0 = compute_theta0();
+		VectorXd weights = params.use_sanathanan_koerner ? compute_sanathanan_koerner_weights() : VectorXd::Constant(N, 1.0);
 
 		//
 		// Step 3: Calculate the sparsity pattern of the P matrix
@@ -416,12 +441,12 @@ public:
 			for (size_t i0 = 0; i0 < size_t(n); i0++) {
 				const size_t i_global = p2 + i * n + i0;
 				for (size_t i1 = v0; i1 < v2; i1++) {
-					P.insert(i_global, i1) = alpha2 * Pg(i0, i1 - v0);
+					P.insert(i_global, i1) = alpha2 * weights[i] * Pg(i0, i1 - v0);
 				}
 				for (size_t i1 = 0; i1 < size_t(n); i1++) {
-					P.insert(i_global, v2 + i * n + i1) = alpha2 * Pv(i0, i1);
+					P.insert(i_global, v2 + i * n + i1) = alpha2 * weights[i] * Pv(i0, i1);
 				}
-				q[i_global] = -alpha2 * qi[i0]; // Minus here because we compute -PTq below
+				q[i_global] = -alpha2 * weights[i] * qi[i0]; // Minus here because we compute -PTq below
 			}
 		}
 

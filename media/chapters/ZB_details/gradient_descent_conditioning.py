@@ -38,7 +38,7 @@ print("c =", sys_cond.c)
 np.random.seed(4897)
 gs_train = np.random.uniform(0, 1000e-9, (1000, assm.n_inputs))
 Js_train = assm.isom_empirical_from_rate(gs_train)
-gs_test = np.random.uniform(0, 1000e-9, (1000, assm.n_inputs))
+gs_test = np.random.uniform(0, 1000e-9, (1001, assm.n_inputs))
 Js_test = assm.isom_empirical_from_rate(gs_test)
 
 def optimise(sys, alpha):
@@ -46,13 +46,14 @@ def optimise(sys, alpha):
     valid_test = Js_test > 1.5e-9
     print(np.sum(valid_train), np.sum(valid_test))
     _, errs_train, errs_test = optimise_sgd(sys,
-                           gs_train[valid_train] * sys.in_scale,
-                           Js_train[valid_train] * sys.out_scale,
-                           gs_test[valid_test] * sys.in_scale,
-                           Js_test[valid_test] * sys.out_scale,
+                           gs_train[valid_train],
+                           Js_train[valid_train],
+                           gs_test[valid_test],
+                           Js_test[valid_test],
                            N_epochs=200,
                            alpha=alpha,
-                           N_batch=10)
+                           N_batch=10,
+                           normalise_error=False)
     return errs_train / sys.out_scale, errs_test / sys.out_scale
 
 errs_train_orig, errs_test_orig = optimise(sys_orig, alpha=3e-7)
@@ -64,9 +65,8 @@ fig, axs = plt.subplots(1, 2, figsize=(7.45, 1.75), gridspec_kw={
 
 def setup_ax(ax, letter):
     ax.set_ylim(5e-3, 1e-1)
-    ax.set_ylim(5e-3, 1e-1)
     ax.set_xlabel("Training epoch")
-    ax.set_ylabel("RMSE ($\\mathrm{nA}$)")
+    ax.set_ylabel("RMSE (nA)")
     ax.text(-0.16, 1.0275, f"\\textbf{{{letter}}}", size=12, transform=ax.transAxes, ha="left", va="bottom")
 
 axs[0].semilogy(errs_test_orig * 1e9, color='k', label='Validation')
