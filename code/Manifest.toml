@@ -147,9 +147,22 @@ generates = "decode_basis_functions.h5"
 is_multithreaded = true
 
 ["chapters/03_nlif/nlif_parameter_optimisation_comparison.py"]
-commit = "eeda03968a249d5c125c3670dc1956834e13f048"
+commit = "50eaed13d6f7773d99fbb78a12250bf58123f7ec"
 dockerfile = "experiments_base"
 generates = "nlif_parameter_optimisation_comparison.h5"
+is_multithreaded = true
+
+["chapters/03_nlif/nlif_parameter_contours.py"]
+commit = "50eaed13d6f7773d99fbb78a12250bf58123f7ec"
+dockerfile = "experiments_base"
+generates = [
+	"nlif_params_contour_two_comp_lif.npz",
+	"nlif_params_contour_three_comp_lif_1.npz",
+	"nlif_params_contour_three_comp_lif_2.npz",
+	"nlif_params_contour_four_comp_lif_1.npz",
+	"nlif_params_contour_four_comp_lif_2.npz",
+	"nlif_params_contour_four_comp_lif_3.npz",
+]
 is_multithreaded = true
 
 ["chapters/ZC_data/two_comp_benchmark_functions_regularisation_filter_sweep.py"]
