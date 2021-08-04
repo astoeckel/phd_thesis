@@ -67,10 +67,11 @@ PARAMS = [
     [5e-2],
 ]
 
-N_REPEAT = 1000
+N_REPEAT = 100
 
 N_EPOCHS = 400
 N_SMPLS = 300
+
 
 def random_selection(count, valid, rng=np.random):
     N = valid.shape[0]
@@ -80,13 +81,14 @@ def random_selection(count, valid, rng=np.random):
     valid_new[idcs[:min(count, len(idcs))]] = True
     return valid_new
 
+
 def run_single(args):
-    i, j, k, l = args
+    i, j, k, l, m = args
 
     neuron = NEURONS[i]
     assm = neuron.assemble()
 
-    rng = np.random.RandomState(12903 * l + 21)
+    rng = np.random.RandomState(12903 * m + 21)
 
     gs_train = rng.uniform(0, 1000e-9, (N_SMPLS, assm.n_inputs))
     gs_test = rng.uniform(0, 1000e-9, (N_SMPLS + 1, assm.n_inputs))
@@ -102,40 +104,51 @@ def run_single(args):
 
     sys = assm.reduced_system().condition()
 
+    # Perform random initialisation if l is one
+    if l == 1:
+        sys.a_const[sys.a_const_mask] = np.random.uniform(
+            0, 1, len(sys.a_const[sys.a_const_mask]))
+        sys.b_const[sys.b_const_mask] = np.random.uniform(
+            -1, 1, len(sys.b_const[sys.b_const_mask]))
+        sys.A[sys.A_mask] = np.random.uniform(0, 10, len(sys.A[sys.A_mask]))
+        sys.B[sys.B_mask] = np.random.uniform(-10, 10, len(sys.B[sys.B_mask]))
+
     try:
         if j == 0:
-            _, errs_train, errs_test = optimise_trust_region(sys,
-                                               gs_train[valid_train],
-                                               Js_train[valid_train],
-                                               gs_test[valid_test],
-                                               Js_test[valid_test],
-                                               alpha3=PARAMS[j][k],
-                                               gamma=0.99,
-                                               N_epochs=N_EPOCHS,
-                                               progress=False,
-                                               parallel_compile=False)
+            _, errs_train, errs_test = optimise_trust_region(
+                sys,
+                gs_train[valid_train],
+                Js_train[valid_train],
+                gs_test[valid_test],
+                Js_test[valid_test],
+                alpha3=PARAMS[j][k],
+                gamma=0.99,
+                N_epochs=N_EPOCHS,
+                progress=False,
+                parallel_compile=False)
         elif j == 1:
             _, errs_train, errs_test = optimise_sgd(sys,
-                                      gs_train[valid_train],
-                                      Js_train[valid_train],
-                                      gs_test[valid_test],
-                                      Js_test[valid_test],
-                                      alpha=PARAMS[j][k],
-                                      N_batch=10,
-                                      N_epochs=N_EPOCHS,
-                                      rng=rng,
-                                      progress=False)
+                                                    gs_train[valid_train],
+                                                    Js_train[valid_train],
+                                                    gs_test[valid_test],
+                                                    Js_test[valid_test],
+                                                    alpha=PARAMS[j][k],
+                                                    N_batch=10,
+                                                    N_epochs=N_EPOCHS,
+                                                    rng=rng,
+                                                    progress=False)
     except:
         errs_train, errs_test = np.ones((2, N_EPOCHS + 1)) * np.nan
 
-    return i, j, k, l, (errs_train, errs_test), (sum(valid_train), sum(valid_test))
+    return i, j, k, l, (errs_train, errs_test), (sum(valid_train),
+                                                 sum(valid_test))
 
 
 def main():
     # Fill the parameter array
-    params = [(i, j, k, l) for i in range(N_NEURONS)
+    params = [(i, j, k, l, m) for i in range(N_NEURONS)
               for j in range(N_OPTIMISERS) for k in range(N_PARAMS)
-              for l in range(N_REPEAT)]
+              for l in range(2) for m in range(N_REPEAT)]
     random.shuffle(params)
 
     fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data',
@@ -145,19 +158,19 @@ def main():
 
         errs = f.create_dataset(
             'errs',
-            (N_NEURONS, N_OPTIMISERS, N_PARAMS, N_REPEAT, 2, N_EPOCHS + 1))
+            (N_NEURONS, N_OPTIMISERS, N_PARAMS, N_REPEAT, 2, 2, N_EPOCHS + 1))
 
         smpls = f.create_dataset(
-            'smpls',
-            (N_NEURONS, N_OPTIMISERS, N_PARAMS, N_REPEAT, 2))
+            'smpls', (N_NEURONS, N_OPTIMISERS, N_PARAMS, N_REPEAT, 2, 2))
 
         with env_guard.SingleThreadEnvGuard():
             with multiprocessing.get_context('spawn').Pool() as pool:
-                for i, j, k, l, E, n_smpls in tqdm.tqdm(pool.imap_unordered(
+                for i, j, k, l, m, E, n_smpls in tqdm.tqdm(pool.imap_unordered(
                         run_single, params),
-                                                  total=len(params)):
-                    errs[i, j, k, l] = E
-                    smpls[i, j, k, l] = n_smpls
+                                                           total=len(params)):
+                    errs[i, j, k, l, m] = E
+                    smpls[i, j, k, l, m] = n_smpls
+
 
 if __name__ == "__main__":
     main()
