@@ -25,7 +25,7 @@ import numpy as np
 import h5py
 
 import nlif
-from nlif.parameter_optimisation import optimise_sgd, optimise_trust_region
+from nlif.parameter_optimisation import optimise_sgd, optimise_bfgs, optimise_trust_region
 
 import env_guard
 
@@ -67,7 +67,7 @@ PARAMS = [
     [5e-2],
 ]
 
-N_REPEAT = 100
+N_REPEAT = 1000
 
 N_EPOCHS = 400
 N_SMPLS = 300
