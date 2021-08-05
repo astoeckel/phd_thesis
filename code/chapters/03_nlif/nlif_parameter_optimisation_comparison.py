@@ -59,7 +59,7 @@ NEURONS = [
 ]
 N_NEURONS = len(NEURONS)
 
-N_OPTIMISERS = 2
+N_OPTIMISERS = 3
 
 N_PARAMS = 1
 PARAMS = [
@@ -67,7 +67,7 @@ PARAMS = [
     [5e-2],
 ]
 
-N_REPEAT = 1000
+N_REPEAT = 100
 
 N_EPOCHS = 400
 N_SMPLS = 300
@@ -136,6 +136,14 @@ def run_single(args):
                                                     N_batch=10,
                                                     N_epochs=N_EPOCHS,
                                                     rng=rng,
+                                                    progress=False)
+        elif j == 2:
+            _, errs_train, errs_test = optimise_bfgs(sys,
+                                                    gs_train[valid_train],
+                                                    Js_train[valid_train],
+                                                    gs_test[valid_test],
+                                                    Js_test[valid_test],
+                                                    N_epochs=N_EPOCHS,
                                                     progress=False)
     except:
         errs_train, errs_test = np.ones((2, N_EPOCHS + 1)) * np.nan

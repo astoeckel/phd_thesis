@@ -106,7 +106,7 @@ def loss_gradient_numerical(reduced_sys, gs, Js, eta=1e-9):
     )
 
 
-def loss_gradient(reduced_sys, gs, Js):
+def loss_gradient(reduced_sys, gs, Js, return_ravelled=False):
     """
     Computes the parameter gradient for the reduced system reduced_sys
     numerically.
@@ -140,12 +140,22 @@ def loss_gradient(reduced_sys, gs, Js):
                                     c) * reduced_sys.b_const_mask
         dB[i] = E * np.einsum('ir,s,i->rs', A_inv, g, c) * reduced_sys.B_mask
 
-    return (
-        dA.reshape((*output_shape, n, k)),
-        da_const.reshape((*output_shape, n)),
-        dB.reshape((*output_shape, n, k)),
-        db_const.reshape((*output_shape, n)),
-    )
+    if return_ravelled:
+        return np.array([
+            np.concatenate((
+                dA[i][reduced_sys.A_mask],
+                da_const[i][reduced_sys.a_const_mask],
+                dB[i][reduced_sys.B_mask],
+                db_const[i][reduced_sys.b_const_mask],
+            )) for i in range(N)
+        ]).reshape(*output_shape, -1)
+    else:
+        return (
+            dA.reshape((*output_shape, n, k)),
+            da_const.reshape((*output_shape, n)),
+            dB.reshape((*output_shape, n, k)),
+            db_const.reshape((*output_shape, n)),
+        )
 
 
 def _optimise_common(reduced_sys, gs_train, Js_train, gs_test, Js_test,
@@ -176,7 +186,7 @@ def _optimise_common(reduced_sys, gs_train, Js_train, gs_test, Js_test,
         rms_test = np.sqrt(np.mean(np.square(Js_test))) if normalise_error else 1.0
 
     # Initialise the errors
-    errs_train, errs_test = np.zeros((2, N_epochs + 1))
+    errs_train, errs_test = np.ones((2, N_epochs + 1)) * np.nan
 
     def update_err(i):
         errs_train[i] = np.sqrt(
@@ -202,6 +212,26 @@ def _optimise_common(reduced_sys, gs_train, Js_train, gs_test, Js_test,
 
     return res
 
+
+def ravel_parameters(sys):
+    return np.concatenate((
+        sys.A[sys.A_mask],
+        sys.a_const[sys.a_const_mask],
+        sys.B[sys.B_mask],
+        sys.b_const[sys.b_const_mask],
+    ))
+
+def unravel_parameters(p, sys):
+    n0 = 0
+    n1 = n0 + int(np.sum(sys.A_mask))
+    n2 = n1 + int(np.sum(sys.a_const_mask))
+    n3 = n2 + int(np.sum(sys.B_mask))
+    n4 = n3 + int(np.sum(sys.b_const_mask))
+
+    sys.A[sys.A_mask] = p[n0:n1]
+    sys.a_const[sys.a_const_mask] = p[n1:n2]
+    sys.B[sys.B_mask] = p[n2:n3]
+    sys.b_const[sys.b_const_mask] = p[n3:n4]
 
 def optimise_sgd(
         reduced_sys,
@@ -269,6 +299,66 @@ def optimise_sgd(
     else:
         return data["reduced_sys"], data["errs_train"], data["errs_test"]
 
+
+def optimise_bfgs(
+        reduced_sys,
+        gs_train,
+        Js_train,
+        gs_test=None,
+        Js_test=None,
+        N_epochs=100,
+        N_batch=10,
+        progress=True,
+        normalise_error=True):
+    # Check some parameters, do some pre-processing
+    data = _optimise_common(reduced_sys, gs_train, Js_train, gs_test, Js_test,
+                             N_epochs, normalise_error)
+
+    # Assemble the optimisation bounds
+    n1 = int(np.sum(reduced_sys.A_mask) + np.sum(reduced_sys.a_const_mask))
+    n2 = n1 + int(np.sum(reduced_sys.B_mask) + np.sum(reduced_sys.b_const_mask))
+    bounds = [(0.0, None) if i < n1 else (None, None) for i in range(n2)]
+
+    # Fetch the initial parameters
+    x0 = ravel_parameters(reduced_sys)
+
+    # Assemble the actual evaluation function and the gradient
+    def f(x):
+        sys = copy.deepcopy(reduced_sys)
+        unravel_parameters(x, sys)
+        E = np.sum(loss(sys, data["gs_train"], data["Js_train"]))
+        return E
+
+    def df(x):
+        sys = copy.deepcopy(reduced_sys)
+        unravel_parameters(x, sys)
+        dE = np.sum(loss_gradient(sys, data["gs_train"], data["Js_train"], return_ravelled=True), axis=0)
+        return dE
+
+
+    # Callback function writing the current parameter set to the output and
+    # updating the recorded error
+    with tqdm.tqdm(total=N_epochs, disable=not progress) as pbar:
+        i = [0]
+        def callback(x):
+            i[0] += 1
+            unravel_parameters(x, data["reduced_sys"])
+            data["update_err"](i[0])
+            pbar.update(1)
+
+        # Run the actual optimisation
+        import scipy.optimize
+        scipy.optimize.minimize(fun=f, x0=x0, jac=df, method='L-BFGS-B', bounds=bounds, options={
+            "maxiter": N_epochs,
+            "ftol": 0.0,
+            "gtol": 0.0,
+        }, callback=callback)
+
+    # Return the updated system as well as the recorded errors
+    if Js_test is None:
+        return data["reduced_sys"], data["errs_train"]
+    else:
+        return data["reduced_sys"], data["errs_train"], data["errs_test"]
 
 def optimise_trust_region(reduced_sys,
                           gs_train,
