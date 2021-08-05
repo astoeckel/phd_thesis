@@ -40,16 +40,16 @@ def run_analysis(neuron,
     assm = neuron.assemble()
     rng = np.random.RandomState(578281)
     gs_train = rng.uniform(0, 0.5e-6, (1000, assm.n_inputs))
-    As_train = assm.rate_empirical(gs_train, noise=True, T=100.0)
+    As_train = assm.rate_empirical(gs_train)
     valid_train = As_train > 12.5
-    Js_train = As_train[valid_train] * 0.1e-9
+    Js_train = assm.lif_rate_inv(As_train)
 
     sys = assm.reduced_system().condition()
 
     sys, _ = optimise_trust_region(sys,
                                    gs_train[valid_train],
-                                   Js_train,
-                                   alpha3=1e-6,
+                                   Js_train[valid_train],
+                                   alpha3=1e-5,
                                    gamma=0.99,
                                    N_epochs=100,
                                    progress=True,
@@ -62,13 +62,13 @@ def run_analysis(neuron,
     As = assm.rate_empirical({
         chan1: c1ss,
         chan2: c2ss,
-    }, noise=True, T=100.0)
+    })
 
     Js_pred = assm.i_som({
         chan1: c1ss,
         chan2: c2ss,
     }, reduced_system=sys)
-    As_pred = np.maximum(0, Js_pred) * 10e9
+    As_pred = assm.lif_rate(Js_pred)
 
     return {
         "c10": c10,
@@ -92,7 +92,7 @@ np.savez(
                    two_comp_lif_neuron.g_I,
                    c10=0.045e-6,
                    c11=0.85e-6,
-                   c21=1.0e-6))
+                   c21=0.75e-6))
 
 np.savez(
     fn("nlif_params_contour_three_comp_lif_1"),
@@ -100,8 +100,8 @@ np.savez(
                    three_comp_lif_neuron.g_E1,
                    three_comp_lif_neuron.g_I2,
                    c10=0.05e-6,
-                   c11=0.2e-6,
-                   c21=1e-6))
+                   c11=0.175e-6,
+                   c21=0.5e-6))
 
 np.savez(
     fn("nlif_params_contour_three_comp_lif_2"),
@@ -109,8 +109,8 @@ np.savez(
                    three_comp_lif_neuron.g_E2,
                    three_comp_lif_neuron.g_I2,
                    c10=0.1e-6,
-                   c11=0.6e-6,
-                   c21=0.55e-6))
+                   c11=0.5e-6,
+                   c21=0.3e-6))
 
 np.savez(
     fn("nlif_params_contour_four_comp_lif_1"),
@@ -119,7 +119,7 @@ np.savez(
                    four_comp_lif_neuron.g_I3,
                    c10=0.05e-6,
                    c11=0.2e-6,
-                   c21=1e-6))
+                   c21=0.5e-6))
 
 np.savez(
     fn("nlif_params_contour_four_comp_lif_2"),
@@ -127,8 +127,8 @@ np.savez(
                    four_comp_lif_neuron.g_E2,
                    four_comp_lif_neuron.g_I3,
                    c10=0.12e-6,
-                   c11=1e-6,
-                   c21=1e-6))
+                   c11=0.5e-6,
+                   c21=0.5e-6))
 
 np.savez(
     fn("nlif_params_contour_four_comp_lif_3"),
@@ -137,5 +137,5 @@ np.savez(
                    four_comp_lif_neuron.g_I3,
                    c10=0.175e-6,
                    c11=1e-6,
-                   c21=0.55e-6))
+                   c21=0.45e-6))
 
