@@ -90,8 +90,8 @@ def run_single(args):
 
     rng = np.random.RandomState(12903 * m + 21)
 
-    gs_train = rng.uniform(0, 1000e-9, (N_SMPLS, assm.n_inputs))
-    gs_test = rng.uniform(0, 1000e-9, (N_SMPLS + 1, assm.n_inputs))
+    gs_train = rng.uniform(0, 0.5e-9, (N_SMPLS, assm.n_inputs))
+    gs_test = rng.uniform(0, 0.5e-9, (N_SMPLS + 1, assm.n_inputs))
 
     As_train = assm.rate_empirical(gs_train, progress=False)
     As_test = assm.rate_empirical(gs_test, progress=False)

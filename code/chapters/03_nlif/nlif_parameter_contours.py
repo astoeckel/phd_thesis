@@ -39,7 +39,7 @@ def run_analysis(neuron,
 
     assm = neuron.assemble()
     rng = np.random.RandomState(578281)
-    gs_train = rng.uniform(0, 1e-6, (1000, assm.n_inputs))
+    gs_train = rng.uniform(0, 0.5e-6, (1000, assm.n_inputs))
     As_train = assm.rate_empirical(gs_train)
     valid_train = As_train > 12.5
     Js_train = assm.lif_rate_inv(As_train)
