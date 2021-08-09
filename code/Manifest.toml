@@ -147,13 +147,13 @@ generates = "decode_basis_functions.h5"
 is_multithreaded = true
 
 ["chapters/03_nlif/nlif_parameter_optimisation_comparison.py"]
-commit = "622c3fb30d9a5809c5f1d1783eb766014fc54cc8"
+commit = "392d7bc37fa2899971625d7e88a61a7a8415f3b8"
 dockerfile = "experiments_base"
 generates = "nlif_parameter_optimisation_comparison.h5"
 is_multithreaded = true
 
 ["chapters/03_nlif/nlif_parameter_contours.py"]
-commit = "9f0c16aa4724b11419b1c369d32adcb744eb377a"
+commit = "392d7bc37fa2899971625d7e88a61a7a8415f3b8"
 dockerfile = "experiments_base"
 generates = [
 	"nlif_params_contour_two_comp_lif.npz",
@@ -166,7 +166,7 @@ generates = [
 is_multithreaded = true
 
 ["chapters/03_nlif/nlif_decode_multiplication_example.py"]
-commit = "9f0c16aa4724b11419b1c369d32adcb744eb377a"
+commit = "392d7bc37fa2899971625d7e88a61a7a8415f3b8"
 dockerfile = "experiments_base"
 generates = "nlif_decode_multiplication_example.npz"
 is_multithreaded = false
