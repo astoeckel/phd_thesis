@@ -165,7 +165,7 @@ generates = [
 ]
 is_multithreaded = true
 
-["chapters/03_nlif/nlif_decode_optimisation_example.py"]
+["chapters/03_nlif/nlif_decode_multiplication_example.py"]
 commit = "9f0c16aa4724b11419b1c369d32adcb744eb377a"
 dockerfile = "experiments_base"
 generates = "nlif_decode_multiplication_example.npz"
