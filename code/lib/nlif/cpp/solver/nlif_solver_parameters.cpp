@@ -121,7 +121,7 @@ private:
 		// Solve for the equilibrium potential for each parameter set and write
 		// that to the parameter vector
 		for (int i = 0; i < N; i++) {
-			VectorXd g = g_in.row(i);
+			const VectorXd g = g_in.row(i);
 			MatrixXd Ai = (a_const + A * g).asDiagonal();
 			Ai += L;
 
@@ -148,7 +148,7 @@ private:
 		// Solve for the equilibrium potential for each parameter set and write
 		// that to the parameter vector
 		for (int i = 0; i < N; i++) {
-			VectorXd g = g_in.row(i);
+			const VectorXd g = g_in.row(i);
 			MatrixXd Ai = (a_const + A * g).asDiagonal();
 			Ai += L;
 
@@ -157,7 +157,6 @@ private:
 
 		return double(N) * (weights / weights.sum());
 	}
-
 
 	/**
 	 * Distributes the parameter dimensions in theta back into the reduced
@@ -251,6 +250,22 @@ private:
 		}
 	}
 
+	bool is_subthreshold(int i)
+	{
+		return problem.relax_subthreshold && (J_tar[i] <= problem.j_threshold);
+	}
+
+	size_t count_subthreshold()
+	{
+		size_t res = 0;
+		for (int i = 0; i < N; i++) {
+			if (is_subthreshold(i)) {
+				res++;
+			}
+		}
+		return res;
+	}
+
 #ifdef NLIF_DEBUG
 	void print_debug_info()
 	{
@@ -289,8 +304,12 @@ private:
 		std::cout << "alpha3 = " << problem.alpha3 << std::endl;
 		std::cout << "reg1 = " << problem.reg1 << std::endl;
 		std::cout << "reg2 = " << problem.reg2 << std::endl;
+		std::cout << "j_threshold = " << problem.j_threshold << std::endl;
+		std::cout << "relax_subthreshold = " << problem.relax_subthreshold
+		          << std::endl;
 
-		std::cout << "use_sanathanan_koerner = " << params.use_sanathanan_koerner << std::endl;
+		std::cout << "use_sanathanan_koerner = "
+		          << params.use_sanathanan_koerner << std::endl;
 		std::cout << "tol = " << params.tolerance << std::endl;
 	}
 #endif
@@ -326,10 +345,10 @@ public:
 	      g_in(problem->g_in, N, k),
 	      J_tar(problem->J_tar, N),
 
-	      n_a_const(a_const_mask.sum()),
-	      n_A(A_mask.sum()),
-	      n_b_const(b_const_mask.sum()),
-	      n_B(B_mask.sum())
+	      n_a_const(a_const_mask.cast<int>().sum()),
+	      n_A(A_mask.cast<int>().sum()),
+	      n_b_const(b_const_mask.cast<int>().sum()),
+	      n_B(B_mask.cast<int>().sum())
 	{
 		// Extract the static (masked) portions of the parameter matrices
 		make_static_matrices();
@@ -348,33 +367,50 @@ public:
 		// Step 1: Count stuff and setup indices used to partition the matrices
 		//         into smaller parts.
 		//
+		const size_t n_invalid = count_subthreshold();
+		const size_t n_valid = N - n_invalid;
+
 		const size_t n_vars = n_a_const + n_A + n_b_const + n_B + N * n;
 
 		const size_t v0 = 0;
 		const size_t v1 = v0 + n_a_const + n_A;
 		const size_t v2 = v1 + n_b_const + n_B;
-		const size_t v3 = v2 + N * n;
+		const size_t v3 = v2 + N * n;      // Auxiliary variables
+		const size_t v4 = v3 + n_invalid;  // Slack variables constraints
 
 		const size_t p1 = 0;
-		const size_t p2 = p1 + N;
-		const size_t p3 = p2 + N * n;
-		const size_t p4 = p3 + n_vars;
-		const size_t p5 = p4 + n_vars;
+		const size_t p2 = p1 + n_valid;    // Current error
+		const size_t p3 = p2 + N * n;      // Voltage error
+		const size_t p4 = p3 + n_vars;     // Trust region
+		const size_t p5 = p4 + n_vars;     // Regularisation
+		const size_t p6 = p5 + n_invalid;  //  Penalize slack variables
+
+		const size_t g1 = 0;
+		const size_t g2 = g1 + n_a_const + n_A;  // Non-negative parameters
+		const size_t g3 = g2 + n_invalid;        // Subthreshold constraints
+		const size_t g4 = g3 + n_invalid;        // Slack non-negativity
 
 		const double alpha1 = std::sqrt(problem.alpha1);
 		const double alpha2 = std::sqrt(problem.alpha2);
 		const double alpha3 = std::sqrt(problem.alpha3);
 
+#ifdef NLIF_DEBUG
+		std::cout << "n_invalid = " << n_invalid << std::endl;
+		std::cout << "n_valid = " << n_valid << std::endl;
+#endif
+
 		//
 		// Step 2: Compute the initial parameter vector for the trust region
 		//
 		VectorXd theta0 = compute_theta0();
-		VectorXd weights = params.use_sanathanan_koerner ? compute_sanathanan_koerner_weights() : VectorXd::Constant(N, 1.0);
+		const VectorXd weights = params.use_sanathanan_koerner
+		                       ? compute_sanathanan_koerner_weights()
+		                       : VectorXd::Constant(N, 1.0);
 
 		//
 		// Step 3: Calculate the sparsity pattern of the P matrix
 		//
-		VectorXi Pssp = VectorXi::Zero(n_vars);
+		VectorXi Pssp = VectorXi::Zero(v4);
 		for (size_t i = v0; i < v2; i++) {
 			Pssp[i] += n;  // For Part 2: Voltage constraints
 			Pssp[i] += 1;  // For Part 3: Trust region
@@ -386,29 +422,37 @@ public:
 			Pssp[i] += 1;  // For Part 3: Trust region
 			Pssp[i] += 1;  // For Part 4: Regularisation
 		}
+		for (size_t i = v3; i < v4; i++) {
+			Pssp[i] += 1;  // For Part 1: Slack variables
+		}
 
 		//
 		// Step 4: Assemble the quadratic terms
 		//
-		VectorXd q = VectorXd::Zero(p5);
-		SpMatrixXd P(p5, v3);
+		VectorXd q = VectorXd::Zero(p6);
+		SpMatrixXd P(p6, v4);
 		P.reserve(Pssp);
 
-		// Step 4.1: Current estimate
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < n; j++) {
-				P.insert(p1 + i, v2 + i * n + j) = alpha1 * c[j];
+		// Step 4.1: Current errors
+		{
+			size_t idx = 0;
+			for (int i = 0; i < N; i++) {
+				if (!is_subthreshold(i)) {
+					for (int j = 0; j < n; j++) {
+						P.insert(p1 + idx, v2 + i * n + j) = alpha1 * c[j];
+					}
+					q[idx] = alpha1 * J_tar[i];
+					idx++;
+				}
 			}
-			q[i] = alpha1 * J_tar[i];
 		}
 
-		// Step 4.2: Voltage constraints
+		// Step 4.2: Voltage errors
 
 		for (int i = 0; i < N; i++) {
 			// Fetch the current input sample, and the corresponding slices of
 			// theta
 			const VectorXd g = g_in.row(i);
-			const VectorMap theta0s(theta0.data(), v2);
 			const VectorMap v0s(theta0.data() + v2 + i * n, n);
 
 			// Assemble the individual sub-matrices for A, b
@@ -441,46 +485,100 @@ public:
 			for (size_t i0 = 0; i0 < size_t(n); i0++) {
 				const size_t i_global = p2 + i * n + i0;
 				for (size_t i1 = v0; i1 < v2; i1++) {
-					P.insert(i_global, i1) = alpha2 * weights[i] * Pg(i0, i1 - v0);
+					P.insert(i_global, i1) =
+					    alpha2 * weights[i] * Pg(i0, i1 - v0);
 				}
 				for (size_t i1 = 0; i1 < size_t(n); i1++) {
-					P.insert(i_global, v2 + i * n + i1) = alpha2 * weights[i] * Pv(i0, i1);
+					P.insert(i_global, v2 + i * n + i1) =
+					    alpha2 * weights[i] * Pv(i0, i1);
 				}
-				q[i_global] = -alpha2 * weights[i] * qi[i0]; // Minus here because we compute -PTq below
+				q[i_global] =
+				    -alpha2 * weights[i] *
+				    qi[i0];  // Minus here because we compute -PTq below
 			}
 		}
 
 		// Step 4.3: Trust region
 		for (size_t i = v0; i < v2; i++) {
-			P.insert(p3 + i, i) = alpha3 * std::sqrt(N);
-			q[p3 + i] = alpha3 * std::sqrt(N) * theta0[i];
+			P.insert(p3 + i - v0, i) = alpha3 * std::sqrt(N);
+			q[p3 + i - v0] = alpha3 * std::sqrt(N) * theta0[i];
 		}
 		for (size_t i = v2; i < v3; i++) {
-			P.insert(p3 + i, i) = alpha3;
-			q[p3 + i] = alpha3 * theta0[i];
+			P.insert(p3 + i - v0, i) = alpha3;
+			q[p3 + i - v0] = alpha3 * theta0[i];
 		}
 
 		// Step 4.4: Regularisation
 		const double lambda1 = std::sqrt(N * problem.reg1);
 		const double lambda2 = std::sqrt(problem.reg2);
 		for (size_t i = v0; i < v2; i++) {
-			P.insert(p4 + i, i) = lambda1;
+			P.insert(p4 + i - v0, i) = lambda1;
 		}
 		for (size_t i = v2; i < v3; i++) {
-			P.insert(p4 + i, i) = lambda2;
+			P.insert(p4 + i - v0, i) = lambda2;
+		}
+
+		// Step 4.5: Penalize subthreshold constraint violations
+		for (size_t i = v3; i < v4; i++) {
+			P.insert(p5 + i - v3, i) = alpha1;
 		}
 
 		// Compute PTP and PTb
-		SpMatrixXd PTP(v3, v3);
+		SpMatrixXd PTP(v4, v4);
 		PTP.selfadjointView<Upper>().rankUpdate(P.transpose());
 		VectorXd PTq = -P.transpose() * q;
 
-		// Enforce positivity of the "A" parameters
-		SpMatrixXd G(v1, v3);
-		VectorXd h = VectorXd::Zero(v1);
+		//
+		// Step 5: Assemble the inequality constraints
+		//
+
+		// Compute the sparsity pattern of G
+		VectorXi Gssp = VectorXi::Zero(v4);
 		for (size_t i = v0; i < v1; i++) {
-			G.insert(i, i) = -1.0;
+			Gssp[i] = 1;  // Each parameter in A and a_const is used once
 		}
+		for (size_t i = v2; i < v3; i++) {
+			Gssp[i] = 1;  // Each voltage is used once
+		}
+		for (size_t i = v3; i < v4; i++) {
+			Gssp[i] = 2;  // Each slack variable is used twice
+		}
+
+		SpMatrixXd G(g4, v4);
+		G.reserve(Gssp);
+		VectorXd h = VectorXd::Zero(g4);
+
+		// Step 5.1: Make sure that the A and a_const parameters are
+		// non-negative
+		for (size_t i = v0; i < v1; i++) {
+			G.insert(g1 + i - v0, i) = -1.0;
+			h[g1 + i - v0] = 0.0;
+		}
+
+		// Step 5.2: Subthreshold constraints
+		{
+			size_t idx = 0;
+			for (int i = 0; i < N; i++) {
+				if (is_subthreshold(i)) {
+					for (int j = 0; j < n; j++) {
+						G.insert(g2 + idx, v2 + i * n + j) = c[j];
+					}
+					G.insert(g2 + idx, v3 + idx) = -1.0;
+					h[g2 + idx] = problem.j_threshold;
+					idx++;
+				}
+			}
+		}
+
+		// Step 5.3: Slack variable non-negativity
+		for (size_t i = v3; i < v4; i++) {
+			G.insert(g3 + i - v3, i) = -1.0;
+			h[g3 + i - v3] = 0.0;
+		}
+
+		//
+		// Step 6: Solve the problem
+		//
 
 		// Solve the actual problem
 		QPResult res =

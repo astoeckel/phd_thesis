@@ -3,6 +3,7 @@ import nlif
 import nlif.solver
 import copy
 
+
 def main():
     neuron = nlif.TwoCompLIFCond()
     assm = neuron.assemble()
@@ -13,8 +14,8 @@ def main():
     gs_test = np.random.uniform(0, 1000e-9, (1001, assm.n_inputs))
     Js_test = assm.isom_empirical_from_rate(gs_test)
 
-    valid_train = Js_train > 1e-9
-    valid_test = Js_test > 1e-9
+    valid_train = Js_train >= 0.0
+    valid_test = Js_test >= 0.0
 
     sys = assm.reduced_system().condition()
 
@@ -25,11 +26,14 @@ def main():
             sys_new,
             gs_train[valid_train] * sys.in_scale,
             Js_train[valid_train] * sys.out_scale,
+            J_th=0.7,
             reg1=0.0,
             reg2=1e-3,
             alpha1=1.0,
             alpha2=1.0,
-            alpha3=100.0)
+            alpha3=1e-6,
+            n_threads=1)
+
 
 if __name__ == "__main__":
     main()

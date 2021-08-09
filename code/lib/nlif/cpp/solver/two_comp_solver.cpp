@@ -394,7 +394,9 @@ NlifError _two_comp_solve(TwoCompWeightProblem *problem,
 		pool.run(problem->n_post, kernel, progress);
 	}
 	else if (params->n_threads == 1) {
-		for (int i = 0; i < problem->n_post; i++) {}
+		for (int i = 0; i < problem->n_post; i++) {
+			kernel(i);
+		}
 	}
 	else if (problem->n_post > 0) {
 		kernel(0);

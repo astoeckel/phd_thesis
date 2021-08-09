@@ -72,11 +72,44 @@ class NlifParameterProblem(ctypes.Structure):
         ("alpha3", c_double),
         ("reg1", c_double),
         ("reg2", c_double),
+        ("j_threshold", c_double),
+        ("relax_subthreshold", c_ubyte),
         ("objective_val", c_double_p),
     ]
 
 
 PNlifParameterProblem = ctypes.POINTER(NlifParameterProblem)
+
+
+class NlifWeightProblem(ctypes.Structure):
+    _fields_ = [
+        ("n_pre", c_int),
+        ("n_post", c_int),
+        ("n_compartments", c_int),
+        ("n_inputs", c_int),
+        ("n_samples", c_int),
+        ("L", c_double_p),
+        ("c", c_double_p),
+        ("a_const", c_double_p),
+        ("A", c_double_p),
+        ("b_const", c_double_p),
+        ("B", c_double_p),
+        ("A_in", c_double_p),
+        ("J_tar", c_double_p),
+        ("W", c_double_p),
+        ("W_mask", c_ubyte_p),
+        ("alpha1", c_double),
+        ("alpha2", c_double),
+        ("alpha3", c_double),
+        ("reg1", c_double),
+        ("reg2", c_double),
+        ("j_threshold", c_double),
+        ("relax_subthreshold", c_ubyte),
+        ("objective_vals", c_double_p),
+    ]
+
+
+PNlifWeightProblem = ctypes.POINTER(NlifWeightProblem)
 
 
 class NlifSolverParameters(ctypes.Structure):
@@ -195,7 +228,8 @@ class Solver:
         deps = [
             D("solver", "common.cpp"),
             D("solver", "two_comp_solver.cpp"),
-            D("solver", "nlif_solver.cpp"),
+            D("solver", "nlif_solver_parameters.cpp"),
+            D("solver", "nlif_solver_weights.cpp"),
             D("solver", "qp.cpp"),
             D("solver", "threadpool.cpp"),
             D("extern", "osqp", "amd_1.c"),
@@ -244,6 +278,10 @@ class Solver:
         self._dll = Solver._compile_library(debug=debug,
                                             parallel_compile=parallel_compile)
 
+    @staticmethod
+    def _to_c_bool_mat(m, copy=False):
+        return np.clip(0, 1, m.astype(dtype=np.uint8, order='C', copy=copy))
+
     def nlif_solve_parameters_iter(self,
                                    reduced_system,
                                    gs,
@@ -253,6 +291,7 @@ class Solver:
                                    alpha3=1.0,
                                    reg1=1e-9,
                                    reg2=1e-3,
+                                   J_th=None,
                                    tol=1e-6,
                                    return_objective_val=False,
                                    use_sanathanan_koerner=False,
@@ -280,9 +319,9 @@ class Solver:
         assert c_Js.shape == (N, )
 
         # Copy the matrices from the given system and check their shape
-        c_L = sys.L.astype(dtype=np.float64, order='C', copy=True)
+        c_L = sys.L.astype(dtype=np.float64, order='C', copy=False)
         assert c_L.shape == (n, n)
-        c_c = sys.c.astype(dtype=np.float64, order='C', copy=True)
+        c_c = sys.c.astype(dtype=np.float64, order='C', copy=False)
         assert c_c.shape == (n, )
 
         c_a_const = sys.a_const.astype(dtype=np.float64, order='C', copy=True)
@@ -294,22 +333,18 @@ class Solver:
         c_B = sys.B.astype(dtype=np.float64, order='C', copy=True)
         assert c_B.shape == (n, k)
 
-        c_a_const_mask = sys.a_const_mask.astype(dtype=np.uint8,
-                                                 order='C',
-                                                 copy=True)
+        c_a_const_mask = Solver._to_c_bool_mat(sys.a_const_mask)
         assert c_a_const_mask.shape == (n, )
-        c_A_mask = sys.A_mask.astype(dtype=np.uint8, order='C', copy=True)
+        c_A_mask = Solver._to_c_bool_mat(sys.A_mask)
         assert c_A_mask.shape == (n, k)
-        c_b_const_mask = sys.b_const_mask.astype(dtype=np.uint8,
-                                                 order='C',
-                                                 copy=True)
+        c_b_const_mask = Solver._to_c_bool_mat(sys.b_const_mask)
         assert c_b_const_mask.shape == (n, )
-        c_B_mask = sys.B_mask.astype(dtype=np.uint8, order='C', copy=True)
+        c_B_mask = Solver._to_c_bool_mat(sys.B_mask)
         assert c_B_mask.shape == (n, k)
 
         # Reserve memory for the objective value
         if return_objective_val:
-            c_objective_val = np.zeros(tuple(), dtype=np.float, order='C')
+            c_objective_val = np.zeros(tuple(), dtype=np.float64, order='C')
 
         # Matrix conversion helper functions
         def PDouble(mat):
@@ -345,6 +380,9 @@ class Solver:
         problem.alpha3 = alpha3
         problem.reg1 = reg1
         problem.reg2 = reg2
+
+        problem.j_threshold = -np.inf if J_th is None else J_th
+        problem.relax_subthreshold = not (J_th is None)
 
         if return_objective_val:
             problem.objective_val = PDouble(c_objective_val)
@@ -382,6 +420,148 @@ class Solver:
 
         # Return the updated system
         return sys
+
+    def nlif_solve_weights_iter(self,
+                                reduced_system,
+                                As,
+                                Js,
+                                W,
+                                W_mask=None,
+                                alpha1=1.0,
+                                alpha2=1.0,
+                                alpha3=1.0,
+                                reg1=1e-9,
+                                reg2=1e-9,
+                                J_th=None,
+                                tol=1e-6,
+                                return_objective_vals=False,
+                                use_sanathanan_koerner=False,
+                                progress_callback=default_progress_callback,
+                                warning_callback=default_warning_callback,
+                                n_threads=0,
+                                max_iter=0):
+        # Make some handy aliases
+        sys = reduced_system
+        As, Js = np.asarray(As), np.asarray(Js)
+        assert As.ndim == 2
+        assert Js.ndim == 2
+        assert As.shape[0] == Js.shape[1]
+        N = N_samples = As.shape[0]
+        m = N_pre = As.shape[1]
+        M = N_post = Js.shape[0]
+        k = N_input = sys.n_inputs
+        n = sys.n_compartments
+
+        # Use an all-to-all connection if no mask is given
+        if W_mask is None:
+            W_mask = np.ones((N_post, N_input, N_pre),
+                             order='C',
+                             dtype=np.uint8)
+
+        # Check some more dimensions
+        assert W.ndim == W_mask.ndim == 3
+        assert W.shape == W_mask.shape
+        assert W.shape == (N_post, N_input, N_pre)
+
+        # Make sure As and Js have the right format
+        c_As = As.astype(dtype=np.float64, order='C', copy=False)
+        assert c_As.shape == (N, m)
+        c_Js = Js.astype(dtype=np.float64, order='C', copy=False)
+        assert c_Js.shape == (M, N)
+
+        # Copy the matrices from the given system and check their shape
+        c_L = sys.L.astype(dtype=np.float64, order='C', copy=False)
+        assert c_L.shape == (n, n)
+        c_c = sys.c.astype(dtype=np.float64, order='C', copy=False)
+        assert c_c.shape == (n, )
+
+        c_a_const = sys.a_const.astype(dtype=np.float64, order='C', copy=False)
+        assert c_a_const.shape == (n, )
+        c_A = sys.A.astype(dtype=np.float64, order='C', copy=False)
+        assert c_A.shape == (n, k)
+        c_b_const = sys.b_const.astype(dtype=np.float64, order='C', copy=False)
+        assert c_b_const.shape == (n, )
+        c_B = sys.B.astype(dtype=np.float64, order='C', copy=False)
+        assert c_B.shape == (n, k)
+
+        c_W = W.astype(dtype=np.float64, order='C', copy=True)
+        assert c_W.shape == (M, k, m)
+
+        c_W_mask = Solver._to_c_bool_mat(W_mask)
+        assert c_W_mask.shape == (M, k, m)
+
+        # Reserve memory for the objective value
+        if return_objective_vals:
+            c_objective_vals = np.zeros(n_post, dtype=np.float64, order='C')
+
+        # Matrix conversion helper functions
+        def PDouble(mat):
+            return mat.ctypes.data_as(c_double_p)
+
+        def PBool(mat):
+            return mat.ctypes.data_as(c_ubyte_p)
+
+        # Assemble the parameter problem
+        problem = NlifWeightProblem()
+        problem.n_pre = m
+        problem.n_post = M
+        problem.n_compartments = n
+        problem.n_inputs = k
+        problem.n_samples = N
+
+        problem.L = PDouble(c_L)
+        problem.c = PDouble(c_c)
+
+        problem.a_const = PDouble(c_a_const)
+        problem.A = PDouble(c_A)
+        problem.b_const = PDouble(c_b_const)
+        problem.B = PDouble(c_B)
+
+        problem.A_in = PDouble(c_As)
+        problem.J_tar = PDouble(c_Js)
+
+        problem.W = PDouble(c_W)
+        problem.W_mask = PBool(c_W_mask)
+
+        problem.alpha1 = alpha1
+        problem.alpha2 = alpha2
+        problem.alpha3 = alpha3
+        problem.reg1 = reg1
+        problem.reg2 = reg2
+
+        problem.j_threshold = -np.inf if J_th is None else J_th
+        problem.relax_subthreshold = not (J_th is None)
+
+        if return_objective_vals:
+            problem.objective_vals = PDouble(c_objective_val)
+
+        # Progress wrapper
+        with SigIntHandler() as sig_int_handler:
+
+            def progress_callback_wrapper(n_done, n_total):
+                if sig_int_handler.triggered:
+                    return False
+                if progress_callback:
+                    return progress_callback(n_done, n_total)
+                return True
+
+            params = NlifSolverParameters()
+            params.use_sanathanan_koerner = use_sanathanan_koerner
+            params.tolerance = tol
+            params.max_iter = max_iter
+            params.progress = NlifProgressCallback(progress_callback_wrapper)
+            params.warn = NlifWarningCallback(
+                0 if warning_callback is None else warning_callback)
+            params.n_threads = n_threads
+
+            # Actually run the solver
+            err = self._dll.nlif_solve_weights_iter(ctypes.pointer(problem),
+                                                    ctypes.pointer(params))
+            if err != 0:
+                raise RuntimeError(self._dll.nlif_strerr(err))
+
+        # Return the updated weight matrix
+        return c_W
 
     def two_comp_solve(self,
                        Apre,
@@ -493,12 +673,8 @@ class Solver:
         # Make sure all matrices are in the correct format
         c_a_pre = Apre.astype(dtype=np.float64, order='C', copy=False)
         c_j_post = Jpost.astype(dtype=np.float64, order='C', copy=False)
-        c_connection_matrix_exc = connection_matrix[0].astype(dtype=np.uint8,
-                                                              order='C',
-                                                              copy=False)
-        c_connection_matrix_inh = connection_matrix[1].astype(dtype=np.uint8,
-                                                              order='C',
-                                                              copy=False)
+        c_connection_matrix_exc = Solver._to_c_bool_mat(connection_matrix[0])
+        c_connection_matrix_inh = Solver._to_c_bool_mat(connection_matrix[1])
         c_model_weights = ws.astype(dtype=np.float64, order='C', copy=False)
         c_we = np.zeros((Npre, Npost), dtype=np.float, order='C')
         c_wi = np.zeros((Npre, Npost), dtype=np.float, order='C')
