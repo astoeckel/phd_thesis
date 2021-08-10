@@ -103,10 +103,10 @@ with nlif.Neuron() as four_comp_lif_neuron:
     nlif.Connection(comp2, comp3, g_c=500e-9)
 
 NEURONS = [
-#    one_comp_lif_neuron,
-#    two_comp_lif_neuron,
+    #    one_comp_lif_neuron,
+    #    two_comp_lif_neuron,
     three_comp_lif_neuron,
-    four_comp_lif_neuron,
+    #    four_comp_lif_neuron,
 ]
 N_NEURONS = len(NEURONS)
 
@@ -114,7 +114,7 @@ INITIALISATIONS = ["random", "zero_point"]
 N_INITIALISATIONS = len(INITIALISATIONS)
 
 FUNCTIONS = [
-#    lambda x1, x2: 0.5 * (x1 + x2),
+    #    lambda x1, x2: 0.5 * (x1 + x2),
     lambda x1, x2: 0.5 * (x1 * x2 + 1.0),
 ]
 N_FUNCTIONS = len(FUNCTIONS)
@@ -126,15 +126,15 @@ OPTIMISERS = [
 ]
 N_OPTIMISERS = len(OPTIMISERS)
 
-N_REPEAT = 100
+N_REPEAT = 1000
 
-N_EPOCHS_TR = 100
-N_EPOCHS_LBFGS = 400
-N_EPOCHS_SGD = 1000
+N_EPOCHS_TR = 50
+N_EPOCHS_LBFGS = 500
+N_EPOCHS_SGD = 1500
 N_EPOCHS = max(N_EPOCHS_TR, N_EPOCHS_LBFGS, N_EPOCHS_SGD)
 
 N_TRAIN_RES = 10
-N_TEST = 100
+N_TEST_RES = 100
 
 NEURON_SYS_CACHE = [None] * N_NEURONS
 
@@ -176,69 +176,63 @@ def run_single(args):
     ens2 = Ensemble(102, 1)
 
     # Get the activities for training
-    rng = np.random.RandomState(7897 * i_repeat + 78897)
     f = FUNCTIONS[i_function]
-    xs1 = np.linspace(-1, 1, N_TRAIN_RES)
-    xs2 = np.linspace(-1, 1, N_TRAIN_RES)
-    xss1, xss2 = np.meshgrid(xs1, xs2)
-    xss1 = xss1.flatten()
-    xss2 = xss2.flatten()
-    As1 = ens1(xss1.reshape(1, -1)).T
-    As2 = ens2(xss2.reshape(1, -1)).T
-    As_train = np.concatenate((As1, As2), axis=1)
-    Js_train = f(xss1, xss2) * 1e-9
 
-    # Get the activities for testing
-    xss1, xss2 = rng.uniform(-1, 1, (2, N_TEST))
-    As1 = ens1(xss1.reshape(1, -1)).T
-    As2 = ens2(xss2.reshape(1, -1)).T
-    As_test = np.concatenate((As1, As2), axis=1)
-    Js_test = f(xss1, xss2) * 1e-9
+    def mk_smpls(res):
+        xs1 = np.linspace(-1, 1, res)
+        xs2 = np.linspace(-1, 1, res)
+        xss1, xss2 = np.meshgrid(xs1, xs2)
+        xss1 = xss1.flatten()
+        xss2 = xss2.flatten()
+        As1 = ens1(xss1.reshape(1, -1)).T
+        As2 = ens2(xss2.reshape(1, -1)).T
+        As = np.concatenate((As1, As2), axis=1)
+        Js = f(xss1, xss2) * 1e-9
+        return As, Js
+
+    As_train, Js_train = mk_smpls(N_TRAIN_RES)
+    As_test, Js_test = mk_smpls(N_TEST_RES)
 
     # Generate the initial weights W0
     init = INITIALISATIONS[i_initialisation]
     if init == "random":
+        rng = np.random.RandomState(7897 * i_repeat + 78897)
         W0 = rng.uniform(0.0, 1.0e-8, (sys.n_inputs, As_train.shape[-1]))
     elif init == "zero_point":
         W0 = np.zeros((sys.n_inputs, As_train.shape[-1]))
-        W0, _ = weight_opt.optimise_trust_region(
-            sys,
-            As_train,
-            Js_train * 0.0,
-            W=W0,
-            N_epochs=1,
-            reg1=1e-1,
-            progress=False,
-            normalise_error=False,
-            parallel_compile=False)
+        W0, _ = weight_opt.optimise_trust_region(sys,
+                                                 As_train,
+                                                 Js_train * 0.0,
+                                                 W=W0,
+                                                 N_epochs=1,
+                                                 reg1=1e-1,
+                                                 progress=False,
+                                                 normalise_error=False,
+                                                 parallel_compile=False)
     else:
         raise RuntimeError("Invalid initialisation")
 
     # Optimise the weights
     opt = OPTIMISERS[i_optimiser]
     kwargs = dict(
-            reduced_sys=sys,
-            As_train=As_train,
-            Js_train=Js_train,
-            J_th=0.0,
-            W=W0,
-            As_test=As_test,
-            Js_test=Js_test,
-            progress=False,
+        reduced_sys=sys,
+        As_train=As_train,
+        Js_train=Js_train,
+        J_th=0.0,
+        W=W0,
+        As_test=As_test,
+        Js_test=Js_test,
+        progress=False,
     )
     if opt == "trust_region":
         _, errs_train, errs_test = weight_opt.optimise_trust_region(
-            **kwargs,
-            N_epochs=N_EPOCHS_TR,
-            parallel_compile=False)
+            **kwargs, N_epochs=N_EPOCHS_TR, parallel_compile=False)
     elif opt == "lbfgsb":
         _, errs_train, errs_test = weight_opt.optimise_bfgs(
-            **kwargs,
-            N_epochs=N_EPOCHS_LBFGS)
+            **kwargs, N_epochs=N_EPOCHS_LBFGS)
     elif opt == "adam":
         _, errs_train, errs_test = weight_opt.optimise_sgd(
-            **kwargs,
-            N_epochs=N_EPOCHS_SGD)
+            **kwargs, N_epochs=N_EPOCHS_SGD)
     else:
         raise RuntimeError("Invalid optimiser")
 
