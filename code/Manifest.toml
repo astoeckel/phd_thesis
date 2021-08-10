@@ -153,7 +153,7 @@ generates = "nlif_parameter_optimisation_comparison.h5"
 is_multithreaded = true
 
 ["chapters/03_nlif/nlif_weight_optimisation_comparison.py"]
-commit = "c9255052f06bbaba5a0fbff62cec2ca4b2ddc258"
+commit = "b3fb35b5548571bb3d08158b67f5520ef1333dca"
 dockerfile = "experiments_base"
 generates = "nlif_weight_optimisation_comparison.h5"
 is_multithreaded = true
