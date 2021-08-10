@@ -153,7 +153,7 @@ generates = "nlif_parameter_optimisation_comparison.h5"
 is_multithreaded = true
 
 ["chapters/03_nlif/nlif_weight_optimisation_comparison.py"]
-commit = "31c4ceaf1171ee9f4b4554c24d39bc29733063ba"
+commit = "f1e6f4a9fe0e35e195c1b7798e1ffeecc68edc2c"
 dockerfile = "experiments_base"
 generates = "nlif_weight_optimisation_comparison.h5"
 is_multithreaded = true
@@ -172,7 +172,7 @@ generates = [
 is_multithreaded = true
 
 ["chapters/03_nlif/nlif_decode_multiplication_example.py"]
-commit = "31c4ceaf1171ee9f4b4554c24d39bc29733063ba"
+commit = "f1e6f4a9fe0e35e195c1b7798e1ffeecc68edc2c"
 dockerfile = "experiments_base"
 generates = "nlif_decode_multiplication_example.npz"
 is_multithreaded = false
