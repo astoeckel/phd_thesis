@@ -172,8 +172,8 @@ def run_single(args):
     # Generate the test samples
     # Assemble the pre-populations
     np.random.seed(5781 * i_repeat + 5713)
-    ens1 = Ensemble(51, 1)
-    ens2 = Ensemble(52, 1)
+    ens1 = Ensemble(101, 1)
+    ens2 = Ensemble(102, 1)
 
     # Get the activities for training
     rng = np.random.RandomState(7897 * i_repeat + 78897)

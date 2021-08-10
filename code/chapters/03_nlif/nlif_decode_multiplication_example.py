@@ -112,8 +112,8 @@ def run_single(neuron,
 
     # Assemble the pre-populations
     np.random.seed(7897)
-    ens1 = Ensemble(51, 1)
-    ens2 = Ensemble(52, 1)
+    ens1 = Ensemble(101, 1)
+    ens2 = Ensemble(102, 1)
 
     # Get the activities for training
     xs1 = np.linspace(-1, 1, res_train)
