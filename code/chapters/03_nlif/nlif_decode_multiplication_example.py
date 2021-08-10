@@ -111,7 +111,7 @@ def run_single(neuron,
                                              parallel_compile=False)
 
     # Assemble the pre-populations
-    np.random.seed(7897)
+    np.random.seed(4987)
     ens1 = Ensemble(101, 1)
     ens2 = Ensemble(102, 1)
 
@@ -135,6 +135,7 @@ def run_single(neuron,
                                                As_train,
                                                Js_train,
                                                J_th=0.0)
+    print("E_train =", errs[-1])
 
     # Get the activities for plotting
     xs1 = np.linspace(-1, 1, res_test)
