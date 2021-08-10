@@ -104,7 +104,7 @@ with nlif.Neuron() as four_comp_lif_neuron:
 
 NEURONS = [
 #    one_comp_lif_neuron,
-    two_comp_lif_neuron,
+#    two_comp_lif_neuron,
     three_comp_lif_neuron,
     four_comp_lif_neuron,
 ]
@@ -128,9 +128,10 @@ N_OPTIMISERS = len(OPTIMISERS)
 
 N_REPEAT = 100
 
-N_EPOCHS_TR = 100
-N_EPOCHS_GRADIENT = 400
-N_EPOCHS = max(N_EPOCHS_TR, N_EPOCHS_GRADIENT)
+N_EPOCHS_TR = 20
+N_EPOCHS_LBFGS = 400
+N_EPOCHS_SGD = 1000
+N_EPOCHS = max(N_EPOCHS_TR, N_EPOCHS_LBFGS, N_EPOCHS_SGD)
 
 N_TRAIN_RES = 10
 N_TEST = 100
@@ -233,11 +234,11 @@ def run_single(args):
     elif opt == "lbfgsb":
         _, errs_train, errs_test = weight_opt.optimise_bfgs(
             **kwargs,
-            N_epochs=N_EPOCHS_GRADIENT)
+            N_epochs=N_EPOCHS_LBFGS)
     elif opt == "adam":
         _, errs_train, errs_test = weight_opt.optimise_sgd(
             **kwargs,
-            N_epochs=N_EPOCHS_GRADIENT)
+            N_epochs=N_EPOCHS_SGD)
     else:
         raise RuntimeError("Invalid optimiser")
 
