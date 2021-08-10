@@ -104,18 +104,19 @@ with nlif.Neuron() as four_comp_lif_neuron:
 
 NEURONS = [
     #    one_comp_lif_neuron,
-    #    two_comp_lif_neuron,
+    two_comp_lif_neuron,
     three_comp_lif_neuron,
-    #    four_comp_lif_neuron,
+    four_comp_lif_neuron,
 ]
 N_NEURONS = len(NEURONS)
 
-INITIALISATIONS = ["random", "zero_point"]
+INITIALISATIONS = [#"random",
+    "zero_point"]
 N_INITIALISATIONS = len(INITIALISATIONS)
 
 FUNCTIONS = [
-    #    lambda x1, x2: 0.5 * (x1 + x2),
-    lambda x1, x2: 0.5 * (x1 * x2 + 1.0),
+    (lambda x1, x2: 0.5 * (x1 + x2), 1e-1),
+    (lambda x1, x2: 0.5 * (x1 * x2 + 1.0), 1e-3),
 ]
 N_FUNCTIONS = len(FUNCTIONS)
 
@@ -176,7 +177,7 @@ def run_single(args):
     ens2 = Ensemble(102, 1)
 
     # Get the activities for training
-    f = FUNCTIONS[i_function]
+    f, reg = FUNCTIONS[i_function]
 
     def mk_smpls(res):
         xs1 = np.linspace(-1, 1, res)
@@ -226,13 +227,13 @@ def run_single(args):
     )
     if opt == "trust_region":
         _, errs_train, errs_test = weight_opt.optimise_trust_region(
-            **kwargs, N_epochs=N_EPOCHS_TR, parallel_compile=False)
+            **kwargs, N_epochs=N_EPOCHS_TR, reg1=reg, parallel_compile=False)
     elif opt == "lbfgsb":
         _, errs_train, errs_test = weight_opt.optimise_bfgs(
-            **kwargs, N_epochs=N_EPOCHS_LBFGS)
+            **kwargs, N_epochs=N_EPOCHS_LBFGS, reg=reg)
     elif opt == "adam":
         _, errs_train, errs_test = weight_opt.optimise_sgd(
-            **kwargs, N_epochs=N_EPOCHS_SGD)
+            **kwargs, N_epochs=N_EPOCHS_SGD, reg=reg)
     else:
         raise RuntimeError("Invalid optimiser")
 
