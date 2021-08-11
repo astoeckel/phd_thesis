@@ -171,6 +171,13 @@ generates = [
 ]
 is_multithreaded = true
 
+["chapters/03_nlif/nlif_frequency_sweep.py"]
+commit = "e5c40f664c07f68d1373eaad0502543e2cae5b93"
+dockerfile = "experiments_base"
+generates = "nlif_frequency_sweep.h5"
+is_multithreaded = true
+
+
 ["chapters/03_nlif/nlif_decode_multiplication_example.py"]
 commit = "9d1d744ff6b3979712cfed1d97105f981e082c55"
 dockerfile = "experiments_base"
