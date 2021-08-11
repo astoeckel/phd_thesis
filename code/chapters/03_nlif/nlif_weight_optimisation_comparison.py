@@ -102,6 +102,10 @@ with nlif.Neuron() as four_comp_lif_neuron:
     nlif.Connection(comp1, comp2, g_c=200e-9)
     nlif.Connection(comp2, comp3, g_c=500e-9)
 
+###########################################################################
+# Parameters                                                              #
+###########################################################################
+
 NEURONS = [
     #    one_comp_lif_neuron,
     two_comp_lif_neuron,
