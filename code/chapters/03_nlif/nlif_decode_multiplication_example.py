@@ -90,7 +90,7 @@ NEURONS = [
 
 
 def run_single(neuron,
-               res_train=10,
+               res_train=16,
                res_test=100,
                f=lambda x, y: (0.5 * x * y + 0.5)):
     # Optimise the neuron itself
