@@ -235,7 +235,7 @@ def main():
         errs = f.create_dataset('errs', (N_NEURONS, N_SIGMAS, N_REPEAT))
 
         with env_guard.SingleThreadEnvGuard():
-            with multiprocessing.get_context('spawn').Pool(16) as pool:
+            with multiprocessing.get_context('spawn').Pool() as pool:
                 for i, j, k, E in tqdm.tqdm(pool.imap_unordered(
                         run_single, params),
                                             total=len(params)):
