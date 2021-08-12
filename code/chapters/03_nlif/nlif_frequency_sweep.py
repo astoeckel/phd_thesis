@@ -131,6 +131,7 @@ def get_neuron_sys(neuron):
 ###########################################################################
 
 NEURONS = [
+    one_comp_lif_neuron,
     two_comp_lif_neuron,
     three_comp_lif_neuron,
     four_comp_lif_neuron,
