@@ -131,7 +131,6 @@ def get_neuron_sys(neuron):
 ###########################################################################
 
 NEURONS = [
-    one_comp_lif_neuron,
     two_comp_lif_neuron,
     three_comp_lif_neuron,
     four_comp_lif_neuron,
@@ -144,7 +143,7 @@ N_SIGMAS = 60
 SIGMAS = np.logspace(np.log10(0.075), 1, N_SIGMAS)[::-1]
 
 # Number of repetitions
-N_REPEAT = 10
+N_REPEAT = 50
 
 # Number of epochs to use for the trust-region
 N_EPOCHS_TR = 30
@@ -161,13 +160,13 @@ N_PRE_NEURONS2 = 101
 
 
 def run_single(args):
-    i, j, k = args
+    i, j, k, partition = args
 
     if not i in NEURON_SYS_CACHE:
         NEURON_SYS_CACHE[i] = get_neuron_sys(NEURONS[i])
     sys, assm = NEURON_SYS_CACHE[i]
     sigma = SIGMAS[j]
-    rng = np.random.RandomState(48919 * k + 4156)
+    rng = np.random.RandomState(48919 * k + 758 * partition + 4156)
 
     # Assemble the target function
     flt = mk_2d_flt(sigma, N_TEST_RES)
@@ -217,13 +216,19 @@ def run_single(args):
 
 
 def main():
+    import sys
+    if len(sys.argv) > 1:
+        partition = int(sys.argv[1])
+    else:
+        partition = 0
+
     # Fill the parameter array
-    params = [(i, j, k) for i in range(N_NEURONS) for j in range(N_SIGMAS)
-              for k in range(N_REPEAT)]
+    params = [(i, j, k, partition) for i in range(N_NEURONS)
+              for j in range(N_SIGMAS) for k in range(N_REPEAT)]
     random.shuffle(params)
 
     fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data',
-                      'nlif_frequency_sweep.h5')
+                      f'nlif_frequency_sweep_{partition}.h5')
     with h5py.File(fn, 'w') as f:
         f.create_dataset('sigmas', data=SIGMAS)
         errs = f.create_dataset('errs', (N_NEURONS, N_SIGMAS, N_REPEAT))
