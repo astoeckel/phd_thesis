@@ -172,7 +172,7 @@ generates = [
 is_multithreaded = true
 
 ["chapters/03_nlif/nlif_frequency_sweep.py"]
-commit = "e344a67cf596f7ed46262e47235b161768a1afa7"
+commit = "9fd3748db0ea00e2cd1117978a89c7628e5d7a2a"
 dockerfile = "experiments_base"
 runs = [
 	{
