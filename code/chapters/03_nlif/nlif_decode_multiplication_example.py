@@ -79,7 +79,7 @@ with nlif.Neuron() as four_comp_lif_neuron:
         four_comp_lif_neuron.g_I3 = nlif.CondChan(E_rev=-75e-3)
     nlif.Connection(soma, comp1, g_c=100e-9)
     nlif.Connection(comp1, comp2, g_c=200e-9)
-    nlif.Connection(comp1, comp3, g_c=200e-9)
+    nlif.Connection(comp2, comp3, g_c=500e-9)
 
 NEURONS = [
     one_comp_lif_neuron,
