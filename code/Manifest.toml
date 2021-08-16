@@ -225,7 +225,7 @@ generates = "nlif_decode_multiplication_example.npz"
 is_multithreaded = false
 
 ["chapters/03_nlif/nlif_2d_benchmark_functions_network.py"]
-commit = "d462c90d2a91307de0344de0965fd8b051656e8f"
+commit = "b71a4f4ddd742a0a80f2edc2e13a8a62e52bf164"
 dockerfile = "experiments_base"
 generates = "nlif_2d_benchmark_functions_network.h5"
 is_multithreaded = true
