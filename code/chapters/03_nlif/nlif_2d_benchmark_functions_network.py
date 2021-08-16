@@ -62,7 +62,7 @@ PARAM_SETS = [
 
 N_PARAM_SETS = len(PARAM_SETS)
 
-N_REPEAT = 1
+N_REPEAT = 10
 
 def run_single_experiment(idcs):
     i_neuron, i_param_set, i_fun, i_repeat = idcs
