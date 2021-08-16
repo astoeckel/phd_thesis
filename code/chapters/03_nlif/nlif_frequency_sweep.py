@@ -161,7 +161,7 @@ N_PRE_NEURONS2 = 101
 
 
 def run_single(args):
-    i, j, k, partition = args
+    i, j, k, partition, rms_correction = args
 
     if not i in NEURON_SYS_CACHE:
         NEURON_SYS_CACHE[i] = get_neuron_sys(NEURONS[i])
@@ -191,6 +191,10 @@ def run_single(args):
     J_train = J_tar[idx_train]
     As_train = As_pre[idx_train]
 
+    rms = np.sqrt(np.mean(np.square(J_tar * sys.out_scale)))
+    if rms_correction:
+        return i, j, k, rms
+
     # Compute the weights
     W, errs = weight_opt.optimise_trust_region(sys,
                                                As_train,
@@ -202,7 +206,6 @@ def run_single(args):
 
     # Compute the test error
     As_pre_test = np.clip(As_pre + 0.01 * rng.randn(*As_pre.shape), 0.0, None)
-    rms = np.sqrt(np.mean(np.square(J_tar * sys.out_scale)))
     rmse = np.sqrt(
         np.mean(
             weight_opt.loss(sys,
@@ -218,18 +221,25 @@ def run_single(args):
 
 def main():
     import sys
+    rms_correction = False
     if len(sys.argv) > 1:
         partition = int(sys.argv[1])
+        if len(sys.argv) > 2:
+            rms_correction = sys.argv[2] == "rms"
     else:
         partition = 0
 
     # Fill the parameter array
-    params = [(i, j, k, partition) for i in range(N_NEURONS)
+    params = [(i, j, k, partition, rms_correction) for i in range(N_NEURONS)
               for j in range(N_SIGMAS) for k in range(N_REPEAT)]
     random.shuffle(params)
 
-    fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data',
-                      f'nlif_frequency_sweep_{partition}.h5')
+    if not rms_correction:
+        fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data',
+                          f'nlif_frequency_sweep_{partition}.h5')
+    else:
+        fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data',
+                          f'nlif_frequency_sweep_{partition}_rms.h5')
     with h5py.File(fn, 'w') as f:
         f.create_dataset('sigmas', data=SIGMAS)
         errs = f.create_dataset('errs', (N_NEURONS, N_SIGMAS, N_REPEAT))
