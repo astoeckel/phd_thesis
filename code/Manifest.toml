@@ -230,6 +230,12 @@ dockerfile = "experiments_base"
 generates = "nlif_2d_benchmark_functions_network.h5"
 is_multithreaded = true
 
+["chapters/03_nlif/nlif_three_comp_multiplication_spike_data.py"]
+commit = "4835b0f10db4c5ba1b1343bf5590c60996177618"
+dockerfile = "experiments_base"
+generates = "nlif_three_comp_multiplication_spike_data.pkl"
+is_multithreaded = true
+
 ["chapters/ZC_data/two_comp_benchmark_functions_regularisation_filter_sweep.py"]
 commit = "e68c291667996e632acd61452f38f73af971727b"
 dockerfile = "experiments_base"
