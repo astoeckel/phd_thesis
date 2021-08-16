@@ -169,30 +169,33 @@ SOLVER_REG = 1e-3
 
 import multiprocessing, os
 
-hostname = os.uname()[1]
-if ("ctngpu" in hostname):
-    # Full throttle when running this on a compute server
-    N_CPUS = multiprocessing.cpu_count()
-else:
-    # Don't overwhelm my workstation
-    N_CPUS = multiprocessing.cpu_count() // 2
+N_CPUS = 1
+N_SOLVER_THREADS = 32
 
-# When running a single experiment from Jupyter, use all threads for solving
-def in_notebook():
-    # See https://stackoverflow.com/a/22424821
-    try:
-        from IPython import get_ipython
-        ipy = get_ipython()
-        if (not ipy) or ('IPKernelApp' not in ipy.config):
-            return False
-    except ImportError:
-        return False
-    return True
+#hostname = os.uname()[1]
+#if ("ctngpu" in hostname):
+#    # Full throttle when running this on a compute server
+#    N_CPUS = multiprocessing.cpu_count()
+#else:
+#    # Don't overwhelm my workstation
+#    N_CPUS = multiprocessing.cpu_count() // 2
 
-if in_notebook():
-    N_SOLVER_THREADS = multiprocessing.cpu_count() // 2
-else:
-    if hasattr(multiprocessing, "current_process") and (multiprocessing.current_process().name == "MainProcess"):
-        N_SOLVER_THREADS = multiprocessing.cpu_count() // 2
-    else:
-        N_SOLVER_THREADS = 1 # We're already parallelising over experiments
+## When running a single experiment from Jupyter, use all threads for solving
+#def in_notebook():
+#    # See https://stackoverflow.com/a/22424821
+#    try:
+#        from IPython import get_ipython
+#        ipy = get_ipython()
+#        if (not ipy) or ('IPKernelApp' not in ipy.config):
+#            return False
+#    except ImportError:
+#        return False
+#    return True
+
+#if in_notebook():
+#    N_SOLVER_THREADS = multiprocessing.cpu_count() // 2
+#else:
+#    if hasattr(multiprocessing, "current_process") and (multiprocessing.current_process().name == "MainProcess"):
+#        N_SOLVER_THREADS = multiprocessing.cpu_count() // 2
+#    else:
+#        N_SOLVER_THREADS = 1 # We're already parallelising over experiments

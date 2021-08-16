@@ -50,7 +50,7 @@ NEURON_KEYS = [
 	"lif_2d",
 	"two_comp",
 	"three_comp",
-	"four_comp"
+#	"four_comp"
 ]
 
 N_NEURON_KEYS = len(NEURON_KEYS)
@@ -62,7 +62,7 @@ PARAM_SETS = [
 
 N_PARAM_SETS = len(PARAM_SETS)
 
-N_REPEAT = 10
+N_REPEAT = 1
 
 def run_single_experiment(idcs):
     i_neuron, i_param_set, i_fun, i_repeat = idcs
