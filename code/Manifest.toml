@@ -218,12 +218,17 @@ runs = [
 ]
 is_multithreaded = true
 
-
 ["chapters/03_nlif/nlif_decode_multiplication_example.py"]
 commit = "9d1d744ff6b3979712cfed1d97105f981e082c55"
 dockerfile = "experiments_base"
 generates = "nlif_decode_multiplication_example.npz"
 is_multithreaded = false
+
+["chapters/03_nlif/nlif_2d_benchmark_functions_network.py"]
+commit = "e373f906ad3bbfc1c0ffacce8db5fa26e0767c08"
+dockerfile = "experiments_base"
+generates = "nlif_2d_benchmark_functions_network.h5"
+is_multithreaded = true
 
 ["chapters/ZC_data/two_comp_benchmark_functions_regularisation_filter_sweep.py"]
 commit = "e68c291667996e632acd61452f38f73af971727b"
