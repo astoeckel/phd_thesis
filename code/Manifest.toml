@@ -225,7 +225,7 @@ generates = "nlif_decode_multiplication_example.npz"
 is_multithreaded = false
 
 ["chapters/03_nlif/nlif_2d_benchmark_functions_network.py"]
-commit = "e373f906ad3bbfc1c0ffacce8db5fa26e0767c08"
+commit = "c4ecaa762d6e0a324fed34884a37d3c0abcb0cac"
 dockerfile = "experiments_base"
 generates = "nlif_2d_benchmark_functions_network.h5"
 is_multithreaded = true
@@ -236,9 +236,9 @@ dockerfile = "experiments_base"
 generates = "two_comp_benchmark_functions_regularisation_filter_sweep.h5"
 is_multithreaded = true
 
-
 ["chapters/ZC_data/two_comp_2d_regularisation_sweep.py"]
 commit = "2fd36947437edb7318c136bb2486f059d3fef58c"
 dockerfile = "experiments_base"
 generates = "two_comp_2d_regularisation_sweep.h5"
 is_multithreaded = true
+
