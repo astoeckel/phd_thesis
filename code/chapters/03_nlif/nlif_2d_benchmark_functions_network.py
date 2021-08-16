@@ -93,8 +93,6 @@ def run_single_experiment(idcs):
     elif kwargs["model_name"] == "two_comp":
         kwargs["N_epochs"] = 10
 
-    kwargs["N_epochs"] = 1
-
     # Run the actual experiment
     res = run_single_spiking_trial(**kwargs)
 
@@ -136,7 +134,6 @@ def main():
             with multiprocessing.get_context('spawn').Pool(N_CPUS) as pool:
                 for ((i, j, k, l), Es) in tqdm.tqdm(pool.imap_unordered(run_single_experiment, params),
                                       total=n_total):
-                    print(i, j, k, l, Es, h5f["errs"].shape)
                     h5f["errs"][i, j, k, l] = Es
                     h5f.flush()
 
