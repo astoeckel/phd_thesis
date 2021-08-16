@@ -136,6 +136,7 @@ def main():
             with multiprocessing.get_context('spawn').Pool(N_CPUS) as pool:
                 for ((i, j, k, l), Es) in tqdm.tqdm(pool.imap_unordered(run_single_experiment, params),
                                       total=n_total):
+                    print(i, j, k, l, Es, h5f["errs"].shape)
                     h5f["errs"][i, j, k, l] = Es
                     h5f.flush()
 
