@@ -172,7 +172,7 @@ generates = [
 is_multithreaded = true
 
 ["chapters/03_nlif/nlif_frequency_sweep.py"]
-commit = "7692920e4275ed7dacc4746660101bda3217f7f1"
+commit = "6f974d8a065102c7af7ec0e6601eab30a203c6a2"
 dockerfile = "experiments_base"
 runs = [
 	{
@@ -214,6 +214,46 @@ runs = [
 	{
 		args=["9"],
 		generates=["nlif_frequency_sweep_9.h5"]
+	},
+	{
+		args=["0", "rms"],
+		generates=["nlif_frequency_sweep_0_rms.h5"]
+	},
+	{
+		args=["1", "rms"],
+		generates=["nlif_frequency_sweep_1_rms.h5"]
+	},
+	{
+		args=["2", "rms"],
+		generates=["nlif_frequency_sweep_2_rms.h5"]
+	},
+	{
+		args=["3", "rms"],
+		generates=["nlif_frequency_sweep_3_rms.h5"]
+	},
+	{
+		args=["4", "rms"],
+		generates=["nlif_frequency_sweep_4_rms.h5"]
+	},
+	{
+		args=["5", "rms"],
+		generates=["nlif_frequency_sweep_5_rms.h5"]
+	},
+	{
+		args=["6", "rms"],
+		generates=["nlif_frequency_sweep_6_rms.h5"]
+	},
+	{
+		args=["7", "rms"],
+		generates=["nlif_frequency_sweep_7_rms.h5"]
+	},
+	{
+		args=["8", "rms"],
+		generates=["nlif_frequency_sweep_8_rms.h5"]
+	},
+	{
+		args=["9", "rms"],
+		generates=["nlif_frequency_sweep_9_rms.h5"]
 	},
 ]
 is_multithreaded = true
