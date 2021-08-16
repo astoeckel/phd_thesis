@@ -69,34 +69,35 @@ def run_single_experiment(idcs):
 
     rng = np.random.RandomState(4917 * i_repeat + 373)
 
-    # Fetch the neuron model
-    kwargs = {
-        "model_name": NEURON_KEYS[i_neuron],
-        "f": BENCHMARK_FUNCTIONS[BENCHMARK_FUNCTION_KEYS[i_fun]],
-        "intermediate": False,
-        "rng": rng,
-    }
-    if kwargs["model_name"].endswith("_2d"):
-        kwargs["intermediate"] = True
-        kwargs["model_name"] = "_".join(kwargs["model_name"].split("_")[:-1])
+#    # Fetch the neuron model
+#    kwargs = {
+#        "model_name": NEURON_KEYS[i_neuron],
+#        "f": BENCHMARK_FUNCTIONS[BENCHMARK_FUNCTION_KEYS[i_fun]],
+#        "intermediate": False,
+#        "rng": rng,
+#    }
+#    if kwargs["model_name"].endswith("_2d"):
+#        kwargs["intermediate"] = True
+#        kwargs["model_name"] = "_".join(kwargs["model_name"].split("_")[:-1])
 
-    # Switch to the optimised parameter set
-    if (PARAM_SETS[i_param_set] == "optimised"):
-        if (kwargs["model_name"] == "three_comp") or (kwargs["model_name"] == "four_comp"):
-            kwargs["reg"] = 1e-6
-        kwargs["intercepts_tar"] = (-0.95, 0.0)
-        kwargs["pinh"] = None
+#    # Switch to the optimised parameter set
+#    if (PARAM_SETS[i_param_set] == "optimised"):
+#        if (kwargs["model_name"] == "three_comp") or (kwargs["model_name"] == "four_comp"):
+#            kwargs["reg"] = 1e-6
+#        kwargs["intercepts_tar"] = (-0.95, 0.0)
+#        kwargs["pinh"] = None
 
-    # For simpler neuron types, fewer iterations suffice
-    if kwargs["model_name"] == "lif":
-        kwargs["N_epochs"] = 1
-    elif kwargs["model_name"] == "two_comp":
-        kwargs["N_epochs"] = 10
+#    # For simpler neuron types, fewer iterations suffice
+#    if kwargs["model_name"] == "lif":
+#        kwargs["N_epochs"] = 1
+#    elif kwargs["model_name"] == "two_comp":
+#        kwargs["N_epochs"] = 10
 
-    # Run the actual experiment
-    res = run_single_spiking_trial(**kwargs)
+#    # Run the actual experiment
+#    res = run_single_spiking_trial(**kwargs)
 
-    return idcs, (res["errors"]["Emodel"], res["errors"]["Emodel_int"])
+#    return idcs, (res["errors"]["Emodel"], res["errors"]["Emodel_int"])
+    return idcs, (0.0, 0.0)
 
 def main():
     print("Running network spatial frequency experiments...")
