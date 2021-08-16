@@ -556,6 +556,9 @@ class Soma(Compartment):
     def is_soma(self):
         return True
 
+    def is_excitatory(self, v_th=DEFAULT_V_TH):
+        return not self.is_inhibitory(v_th)
+
 
 class Channel(NeuronPart):
     def __init__(self,
@@ -702,7 +705,7 @@ class CondChan(Channel):
     def is_static(self):
         return not self.g is None
 
-    def is_inhibitory(self, v_th=-50e-3):
+    def is_inhibitory(self, v_th=DEFAULT_V_TH):
         return self.E_rev < v_th
 
 
@@ -757,7 +760,6 @@ class CurChan(Channel):
     def is_static(self):
         return not self.J is None
 
-    @property
     def is_inhibitory(self, v_th=DEFAULT_V_TH):
         return ((self.mul < 0) if (self.J is None) else
                 (self.mul * self.J < 0))
@@ -770,6 +772,8 @@ ConductanceChannel = CondChan
 
 class LIF(Neuron):
     def __init__(self,
+                 mul_E=1.0,
+                 mul_I=-1.0,
                  g_L=DEFAULT_G_L,
                  E_L=DEFAULT_E_L,
                  C_m=DEFAULT_C_M,
@@ -789,8 +793,8 @@ class LIF(Neuron):
                       tau_ref=tau_ref,
                       tau_spike=tau_spike) as self.soma:
                 self.g_L = CondChan(E_rev=E_L, g=g_L)
-                self.J_E = CurChan(mul=1)
-                self.J_I = CurChan(mul=-1)
+                self.J_E = CurChan(mul=mul_E)
+                self.J_I = CurChan(mul=mul_I)
 
 
 class LIFCond(Neuron):

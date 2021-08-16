@@ -323,6 +323,102 @@ class ReducedSystem:
 
         return res
 
+    def fraction_coeffs(self, normalise=False, tabulate=False):
+        # Iterate over all possible input configurations X. In a matrix M
+        # keep track of the product terms that could be influenced by this
+        # particular input.
+        n_configs = 2 ** self.n_inputs
+        xs = []
+        X = np.zeros((n_configs, self.n_inputs))
+        M = np.zeros((n_configs, n_configs))
+        for i in range(n_configs):
+            x = np.array(tuple(bool(i & (1 << k)) for k in range(self.n_inputs)))
+            xs.append(list(np.where(x)[0]))
+            X[i] = x
+            for j in range(n_configs):
+                M[i, j] = (j & i) == j
+
+        # Now iterate over all possible inputs and compute the numerator and
+        # denominator
+        b_denom = np.zeros(n_configs)
+        b_numer = np.zeros(n_configs)
+        for i in range(n_configs):
+            # Compute A and b for this x
+            A_dyn = self._L + np.diag(self._a_const + self._A @ X[i])
+            b_dyn = self._b_const + self._B @ X[i]
+
+            # Compute the denumerator and numerator
+            b_denom[i] = np.linalg.det(A_dyn)
+            b_numer[i] = np.inner(self._c, (np.linalg.solve(A_dyn, b_dyn) * b_denom[i]) - self._v_som)
+
+        # Compute the influence of each input on the denumerator and numerator
+        coeff_denom = np.linalg.solve(M, b_denom)
+        coeff_numer = np.linalg.solve(M, b_numer)
+
+        # Force small coefficients to zero
+        max_coeff = max(np.max(np.abs(coeff_denom)), np.max(np.abs(coeff_numer)))
+        coeff_denom[np.abs(coeff_denom / max_coeff) < 1e-9] = 0.0
+        coeff_numer[np.abs(coeff_numer / max_coeff) < 1e-9] = 0.0
+
+        # Normalise the matrix coefficients if so desired
+        if normalise:
+            scale = 1.0 / np.max(np.abs(coeff_numer))
+            coeff_numer *= scale
+            coeff_denom *= scale
+
+        if not tabulate:
+            return xs, coeff_numer, coeff_denom
+
+        # Arrange the coefficients in a matrix
+        def tabulate(coeffs):
+            # Extract the rows and columns
+            rows, cols = [set()], [set()] # Constant is encoded as None
+            for coeff_idx, var_idcs in sorted(enumerate(xs), key=lambda x: (len(x[1]), x[1])):
+                if coeffs[coeff_idx] == 0.0:
+                    continue
+
+                # Check whether this coefficient can be expressed as a product
+                # of coefficients already in the table
+                done = False
+                var_idcs_set = set(var_idcs)
+                while not done:
+                    for i, row_idcs in enumerate(rows):
+                        for j, col_idcs in enumerate(cols):
+                            if sorted(tuple(row_idcs) + tuple(col_idcs)) == var_idcs:
+                                done = True
+                    if not done:
+                        # Find the longest intersection between the column and
+                        # row indices
+                        max_row_isec, max_col_isec = set(), set()
+                        for i, row_idcs in enumerate(rows):
+                            isec = var_idcs_set & row_idcs
+                            if len(isec) > len(max_row_isec):
+                                max_row_isec = isec
+                        for i, col_idcs in enumerate(cols):
+                            isec = var_idcs_set & col_idcs
+                            if len(isec) > len(max_col_isec):
+                                max_col_isec = isec
+
+                        # If the row intersection was longer than the column
+                        # intersection, add a new part to the column and vice
+                        # vera.
+                        if len(max_row_isec) >= len(max_col_isec):
+                            cols.append(var_idcs_set - max_row_isec)
+                        else:
+                            rows.append(var_idcs_set - max_col_isec)
+
+            # Create the actual table
+            table = np.zeros((len(rows), len(cols)))
+            for i, row_idcs in enumerate(rows):
+                for j, col_idcs in enumerate(cols):
+                    for coeff_idx, var_idcs in enumerate(xs):
+                        if sorted(tuple(row_idcs) + tuple(col_idcs)) == var_idcs:
+                            table[i, j] = coeffs[coeff_idx]
+
+            return rows, cols, table
+
+        return tabulate(coeff_numer), tabulate(coeff_denom)
+
     @property
     def A(self):
         return self._A
@@ -654,6 +750,9 @@ class AssembledNeuron:
                                                Cm=params["C_m"],
                                                EL=params["E_L"],
                                                tau_ref=params["tau_ref"])
+
+    def i_th(self):
+        return self.lif_rate_inv(1e-3)
 
     def A(self, xs, exclude_intrinsic=False):
         """

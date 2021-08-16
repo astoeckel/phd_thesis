@@ -206,7 +206,7 @@ private:
 //		std::cout << "A_in = \n" << A_in.format(CleanFmt) << std::endl;
 //		std::cout << "J_tar = \n" << J_tar.format(CleanFmt) << std::endl;
 
-//		std::cout << "W = \n" << W.format(CleanFmt) << std::endl;
+		std::cout << "W = \n" << W.format(CleanFmt) << std::endl;
 		std::cout << "W_mask = \n" << W_mask.format(CleanFmt) << std::endl;
 		std::cout << "n_W = " << n_W << std::endl;
 
@@ -550,19 +550,23 @@ NlifError nlif_solve_weights_iter(NlifWeightProblem *problem,
 	// Create a threadpool and solve the weights for all neurons. Do not create
 	// a threadpool if there is only one set of weights to solve for, or the
 	// number of threads has explicitly been set to one.
-	if ((params->n_threads != 1) && (problem->n_post > 1)) {
+	int n_threads = std::min(params->n_threads, problem->n_post);
+#ifdef NLIF_DEBUG
+	std::cout << "n_threads = " << n_threads << std::endl;
+#endif
+	if ((n_threads != 1) && (problem->n_post > 1)) {
 		Threadpool pool(params->n_threads);
 		pool.run(problem->n_post, kernel, progress);
-	}
-	else if (params->n_threads == 1) {
+	} else {
 		for (int i = 0; i < problem->n_post; i++) {
 			kernel(i);
+			if (params->progress) {
+				if (!params->progress(i + 1, problem->n_post)) {
+					return NL_ERR_CANCEL;
+				}
+			}
 		}
 	}
-	else if (problem->n_post > 0) {
-		kernel(0);
-	}
-
 	return did_cancel ? NL_ERR_CANCEL : NL_ERR_OK;
 }
 

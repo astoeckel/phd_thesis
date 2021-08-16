@@ -421,6 +421,8 @@ class Solver:
         # Return the updated system
         return sys
 
+    ITER = [0]
+
     def nlif_solve_weights_iter(self,
                                 reduced_system,
                                 As,
@@ -429,9 +431,9 @@ class Solver:
                                 W_mask=None,
                                 alpha1=1.0,
                                 alpha2=1.0,
-                                alpha3=1.0,
-                                reg1=1e-9,
-                                reg2=1e-9,
+                                alpha3=1e-3,
+                                reg1=1e-3,
+                                reg2=1e-6,
                                 J_th=None,
                                 tol=1e-6,
                                 return_objective_vals=False,

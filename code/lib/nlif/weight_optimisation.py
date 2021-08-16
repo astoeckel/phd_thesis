@@ -145,10 +145,10 @@ def loss_gradient(reduced_sys,
         # Compute the final derivative
         dW[l] = E * (
             np.einsum('ik,kj,kr,s,j,i->rs', A_inv, A_inv, Ap, As[l], b, c) +
-            np.einsum('ij,jr,s,i->rs', A_inv, Bp, As[l], c))
+            np.einsum('ij,jr,s,i->rs', A_inv, Bp, As[l], c)) * W_mask
 
         # Account for the regularisation term
-        dW[l] += 2.0 * N * reg * W
+        dW[l] += 2.0 * N * reg * W * W_mask
 
     if return_ravelled:
         return np.array([dW[i][W_mask]
@@ -422,6 +422,7 @@ def optimise_trust_region(reduced_sys,
             data["As_train"],
             data["Js_train"].reshape(1, *data["Js_train"].shape),
             data["W"].reshape(1, *data["W"].shape),
+            data["W_mask"].reshape(1, *data["W_mask"].shape),
             reg1=reg1,
             reg2=reg2,
             alpha1=alpha1,
@@ -429,6 +430,7 @@ def optimise_trust_region(reduced_sys,
             alpha3=alpha3 * scale,
             J_th=data["J_th"],
             use_sanathanan_koerner=use_sanathanan_koerner,
+            progress_callback=None,
             tol=tol)[0]
         data["update_err"](i + 1)
 
