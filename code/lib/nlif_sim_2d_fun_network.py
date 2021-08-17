@@ -5,6 +5,7 @@ import nengo
 import os, sys
 import nlif
 import nlif.solver
+import nlif.weight_optimisation
 
 from nef_synaptic_computation.lif_utils import *
 from nef_synaptic_computation.tuning_curves import *
@@ -249,26 +250,36 @@ def solve(Apre,
         sys.stderr.write(f"\r{n_it}/{n_it_total} iterations...")
         return True
 
-    for i in range(N_epochs):
-        scale = np.power(gamma, -i)
-        epoch[0] = i
-        W[np.abs(W) < np.percentile(np.abs(W), 95) * 1e-3] = 0.0 # Slightly improves runtime by making P more sparse
-        W = SOLVER[0].nlif_solve_weights_iter(reduced_system,
-                                              Apre * Apre_scale,
-                                              Jpost.T *
-                                              reduced_system.out_scale,
-                                              W,
-                                              W_mask,
-                                              reg1=reg1,
-                                              reg2=reg2,
-                                              alpha1=alpha1,
-                                              alpha2=alpha2,
-                                              alpha3=alpha3 * scale,
-                                              J_th=iTh,
-                                              progress_callback=progress,
-                                              n_threads=N_SOLVER_THREADS)
+#    for i in range(N_epochs):
+#        scale = np.power(gamma, -i)
+#        epoch[0] = i
+#        W[np.abs(W) < np.percentile(np.abs(W), 95) * 1e-3] = 0.0 # Slightly improves runtime by making P more sparse
+#        W = SOLVER[0].nlif_solve_weights_iter(reduced_system,
+#                                              Apre * Apre_scale,
+#                                              Jpost.T *
+#                                              reduced_system.out_scale,
+#                                              W,
+#                                              W_mask,
+#                                              reg1=reg1,
+#                                              reg2=reg2,
+#                                              alpha1=alpha1,
+#                                              alpha2=alpha2,
+#                                              alpha3=alpha3 * scale,
+#                                              J_th=iTh,
+#                                              progress_callback=progress,
+#                                              n_threads=N_SOLVER_THREADS)
+    for i in range(n_post):
+        W[i], _ = nlif.weight_optimisation.optimise_bfgs(reduced_system,
+                          Apre * Apre_scale,
+                          Jpost[:, i],
+                          W[i],
+                          W_mask=W_mask[i],
+                          reg=reg1,
+                          progress=False,
+                          N_epochs=100)
+        progress(i + 1, n_post)
 
-    return W * Apre_scale / reduced_system.in_scale
+    return W * Apre_scale # / reduced_system.in_scale
 
 
 def run_single_spiking_trial(model_name,
