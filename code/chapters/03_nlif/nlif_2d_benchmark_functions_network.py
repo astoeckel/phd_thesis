@@ -35,12 +35,12 @@ BENCHMARK_FUNCTION_KEYS = [
 	"addition",
 	"multiplication_limited",
 	"multiplication",
-#	"sqrt-multiplication",
-#	"sqr-multiplication",
-#	"shunting",
-#	"norm",
-#	"arctan",
-#	"max",
+	"sqrt-multiplication",
+	"sqr-multiplication",
+	"shunting",
+	"norm",
+	"arctan",
+	"max",
 ]
 
 N_BENCHMARK_FUNCTION_KEYS = len(BENCHMARK_FUNCTION_KEYS)
@@ -50,19 +50,19 @@ NEURON_KEYS = [
 	"lif_2d",
 	"two_comp",
 	"three_comp",
-#	"four_comp"
+	"four_comp"
 ]
 
 N_NEURON_KEYS = len(NEURON_KEYS)
 
 PARAM_SETS = [
 	"normal",
-#	"optimised",
+	"optimised",
 ]
 
 N_PARAM_SETS = len(PARAM_SETS)
 
-N_REPEAT = 5
+N_REPEAT = 10
 
 def run_single_experiment(idcs):
     i_neuron, i_param_set, i_fun, i_repeat, partition = idcs
