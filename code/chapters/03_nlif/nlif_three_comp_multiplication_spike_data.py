@@ -9,11 +9,21 @@ sys.path.append(os.path.join(os.path.dirname("__file__"), '..', '..', 'lib'))
 
 import nlif_sim_2d_fun_network as netsim
 
+if len(sys.argv) > 1:
+    assert sys.argv[1] == "default_icepts"
+    intercepts_tar = (-0.95, 0.95)
+    fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data',
+                      'nlif_three_comp_multiplication_spike_data_default_icepts.pkl')
+else:
+    intercepts_tar = (-0.95, 0.0)
+    fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data',
+                      'nlif_three_comp_multiplication_spike_data.pkl')
+
 rng = np.random.RandomState(41268)
 
 res = netsim.run_single_spiking_trial('three_comp',
                                       lambda x, y: x * y,
-                                      intercepts_tar=(-0.95, 0.0),
+                                      intercepts_tar=intercepts_tar,
                                       intermediate=False,
                                       pinh=None,
                                       N_epochs=30,
@@ -37,8 +47,6 @@ def make_primitive(o):
 
 res = make_primitive(res)
 
-fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data',
-                  'nlif_three_comp_multiplication_spike_data.pkl')
 with open(fn, "wb") as f:
     pickle.dump(res, f)
 
