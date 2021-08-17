@@ -225,15 +225,65 @@ generates = "nlif_decode_multiplication_example.npz"
 is_multithreaded = false
 
 ["chapters/03_nlif/nlif_2d_benchmark_functions_network.py"]
-commit = "b71a4f4ddd742a0a80f2edc2e13a8a62e52bf164"
+commit = "3cbde35d2ebb77b4b38bfb26e727b02999235539"
 dockerfile = "experiments_base"
-generates = "nlif_2d_benchmark_functions_network.h5"
+runs = [
+	{
+		args=["0"],
+		generates=["nlif_2d_benchmark_functions_network_0.h5"]
+	},
+	{
+		args=["1"],
+		generates=["nlif_2d_benchmark_functions_network_1.h5"]
+	},
+	{
+		args=["2"],
+		generates=["nlif_2d_benchmark_functions_network_2.h5"]
+	},
+	{
+		args=["3"],
+		generates=["nlif_2d_benchmark_functions_network_3.h5"]
+	},
+	{
+		args=["4"],
+		generates=["nlif_2d_benchmark_functions_network_4.h5"]
+	},
+	{
+		args=["5"],
+		generates=["nlif_2d_benchmark_functions_network_5.h5"]
+	},
+	{
+		args=["6"],
+		generates=["nlif_2d_benchmark_functions_network_6.h5"]
+	},
+	{
+		args=["7"],
+		generates=["nlif_2d_benchmark_functions_network_7.h5"]
+	},
+	{
+		args=["8"],
+		generates=["nlif_2d_benchmark_functions_network_8.h5"]
+	},
+	{
+		args=["9"],
+		generates=["nlif_2d_benchmark_functions_network_9.h5"]
+	},
+]
 is_multithreaded = true
 
 ["chapters/03_nlif/nlif_three_comp_multiplication_spike_data.py"]
-commit = "4835b0f10db4c5ba1b1343bf5590c60996177618"
+commit = "7b5a2e3f04333404e13bc8a0485c4d08e7ba3b16"
 dockerfile = "experiments_base"
-generates = "nlif_three_comp_multiplication_spike_data.pkl"
+runs = [
+	{
+		args=[],
+		generates=["nlif_three_comp_multiplication_spike_data.pkl"]
+	},
+	{
+		args=["default_icepts"],
+		generates=["nlif_three_comp_multiplication_spike_data_default_icepts.pkl"]
+	}
+]
 is_multithreaded = true
 
 ["chapters/ZC_data/two_comp_benchmark_functions_regularisation_filter_sweep.py"]
