@@ -100,7 +100,7 @@ def run_single_experiment(idcs):
     # Run the actual experiment
     res = run_single_spiking_trial(**kwargs)
 
-    return idcs, (res["errors"]["Emodel"], res["errors"]["Enet"])
+    return idcs[:-1], (res["errors"]["Emodel"], res["errors"]["Enet"])
 
 
 def main():
