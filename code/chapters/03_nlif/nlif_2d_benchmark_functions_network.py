@@ -50,7 +50,7 @@ NEURON_KEYS = [
 	"lif_2d",
 	"two_comp",
 	"three_comp",
-#	"four_comp"
+	"four_comp"
 ]
 
 N_NEURON_KEYS = len(NEURON_KEYS)
@@ -65,9 +65,13 @@ N_PARAM_SETS = len(PARAM_SETS)
 N_REPEAT = 10
 
 def run_single_experiment(idcs):
-    i_neuron, i_param_set, i_fun, i_repeat = idcs
+    i_neuron, i_param_set, i_fun, i_repeat, partition = idcs
 
-    rng = np.random.RandomState(4917 * i_repeat + 373)
+    # Fetch the random number generator
+    if partition is None:
+        rng = np.random.RandomState(4917 * i_repeat + 373)
+    else:
+        rng = np.random.RandomState(4917 * i_repeat + 15 * partition + 373)
 
     # Fetch the neuron model
     kwargs = {
@@ -101,10 +105,12 @@ def run_single_experiment(idcs):
 
 def main():
     print("Running network spatial frequency experiments...")
-    if len(sys.argv) == 1:
-        fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data', 'nlif_2d_benchmark_functions_network.h5')
+    if len(sys.argv) == 2:
+        partition = int(sys.argv[1])
+        fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data', f'nlif_2d_benchmark_functions_network_{partition}.h5')
     else:
-        fn = sys.argv[1]
+        partition = None
+        fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data', f'nlif_2d_benchmark_functions_network.h5')
 
     os.makedirs(os.path.dirname(fn), exist_ok=True)
     print("Writing to {}".format(fn))
@@ -120,7 +126,7 @@ def main():
 
         # Assemble the parameters we sweep over
         params = [
-            (i_neuron, i_param_set, i_fun, i_repeat)
+            (i_neuron, i_param_set, i_fun, i_repeat, partition)
             for i_neuron in range(N_NEURON_KEYS)
             for i_param_set in range(N_PARAM_SETS)
             for i_fun in range(N_BENCHMARK_FUNCTION_KEYS)
