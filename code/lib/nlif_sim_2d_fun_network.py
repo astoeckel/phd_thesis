@@ -339,8 +339,8 @@ def run_single_spiking_trial(model_name,
 
     # Alias for the number of neurons
     N = n_neurons
-    N0, N1, N2, N3 = 0, 1, 2, 3  # Debug offsets (to avoid ambiguous mat muls)
-    #N0, N1, N2, N3 = 0, 0, 0, 0
+    #N0, N1, N2, N3 = 0, 1, 2, 3  # Debug offsets (to avoid ambiguous mat muls)
+    N0, N1, N2, N3 = 0, 0, 0, 0
 
     #
     # Neuron population setup
