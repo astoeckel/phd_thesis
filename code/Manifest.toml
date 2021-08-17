@@ -225,49 +225,49 @@ generates = "nlif_decode_multiplication_example.npz"
 is_multithreaded = false
 
 ["chapters/03_nlif/nlif_2d_benchmark_functions_network.py"]
-commit = "3cbde35d2ebb77b4b38bfb26e727b02999235539"
+commit = "a0795c29cc9841039f9686cab95791d2adb3df08"
 dockerfile = "experiments_base"
 runs = [
 	{
 		args=["0"],
 		generates=["nlif_2d_benchmark_functions_network_0.h5"]
 	},
-	{
-		args=["1"],
-		generates=["nlif_2d_benchmark_functions_network_1.h5"]
-	},
-	{
-		args=["2"],
-		generates=["nlif_2d_benchmark_functions_network_2.h5"]
-	},
-	{
-		args=["3"],
-		generates=["nlif_2d_benchmark_functions_network_3.h5"]
-	},
-	{
-		args=["4"],
-		generates=["nlif_2d_benchmark_functions_network_4.h5"]
-	},
-	{
-		args=["5"],
-		generates=["nlif_2d_benchmark_functions_network_5.h5"]
-	},
-	{
-		args=["6"],
-		generates=["nlif_2d_benchmark_functions_network_6.h5"]
-	},
-	{
-		args=["7"],
-		generates=["nlif_2d_benchmark_functions_network_7.h5"]
-	},
-	{
-		args=["8"],
-		generates=["nlif_2d_benchmark_functions_network_8.h5"]
-	},
-	{
-		args=["9"],
-		generates=["nlif_2d_benchmark_functions_network_9.h5"]
-	},
+#	{
+#		args=["1"],
+#		generates=["nlif_2d_benchmark_functions_network_1.h5"]
+#	},
+#	{
+#		args=["2"],
+#		generates=["nlif_2d_benchmark_functions_network_2.h5"]
+#	},
+#	{
+#		args=["3"],
+#		generates=["nlif_2d_benchmark_functions_network_3.h5"]
+#	},
+#	{
+#		args=["4"],
+#		generates=["nlif_2d_benchmark_functions_network_4.h5"]
+#	},
+#	{
+#		args=["5"],
+#		generates=["nlif_2d_benchmark_functions_network_5.h5"]
+#	},
+#	{
+#		args=["6"],
+#		generates=["nlif_2d_benchmark_functions_network_6.h5"]
+#	},
+#	{
+#		args=["7"],
+#		generates=["nlif_2d_benchmark_functions_network_7.h5"]
+#	},
+#	{
+#		args=["8"],
+#		generates=["nlif_2d_benchmark_functions_network_8.h5"]
+#	},
+#	{
+#		args=["9"],
+#		generates=["nlif_2d_benchmark_functions_network_9.h5"]
+#	},
 ]
 is_multithreaded = true
 
