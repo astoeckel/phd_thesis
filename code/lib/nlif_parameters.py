@@ -86,9 +86,9 @@ BENCHMARK_FUNCTIONS = {
     "multiplication_limited": scale(lambda x, y: x * y),
     "multiplication": lambda x, y: x * y,
     "sqrt-multiplication": scale(lambda x, y: np.sqrt(x) * np.sqrt(y)),
-    "sqr-multiplication": lambda x, y: (x ** 2) * (y ** 2),
+    "sqr-multiplication": lambda x, y: 2.0 * (x ** 2) * (y ** 2) - 1.0,
     "shunting": scale(lambda x, y: (1 + x) / (2 + 2 * y)),
-    "norm": lambda x, y: np.sqrt(x * x + y * y) / np.sqrt(2.0),
+    "norm": lambda x, y: 2.0 * np.sqrt(x * x + y * y) / np.sqrt(2.0) - 1.0,
     "arctan": lambda x, y: np.arctan2(y, x) / np.pi,
     "max": lambda x, y: np.max((x, y), axis=0),
 }
