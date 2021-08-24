@@ -18,7 +18,7 @@ for i in range(N_DIMS):
         color = mpl.cm.get_cmap(CMAP)(j / (N_THS - 1))
         data = np.mean(np.sum(Es[i] < th, axis=0), axis=1)
         axs[i].fill_between(N_NEURONS, data, np.zeros_like(N_NEURONS), linewidth=0.0, color=color)
-        axs[i].semilogx(N_NEURONS, data, color='k')
+        axs[i].semilogx(N_NEURONS, data, linewidth=0.7, color='k')
     axs[i].set_xlim(N_NEURONS[0], N_NEURONS[-1])
     axs[i].set_ylim(0, 10)
     if i == 0:

@@ -19,12 +19,13 @@ While it is not possible to derive an exact dendritic nonlinearity $H$ for these
 	{\phantomsubcaption\label{fig:nlif_b}}%
 	{\phantomsubcaption\label{fig:nlif_c}}%
 	{\phantomsubcaption\label{fig:nlif_d}}%
+	{\phantomsubcaption\label{fig:nlif_e}}%
 	\caption[\enquote{Ball-and-stick} illustration of multi-compartment LIF neurons]{\enquote{Ball-and-stick} illustration of multi-compartment \LIF neurons.
 	Large circles correspond to compartments, small circles and rectangles to conductance- and current-based channels. Filled symbols indicate passive channels.
 	\textbf{(A)} Standard \LIF neuron with current-based inputs.
 	\textbf{(B)} \LIF neuron with conductance-based input channels.
 	\textbf{(C)} \Gls{twocomp} with a separate dendritic compartment.
-	\textbf{(D)} A three-compartment \LIF neuron with distal and proximal dendritic compartments.}
+	\textbf{(D, E)} Three- and four-compartment \LIF neurons with apical and basal dendrites.}
 	\label{fig:nlif}
 \end{figure}
 
@@ -74,7 +75,7 @@ The adjacency matrix of coupling conductances $\mat C$ must be symmetric, and th
 Some conductances $g_{k}^i(t)$ and currents $J_{k}^i(t)$ are constant, such as the static leak channels and bias currents.
 
 \begin{table}
-	\caption[Matrix representations of the neuron models in \Cref{fig:nlif}]{Matrix representations of the neuron models in \Cref{fig:nlif}. See text for a description.
+	\caption[Matrix representations of the first four neuron models in \Cref{fig:nlif}]{Matrix representations of the first four neuron models in \Cref{fig:nlif}. See text for details.
 	%All matrices are multiplied by the membrane capacitance $C_\mathrm{m}$ (assuming that $C_\mathrm{m}$ is the same across compartments).
 	}
 	\label{tbl:nlif_matrices}
@@ -117,9 +118,10 @@ Some conductances $g_{k}^i(t)$ and currents $J_{k}^i(t)$ are constant, such as t
 				g_\mathrm{L} \\
 				g_\mathrm{L}
 			\end{bmatrix}$
-			& $\displaystyle \begin{bmatrix} 0 & 0 & 0 & 0\\
-				0 & 0 & 1 & 1 \\
-				1 & 1 & 0 & 0 \end{bmatrix}$
+			& $\displaystyle \begin{bmatrix}
+			    0 & 0 & 0 & 0\\
+				1 & 1 & 0 & 0 \\
+				0 & 0 & 1 & 1 \end{bmatrix}$
 			& $\displaystyle \begin{bmatrix}
 				g_\mathrm{L} E_\mathrm{L} \\
 				g_\mathrm{L} E_\mathrm{L} \\
@@ -127,8 +129,8 @@ Some conductances $g_{k}^i(t)$ and currents $J_{k}^i(t)$ are constant, such as t
 			\end{bmatrix}$
 			& $\displaystyle \begin{bmatrix}
 				0 & 0 & 0 & 0 \\
-				0 & 0 & E_\mathrm{E} & E_\mathrm{I} \\
 				E_\mathrm{E} & E_\mathrm{I} & 0 & 0 \\
+				0 & 0 & E_\mathrm{E} & E_\mathrm{I} \\
 			\end{bmatrix}$
 			& $\displaystyle \begin{bmatrix} c_{12} & -c_{12} & 0 \\ -c_{12} & c_{12} + c_{23} & -c_{23} \\ 0 & -c_{23} & c_{23} \end{bmatrix}$ 			\\
 		\bottomrule
@@ -161,7 +163,7 @@ More specifically, the \gls{laplacian} \mnL is the difference between the weight
 The vector \vnap consists of sums of static channel conductances for each channel (such as the leak conductance) and \vnbp contains the sums of the static channel conductances multiplied by their reversal potential.
 The matrix \mnAp contains one-entries for input-variables influencing a conductance-based channel in the corresponding compartment.
 \mnBp contains a \enquote{one} for each variable current-based channel in the corresponding compartment, and the reversal potential for each variable conductance-based channel in a compartment.
-Examples of these matrices for the \nlif neuron models depicted in \Cref{fig:nlif} are given in \Cref{tbl:nlif_matrices}.
+Examples of these matrices for the first four \nlif neuron models depicted in \Cref{fig:nlif} are given in \Cref{tbl:nlif_matrices}.
 
 \pagebreak
 
@@ -177,17 +179,18 @@ Consider an $n$-LIF neuron with at least one static conductance-based channel an
 In this case, the feedback matrix $\mnA[\vng] \diag(\vCm)^{-1}$ is negative definite.
 \end{restatable}
 This is quite intuitive form a physical perspective.
-The \nlif neuron is described as a resistor-capacitor network.
+The \nlif neuron essentially is a resistor-capacitor network.
 When tying at least one point of the network to a voltage source, the capacitors will converge to some equilibrium potential $\vneq$.
-For constant \vng, the corresponding dynamics are
-\begin{align*}
+For constant \vng the dynamics are
+\begin{align}
 	{\vMem}(t)
 		&= \vneq + \exp\big(\mnA[\vng] \diag(\vCm)^{-1} t\big) \big(\vvMem(0) - \vneq\big) \,,
 		& \text{where }  \vneq &= -\mnA[\vng]^{-1} \vnb[\vng] \,,
-\end{align*}
+	\label{eqn:nlif_dynamics}
+\end{align}
 Crucially, $\mnA[\vng]$ is guaranteed to be invertible under the conditions listed in \Cref{thm:nlif_convergence}.
 %It is singular exactly if the neuron does not possess any conductance-based channels, or the conductances of all channels are zero.
-Also note that \vneq does not depend on \vCm since both $\mnA[\vng]$ and $\vnb[\vng]$ are divided by \vCm (cf.~eq.~\ref{eqn:nlif_matrix}):
+Furthermore, note that \vneq does not depend on \vCm; both $\mnA[\vng]$ and $\vnb[\vng]$ are divided by \vCm (cf.~eq.~\ref{eqn:nlif_matrix}):
 \begin{align*}
 	  \bigl(\diag(\vCm)^{-1} \mnA[\vng]\bigr)^{-1} \bigl(\diag(\vCm)^{-1} \vnb[\vng]\bigr)
 	= \mnA[\vng]^{-1} \diag(\vCm) \diag(\vCm)^{-1} \vnb[\vng] = \mnA[\vng]^{-1} \vnb[\vng] \,.
@@ -202,7 +205,7 @@ Also note that \vneq does not depend on \vCm since both $\mnA[\vng]$ and $\vnb[\
 	The impulse is filtered and dampened while it is travelling through a neuron.
 	}
 \end{figure}
-The impulse response of the system is illustrated in \Cref{fig:nlif_impulse_response_panels}.
+The impulse response of the system is depicted in \Cref{fig:nlif_impulse_response_panels}.
 Each compartment acts as a first-order low-pass filter; the response in compartment $i$ to an impulse in compartment $j$ thus resembles a low-pass filter of order $d(i, j)$, the distance between nodes $i$, $j$.
 %However, once again note that conductance channels are nonlinear---the impulse response does not fully characterise the system.
 %No matter what the previous membrane potential, an input will at most charge the corresponding compartment up to the channel reversal potential.
@@ -248,7 +251,7 @@ As we discuss below, we propose use a parametrised version of $H$ that is fit to
 \end{figure}
 
 \begin{table}[p]
-	\caption[Reduced matrix representations of the neuron models in \Cref{fig:nlif}]{Reduced matrix representations of the multi-compartment neuron models in \Cref{fig:nlif}.
+	\caption[Reduced matrix representations of the first four neuron models in \Cref{fig:nlif}]{Reduced matrix representations of the first four multi-compartment neuron models in \Cref{fig:nlif}.
 	The somatic compartment is disconnected from the remaining neuron model.
 	Connections to the somatic compartment are replaced by a static conductance-based channel with reversal potential $\vSom$. The voltage difference between $\vSom$ and the equilibrium potential of the new model is proportional to the current flowing into the somatic compartment.
 	}
@@ -298,8 +301,8 @@ As we discuss below, we propose use a parametrised version of $H$ that is fit to
 			\end{bmatrix}$
 			& $\displaystyle \begin{bmatrix}
 				0 & 0 & 0 & 0 \\
-				0 & 0 & 1 & 1 \\
-				1 & 1 & 0 & 0 \end{bmatrix}$
+				1 & 1 & 0 & 0 \\
+				0 & 0 & 1 & 1 \end{bmatrix}$
 			& $\displaystyle \begin{bmatrix}
 				g_\mathrm{L} ( E_\mathrm{L} - \vSom ) + \vSom \\
 				g_\mathrm{L} E_\mathrm{L} + c_{12} \vSom \\
@@ -307,8 +310,8 @@ As we discuss below, we propose use a parametrised version of $H$ that is fit to
 			\end{bmatrix}$
 			& $\displaystyle \begin{bmatrix}
 				0 & 0 & 0 & 0 \\
-				0 & 0 & E_\mathrm{E} & E_\mathrm{I} \\
 				E_\mathrm{E} & E_\mathrm{I} & 0 & 0 \\
+				0 & 0 & E_\mathrm{E} & E_\mathrm{I} \\
 			\end{bmatrix}$
 			& $\displaystyle \begin{bmatrix}
 				0 & 0 & 0 \\
@@ -397,7 +400,7 @@ However, before we do so, we explicitly derive $H$ for a few special cases and a
 The above framework is well suited for algorithmically deriving the dendritic nonlinearity model $H$ for arbitrary \nlif neurons.
 Unfortunately, it may be less intuitive when manually analysing these models.
 %We can easily construct the corresponding model matrices and predict the somatic current for a given input configuration.
-Hence, we find it useful to at least provide the expanded dendritic nonlinearity $H$ for the four models depicted in \Cref{fig:nlif}.
+Hence, we find it useful to at least provide the expanded dendritic nonlinearity $H$ for the first four models depicted in \Cref{fig:nlif}.
 
 \subsubsection{Single-compartment LIF neuron with current-based input}
 Expanding \cref{eqn:h_model} for the model depicted in \Cref{fig:nlif_a} using \Cref{tbl:nlif_matrices_reduced} yields 
@@ -555,15 +558,15 @@ We can thus write $H$ as
 \begin{align}
 	H(g_\mathrm{E}^1, g_\mathrm{I}^1, g_\mathrm{E}^2, g_\mathrm{I}^2) =
 		\frac{
-	        b_0 + b_1 g^1_\mathrm{E} + b_2 g^1_\mathrm{I} +
-	              b_3 g^2_\mathrm{E} + b_4 g^2_\mathrm{I} +
+	        b_0 + b_1 g^2_\mathrm{E} + b_2 g^2_\mathrm{I} +
+	              b_3 g^1_\mathrm{E} + b_4 g^1_\mathrm{I} +
 	              b_5 g^1_\mathrm{E} g^2_\mathrm{E} +
 	              b_6 g^1_\mathrm{I} g^2_\mathrm{E} +
 	              b_7 g^1_\mathrm{E} g^2_\mathrm{I} +
 	              b_8 g^1_\mathrm{I} g^2_\mathrm{I}
         }{
-	        a_0 + a_1 g^1_\mathrm{E} + a_2 g^1_\mathrm{I} +
-	              a_3 g^2_\mathrm{E} + a_4 g^2_\mathrm{I} +
+	        a_0 + a_1 g^2_\mathrm{E} + a_2 g^2_\mathrm{I} +
+	              a_3 g^1_\mathrm{E} + a_4 g^1_\mathrm{I} +
 	              a_5 g^1_\mathrm{E} g^2_\mathrm{E} +
 	              a_6 g^1_\mathrm{I} g^2_\mathrm{E} +
 	              a_7 g^1_\mathrm{E} g^2_\mathrm{I} +
@@ -666,5 +669,5 @@ This current is proportional to the product of the intermediate coupling conduct
 Countering this by choosing larger $c_{ij}$ results in more linear $H$.
 
 Still, as we demonstrate in \Cref{sec:nlif_opt}, it is indeed possible to solve the weak XOR problem using a single three-compartment neuron.
-In particular, we discuss an iterative weight optimisation scheme that quickly converges to locally optimal weights for any \nlif neuron.
+In particular, we discuss an iterative weight optimisation scheme that in practice quickly converges to locally optimal weights.
 

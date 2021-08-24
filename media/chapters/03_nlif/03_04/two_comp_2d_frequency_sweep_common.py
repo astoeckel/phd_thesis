@@ -1,6 +1,6 @@
 import h5py
 
-def plot_files(files, title, letter=None, figsize=(7.45, 3), mark_sigmas=[]):
+def plot_files(files, title, letter=None, figsize=(7.45, 3), mark_sigmas=[], plot_baselines=False):
     params_keys = []
     errs = None
     for file in files:
@@ -19,9 +19,36 @@ def plot_files(files, title, letter=None, figsize=(7.45, 3), mark_sigmas=[]):
         f = 1.0 + f;
         return np.clip(c * np.array((f, f, f, 1.0)), 0.0, 1.0)
 
+    if plot_baselines:
+        with h5py.File(utils.datafile('dendritic_computation_fourier_example_d9.h5'), 'r') as f:
+            sigmas_theo = f["SIGMAS"][()]
+            lbls_theo = 1.0 / sigmas_theo
+            Es_add = f["Es_add"][()]
+            Es_mul = f["Es_mul"][()]
+            Es_a2d = f["Es_mlp"][()]
+
     colors = ['#000000', mpl.cm.get_cmap('viridis')(0.3), mpl.cm.get_cmap('viridis')(0.6), mpl.cm.get_cmap('viridis')(0.9), utils.oranges[1]]
 
     styles = {
+        "add": {
+            "color": "k",
+            "linewidth": 1.0,
+            "linestyle": ":",
+            "zorder": -1,
+        },
+        "mul": {
+            "color": "k",
+            "linewidth": 1.0,
+            "linestyle": ":",
+            "zorder": -1,
+        },
+        "a2d": {
+            "label": "",
+            "color": "k",
+            "linestyle": ":",
+            "linewidth": 1.0,
+            "zorder": -1,
+        },
         "linear": {
             "label": "$H_\\mathrm{cur}$",
             "color": "k",
@@ -129,6 +156,17 @@ def plot_files(files, title, letter=None, figsize=(7.45, 3), mark_sigmas=[]):
 
     for x in mark_sigmas:
         ax.axvline(x, color='grey', linewidth=0.5, linestyle=':', zorder=-1)
+
+
+    if plot_baselines:
+        ax.plot(lbls_theo, np.median(Es_mul, axis=-1), **styles["mul"])
+        ax.plot(lbls_theo, np.median(Es_add, axis=-1), **styles["add"])
+#        ax.plot(lbls_theo, np.median(Es_a2d, axis=-1), **styles["a2d"])
+
+        utils.annotate(ax, 10.0**(-0.425), 10.0**(-0.85), 10.0**(-0.6), 10.0**(-0.6), 'Additive baseline')
+        utils.annotate(ax, 10.0**(0.125), 10.0**(-1.0), 10.0**(0.65), 10.0**(-1.0), 'Multiplicative baseline', ha="left", zorder=100)
+#        utils.annotate(ax, 10.0**(0.5), 10.0**(-1.175), 10.0**(0.65), 10.0**(-1.175), '2D basis baseline', ha="left", zorder=100)
+
 
     y_cen = -0.1175 * (3.0 / figsize[1])
     arrow_width = 0.015

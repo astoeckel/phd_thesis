@@ -69,6 +69,7 @@ def plot_cross_section(ax,
 
 
 def write_error(ax, Zmodel, Ztruth, mul, unit, clip=False):
+    Zmodel = np.maximum(0, Zmodel)
     if clip:
         valid = np.logical_or(Ztruth > 12.5, Zmodel > 12.5)
         E = np.sqrt(np.mean((Zmodel[valid] - Ztruth[valid])**2))
@@ -150,7 +151,7 @@ def plot_analysis(
     tau = (5e-3, 10e-3)  # Time-constants for the individual synapses
     rate = (1800, 4500)  # Firing rates
     n_samples_per_dim = 5000
-    clip = True
+    clip = False
 
     # Print the original parameters
     def print_rational_fun(expr, α=None, β=None):

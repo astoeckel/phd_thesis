@@ -12,39 +12,38 @@ It may well be that certain nerve pulse combinations will stimulate a given neur
 \vspace{10pt}
 
 \begin{PriorPublication}
-Portions of this chapter (in particular \Cref{sec:two_comp_lif}) are, in extended and heavily edited form, adapted from \citet{stoeckel2021}, which in turn is an extension of work presented at COSYNE 2018 \citep{stockel2018nonlinear}, as well as an earlier technical report \citep{stockel2017point}.
-Whereas these prior publications focus on single- and two-compartment LIF neurons, we deepen the provided theoretical background and discuss method for working with $n$-LIF neurons in general.
+Portions of this chapter (in particular \Cref{sec:two_comp_lif,sec:nlif_discussion}) are, in extended and edited form, adapted from \citet{stoeckel2021}, which in turn builds upon work presented at COSYNE 2018 \citep{stockel2018nonlinear}, as well as an earlier technical report \citep{stockel2017point}.
+While these prior publications focus on single- and two-compartment LIF neurons, we deepen the provided theoretical background and discuss methods for working with \nlif neurons in general.
 \end{PriorPublication}
 
 \begin{Contributions}
 The work in this chapter can be seen as a continuation of the research presented in \citet[Chapter~5]{koch1999biophysics}, as well as \citet[Chapter~4]{tripp2009search}.
-In contrast to these prior publication, we discuss a systematic approach to using passive dendritic nonlinearities as a computational resource to approximate arbitrary functions within the context of functional modelling frameworks.
-We particularly focus on convex optimisation.
-Additionally, as far as we are aware, the idea to use quadratic programming for subthreshold relaxation is novel.
+In contrast to this prior work, we discuss a systematic approach to exploiting passive dendritic nonlinearities as a computational resource to approximate arbitrary functions.
+As far as we are aware, our mathematical description and analysis of \nlif neurons, the idea to use quadratic programming for subthreshold relaxation, our spatial frequency-sweep analysis technique, and the presented soft trust-region optimisation scheme are completely novel.
 \end{Contributions}
 
-%\input{content/chapters/03_nlif/03_00_introduction}
-%
-%\clearpage
-%\setcounter{section}{0}
-%\input{content/chapters/03_nlif/03_01_theory}
-%
-%\clearpage
-%\setcounter{section}{1}
-%\input{content/chapters/03_nlif/03_02_nef}
-%
-%\clearpage
-%\setcounter{section}{2}
-%\input{content/chapters/03_nlif/03_03_nlif}
-%
-%\clearpage
-%\setcounter{section}{3}
-%\input{content/chapters/03_nlif/03_04_two_comp}
+\input{content/chapters/03_nlif/03_00_introduction}
+
+\clearpage
+\setcounter{section}{0}
+\input{content/chapters/03_nlif/03_01_theory}
+
+\clearpage
+\setcounter{section}{1}
+\input{content/chapters/03_nlif/03_02_nef}
+
+\clearpage
+\setcounter{section}{2}
+\input{content/chapters/03_nlif/03_03_nlif}
+
+\clearpage
+\setcounter{section}{3}
+\input{content/chapters/03_nlif/03_04_two_comp}
 
 \clearpage
 \setcounter{section}{4}
 \input{content/chapters/03_nlif/03_05_nlif_weights}
 
-%\clearpage
-%\setcounter{section}{5}
-%\input{content/chapters/03_nlif/03_06_discussion}
+\clearpage
+\setcounter{section}{5}
+\input{content/chapters/03_nlif/03_06_discussion}

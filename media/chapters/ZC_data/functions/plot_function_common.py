@@ -1,8 +1,12 @@
-from two_comp_parameters import BENCHMARK_FUNCTIONS
+from two_comp_parameters import BENCHMARK_FUNCTIONS as BENCHMARK_FUNCTIONS1
+from nlif_parameters import BENCHMARK_FUNCTIONS as BENCHMARK_FUNCTIONS2
 
-def do_plot(key):
-    f = lambda x, y: 2.0 * BENCHMARK_FUNCTIONS[key](0.5 * (x + 1.0), 0.5 *
-                                                    (y + 1.0)) - 1.0
+def do_plot(key, full=False):
+    if not full:
+        f = lambda x, y: 2.0 * BENCHMARK_FUNCTIONS1[key](0.5 * (x + 1.0), 0.5 *
+                                                        (y + 1.0)) - 1.0
+    else:
+            f = BENCHMARK_FUNCTIONS2[key]
 
     xs, ys = np.linspace(-1, 1, 100), np.linspace(-1, 1, 100)
     xss, yss = np.meshgrid(xs, ys)
@@ -37,5 +41,9 @@ def do_plot(key):
 
     utils.save(fig)
 
+    # Approximate the RMSE with a high precision
+    xs, ys = np.linspace(-1, 1, 1000), np.linspace(-1, 1, 1000)
+    xss, yss = np.meshgrid(xs, ys)
+    zss = f(xss, yss)
     print(key, "rms =", np.sqrt(np.mean(np.square(zss))))
 

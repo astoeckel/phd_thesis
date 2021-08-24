@@ -18,25 +18,25 @@
 	\label{fig:nef_multivariate_functions}
 \end{figure}
 
-The idea of dendritic computation as pursued here is best explained by reviewing fundamental properties of neural networks, and exploring how mul\-ti\-va\-ri\-ate functions such as $f(x_1, \ldots, x_\ell)$ can be computed in the NEF.
-Specifically, we analyse three different network architectures (cf.~\Cref{fig:nef_multivariate_functions}).
+Dendritic computation as pursued here is best explained by reviewing fundamental properties of neural networks, and exploring how mul\-ti\-va\-ri\-ate functions such as $f(x_1, \ldots, x_\ell)$ can be approximated in the NEF.
+Specifically, we compare three different network architectures (cf.~\Cref{fig:nef_multivariate_functions}).
 \emph{Additive networks} represent $x_1$, $\ldots$, $x_\ell$ in independent neuron populations.
 These networks cannot approximate most multivariate functions.
-In contrast, \emph{two-layer networks} can represent all variables in a common intermediate population.
+In contrast, \emph{two-layer networks} represent all variables in a common intermediate population.
 These networks are universal approximators.
 Lastly, our notion of \emph{dendritic computation} relies on non-linear interaction between independent neural input channels.
-While not as powerful as multi-layer networks, dendritic computation can approximate a larger class of functions well compared to additive networks.
+While not as powerful as multi-layer networks, dendritic computation can approximate a larger class of functions as additive networks.
 
 \subsection{Additive Multivariate Networks}
 \label{sec:additive_net}
 
 As stated above, our goal is to compute multivariate functions $f(x_1, \ldots, x_\ell)$ within the context of the NEF.
 %For the sake of simplicity, we mostly discuss bivariate functions of the form $\phi(x_1, x_2)$, but the same considerations apply to more than two input variables as well.
-For the sake of simplicity, assume that two pre-populations representing the variables $x_1$, $x_2$ are connected to a common post-population.
+For the sake of simplicity, assume that two pre-populations representing variables $x_1$, $x_2$, respectively, are connected to a common post-population.
 To compute $f(x_1, x_2)$, we must find connection weights $\vec w_{1, i}$, $\vec w_{2, i}$ such that the following holds for every post-neuron $i$
 \begin{align}
 	a_i(f(x_1, x_2))
-		= G_i \bigl[
+		= G_i \bigl[y
 			\langle \vec e_i, f(x_1, x_2) \rangle
 		\bigr]
 		\supposedEq G_i\bigl[
@@ -358,7 +358,7 @@ For our analysis of dendritic computation, we choose $\sigma(\xi_1, \xi_2) = \xi
 	\label{eqn:f_den}
 \end{align}
 Solving for $w^1_{i}$, $w^2_{i}$, $w^3_{i}$, $w^4_{i}$ (for a total of $4\oh$ DOF) is a non-convex optimisation problem that tends to possess numerous local minima.
-We use the BFGS quasi-Newton method \citep[Chapter~8]{wright1999numerical} with ten random initialisations and pick the best solution.
+We use the BFGS quasi-Newton method \citep[Chapter~8]{nocedal2006numerical} with ten random initialisations and pick the best solution.
 
 Finally, we emulate the universal approximator nature of multi-layer networks by constructing an additive network based on two-dimensional basis functions $P_{ij}(x_1, x_2) = P_{i}(x_1) P_j(x_2)$:
 \begin{align}
@@ -453,10 +453,10 @@ This suggests that, in some scenarios, dendritic computation schemes could outpe
 Let $d$ and $d'$ be the number of basis functions that can be decoded from a one- and $\ell$-dimensional population, respectively.
 Dendritic computation has more DOF if $k \ell d > d'$, and could thus approximate a larger class of functions below some error threshold.
 
-Note however that this analysis does not take redundant DOF into account and relies on a questionable binary notion of a basis function being \enquote{decodable}.
+This analysis should be taken with a grain of salt, since we do not take redundant DOF into account and rely on a questionable binary notion of a basis function being \enquote{decodable}.
 Still, as we will see in \Cref{sec:two_comp_lif}, dendritic computation can indeed outperform multi-layer networks in practice.
 
 \subsubsection{Conclusion}
-Our numerical experiments confirm that, under optimal circumstances, dendritic computation schemes can only be used to compute a subset of functions better than purely additive networks.
+Our numerical experiments confirm that, under optimal circumstances, dendritic computation schemes can only compute some functions better than purely additive networks.
 This is independent of the order of the function basis induced by the pre-populations.
-However, our analysis suggests that in a scenario where only few multivariate basis functions can be decoded well from an intermediate population, dendritic computation may be a viable alternative.
+Our analysis also suggests that dendritic computation may be a viable alternative if only few multivariate basis functions can be decoded well from an intermediate population.

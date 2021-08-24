@@ -313,7 +313,7 @@ Errors are substantially smaller than what we obtain by na\"ively enforcing spar
 	\includegraphics[trim=0cm 0cm 7.9cm 0cm,clip]{media/chapters/03_nlif/03_02/inhibitory_interneurons.pdf}%
 	{\phantomsubcaption\label{fig:inhibitory_interneurons_a}}%
 	{\phantomsubcaption\label{fig:inhibitory_interneurons_b}}%
-	\caption[Inhibitory interneurons and communication channels]{Inhibitory interneurons and communication channels.
+	\caption[Inhibitory interneurons]{Inhibitory interneurons.
 	\textbf{(A)} To establish interneuron populations, we compute the identity function $f(x) = x$ in the purely excitatory projection onto the interneurons.
 	The desired $\phi(\vec x)$ is then decoded from a virtual population encompassing both the inhibitory interneurons, and the excitatory pre-neurons.
 	\textbf{(B)} Using this scheme, we can compute linear and nonlinear functions $\phi(x)$.
@@ -321,6 +321,7 @@ Errors are substantially smaller than what we obtain by na\"ively enforcing spar
 	The dotted line is the target $\phi(x)$, black line is the median decoded value over 1000 trials, shaded grey areas correspond to the 10th and 90th percentiles.
 	Errors $E$ are the mean NRMSE with standard deviation.
 	}
+	\label{fig:inhibitory_interneurons}
 \end{figure}
 
 \subsubsection{Inhibitory interneuons}
@@ -332,7 +333,7 @@ construct NEF networks with such inhibitory interneurons.
 The techniques we discussed above can similarly be used to construct networks with inhibitory interneurons, albeit in a much simpler manner.
 Recall that we can compute the identity function over purely excitatory connections (cf.~\Cref{fig:nonnegative_experiments}).
 We can hence represent $\vec x$ in the interneurons using excitatory connection weights (cf.~\Cref{fig:inhibitory_interneurons_a}).
-With this connection in place, the pre- and interneurons can be thought of as forming a \enquote{virtual pre-population} representing $\vec x$.
+With this connection in place, the pre- and interneurons can be thought of as forming a \enquote{virtual pre-population} representing the same quantity $\vec x$.
 Using \cref{eqn:decode_nonneg} we can solve for excitatory weights $\vec w_i^+$ originating from the pre-population, and inhibitory weights $\vec w_i^-$ originating from the interneurons, that project onto the post-population while approximating a function $\phi(\vec x)$.
 
 Although we decode from multiple pre-populations, we do not need to resort to an optimisation problem such as \cref{eqn:decode_current_additive}, where we decoded additive functions from multiple pre-populations.
@@ -342,7 +343,7 @@ Hence, we do not require a double integral, and we can compute nonlinear functio
 As depicted in \Cref{fig:inhibitory_interneurons_b}, we can use this technique to approximate linear and nonlinear functions $\phi(\vec x)$; errors mostly stem from the pre- to interneuron connection.
 Crucially, in contrast to the \enquote{Parisien transform}, we did not take any special precautions regarding the interneuron tuning curve distributions.
 All populations use the \enquote{standard} tuning with uniform $x$-intercepts.
-This is possible because we solve for weights directly in the current space.
+This is possible because we solve for weights directly in current space.
 
 \begin{figure}
 	\includegraphics[trim=7.9cm 0cm 0cm 0cm,clip]{media/chapters/03_nlif/03_02/inhibitory_interneurons_overview.pdf}%
@@ -363,17 +364,18 @@ This is possible because we solve for weights directly in the current space.
 Curiously, using the same techniques, we can also construct purely inhibitory communication channels---at least under the assumption that there is some separate excitatory pre-population that can be used as a bias source.
 The lack of such an excitatory population is exactly what prevented us from computing functions across inhibitory connections in \Cref{fig:nonnegative_experiments}.
 
-Assume that we have an inhibitory population representing $\vec x$, and another population representing some unrelated $\vec \nu$ (cf.~\Cref{fig:inhibitory_comm_a}).
-Similar to \cref{eqn:decode_current_additive}, we minimise
-\begin{align*}
+Given an inhibitory population representing $\vec x$, and another population representing some unrelated $\vec \nu$ (cf.~\Cref{fig:inhibitory_comm_a}).
+Similar to \cref{eqn:decode_current_additive}, we minimise (without regularisation)
+\begin{align}
 	\min_{\vec w_i^+, \vec w_i^-}
 	\frac{1}{\vol(\Xrepr)^2} \! \iint_{\Xrepr}
 	\left(
 		J_i\bigl(\langle \vec e_i, \phi(\vec x) \rangle\bigr)
 		- \langle \vec w^-_i, -\vec a^-(\vec x) \rangle
 		- \langle \vec w^+_i, \vec a^+(\vec \nu) \rangle
-	\right)^2 \, d\vec x \, d\vec \nu + \sigma^2 \|\vec w_{i}^+\|_2^2 + \sigma^2 \|\vec w_{i}^-\|_2^2 \,,
-\end{align*}
+	\right)^2 \, d\vec x \, d\vec \nu %+ \sigma^2 \|\vec w_{i}^+\|_2^2 + \sigma^2 \|\vec w_{i}^-\|_2^2 \,,
+	\label{eqn:inhibitory_communication_channel}
+\end{align}
 subject to $\vec w_{i}^+$, $\vec w_{i}^- > 0$.
 Crucially, we ignore $\vec \nu$ in our target function; we solely use the pre-population to provide background activity but ignore its represented value.
 
@@ -623,6 +625,7 @@ In contrast, we described neurons with nonlinear synapses as follows
 		\ldots ,
 		\langle \vec w_{i}^k, \vec a_k \rangle
 	\bigr] \,.
+	\label{eqn:def_response_curve_g}
 \end{align}
 Here, $k$ is the number of input channels, and the vector $\vec g_i = (g^1_i$, $\ldots$, $g^k_i)$ describes some abstract \enquote{channel state}.
 Again, we assume that, on average, each channel state $g^j_i$ is linear in the weights and the ´activities $\vec a_j$ of the neurons connecting to the $j$th channel.

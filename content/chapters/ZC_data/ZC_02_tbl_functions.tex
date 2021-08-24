@@ -1,54 +1,72 @@
 \begin{table}
-\caption[Functions analysed in the two-compartment LIF network experiment]{Functions analysed in the two-compartment LIF network experiment (cf.~\Cref{sec:two_comp_lif_experiment_3}). The functions $f(x_1, x_2)$ are defined over the interval $(x_1, x_2) \in [0, 1]^2$ and re-scaled such that they map onto the interval $[-1, 1]$ for $(x_1, x_2) \in [-1, 1]^2$. Contour plots and RMS values are for the re-scaled functions. Red corresponds to negative values, blue to positive values.}
-\vspace{0.25cm}
+\caption[Functions analysed in the $n$-LIF network experiments]{Functions analysed in the $n$-LIF network experiments (cf.~\Cref{sec:two_comp_lif_experiment_3,sec:nlif_experiment_3}).
+The intervals $[0, 1]^2$ and $[-1, 1]^2$ correspond to the function domain; in any case, functions are re-scaled such that they map onto the interval $[-1, 1]$ for $(x_1, x_2) \in [-1, 1]^2$.
+Red is negative, blue positive.}
 \label{tbl:two_comp_functions}
 \sffamily
 \centering
-\small
-\begin{tabular}{r l l l}
+\fontsize{10pt}{12pt}\selectfont
+\begin{tabular}{p{4.75cm} c c c c c}
 	\toprule
-	\raggedleft \textbf{Name} & \textbf{Function} & \textbf{RMS} & \textbf{Contour}\\
-	\cmidrule(r){1-4}
+	\raggedleft \textbf{Name} & \textbf{Function $f(x_1, x_2)$} & \multicolumn{2}{c}{\textbf{RMS}} & \multicolumn{2}{c}{\textbf{Contour}}\\
+	\cmidrule(r){1-1}\cmidrule(r){2-2}\cmidrule(r){3-4}\cmidrule(r){5-6}
+	& & $[0, 1]^2$ & $[-1, 1]^2$ & $[0, 1]^2$ & $[-1, 1]^2$ \\
+	\midrule
 	\raggedleft Addition
-	& $\displaystyle f(x, y) = \frac{1}2 (x + y)$
-	& $\displaystyle f_\mathrm{RMS} = \frac{\sqrt{6}}{6} \approx 0.4082$
+	& $\displaystyle \frac{1}2 (x_1 + x_2)$
+	& $0.4082$
+	& $0.4082$
+	& \raisebox{-0.9cm}{\includegraphics{media/chapters/ZC_data/functions/addition.pdf}}
 	& \raisebox{-0.9cm}{\includegraphics{media/chapters/ZC_data/functions/addition.pdf}} \\
-	\cmidrule(r){1-4}
-	\raggedleft Multiplication
-	& $\displaystyle f(x, y) = x y$
-	& $\displaystyle f_\mathrm{RMS} = \frac{2}3 \approx 0.6667$
-	& \raisebox{-0.9cm}{\includegraphics{media/chapters/ZC_data/functions/multiplication.pdf}}\\
-	\cmidrule(r){1-4}
-	\raggedleft Multiplication with square root
-	& $\displaystyle f(x, y) = \sqrt{x y}$
-	& $\displaystyle f_\mathrm{RMS} = \frac{\sqrt{2}}3 \approx 0.4714$
-	& \raisebox{-0.9cm}{\includegraphics{media/chapters/ZC_data/functions/sqrt_multiplication.pdf}}\\
-	\cmidrule(r){1-4}
-	\raggedleft Squared multiplication
-	& $\displaystyle f(x, y) = x^2 y^2$
-	& $\displaystyle f_\mathrm{RMS} = \frac{\sqrt{161}}{15} \approx 0.8459$
-	& \raisebox{-0.9cm}{\includegraphics{media/chapters/ZC_data/functions/sqr_multiplication.pdf}}\\
-	\cmidrule(r){1-4}
+	\midrule
 	\raggedleft Controlled shunting
-	& $\displaystyle f(x, y) = \frac{1 + x}{2(1 + y)}$
-	& $\displaystyle f_\mathrm{RMS} \approx 0.2953$
-	& \raisebox{-0.9cm}{\includegraphics{media/chapters/ZC_data/functions/shunting.pdf}}\\
-	\cmidrule(r){1-4}
+	& $\displaystyle \frac{1 + x_1}{2(1 + x_2)}$
+	& $0.2953$
+	& /
+	& \raisebox{-0.9cm}{\includegraphics{media/chapters/ZC_data/functions/shunting.pdf}}
+	& / \\
+	\midrule
+	\raggedleft Multiplication with square root
+	& $\displaystyle \sqrt{x_1 x_2}$
+	& $0.4714$
+	& /
+	& \raisebox{-0.9cm}{\includegraphics{media/chapters/ZC_data/functions/sqrt_multiplication.pdf}}
+	& / \\
+	\midrule
+	\raggedleft Multiplication
+	& $\displaystyle x_1 x_2$
+	& $0.6667$
+	& $0.3333$
+	& \raisebox{-0.9cm}{\includegraphics{media/chapters/ZC_data/functions/multiplication.pdf}}
+	& \raisebox{-0.9cm}{\includegraphics{media/chapters/ZC_data/functions/multiplication_full.pdf}} \\
+	\midrule
+	\raggedleft Squared multiplication
+	& $\displaystyle x_1^2 x_2^2$
+	& $0.8459$
+	& $0.8459$
+	& \raisebox{-0.9cm}{\includegraphics{media/chapters/ZC_data/functions/sqr_multiplication.pdf}}
+	& \raisebox{-0.9cm}{\includegraphics{media/chapters/ZC_data/functions/sqr_multiplication_full.pdf}} \\
+	\midrule
 	\raggedleft Norm
-	& $\displaystyle f(x, y) = \sqrt{\frac{1}2 \big( x^2 + y^2 \big) }$
-	& $\displaystyle f_\mathrm{RMS} \approx 0.4111$
-	& \raisebox{-0.9cm}{\includegraphics{media/chapters/ZC_data/functions/norm.pdf}}\\
-	\cmidrule(r){1-4}
+	& $\displaystyle \sqrt{\frac{1}2 \big( x_1^2 + x_2^2 \big) }$
+	& $0.4111$
+	& $0.4111$
+	& \raisebox{-0.9cm}{\includegraphics{media/chapters/ZC_data/functions/norm.pdf}}
+	& \raisebox{-0.9cm}{\includegraphics{media/chapters/ZC_data/functions/norm_full.pdf}}\\
+	\midrule
 	\raggedleft Arctan
-	& $\displaystyle f(x, y) = \frac{2}{\pi} \mathrm{arctan}\left(\frac{y}x\right)$
-	& $\displaystyle f_\mathrm{RMS} \approx 0.5293$
-	& \raisebox{-0.9cm}{\includegraphics{media/chapters/ZC_data/functions/arctan.pdf}}\\
-	\cmidrule(r){1-4}
+	& $\displaystyle \frac{1}{\pi} \mathrm{arctan}\left(\frac{x_2}{x_1}\right)$
+	& $0.5293$
+	& $0.5745$
+	& \raisebox{-0.9cm}{\includegraphics{media/chapters/ZC_data/functions/arctan.pdf}}
+	& \raisebox{-0.9cm}{\includegraphics{media/chapters/ZC_data/functions/arctan_full.pdf}}\\
+	\midrule
 	\raggedleft Maximum
-	& $\displaystyle f(x, y) = \max\{x, y\}$
-	& $\displaystyle f_\mathrm{RMS} = \frac{\sqrt{3}}3 \approx 0.5774$
+	& $\displaystyle \max\{x_1, x_2\}$
+	& $0.5774$
+	& $0.5774$
 	& \raisebox{-0.9cm}{\includegraphics{media/chapters/ZC_data/functions/max.pdf}}
-	\\
+	& \raisebox{-0.9cm}{\includegraphics{media/chapters/ZC_data/functions/max_full.pdf}} \\
 	\bottomrule
 \end{tabular}
 \end{table}

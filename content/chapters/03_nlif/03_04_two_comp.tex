@@ -78,8 +78,8 @@ Arranging the samples in vectors $\vec J$, $\vec g_\mathrm{E}$, $\vec g_\mathrm{
 
 Crucially, and as is illustrated in \Cref{fig:two_comp_lif_loss_comparison}, the solutions obtained by minimising \cref{eqn:two_comp_optimal_parameters,eqn:two_comp_optimal_parameters_prime} are similar, but not equivalent.
 While both optimisation problems minimise the error for each sample, multiplication with the denominator in \cref{eqn:two_comp_optimal_parameters_prime} causes samples to be dynamically re-weighted.
-In our application, the impact of this is fairly low in practice.
-The global minimum of the substitute loss is typically close to a minimum in the actual loss function---though we technically cannot guarantee that this is a global minimum.
+In our application, the impact of this is fairly low in practice, and the global minimum of the substitute loss seems to be close to a minimum in the actual loss function.
+This method has been proposed in the context of fitting transfer functions by \citet{levy1959complexcurve}.
 
 \subsubsection{Parameter refinement}
 If an exact solution in terms of the closest local optimum of \cref{eqn:two_comp_optimal_parameters} is desired, the parameters can easily be refined using gradient descent.
@@ -91,8 +91,8 @@ Each sample is weighted by the inverse of its denominator from the previous iter
 \end{align}
 This scheme converges to a (not necessarily globally optimal) fixed point.
 In our application this seems to be the case after two additional iterations.
-A more thorough review of this \enquote{Sanathanan-Koerner iteration} is given in \citet[Section~2.2]{hokanson2018least}.
-For the sake of simplicity, we chose not to rely on parameter refinement in our experiments.
+A more thorough review of this \enquote{Sanathanan-Koerner iteration} is given in \citet[Section~2.2]{hokanson2018least} and \citet{pintelon1994parametric}.
+For the sake of simplicity, and because we do not observe a significant reduction in errors, we chose not to rely on this parameter refinement in our experiments.
 
 \subsection{Experiment 1: Precision of the Model Parameter Estimation}
 \label{sec:two_comp_lif_experiment_1}
@@ -104,12 +104,12 @@ We conduct this experiment in an artificial scenario with constant conductances 
 	\includegraphics{media/chapters/03_nlif/03_04/model_parameter_fits_a.pdf}%
 	{\phantomsubcaption\label{fig:synaptic_nonlinearity_fit_a_a}}%
 	{\phantomsubcaption\label{fig:synaptic_nonlinearity_fit_a_b}}%
-	\caption[Two-compartment dendritic nonlinearity model for constant input]{
-		Two-compartment dendritic nonlinearity model for constant input. Contour plots depict measured average spike rates $\mathscr{G}(g_\mathrm{E}, g_\mathrm{I})$.
+	\caption[Two-compartment nonlinearity model for constant input]{
+		Two-compartment nonlinearity model for constant input. Contour plots depict measured average spike rates $\mathscr{G}(g_\mathrm{E}, g_\mathrm{I})$.
 		Dashed lines are the model prediction $G[H(g_\mathrm{E}, g_\mathrm{I})]$. Dotted lines indicate the cross-section location.
-		$E$ denotes the spike-rate \RMSE over the regions where either the measured or predicted spike rate is greater than \SI{12.5}{\per\second}.
+		$E$ denotes the spike-rate \RMSE.
 		Columns correspond to different coupling conductances $c_\mathrm{12}$.
-		The model fits the numerical data well, with some deviations near the spike onset.}
+		The model fits the simulation well, with minor deviations near the spike onset.}
 	\label{fig:synaptic_nonlinearity_fit_a}%
 \end{figure}
 
@@ -122,8 +122,9 @@ The conductance range has been selected such that the maximum rate is \SI{100}{\
 
 We compare these numerical simulation results to both the theoretical somatic current prediction according to \cref{eqn:two_comp_lif_natural}, and the parameterised dendritic nonlinearity with the parameters fitted to the measured data.
 Parameter optimisation according to \cref{eqn:two_comp_optimal_parameters_prime_matrix} is based on a training-set of \num{200} conductance pairs sampled with uniform probability from the conductance-range.
-The final prediction error is computed over all \num{10000} grid points.%
-\footnote{As the next experiment produces a pronounced noise floor, we only consider rates above \SI{12.5}{\per\second} for fitting the model parameters and reporting the \RMSE. For comparability, we use the same threshold in both experiments.}
+The final prediction error is computed over all \num{10000} grid points.
+
+\pagebreak
 
 \paragraph{Results}
 The results for this experiment are depicted in \Cref{fig:synaptic_nonlinearity_fit_a}; the fitted parameters can be found in \Cref{tbl:two_comp_model_parameters}.
@@ -141,7 +142,7 @@ Failure to predict the spike onset is likely due to our model not capturing low 
 
 \begin{figure}[t]
 	\includegraphics{media/chapters/03_nlif/03_04/model_parameter_fits_b.pdf}%
-	\caption[Two-compartment dendritic nonlinearity model for noisy input]{Two-compartment dendritic nonlinearity model for noisy input with combined excitatory Poisson spike rates of $1/\lambda = \SI{4500}{\per\second}$ for excitatory synapses and $1/\lambda = \SI{1800}{\per\second}$ for inhibitory synapses.
+	\caption[Two-compartment nonlinearity model for noisy input]{Two-compartment nonlinearity model for noisy input with combined excitatory Poisson spike rates of $1/\lambda = \SI{4500}{\per\second}$ for excitatory synapses and $1/\lambda = \SI{1800}{\per\second}$ for inhibitory synapses.
 	See \Cref{fig:synaptic_nonlinearity_fit_a} for a complete legend.
 	The model fits the noisy data better than the noise-free data.
 	    }
@@ -163,7 +164,7 @@ The results of this experiment are depicted in \Cref{fig:synaptic_nonlinearity_f
 Final fitted parameters are provided in \Cref{tbl:two_comp_model_parameters}.
 Surprisingly, our model fits the noisy spike rates better than non-noisy data.
 Still, the overall trends from the previous experiment are still visible.
-When using the theoretical parameter estimates, larger $c_{12}$ result in higher overall errors and fitting the model parameters greatly reduces the error to values below \SI{1}{\per\second} for spike rates greater than \SI{12.5}{\per\second}.
+When using the theoretical parameter estimates, larger $c_{12}$ result in higher overall errors and fitting the model parameters greatly reduces the error to values of about \SIrange{1}{2}{\per\second}.
 While the sharp spike onset is no longer present, the model does not capture the subtle sigmoid shape of the response curve near the spike onset that is particularly pronounced for larger $g_\mathrm{C}$.
 
 \paragraph{Discussion}
@@ -339,22 +340,21 @@ Compared to computing addition, the median synaptic weight increases by a factor
 Given the encouraging results from the previous subsection, we would now like to analyse the theoretical advantage of the two-compartment \LIF model in a more systematic manner.
 In particular, our goal is to characterise the \enquote{computational power} of different network and neuron types using the methodology from our basis-function experiment in \Cref{sec:dendritic_computation_theory_numerical}.
 
-Note that we abbreviate the \glsdisp{dennonlin}{two-compartment LIF nonlinearity} with conductance-based synapses as \Hcond, and the standard current-based \LIF neuron as \Hcur.
-As mentioned before $\Hcur$, is simply defined as $\Hcur(J_\mathrm{E}, J_\mathrm{I}) = J_\mathrm{E} - J_\mathrm{I}$.
-Additionally, we implicitly assume that \Hcond accurately describes the somatic current flowing into the \gls{twocomp}.
+We implicitly assume that \Hcond accurately describes the somatic current flowing into the \gls{twocomp}.
 This is supported by our earlier results from Experiment~1 (\Cref{sec:two_comp_lif_experiment_1}).
+Furthermore, note that we abbreviate the \glsdisp{dennonlin}{two-compartment LIF nonlinearity} with conductance-based synapses as \Hcond, and the standard current-based \LIF neuron as \Hcur.
+As mentioned before $\Hcur$, is simply defined as $\Hcur(J_\mathrm{E}, J_\mathrm{I}) = J_\mathrm{E} - J_\mathrm{I}$.
 
 \subsubsection{Methods}
 Just as in \Cref{sec:dendritic_computation_theory_numerical}, we would like to measure how well different networks can approximate functions of increasing complexity \slc.
-We sample random 2D target-current functions $J_\rho$ over $(x_1, x_2) \in [-1, 1]^2$ on a $63 \times 63$ grid using the technique illustrated in \Cref{fig:2d_functions_overview}.
+We sample random 2D target-current functions $J_\rho$ over $(x_1, x_2) \in [-1, 1]^2$ with an RMS of \SI{0.5}{\nano\ampere} on a $63 \times 63$ grid using the technique illustrated in \Cref{fig:2d_functions_overview}.
 We then measure how well $J_\rho$ can be approximated for a single post-neuron given the static tuning of the networks depicted in \Cref{fig:nef_multivariate_functions}.
 The pre-populations consist of \num{100} neurons each and project both excitatorily and inhibitorily onto the post-neuron; the intermediate population in the two-layer network (\Cref{fig:nef_multivariate_functions_b}) consists of \num{200} neurons.
-In each trial, the pre-population tuning is randomly generated with maximum rates between \num{50} and \SI{100}{\per\second}.
+In each trial, the pre-population tuning is randomly generated.
 
 All synaptic weights are computed by solving the QP in \cref{eqn:two_comp_optimal_weights_prime_matrix} for 256 randomly selected training samples, with and without \gls{subrelax} (the relaxation threshold is set to \SI{0}{\nano\ampere}).
 The regularisation parameters were selected independently for each setup (cf.~\Cref{app:two_comp_regularisation_factor_sweep}).
-The final error $E_\mathrm{model}$ is the \NRMSE over all grid points.
-We add normal distributed noise to the pre-activities when computing the error to test generalisation.
+The final error $E_\mathrm{model}$ is the \NRMSE over all grid points with Gaussian noise (standard deviation $10^{-2} a_\mathrm{max}$) added to the pre-activities to test for generalisation.
 
 \subsubsection{Results}
 
@@ -362,8 +362,10 @@ We add normal distributed noise to the pre-activities when computing the error t
 	\centering
 	\includegraphics{media/chapters/03_nlif/03_04/two_comp_2d_frequency_sweep.pdf}%
 	\kern-158.06mm\includegraphics{media/chapters/03_nlif/03_04/two_comp_2d_frequency_sweep_overlay.pdf}
-	\caption[Decoding error for random multivariate current functions]{Decoding error for random multivariate current functions.
-	\NRMSE between random, two-dimensional current functions and the decoded approximation using different input-dependent nonlinearities. The error measurement does not take subthreshold currents into account, using the function $\mathcal{E}$ defined in \cref{eqn:decode_current_subthreshold}. The low-pass filter coefficient \slc is a proxy for the spatial frequency content in the target function (cf.~\Cref{sec:dendritic_computation_theory_numerical}). All points correspond to the median over \num{100} trials. Dashed lines show results for not taking the \gls{subrelax} into account when solving for weights. The black lines show the results for a linear, current-based \Hcur; blue/green lines show the results for the two-compartment conductance-based model  \Hcond with parameters given in \Cref{tbl:two_comp_model_parameters} (without noise). Orange lines correspond a current-based network with two-dimensional pre-neuron tuning (i.e., a two-layer neural network). Shaded areas correspond to the 25/75 percentile for the current-based models and the conductance-based model with $c_{12} = \SI{50}{\nano\siemens}$.
+	\caption[Two-compartment neuron decoding error for random multivariate current functions]{Decoding error for random multivariate current functions.
+	\NRMSE between random, two-dimensional current functions and the decoded approximation using different input-dependent nonlinearities; errors are based on the superthreshold error function $\mathcal{E}$ (eq.~\ref{eqn:decode_current_subthreshold}). The low-pass filter coefficient \slc is a proxy for the spatial frequency content in the target function (cf.~\Cref{sec:dendritic_computation_theory_numerical}). All points correspond to the median over \num{100} trials. Dashed lines show results for not taking the \gls{subrelax} into account when solving for weights.
+	Dotted lines are theoretical predictions from \Cref{fig:dendritic_computation_fourier_example_b}.	
+	The black lines show the results for a linear, current-based \Hcur; blue/green lines show the results for the two-compartment conductance-based model  \Hcond with parameters given in \Cref{tbl:two_comp_model_parameters} (without noise). Orange lines correspond a current-based network with two-dimensional pre-neuron tuning (i.e., a two-layer neural network). Shaded areas correspond to the 25/75 percentile for the current-based models and the conductance-based model with $c_{12} = \SI{50}{\nano\siemens}$.
 	}
 	\label{fig:two_comp_lif_frequency_sweep}
 \end{figure}
@@ -372,8 +374,8 @@ Overall, the results depicted in \Cref{fig:two_comp_lif_frequency_sweep} are sim
 In particular, the error curve for the \gls{twocomp} qualitatively resembles the multiplicative nonlinearity, although errors tend to be higher for \Hcond:
 the inflection point of the sigmoid is at $\slc \approx 0.7$ for the \twocomplif nonlinearity, and was at $\slc \approx 1$ for the multiplicative nonlinearity.
 
-Similarly to additive network in the basis-function experiment, the median error for \Hcur initially increases almost linearly on a log-log plot, starting from a $2.5\%$ error for low-frequency functions to an error of about $50\%$ for functions with \slc greater than one.
-\Gls{subrelax} reduces this error by up to $50\%$, but does not affect the overall shape of the curve.
+Similarly to additive network in the basis-function experiment (cf.~the dotted line labelled \enquote{additive baseline}), the median error for \Hcur initially increases almost linearly on a log-log plot, starting from a $2.5\%$ error for low-frequency functions to an error of about $50\%$ for functions with \slc greater than one.
+\Gls{subrelax} reduces this error by up to $50\%$.
 
 The error for the conductance-based \twocomplif nonlinearity initially increases sub-linearly on a log-log plot, starting at median errors of about $0.8\%$ for low-frequency functions.
 The maximum reduction in the median error compared to the standard-\LIF neuron is about $65\%$.
@@ -386,8 +388,8 @@ The large errors for \Hcur and \Hcond in regimes with $\slc > 0.5$ are likely du
 Functions with $\slc \geq 0.5$ may possess multiple maxima/minima over $[-1, 1]^2$ (cf.~\Cref{fig:2d_functions_overview}), akin to \XOR.
 Trying to approximate these functions using \Hcur or \Hcond thus leads to a large error.
 
-This observation also explains the difference in results between the multiplicative nonlinearity from the basis-function experiment and the two-compartment \LIF neuron---the multiplicative nonlinearity \emph{can} be used to solve the \XOR problem.
-Evidently, networks capable of approximating \XOR-like functions are, using our terminology form \Cref{sec:nlif_theory}, more \enquote{powerful} than those limited to conductance-based shunting.
+This observation explains the difference between the multiplicative nonlinearity from the basis-function experiment (see the \enquote{multiplicative baseline} in the above figure) and the two-compartment \LIF neuron---the multiplicative nonlinearity \emph{can} be used to solve the \XOR problem.
+Evidently, networks capable of approximating \XOR-like functions are, using our terminology form \Cref{sec:dendritic_computation_theory}, more \enquote{powerful} than those limited to conductance-based shunting.
 
 To summarise, this experiment demonstrates that the \twocomplif \gls{dennonlin} \Hcond substantially reduces the approximation error for $J_\rho$ with $\slc < 1$ compared to an additive network with nonlinearity \Hcur.
 The \gls{twocomp} is competitive with a two-layer network for $\slc < 0.5$ and reaches similar errors as the multiplicative nonlinearity.
@@ -412,7 +414,7 @@ All remaining neuron parameters can be found in \Cref{tbl:two_comp_neuron_parame
 
 \begin{figure}
 	\includegraphics{media/chapters/03_nlif/03_04/two_comp_network_spikes_example.pdf}
-	\caption[Single spiking neuron experiment showing computation of multiplication using a two-compartment LIF neuron]{Single spiking neuron experiment showing computation of multiplication using a \gls{twocomp}.
+	\caption[Computing nonnegative multiplication in a spiking neural network using two-compartment LIF neurons]{Computing nonnegative multiplication in a spiking neural network using two-compartment LIF neurons.
 	\textbf{(A)} \emph{Top two plots:} inputs $x_1(t)$ and $x_2(t)$ as represented by the two pre-populations. The input is a fourth order 2D Hilbert curve. \emph{Bottom:} mathematical target $f(x_1(t), x_2(t)) = (x_1(t) + 1) (x_2(t) + 1) / 4$, filtered target function, as well as the decoded target population output.
 	\textbf{(B)} Spike raster plots corresponding to the spiking activity of each of the populations (only half of the neurons are depicted). Red shaded background corresponds to inhibitory neurons in the pre-populations, all other neurons are excitatory.}
 	\label{fig:two_comp_lif_spiking_example}

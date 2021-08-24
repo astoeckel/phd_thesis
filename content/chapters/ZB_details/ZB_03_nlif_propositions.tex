@@ -8,7 +8,7 @@ In this section, we provide proofs for the claims made in \Cref{chp:nlif}, where
 \subsection{Proof of \Cref{thm:xor_general}}
 
 The theorem as stated above posits that there are always functions $f$ that cannot be approximated using an additive network with a fixed nonlinearity $\sigma$.
-We can prove this by constructing an $f$ that is constant along the sides of a rectangle, but takes on a different value inside.
+We can prove this by constructing an $f$ that is constant along the sides of a rectangle, but maps onto a different value on the inside.
 
 \ThmXorGeneral*
 
@@ -88,7 +88,7 @@ But, according to our assumption, it should also hold that
 However, since the values passed to $\sigma$ overlap in both cases, this is a contradiction. \Lightning
 \end{proof}
 
-\subsection{Discussion of of \Cref{thm:two_layer_universal}}
+\subsection{Discussion of \Cref{thm:two_layer_universal}}
 \label{app:thm_two_layer_universal}
 
 \begin{figure}
@@ -151,7 +151,7 @@ By Theorem~13.1.1 in \citet[Chapter~13]{godsil2001algebraic}, the multiplicity o
 Hence, the null-space of $\mat L$ is $\alpha \vec 1$.
 \end{proof}
 
-Given this Lemma, we can now show the original theorem.
+Equipped with this Lemma, we can now show the original theorem.
 
 \ThmNlifConvergence*
 

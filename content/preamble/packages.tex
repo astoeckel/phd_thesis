@@ -11,8 +11,10 @@
 \usepackage{multirow}
 \usepackage{rotating}
 \usepackage{nicematrix}
-\usepackage{algpseudocode}
-\usepackage[chapter]{algorithm}
+\usepackage{minted}
+\usepackage[ruled,vlined,linesnumbered,algochapter]{algorithm2e}
+\renewcommand\AlCapFnt{\sffamily\small\bfseries}
+\renewcommand\AlCapNameFnt{\sffamily\small}
 
 \usepackage{marvosym} % Lightning symbol
 
@@ -20,8 +22,19 @@
 \usepackage{thmtools}
 \usepackage{thm-restate}
 
+\newminted{python}{
+	python3,
+	fontsize=\small,
+	bgcolor=WhiteSmoke,
+    rulecolor=WhiteSmoke,
+    frame=single,
+    framesep=2.5pt,
+    xleftmargin=2.5pt,
+    xrightmargin=2.5pt,
+    tabsize=4,
+    style=srinivasa,
+}
 
-%\usepackage{imakeidx}
 
 \usepackage[toc,acronyms,symbols,nopostdot]{glossaries} % Glossary.
 \usepackage{glossaries-extra}
@@ -29,8 +42,6 @@
 \usepackage[labelfont={small,bf,sf},textfont={small,sf}]{caption}
 \DeclareCaptionStyle{ruled}{labelfont={small,bf,sf},textfont={small,sf}}
 \usepackage{subcaption}
-
-\usepackage[a-1b]{pdfx}
 
 % Setup Bibtex
 
@@ -85,10 +96,10 @@
     pdfborder={0 0 0},
     plainpages=false,
     unicode=true,
-%    colorlinks=false,
-    colorlinks=true,
-    allcolors=linkPink,
-    citecolor=linkGreen
+    colorlinks=false,
+%    colorlinks=true,
+%    allcolors=linkPink,
+%    citecolor=linkGreen
 }
 \usepackage{cleveref}
 \renewcommand\thesubfigure{\Alph{subfigure}}

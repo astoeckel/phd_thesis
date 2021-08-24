@@ -3,27 +3,30 @@
 % TODO: Add Koch & Softky reference regarding synaptic saturation later in the chapter
 
 As we saw in the previous chapter, neurons possess intricately detailed dendritic trees (cf.~\Cref{fig:neuron_sketches}).
-While the development of these trees can to some degree be modelled as a stochastic process \citep[e.g.,][]{nowakowski1992competitive}, dendrites are not merely a means to establishing random connectivity.
-Dendritic growth is guided by multiple extrinsic signals, including the activities of neighbouring neurons \citep{mcallister2000cellular}.
-This suggests that dendritic structures are fine-tuned to fulfil a certain computational function.
+While the growth of these structures can to some degree be modelled by stochastic processes \citep[e.g.,][]{nowakowski1992competitive}, dendrites are not merely a means to establishing random connectivity.
+Dendritic development is guided by several extrinsic signals, including the activities of neighbouring neurons \citep{mcallister2000cellular}.
+This suggests that dendries are fine-tuned to fulfil a certain computational function.
 
-Indeed, both theoretical and empirical studies demonstrate that the location of synaptic sites within the dendrites has a significant influence on neural computation \citep{mel1994information,koch2002singlecell,polsky2004computational}.
-Still, there is no widely accepted high-level theory of dendritic computation \citep{london2005dendritic}, that is, for example, on a similar level of abstraction as the admirably successful LIF neuron.
+Indeed, both theoretical and empirical studies imply that the location of synaptic sites within the dendrites has a significant impact on neural computation \citep{mel1994information,koch2002singlecell,polsky2004computational}.
+Still, there is no widely accepted high-level theory of dendritic computation \citep{london2005dendritic}, that would, for example, be on a similar level of abstraction as the admirably successful LIF neuron.
 
-One reason why finding an overarching theory of dendritic computation is difficult, is the heterogeneity of biophysical mechanisms and proposed function.
+Finding such an overarching theory of dendritic computation is difficult due to the sheer complexity of the nonlinear dynamical systems formed by active dendritic structures \citep{beniaguev2021single}.
+This may sometimes lead to seemingly contradictory observations.
 For example, the distance between a synaptic event and the soma determines the strength of the somatic post-synaptic potential---this is a direct result of the passive cable properties of a neuron (cf.~\Cref{sec:comp}).
-In fact, distal spikes in isolation do not substantially influence the somatic membrane potential \citep{stuart1998determinants}.%
-\footnote{Interestingly, as explored by \citet{stuart1998determinants}, this attenuation is less of a result of longitudinal resistance, but of leak (or \enquote{resting}) channels distributed nonuniformly throughout the dendritic cell membrane.}
-Surprisingly, under some circumstances, dendrites with active Hodgkin-Huxley-like cell membranes (cf.~\Cref{sec:neural_dynamics}) can negate the effects of distance-dependent attenuation \citep{koch2002singlecell}.
-Coincident input may trigger dendritic action-potentials, which in turn drive the somatic membrane potential \citep{williams2002dependence}.
+In fact, isolated distal spikes hardly influence the somatic membrane potential \citep{stuart1998determinants}.
+%\footnote{Interestingly, as explored by \citet{stuart1998determinants}, this attenuation is less of a result of longitudinal resistance, but of leak (or \enquote{resting}) channels being distributed nonuniformly throughout the dendritic cell membrane.}
+However, some dendrites with active Hodgkin-Huxley-like cell membranes (cf.~\Cref{sec:neural_dynamics}) negate the effects of distance-dependent attenuation \citep{koch2002singlecell}.
+Coincident distal input may trigger dendritic action-potentials that in turn strongly influence the soma \citep{williams2002dependence}.
 
-Early theoretical studies suggest that the passive properties of the dendrites can be exploited to implement arbitrary logic by mapping \enquote{and-not} expressions onto dendritic branches \citep{koch1983nonlinear,mel1994information,london2005dendritic}.
-Unfortunately, these considerations rely on the empirically not well-supported concept of \enquote{shunting inhibition} (cf.~\Cref{sec:two_comp_synaptic_weights}; \cite{holt1997shunting,abbott2005drivers}).
+\subsubsection{Hypothesised dendritic function}
+Early theoretical studies suggest that the passive properties of the dendrites can be exploited to implement arbitrary logic.
+This is accomplished by mapping \enquote{and-not} expressions onto dendritic branches \citep{koch1983nonlinear,mel1994information,london2005dendritic}.
+Unfortunately, this relies on the empirically not well-supported concept of \enquote{shunting inhibition} (cf.~\Cref{sec:two_comp_synaptic_weights}; \cite{holt1997shunting,abbott2005drivers}).
 
 More recent investigations into the theoretical properties of dendritic trees tend to take the active properties of dendritic compartments into account.
-For example, \citet{poirazi2003pyramidal} suggest that the dendritic tree of cortical pyramidal is equivalent to a two-layer network of artificial neurons.
-This implies that artificial models of cortical circuits require at least twice as many neuron layers as the biological circuitry.
-Interestingly, this is consistent with findings of studies comparing deep neural networks to cerebral cortex \citep[e.g.,][]{guclu2015deep}.
+For example, \citet{poirazi2003pyramidal} argue that the dendritic tree of cortical pyramidal is equivalent to a two-layer network of artificial neurons.
+This implies that artificial models of cortical circuits require at least twice as many neuron layers as the biological circuitry, and is consistent with comparisons between deep neural networks and cerebral cortex \citep[e.g.,][]{guclu2015deep}.
+Taking dynamics into account, \citet{beniaguev2021single} even claim that a single cortical neuron is equivalent to a five-layer temporal convolutional neural network.
 
 Dendritic structures have also been found to play a significant role in learning.
 One of the most prominent examples of this are the Purkinje cells in the cerebellum, where basal input is believed to trigger synaptic plasticity \citep{fujita1982adaptive,ito2010cerebellar}.
@@ -31,23 +34,22 @@ Similar mechanisms have been proposed as a learning mechanism in cortical pyrami
 
 \subsubsection{Goal of this chapter}
 Compared to the complex mechanisms discussed in many of the studies listed above, the goal of this chapter is decidedly modest.
-In particular, we would like to incorporate the simplest possible model of dendritic computation into the NEF.
-By \enquote{simple} we mean that our model should be as mathematically tractable as possible, while still being systematically exploitable as a computational resource.
-Specifically, we harness the dynamics of the dendritic tree for computation, with a particular focus on divisive shunting in \glspl{twocomp}.
-Correspondingly, integrating this model into the NEF facilitates connecting low-level dendritic effects to high-level function.
+In fact, we would like to incorporate the \emph{simplest possible} model of dendritic computation into the NEF.
+By \enquote{simple} we mean that our model should be as mathematically tractable as possible, while still being exploitable as a computational resource.
+Correspondingly, our work provides a baseline for the computational power of fundamental mechanisms found in all biological neurons and allows modellers to meaningfully connect this low-level biological detail to high-level function.
 
 Crucially, we do \emph{not} include active effects such as dendritic spikes in our model.
 Instead, we investigate in how far passive nonlinear interaction between different dendritic compartments can provide a substantial computational advantage over standard LIF neurons.
-This results in a more conservative estimate of the computational power of dendritic trees compared to the two-layer networks proposed by \citet{poirazi2003pyramidal}.
+This results in a more conservative estimate of the computational power of dendritic trees compared to the two- and five-layer networks proposed by \citet{poirazi2003pyramidal,beniaguev2021single}.
 While scientific interest in passive dendritic effects has waned over the past two decades, we think that our work approaches this topic from a new angle, and, importantly, produces results that are compatible with the aforementioned empirical observations regarding shunting inhibition.
 Furthermore, as demanded by \citet{london2005dendritic}, we demonstrate that our theoretical results hold up in noisy spiking networks with low firing rates and few neurons.
 
 There are two primary reasons why we think that integrating dendritic computation into the NEF is important.
-First, the presence of dendritic structures suggests that individual neurons are computationally more powerful than we typically assume in the NEF.
-This may be misleading when using the NEF as a litmus test for exploring whether a certain model could at all be implemented in a biological network (cf.~\Cref{sec:nef_purpose}).
-One example of this, and a recurring theme in this chapter, is the matter of computing non-negative multiplication, also referred to as \enquote{gain modulation} \citep{salinas2000gain}.
+First, the presence of dendritic structures suggests that individual neurons are computationally more powerful than typically assumed in the NEF.
+This may be misleading when using the NEF as a litmus test for exploring whether a certain high-level function could at all be implemented in a biological network (cf.~\Cref{sec:nef_purpose}).
+One example of this, and a recurring theme in this chapter, is the matter of computing nonnegative multiplication, also referred to as \enquote{gain modulation} \citep{salinas2000gain}.
 This function can only be computed in the standard NEF if the multiplicands are represented in a common pre-population \citep[Section~6.3]{eliasmith2003neural}.
-However, we know that certain circuits in the brain, such layer six in visual cortex, act as gain-control mechanisms that likely do not rely on common representations \citep{olsen2012gain,bobier2014unifying}.
+However, we know that certain circuits in the brain, such layer six in visual cortex, act as gain-control mechanisms that do not rely on common representations \citep{olsen2012gain,bobier2014unifying}.
 
 Second, accounting for dendritic computation may be of interest for neuromorphic computing.
 This is particular true for mixed-signal neuromorphic hardware systems, where individual neurons are analogue model circuits, and communication infrastructure between neurons is digital.
@@ -66,26 +68,27 @@ Similar techniques have been pursued in the context of the FORCE and EBN framewo
 
 Another line of research related to ours is integrating detailed multi-compartment neuron models into NEF networks.
 \Citet{eliasmith2016biospaun} demonstrate that it is possible to replace portions of the SPAUN model \citep{eliasmith2012largescale} with detailed multi-compartment neurons, while mostly retaining the performance of the model. Similarly, \citet{duggins2017incorporating} presents techniques for integrating detailed neurons into NEF networks.
-Our goal is less to demonstrate that it is possible to construct more detailed NEF models, but that accounting for this detail can be advantageous with respect to high-level function.
+Our goal is less to demonstrate that such detailed neurons can be used in NEF models, but that accounting for this detail can be advantageous with respect to high-level function.
 
 \subsubsection{Structure of this chapter}
-In \Cref{sec:dendritic_computation_theory}, we define the concept of \enquote{dendritic computation} in a theoretical context.
+In \Cref{sec:dendritic_computation_theory}, we define the concept of \enquote{dendritic computation} in a theoretical function approximation context.
 Specifically, we treat different synaptic sites in the dendritic structure as separate \enquote{input channels}, resulting in a multivariate neural nonlinearity.
-We compare the computational power of such multi-channel neurons to that of multi-layer neural networks and single-channel neurons, both theoretically, and in numerical experiments.
+We find that such multi-channel neurons are not universal function approximators, but can potentially outperform two-layer networks in real-world scenarios.
 
-Next, in \Cref{sec:nef_extension}, we extend the NEF to support multi-channel neurons.
+Next, in \Cref{sec:nef_extension}, we extend the NEF to support biologically plausible multi-channel neurons.
 To this end, we first generalise the weight-optimisation problem to act in current space (resulting in full weight matrices $\mat W$) instead of representational space (resulting in decoders $\mat D$).
 We furthermore discuss solving for non-negative weights, as is required for conductance-based channels in more realistic neuron models, and introduce \enquote{\gls{subrelax}}, a method for de-emphasising subthreshold target currents and improving superthreshold accuracy.
 
-We continue by formally defining $n$-LIF neurons, a family of $n$-compartment LIF neurons in \Cref{sec:nlif}.
-We are able to derive a closed-form expression for the average current flowing into the somatic compartment.
-Further theoretical analysis of this expression yields simple rules according to which input channels interact nonlinearly, via shunting, or linearly.
+We continue in \Cref{sec:nlif} by formally defining \nlif neurons, a family of $n$-compartment LIF neurons.
+We to derive an approximate closed-form expression for the average current flowing into the somatic compartment.
+Further theoretical analysis of this expression yields rules according to which input channels interact divisively, multiplicatively, or linearly.
 
-Subsequently, in \Cref{sec:two_comp_lif}, we apply these theoretical insights to the simplest non-trivial $n$-LIF neuron, the \gls{twocomp}.
+Subsequently, in \Cref{sec:two_comp_lif}, we apply these theoretical insights to the simplest non-trivial \nlif neuron, the \gls{twocomp}.
 We derive a convex optimisation problem that allows us to solve for near-optimal synaptic weights and show that we can exploit this neuron model to compute a wide range of functions at similar or lower errors than two-layer spiking neural networks.
 
-Finally, in Section~3.5, we discuss a general weight-solving method for $n$-LIF neurons.
-While we cannot guarantee that the resulting weights are globally optimal, our method typically converges to a local optimum within a few iterations.
+Finally, in Section~3.5, we discuss a general weight-solving method for \nlif neurons.
+While we cannot guarantee that the resulting weights are globally optimal, our method typically converges within a few iterations.
 We show that we can use this method to systematically solve for weights to compute functions such as XOR with a single neuron.
 
 We close with a discussion of our results in \Cref{sec:nlif_discussion}.
+An overview of the software libraries developed to perform the experiments presented here is given in \Cref{app:software}.
