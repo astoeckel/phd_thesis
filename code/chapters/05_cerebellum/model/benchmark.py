@@ -1,6 +1,24 @@
-#!/usr/bin/env python3
+#   Code for the PhD Thesis
+#   "Harnessing Neural Dynamics as a Computational Resource: Building Blocks
+#   for Computational Neuroscience and Artificial Agents"
+#   Copyright (C) 2021  Andreas Stöckel
+#
+#   This program is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation, either version 3 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-# Nengo Cerebellum Test Code; Andreas Stöckel, Terry Stewart; 2020
+import os, sys
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'lib'))
+import env_guard
 
 import numpy as np
 import nengo
@@ -301,6 +319,7 @@ def build_test_network(input_descr,
 
 def build_and_run_test_network(input_descr,
                                T=10.0,
+                               dirname="out",
                                record_weights=False,
                                probe_granule_decoded=False,
                                probe_spatial_data=False,
@@ -337,7 +356,7 @@ def build_and_run_test_network(input_descr,
         # Generate a unique filename for these parameters
         m = hashlib.sha256()
         m.update(json.dumps(params).encode('utf-8'))
-        fn = "out/weights/weights_" + m.hexdigest()[:8] + ".h5"
+        fn = os.path.join(dirname, "weights", "weights_" + m.hexdigest()[:8] + ".h5")
 
         # Create the target directory
         os.makedirs(os.path.dirname(fn), exist_ok=True)
@@ -419,7 +438,7 @@ def _run_benchmark_callback(p):
     import warnings
 
     # Fetch the experiment parameters
-    idx, seed, delays, kwargs = p
+    idx, seed, delays, dirname, kwargs = p
 
     # Create a RandomState instance
     rng = np.random.RandomState(seed)
@@ -432,6 +451,7 @@ def _run_benchmark_callback(p):
     with warnings.catch_warnings():  # Silence the decoder cache UserWarning
         warnings.filterwarnings("ignore", category=UserWarning)
         ts, xs, As, theta = build_and_run_test_network(rng=rng,
+                                                       dirname=dirname,
                                                        **kwargs)
         E = benchmark_delay_network_delay(xs=xs,
                                           As=As,
@@ -487,6 +507,7 @@ def sweep(name, n, cback, sweep=None):
 def run_benchmark(sweep,
                   n_repeat,
                   n_delays,
+                  dirname="out",
                   filename_prefix="nengo_cerebellum",
                   seed=45781,
                   randomize_all=False,
@@ -508,7 +529,6 @@ def run_benchmark(sweep,
     """
     import os, json, datetime, multiprocessing
     import h5py # Use h5 for storing files
-    from nengo_bio.internal.env_guard import EnvGuard
     from tqdm import tqdm
 
     # Create the sweep over the delays and the random inputs
@@ -521,13 +541,12 @@ def run_benchmark(sweep,
             local_seed = seed + j
             if randomize_all:
                 local_seed += i * n_repeat
-            params.append([(i, j), local_seed, delays, sweep[i]])
+            params.append([(i, j), local_seed, delays, dirname, sweep[i]])
 
     # Create the target h5 file that will store both the execution results and
     # the parameters.
-    os.makedirs('out', exist_ok=True)
-    filename = ("out/" + filename_prefix + "_" + 
-                datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S") + ".h5")
+    os.makedirs(dirname, exist_ok=True)
+    filename = os.path.join(dirname, filename_prefix + ".h5")
     with h5py.File(filename, "w") as f:
         # Create the errors dataset
         dims = (len(sweep), n_delays, 2, n_repeat)
@@ -539,15 +558,9 @@ def run_benchmark(sweep,
         # Disable multithreading; we're already launching multiple processes
         # for inter-task parallelism, which is far more efficient than
         # intra-task parallelism
-        with EnvGuard({
-                "OMP_NUM_THREADS": "1",
-                "OPENBLAS_NUM_THREADS": "1",
-                "MKL_NUM_THREADS": "1",
-                "NUMEXPR_NUM_THREADS": "1",
-        }) as env:
+        with env_guard.SingleThreadEnvGuard():
             # Run the simulation with "concurrency" threads
-            ctx = multiprocessing.get_context("spawn")
-            with ctx.Pool(concurrency) as pool:
+            with multiprocessing.get_context("spawn").Pool(concurrency) as pool:
                 for idcs, err in tqdm(pool.imap_unordered(_run_benchmark_callback,
                                                           params),
                                       total=len(params)):
@@ -556,10 +569,4 @@ def run_benchmark(sweep,
     # Return the name of the file the results were saved to
     return filename
 
-
-
-if __name__ == "__main__":
-    run_benchmark()
-
-#    print(ts.shape, xs.shape, As.shape)
 
