@@ -231,7 +231,8 @@ def main():
                     "gs", "-o", target, "-dEmbedAllFonts=true",
                     "-dSubsetFonts=true", "-dCompressFonts=true",
                     "-dPDFSETTINGS=/prepress", '-dDoThumbnails=false',
-                    "-sDEVICE=pdfwrite", f"-dDEVICEWIDTHPOINTS={x1 - x0}",
+                    "-sDEVICE=pdfwrite", "-dCompatibilityLevel=1.5",
+                    f"-dDEVICEWIDTHPOINTS={x1 - x0}",
                     f"-dDEVICEHEIGHTPOINTS={y1 - y0}", "-dFIXEDMEDIA", "-c",
                     f"<</PageOffset [-{x0} -{y0}]>>setpagedevice", "-f",
                     target_large
