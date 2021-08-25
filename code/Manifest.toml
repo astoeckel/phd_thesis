@@ -286,6 +286,33 @@ runs = [
 ]
 is_multithreaded = true
 
+["chapters/05_cerebellum/generate_cerebellum_detailed_neurons_example.py"]
+commit = "703545981eb0ffbe47f478d0400200a0755eceaa"
+dockerfile = "experiments_base"
+generates = "cerebellum_detailed_neurons_example.h5"
+is_multithreaded = true
+
+["chapters/05_cerebellum/generate_benchmark_data.py"]
+commit = "8e5d2a0dc30a88c3b6911d3e866f9b660ec09422"
+dockerfile = "experiments_base"
+is_multithreaded = true
+generates = [
+	"weights.tar",
+	"pl_direct.h5",
+	"pl_single_population.h5",
+	"pl_two_populations_dales_principle_detailed.h5",
+	"pl_two_populations_dales_principle.h5",
+	"pl_two_populations.h5",
+	"sweep_n_golgi_granule_convergence_wn_two_populations_dales_principle_detailed.h5",
+	"sweep_n_pcn_granule_convergence_wn_two_populations_dales_principle_detailed.h5",
+	"sweep_tau_wn_two_populations_dales_principle_detailed.h5",
+	"wn_direct.h5",
+	"wn_single_population.h5",
+	"wn_two_populations_dales_principle_detailed.h5",
+	"wn_two_populations_dales_principle.h5",
+	"wn_two_populations.h5"
+]
+
 ["chapters/ZC_data/two_comp_benchmark_functions_regularisation_filter_sweep.py"]
 commit = "e68c291667996e632acd61452f38f73af971727b"
 dockerfile = "experiments_base"
