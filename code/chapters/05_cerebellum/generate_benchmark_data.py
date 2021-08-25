@@ -61,7 +61,7 @@ def get_benchmark_params_single(**kwargs):
     return {
         "dirname": DIRNAME,
         "sweep": get_benchmark_sweep(**kwargs),
-        "n_repeat": 1,
+        "n_repeat": 100,
         "n_delays": 21,
         "concurrency": None,
         "randomize_all": False,
