@@ -30,7 +30,7 @@ data_dir = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data')
 
 for i in range(6):
     BlinkTrial().run(
-         n_trials=500
+         n_trials=500,
          seed=3924 + i,
          learning_rate=0.00018,
          tau=60e-3,
@@ -44,7 +44,7 @@ for i in range(6):
          n_granule_golgi_convergence=100,
          n_golgi_granule_convergence=5,
          n_golgi_golgi_convergence=100,
-         n_granule=10000
+         n_granule=10000,
          n_golgi=100,
          q=6,
          theta=0.4,
