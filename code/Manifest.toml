@@ -313,6 +313,19 @@ generates = [
 	"wn_two_populations.h5"
 ]
 
+["chapters/05_cerebellum/generate_blink_trial_data.py"]
+commit = "f9d929f22dfa2c972c7cb3a84c28842dee804c87"
+dockerfile = "experiments_base"
+generates = [
+	"blink_trial_0.npz",
+	"blink_trial_1.npz",
+	"blink_trial_2.npz",
+	"blink_trial_3.npz",
+	"blink_trial_4.npz",
+	"blink_trial_5.npz",
+]
+is_multithreaded = true
+
 ["chapters/ZC_data/two_comp_benchmark_functions_regularisation_filter_sweep.py"]
 commit = "e68c291667996e632acd61452f38f73af971727b"
 dockerfile = "experiments_base"
