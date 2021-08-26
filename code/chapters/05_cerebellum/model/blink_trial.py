@@ -17,7 +17,7 @@ import scipy.stats
 
 def 𐌈(**kwargs):
     return kwargs
-g
+
 class EyeblinkReflex(nengo.Process):
     """
     This class implements the trajectory generation for the agonist and
