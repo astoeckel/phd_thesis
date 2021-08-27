@@ -293,7 +293,7 @@ generates = "cerebellum_detailed_neurons_example.h5"
 is_multithreaded = true
 
 ["chapters/05_cerebellum/generate_benchmark_data.py"]
-commit = "8e5d2a0dc30a88c3b6911d3e866f9b660ec09422"
+commit = "c6b612deea9a83bb1e70759c8938c1e9e71e4a9d"
 dockerfile = "experiments_base"
 is_multithreaded = true
 generates = [
