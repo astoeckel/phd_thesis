@@ -96,7 +96,7 @@ detailed_kwargs = 𐌈(
 
 print("Running pulse input experiment...")
 np.random.seed(4192)
-res1 = benchmark.build_and_run_test_network(benchmark.pulse_input(0.5, 0.5),
+res1 = benchmark.build_and_run_test_network(benchmark.pulse_input(0.3, 0.1),
                                             T=T,
                                             probe_granule_decoded=True,
                                             **detailed_kwargs)
