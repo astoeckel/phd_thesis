@@ -82,6 +82,7 @@ def 𐌈(**kwargs):
 
 detailed_kwargs = 𐌈(
     mode="two_populations_dales_principle",
+    bias_mode="realistic_pcn_intercepts",
     use_spatial_constraints=True,
     n_pcn_golgi_convergence=100,
     n_pcn_granule_convergence=5,
@@ -90,6 +91,7 @@ detailed_kwargs = 𐌈(
     n_golgi_golgi_convergence=100,
     n_granule=10000,
     n_golgi=100,
+    pcn_max_rates=(25, 50),
 )
 
 print("Running pulse input experiment...")
