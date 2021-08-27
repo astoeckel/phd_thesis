@@ -61,7 +61,7 @@ def get_benchmark_params_single(**kwargs):
     return {
         "dirname": DIRNAME,
         "sweep": get_benchmark_sweep(**kwargs),
-        "n_repeat": 100,
+        "n_repeat": 10,
         "n_delays": 21,
         "concurrency": None,
         "randomize_all": False,
@@ -134,11 +134,11 @@ def run_benchmark_suite(mode, filename_prefix=None, **kwargs):
 
 if __name__ == "__main__":
     default_kwargs = 𐌈(
-            bias_mode="jbias_uniform_pcn_intercepts",
+            bias_mode="uniform_pcn_intercepts",
     )
 
     detailed_kwargs = 𐌈(
-            bias_mode="jbias_very_realistic_pcn_intercepts",
+            bias_mode="very_realistic_pcn_intercepts",
             use_spatial_constraints=True,
             n_pcn_golgi_convergence=100,
             n_pcn_granule_convergence=5,
@@ -150,31 +150,31 @@ if __name__ == "__main__":
             pcn_max_rates=(50, 120),
     )
 
-    run_benchmark_suite(
-            mode="direct",
-            **default_kwargs,
-    )
+#    run_benchmark_suite(
+#            mode="direct",
+#            **default_kwargs,
+#    )
 
-    run_benchmark_suite(
-            mode="single_population",
-            **default_kwargs,
-    )
+#    run_benchmark_suite(
+#            mode="single_population",
+#            **default_kwargs,
+#    )
 
-    run_benchmark_suite(
-            mode="two_populations",
-            **default_kwargs,
-    )
-
-    run_benchmark_suite(
-            mode="two_populations_dales_principle",
-            **default_kwargs,
-    )
+#    run_benchmark_suite(
+#            mode="two_populations",
+#            **default_kwargs,
+#    )
 
     run_benchmark_suite(
             mode="two_populations_dales_principle",
-            filename_prefix="detailed",
-            **detailed_kwargs
+            **default_kwargs,
     )
+
+#    run_benchmark_suite(
+#            mode="two_populations_dales_principle",
+#            filename_prefix="detailed",
+#            **detailed_kwargs
+#    )
 
     # Pack all recorded weights into a single tar file
     import subprocess
