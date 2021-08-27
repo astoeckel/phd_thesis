@@ -182,3 +182,6 @@ if __name__ == "__main__":
     os.chdir(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data'))
     subprocess.run(["tar", "-cf", 'weights.tar', 'weights'])
 
+    # Remove the weights directory
+    import shutil
+    shutil.rmtree('weights')
