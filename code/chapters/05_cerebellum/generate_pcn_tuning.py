@@ -39,7 +39,7 @@ def measure_granule_epscs(seed, bias_mode, T, n_granule=10000):
         probe_pcn_spikes=True,
         mode='two_populations_dales_principle',
         bias_mode=bias_mode,
-        pcn_max_rates=(25, 50),
+        pcn_max_rates=(25, 75),
         bias_mode_golgi=bio.JBias,
         tau=60e-3,
         use_spatial_constraints=True,
@@ -80,7 +80,7 @@ def measure_granule_epscs(seed, bias_mode, T, n_granule=10000):
     }
 
 
-data = measure_granule_epscs(12397, "realistic_pcn_intercepts", 10.0)
+data = measure_granule_epscs(12397, "jbias_realistic_pcn_intercepts", 10.0)
 fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data', 'granule_pcn_tuning.npz')
 np.savez(fn, **data)
 

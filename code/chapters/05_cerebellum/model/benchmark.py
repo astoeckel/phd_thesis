@@ -264,7 +264,7 @@ def build_test_network(input_descr,
                 bio_bias_mode = bio.Decode
 
         if pcn_max_rates is None:
-            pcn_max_rates = nengo.dists.Uniform(25, 50)
+            pcn_max_rates = nengo.dists.Uniform(25, 75)
         else:
             pcn_max_rates = nengo.dists.Uniform(*pcn_max_rates)
 
