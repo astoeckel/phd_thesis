@@ -287,13 +287,13 @@ runs = [
 is_multithreaded = true
 
 ["chapters/05_cerebellum/generate_cerebellum_detailed_neurons_example.py"]
-commit = "703545981eb0ffbe47f478d0400200a0755eceaa"
+commit = "2f9f0f31a9469ab983000fdbb53c89e619949b0e"
 dockerfile = "experiments_base"
 generates = "cerebellum_detailed_neurons_example.h5"
 is_multithreaded = true
 
 ["chapters/05_cerebellum/generate_benchmark_data.py"]
-commit = "c6b612deea9a83bb1e70759c8938c1e9e71e4a9d"
+commit = "2f9f0f31a9469ab983000fdbb53c89e619949b0e"
 dockerfile = "experiments_base"
 is_multithreaded = true
 generates = [
@@ -314,7 +314,7 @@ generates = [
 ]
 
 ["chapters/05_cerebellum/generate_blink_trial_data.py"]
-commit = "c6b612deea9a83bb1e70759c8938c1e9e71e4a9d"
+commit = "2f9f0f31a9469ab983000fdbb53c89e619949b0e"
 dockerfile = "experiments_base"
 generates = [
 	"blink_trial_0.npz",
@@ -324,6 +324,12 @@ generates = [
 	"blink_trial_4.npz",
 	"blink_trial_5.npz",
 ]
+is_multithreaded = true
+
+["chapters/05_cerebellum/generate_pcn_tuning.py"]
+commit = "2f9f0f31a9469ab983000fdbb53c89e619949b0e"
+dockerfile = "experiments_base"
+generates = "granule_pcn_tuning.npz"
 is_multithreaded = true
 
 ["chapters/ZC_data/two_comp_benchmark_functions_regularisation_filter_sweep.py"]
