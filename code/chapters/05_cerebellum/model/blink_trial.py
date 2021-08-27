@@ -187,9 +187,9 @@ class BlinkTrial(pytry.PlotTrial):
         self.param('n_granule', n_granule=net.n_granule)
         self.param('n_golgi', n_golgi=net.n_golgi)
         self.param('n_pcn', n_pcn=100)
-        self.param('pcn_max_rates_lower', pcn_max_rates_lower=50)
-        self.param('pcn_max_rates_upper', pcn_max_rates_upper=120)
-        self.param('bias_mode', bias_mode="very_realistic_pcn_intercepts")
+        self.param('pcn_max_rates_lower', pcn_max_rates_lower=25)
+        self.param('pcn_max_rates_upper', pcn_max_rates_upper=50)
+        self.param('bias_mode', bias_mode="realistic_pcn_intercepts")
 
 
     def evaluate(self, p, plt):
