@@ -61,7 +61,7 @@ def get_benchmark_params_single(**kwargs):
     return {
         "dirname": DIRNAME,
         "sweep": get_benchmark_sweep(**kwargs),
-        "n_repeat": 10,
+        "n_repeat": 100,
         "n_delays": 21,
         "concurrency": None,
         "randomize_all": False,
@@ -150,31 +150,31 @@ if __name__ == "__main__":
             pcn_max_rates=(50, 120),
     )
 
-#    run_benchmark_suite(
-#            mode="direct",
-#            **default_kwargs,
-#    )
+    run_benchmark_suite(
+            mode="direct",
+            **default_kwargs,
+    )
 
-#    run_benchmark_suite(
-#            mode="single_population",
-#            **default_kwargs,
-#    )
+    run_benchmark_suite(
+            mode="single_population",
+            **default_kwargs,
+    )
 
-#    run_benchmark_suite(
-#            mode="two_populations",
-#            **default_kwargs,
-#    )
+    run_benchmark_suite(
+            mode="two_populations",
+            **default_kwargs,
+    )
 
     run_benchmark_suite(
             mode="two_populations_dales_principle",
             **default_kwargs,
     )
 
-#    run_benchmark_suite(
-#            mode="two_populations_dales_principle",
-#            filename_prefix="detailed",
-#            **detailed_kwargs
-#    )
+    run_benchmark_suite(
+            mode="two_populations_dales_principle",
+            filename_prefix="detailed",
+            **detailed_kwargs
+    )
 
     # Pack all recorded weights into a single tar file
     import subprocess
