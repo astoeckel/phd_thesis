@@ -314,7 +314,7 @@ generates = [
 ]
 
 ["chapters/05_cerebellum/generate_blink_trial_data.py"]
-commit = "fb320ed663281d79d265ac512c80dc9b35c18bac"
+commit = "e239d71fe6071f69f98a661f6d8e66cd19012c16"
 dockerfile = "experiments_base"
 generates = [
 	"blink_trial_0.npz",
