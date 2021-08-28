@@ -32,7 +32,7 @@ for i in range(6):
     BlinkTrial().run(
          n_trials=500,
          seed=3924 + i,
-         learning_rate=0.0009,
+         learning_rate=0.00045,
          tau=60e-3,
          tau_error=0.1,
          tau_pre=75e-3,
