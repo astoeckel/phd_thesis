@@ -314,7 +314,7 @@ generates = [
 ]
 
 ["chapters/05_cerebellum/generate_blink_trial_data.py"]
-commit = "e239d71fe6071f69f98a661f6d8e66cd19012c16"
+commit = "b85acc6e6bf63bd3ba0bbd7bc37d1f4e8394bf6c"
 dockerfile = "experiments_base"
 generates = [
 	"blink_trial_0.npz",
@@ -330,6 +330,19 @@ is_multithreaded = true
 commit = "fb320ed663281d79d265ac512c80dc9b35c18bac"
 dockerfile = "experiments_base"
 generates = "granule_pcn_tuning.npz"
+is_multithreaded = true
+
+["chapters/05_cerebellum/generate_temporal_basis_data.py"]
+commit = "b85acc6e6bf63bd3ba0bbd7bc37d1f4e8394bf6c"
+dockerfile = "experiments_base"
+generates = [
+	"temporal_basis_direct.npz",
+	"temporal_basis_single_population.npz",
+	"temporal_basis_two_populations.npz",
+	"temporal_basis_two_populations_dales_principle.npz",
+	"temporal_basis_two_populations_dales_principle_detailed.npz",
+	"temporal_basis_two_populations_dales_principle_detailed_no_jbias.npz",
+]
 is_multithreaded = true
 
 ["chapters/ZC_data/two_comp_benchmark_functions_regularisation_filter_sweep.py"]
