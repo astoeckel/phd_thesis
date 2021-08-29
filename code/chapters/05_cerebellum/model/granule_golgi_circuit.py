@@ -49,13 +49,12 @@ def _make_control_lti(tau, q):
     try:
         rng = np.random.RandomState(np.random.randint(48919))
         taus = np.logspace(-2, -0.5, q)
-        A = -1.0 * np.diag(1.0 / taus)
-        B = 1.0 / taus
 
         C = rng.randn(q, q)
-        _, V = np.linalg.eig(C.T + C)
-        A = V @ A @ V.T
-        B = V @ B
+        L, V = np.linalg.eig(C)
+        L = -5.0 * (np.abs(np.real(L)) + np.imag(L) * 1.0j)
+        A = V @ np.diag(L) @ np.linalg.inv(V)
+        B = (-1) ** np.arange(q)
 
         S = np.diag(np.minimum(1.0, np.abs(1.0 / np.linalg.solve(-A, B))))
         A = S @ A @ np.linalg.inv(S)
