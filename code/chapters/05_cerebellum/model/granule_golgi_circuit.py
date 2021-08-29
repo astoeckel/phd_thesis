@@ -58,7 +58,7 @@ def _make_control_lti(tau, q):
         try:
             C = np.eye(q) #rng.randn(q, q)
             print("(1c1)")
-            L, V = np.linalg.eig(C)
+            L, V = np.linalg.eigh(C)
             print("(1c2)")
             L = -5.0 * (np.abs(np.real(L)) + np.imag(L) * 1.0j)
             print("(1c3)")
