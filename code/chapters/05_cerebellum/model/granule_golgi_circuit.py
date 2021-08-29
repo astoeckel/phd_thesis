@@ -201,11 +201,13 @@ class GranuleGolgiCircuit(nengo.Network):
             self.ens_granule = Ensemble(**kwargs_granule)
 
             # Compute the Delay Network coefficients
+            print("(1)")
             if self.use_control_lti:
                 AH, BH = _make_control_lti(self.tau, self.q)
             else:
                 AH, BH = _make_nef_lti(
                     self.tau, *_make_delay_network(q=self.q, theta=self.theta))
+            print("(2)")
 
             # Make the recurrent connections
             if use_nengo_bio:
