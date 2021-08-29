@@ -65,8 +65,7 @@ def _make_control_lti(tau, q):
                 print("A", V)
                 print("B", L)
                 print("C", V @ np.diag(L))
-                for i in range(1000):
-                    print("!")
+                import pdb; pdb.set_trace()
                 print("D", np.linalg.inv(V))
                 A = V @ np.diag(L) @ np.linalg.inv(V)
                 print("(1c4)")
