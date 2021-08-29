@@ -30,7 +30,7 @@ import benchmark
 
 DIRNAME = os.path.join(os.path.dirname(__file__), "..", "..", "..", "data")
 
-N_REPEAT = 100
+N_REPEAT = 32
 
 def 𐌈(**kwargs):
     return kwargs
@@ -101,41 +101,41 @@ if __name__ == "__main__":
     detailed_kwargs_control = dict(detailed_kwargs)
     detailed_kwargs_control["use_control_lti"] = True
 
-#    run_experiment(
-#        fn="temporal_basis_direct.npz",
-#        mode="direct",
-#        **default_kwargs,
-#    )
+    run_experiment(
+        fn="temporal_basis_direct.npz",
+        mode="direct",
+        **default_kwargs,
+    )
 
-#    run_experiment(
-#        fn="temporal_basis_single_population.npz",
-#        mode="single_population",
-#        **default_kwargs,
-#    )
+    run_experiment(
+        fn="temporal_basis_single_population.npz",
+        mode="single_population",
+        **default_kwargs,
+    )
 
-#    run_experiment(
-#        fn="temporal_basis_two_populations.npz",
-#        mode="two_populations",
-#        **default_kwargs,
-#    )
+    run_experiment(
+        fn="temporal_basis_two_populations.npz",
+        mode="two_populations",
+        **default_kwargs,
+    )
 
-#    run_experiment(
-#        fn="temporal_basis_two_populations_dales_principle.npz",
-#        mode="two_populations_dales_principle",
-#        **default_kwargs,
-#    )
+    run_experiment(
+        fn="temporal_basis_two_populations_dales_principle.npz",
+        mode="two_populations_dales_principle",
+        **default_kwargs,
+    )
 
-#    run_experiment(
-#        fn="temporal_basis_two_populations_dales_principle_detailed.npz",
-#        mode="two_populations_dales_principle",
-#        **detailed_kwargs,
-#    )
+    run_experiment(
+        fn="temporal_basis_two_populations_dales_principle_detailed.npz",
+        mode="two_populations_dales_principle",
+        **detailed_kwargs,
+    )
 
-#    run_experiment(
-#        fn=
-#        "temporal_basis_two_populations_dales_principle_detailed_no_jbias.npz",
-#        mode="two_populations_dales_principle",
-#        **detailed_kwargs_no_jbias)
+    run_experiment(
+        fn=
+        "temporal_basis_two_populations_dales_principle_detailed_no_jbias.npz",
+        mode="two_populations_dales_principle",
+        **detailed_kwargs_no_jbias)
 
     run_experiment(
         fn=

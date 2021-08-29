@@ -45,48 +45,25 @@ def _make_nef_lti(tau, A, B):
 
 def _make_control_lti(tau, q):
     # Do not alter the random state
-    print("(1a)")
-#    rs = np.random.get_state()
-#    try:
-    print("(1b)")
-    rng = np.random.RandomState(np.random.randint(2 << 31))
-    taus = np.logspace(-2, -0.5, q)
+    rs = np.random.get_state()
+    try:
+        rng = np.random.RandomState(np.random.randint(48919))
+        taus = np.logspace(-2, -0.5, q)
 
-    print("(1c)")
-    done = False
-    while not done:
-        try:
-            C = np.eye(q) #rng.randn(q, q)
-            print("(1c1)")
-            L, V = np.linalg.eigh(C)
-            print("(1c2)")
-            #L = -5.0 * (np.abs(np.real(L)) + np.imag(L) * 1.0j)
-            print("(1c3)")
-            print("A", V)
-            print("B", L)
-#            import pdb; pdb.set_trace()
-            print("B1", np.diag(L))
-            print("C", V @ np.diag(L))
-            print("D", np.linalg.inv(V))
-            A = V @ np.diag(L) @ np.linalg.inv(V)
-            print("(1c4)")
-            B = (-1) ** np.arange(q)
-            print("(1c5)")
+        C = rng.randn(q, q)
+        L, V = np.linalg.eig(C)
+        L = -5.0 * (np.abs(np.real(L)) + np.imag(L) * 1.0j)
+        A = V @ np.diag(L) @ np.linalg.inv(V)
+        B = (-1) ** np.arange(q)
 
-            print("(1d)")
-            S = np.diag(np.minimum(1.0, np.abs(1.0 / np.linalg.solve(-A, B))))
-            A = S @ A @ np.linalg.inv(S)
-            B = S @ B
+        S = np.diag(np.minimum(1.0, np.abs(1.0 / np.linalg.solve(-A, B))))
+        A = S @ A @ np.linalg.inv(S)
+        B = S @ B
 
-            done = True
-        except Exception as e:
-            print("Error:", str(err))
-
-    print("(1e)")
-    AH, BH = _make_nef_lti(tau, A, B)
-    BH = BH.reshape(-1, 1)
-#    finally:
-#        np.random.set_state(rs)
+        AH, BH = _make_nef_lti(tau, A, B)
+        BH = BH.reshape(-1, 1)
+    finally:
+        np.random.set_state(rs)
 
     return AH, BH
 
@@ -217,13 +194,11 @@ class GranuleGolgiCircuit(nengo.Network):
             self.ens_granule = Ensemble(**kwargs_granule)
 
             # Compute the Delay Network coefficients
-            print("(1)")
             if self.use_control_lti:
                 AH, BH = _make_control_lti(self.tau, self.q)
             else:
                 AH, BH = _make_nef_lti(
                     self.tau, *_make_delay_network(q=self.q, theta=self.theta))
-            print("(2)")
 
             # Make the recurrent connections
             if use_nengo_bio:
