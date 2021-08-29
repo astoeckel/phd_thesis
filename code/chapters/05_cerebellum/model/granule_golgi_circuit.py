@@ -43,6 +43,32 @@ def _make_nef_lti(tau, A, B):
     return AH, BH
 
 
+def _make_control_lti(tau, q):
+    # Do not alter the random state
+    rs = np.random.get_state()
+    try:
+        rng = np.random.RandomState(np.random.randint(48919))
+        taus = np.logspace(-2, -0.5, q)
+        A = -1.0 * np.diag(1.0 / taus)
+        B = 1.0 / taus
+
+        C = rng.randn(q, q)
+        _, V = np.linalg.eig(C.T + C)
+        A = V @ A @ V.T
+        B = V @ B
+
+        S = np.diag(np.minimum(1.0, np.abs(1.0 / np.linalg.solve(-A, B))))
+        A = S @ A @ np.linalg.inv(S)
+        B = S @ B
+
+        AH, BH = _make_nef_lti(tau, A, B)
+        BH = BH.reshape(-1, 1)
+    finally:
+        np.random.set_state(rs)
+
+    return AH, BH
+
+
 class Legendre(nengo.Process):
     def __init__(self, theta, q):
         self.q = q
@@ -101,7 +127,9 @@ class GranuleGolgiCircuit(nengo.Network):
             kwargs_granule = self._kwargs_granule()
             self.ens_granule = nengo.Ensemble(**kwargs_granule)
 
-            if not use_esn:
+            if self.use_control_lti:
+                AH, BH = _make_control_lti(self.q, self.tau)
+            elif not use_esn:
                 # Compute the Delay Network coefficients
                 AH, BH = _make_nef_lti(
                     self.tau, *_make_delay_network(q=self.q, theta=self.theta))
@@ -167,8 +195,11 @@ class GranuleGolgiCircuit(nengo.Network):
             self.ens_granule = Ensemble(**kwargs_granule)
 
             # Compute the Delay Network coefficients
-            AH, BH = _make_nef_lti(
-                self.tau, *_make_delay_network(q=self.q, theta=self.theta))
+            if self.use_control_lti:
+                AH, BH = _make_control_lti(self.tau, self.q)
+            else:
+                AH, BH = _make_nef_lti(
+                    self.tau, *_make_delay_network(q=self.q, theta=self.theta))
 
             # Make the recurrent connections
             if use_nengo_bio:
@@ -310,6 +341,7 @@ class GranuleGolgiCircuit(nengo.Network):
                  use_lugaro=False,
                  use_golgi_recurrence=False,
                  use_spatial_constraints=False,
+                 use_control_lti=False,
                  bias_mode_golgi=None,
                  bias_mode_granule=None,
                  qp_solver_extra_args={}):
@@ -378,6 +410,7 @@ class GranuleGolgiCircuit(nengo.Network):
         self.use_lugaro = use_lugaro
         self.use_golgi_recurrence = use_golgi_recurrence
         self.use_spatial_constraints = use_spatial_constraints
+        self.use_control_lti = use_control_lti
         self.bias_mode_golgi = bias_mode_golgi
         self.bias_mode_granule = bias_mode_granule
         self.qp_solver_extra_args = qp_solver_extra_args
