@@ -56,7 +56,7 @@ def _make_control_lti(tau, q):
     done = False
     while not done:
         try:
-            C = rng.randn(q, q)
+            C = np.eye(q) #rng.randn(q, q)
             print("(1c1)")
             L, V = np.linalg.eig(C)
             print("(1c2)")
