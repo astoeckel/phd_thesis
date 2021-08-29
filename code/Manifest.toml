@@ -333,7 +333,7 @@ generates = "granule_pcn_tuning.npz"
 is_multithreaded = true
 
 ["chapters/05_cerebellum/generate_temporal_basis_data.py"]
-commit = "b18f26a9add45c01a7b55bab1d2d41a10946e8c0"
+commit = "c28af19a2cac1a38628bfdeaad2085a169b0cd89"
 dockerfile = "experiments_base"
 generates = [
 	"temporal_basis_direct.npz",
