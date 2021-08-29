@@ -60,7 +60,7 @@ def _make_control_lti(tau, q):
             print("(1c1)")
             L, V = np.linalg.eigh(C)
             print("(1c2)")
-            L = -5.0 * (np.abs(np.real(L)) + np.imag(L) * 1.0j)
+            #L = -5.0 * (np.abs(np.real(L)) + np.imag(L) * 1.0j)
             print("(1c3)")
             print("A", V)
             print("B", L)
