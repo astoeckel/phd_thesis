@@ -342,6 +342,7 @@ generates = [
 	"temporal_basis_two_populations_dales_principle.npz",
 	"temporal_basis_two_populations_dales_principle_detailed.npz",
 	"temporal_basis_two_populations_dales_principle_detailed_no_jbias.npz",
+	"temporal_basis_two_populations_dales_principle_detailed_control.npz",
 ]
 is_multithreaded = true
 
