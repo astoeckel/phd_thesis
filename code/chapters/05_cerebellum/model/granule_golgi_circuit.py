@@ -57,10 +57,15 @@ def _make_control_lti(tau, q):
         while not done:
             try:
                 C = rng.randn(q, q)
+                print("(1c1)")
                 L, V = np.linalg.eig(C)
+                print("(1c2)")
                 L = -5.0 * (np.abs(np.real(L)) + np.imag(L) * 1.0j)
+                print("(1c3)")
                 A = V @ np.diag(L) @ np.linalg.inv(V)
+                print("(1c4)")
                 B = (-1) ** np.arange(q)
+                print("(1c5)")
 
                 print("(1d)")
                 S = np.diag(np.minimum(1.0, np.abs(1.0 / np.linalg.solve(-A, B))))
