@@ -40,25 +40,32 @@ def run_experiment(fn, **kwargs):
     tss, xss, yss, basiss, sigmas = [[] for _ in range(5)]
 
     for i in range(N_REPEAT):
-        np.random.seed(12369 + i)
-        ts, xs, ys, As, theta = benchmark.build_and_run_test_network(
-            T=2.29,
-            input_descr = benchmark.pulse_input(t_on=0.25, t_off=1.75),
-            probe_granule_decoded=True,
-            probe_spatial_data=False,
-            **kwargs
-        )
+        it = 0
+        while True:
+            np.random.seed(12369 + i + N_REPEAT * it)
+            ts, xs, ys, As, theta = benchmark.build_and_run_test_network(
+                T=2.29,
+                input_descr = benchmark.pulse_input(t_on=0.25, t_off=1.75),
+                probe_granule_decoded=True,
+                probe_spatial_data=False,
+                **kwargs
+            )
 
-        # Compute this for a random subset of neurons
-        if As.shape[1] > 1000:
-            all_idcs = np.arange(As.shape[1], dtype=int)
-            idcs = np.random.RandomState(58791).choice(all_idcs,
-                                                       1000,
-                                                       replace=False)
-            As = As[:, idcs]
+            # Compute this for a random subset of neurons
+            if As.shape[1] > 1000:
+                all_idcs = np.arange(As.shape[1], dtype=int)
+                idcs = np.random.RandomState(58791).choice(all_idcs,
+                                                           1000,
+                                                           replace=False)
+                As = As[:, idcs]
 
-        U, S, V = np.linalg.svd(As - np.mean(As, axis=0))
-        basis = U[:, :ys.shape[1]]
+            try:
+                U, S, V = np.linalg.svd(As - np.mean(As, axis=0))
+                basis = U[:, :ys.shape[1]]
+                break
+            except np.linalg.LinAlgError:
+                print("Error computing SVD, trying again")
+            it += 1
 
         tss.append(ts)
         xss.append(xs)
