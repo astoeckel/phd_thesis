@@ -30,7 +30,7 @@ import benchmark
 
 DIRNAME = os.path.join(os.path.dirname(__file__), "..", "..", "..", "data")
 
-N_REPEAT = 32
+N_REPEAT = 100
 
 def 𐌈(**kwargs):
     return kwargs
