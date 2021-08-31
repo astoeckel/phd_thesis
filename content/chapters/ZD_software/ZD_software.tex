@@ -185,7 +185,7 @@ Just like the \nlif simulator, the trust-region optimiser relies on a dynamicall
 
 \begin{figure}
 	\includegraphics{media/chapters/ZD_software/libnlif_weight_solver.pdf}
-	\caption[eight optimisation code for the two-compartment neuron and nonnegative multiplication]{Weight optimisation code for the two-compartment neuron and nonnegative multiplication. Coloured contours and dotted lines show the decoded currents; dashed lines are the target.}
+	\caption[Nonnegative multiplication in two-compartment LIF neurons using \emph{libnlif}]{Nonnegative multiplication in two-compartment LIF neurons using \emph{libnlif}. Coloured contours and dotted lines show the decoded currents; dashed lines are the target.}
 \end{figure}
 
 The synaptic weight solvers discussed in \Cref{sec:nlif_opt_weights} are provided in the \texttt{nlif.weight\_optimisation} package.
@@ -293,6 +293,7 @@ Here, the two pre-populations represent one-dimensional quantities---correspondi
 In the above code, we simply ignore the second dimension that originates from the excitatory pre-neuron.
 
 \subsection{Sparsity Constraints}
+\label{sec:nengo_bio_sparsity}
 
 \begin{figure}
 	\centering
