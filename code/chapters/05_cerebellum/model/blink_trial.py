@@ -359,7 +359,7 @@ class BlinkTrial(pytry.PlotTrial):
 
             ###########################################################################
             # Learn the connection from the Granule cells to the Purkinje cells via   #
-            # input from the Interior Olive                                           #
+            # input from the Inferior Olive                                           #
             ###########################################################################
 
             # This is the US pathway; the data is relayed from the Trigeminal nucleus
