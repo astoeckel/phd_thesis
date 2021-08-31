@@ -2,18 +2,17 @@
 \chapter{Computational Properties of Multi-Compartment LIF Neurons}
 \label{chp:nlif}
 
-\vspace{30pt}
+\vspace{20pt}
 
 \begin{OpeningQuote}
 It may well be that certain nerve pulse combinations will stimulate a given neuron not simply by virtue of their number but also by virtue of the spatial relations of the synapses to which they arrive. This is, one may have to face situations in which there are, say, hundreds of synapses on a single nerve cell, and the combinations of stimulations on these that are effective [...] are characterised not only by their number, but also by their coverage of certain special regions on that neuron [...], by the spatial relations of such regions to each other, and by even more complicated quantiative and geometrical relationships that might be relevant.
 \OpeningQuoteSource{John von Neumann}{The Computer and the Brain (1958)}
 \end{OpeningQuote}
 
-\vspace{10pt}
-
 \begin{PriorPublication}
-Portions of this chapter (in particular \Cref{sec:two_comp_lif,sec:nlif_discussion}) are, in extended and edited form, adapted from \citet{stoeckel2021}, which in turn builds upon work presented at COSYNE 2018 \citep{stockel2018nonlinear}, as well as an earlier technical report \citep{stockel2017point}.
-While these prior publications focus on single- and two-compartment LIF neurons, we deepen the provided theoretical background and discuss methods for working with \nlif neurons in general.
+Portions of this chapter (in particular \Cref{sec:two_comp_lif,sec:nlif_discussion}) are, in extended and edited form, adapted from \citet{stoeckel2021}, originally published in \emph{Neural Computation}. These parts are \textcopyright 2021 Massachusetts of Technology and used by permission of \emph{The MIT Press}.
+In turn, this publication builds upon work presented at COSYNE 2018 \citep{stockel2018nonlinear}, and an earlier technical report \citep{stockel2017point}.
+While these prior publications focus on two-compartment LIF neurons, we deepen the provided theoretical background and discuss \nlif neurons in general.
 \end{PriorPublication}
 
 \begin{Contributions}
@@ -22,6 +21,7 @@ In contrast to this prior work, we discuss a systematic approach to exploiting p
 As far as we are aware, our mathematical description and analysis of \nlif neurons, the idea to use quadratic programming for subthreshold relaxation, our spatial frequency-sweep analysis technique, and the presented soft trust-region optimisation scheme are completely novel.
 \end{Contributions}
 
+\clearpage
 \input{content/chapters/03_nlif/03_00_introduction}
 
 \clearpage

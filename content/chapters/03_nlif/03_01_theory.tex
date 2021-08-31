@@ -10,7 +10,7 @@
 	{\phantomsubcaption\label{fig:nef_multivariate_functions_b}}%
 	{\phantomsubcaption\label{fig:nef_multivariate_functions_c}}%
 	\caption[Using dendritic computation to compute multivariate functions in the NEF]{Using dendritic computation to compute multivariate functions in the NEF. \textbf{(A)} Standard NEF networks are additive: summation in activity space corresponds to addition in representation space.
-	\textbf{(B)} Computing nonlinear multivariate functions $\phi$ generally requires all variables to be represented in an intermediate population.
+	\textbf{(B)} Computing nonlinear multivariate functions $f$ generally requires all variables to be represented in an intermediate population.
 	\textbf{(C)} The dendritic computation scheme discussed in here.
 	Two pre-populations project onto a post-population with separate excitatory and inhibitory input channels.
 	%The nonlinear interaction between these channels is exploited to compute $\phi$.
@@ -36,7 +36,7 @@ For the sake of simplicity, assume that two pre-populations representing variabl
 To compute $f(x_1, x_2)$, we must find connection weights $\vec w_{1, i}$, $\vec w_{2, i}$ such that the following holds for every post-neuron $i$
 \begin{align}
 	a_i(f(x_1, x_2))
-		= G_i \bigl[y
+		= G_i \bigl[
 			\langle \vec e_i, f(x_1, x_2) \rangle
 		\bigr]
 		\supposedEq G_i\bigl[
@@ -47,8 +47,8 @@ To compute $f(x_1, x_2)$, we must find connection weights $\vec w_{1, i}$, $\vec
 Here, $a_i$ is the desired post-neuron activity according to the normative tuning-curve constraint (eq.~\ref{eqn:encoding}).
 As discussed in the context of the NEF transformation principle (cf.~\Cref{sec:nef_transformation}), we assume that the current-translation function $J_i$ is part of the individual neuron response curve $G_i$, and that the currents induced by the pre-populations are summed.
 
-Now, consider multivariate functions that can be decomposed into a sum of two univariate functions, i.e., $f(x_1, x_2) = f_1(x_1) + f_2(x_2)$ (cf.~\Cref{fig:nef_multivariate_functions_a}).
-We can easily find weights $\vec w_{1, i}$, $\vec w_{2, i}$ that approximate $f$ using the encoder-decoder split of the NEF \citep[cf.][Section~6.1.2]{eliasmith2003neural}.
+This optimisation problem can be easily solved for multivariate functions that can be decomposed into a sum of two univariate functions, i.e., $f(x_1, x_2) = f_1(x_1) + f_2(x_2)$ (cf.~\Cref{fig:nef_multivariate_functions_a}).
+Specifically, we can find weights $\vec w_{1, i}$, $\vec w_{2, i}$ that approximate $f$ using the encoder-decoder split of the NEF. % \citep[cf.][Section~6.1.2]{eliasmith2003neural}.
 Computing decoders $\mat D^{f_1}$, $\mat D^{f_2}$ and applying $(\vec w_i)^T = \vec e_i \mat D$, we have
 \begin{align*}
 	G_i\bigl[
@@ -77,8 +77,8 @@ Summing functions incurs no additional decoding error.
 
 \subsubsection{Additive networks cannot compute most multivariate functions}
 The only way to compute general multivariate functions $f(x_1, x_2)$ in additive networks is to \emph{approximate} $f$ as an additive univariate decomposition.
-As is expressed by the following proposition (see Appendix~B.3.1 for a proof), it is impossible to compute many continuous multi-variate $f$ using such additive networks.%
-\footnote{We our propositions to continuous functions for the sake of simplicity.
+As is expressed by the following proposition (see Appendix~B.3.1 for a proof), it is impossible to compute many continuous multi-variate $f$ in this way.%
+\footnote{We limit our propositions to continuous functions for the sake of simplicity.
 However, we conjecture that the same results hold for larger classes of functions, for example square Lebesgue integrable functions.}
 This is true even if we can decode arbitrary univariate functions $f_1$, $\ldots$, $f_\ell$ over the pre-variables (this is equivalent to having an infinite number of pre-neurons, see below), and we were able to freely choose a fixed nonlinearity $\sigma$ (cf.~\Cref{fig:perceptron_a}).
 
@@ -186,7 +186,7 @@ There exist $d_i \in \mathbb{R}$ such that
 \end{restatable}
 \vspace*{-0.5em}\noindent
 This follows directly from \citet{hornik1989multilayer}.
-We provide a more thorough discussion \Cref{app:thm_two_layer_universal}.
+We provide a more thorough discussion in \Cref{app:thm_two_layer_universal}.
 This theorem can be extended to hold for arbitrary compact domains $\Xrepr$, codomain dimensionalities, and other neural nonlinearities $\sigma$.
 
 %It may not be obvious why \cref{eqn:two_layer_network} describes a \enquote{two-layer} neural network.
@@ -211,21 +211,19 @@ This is equivalent to the additive networks we discussed before.
 We can only decode sums of univariate functions over the individual $x_j$ from the pre-population.
 
 \subsubsection{Intermediate populations}
-%We now know that we can indeed approximate multivariate functions in the NEF with an arbitrarily small error.
-%The pre-condition for this is that all variables over which we would like to compute a $\phi$ represented in the same neuron population with non-axis aligned encoding vectors $\vec e_i$.
-As discussed by \citep[Chapter~6]{eliasmith2003neural}, multivariate functions $f(x_1, x_2)$ can in general only be computed if all variables $x_1$, $x_2$ are represented in a common intermediate population.
-Correspondingly, this intermediate population represents a vectorial quantity $\vec z = (x_1, x_2)$ (cf.~\Cref{fig:nef_multivariate_functions_b}).
+As discussed by \citet[Chapter~6]{eliasmith2003neural}, multivariate functions $f(x_1, x_2)$ can in general only be computed in the NEF if all variables $x_1$, $x_2$ are represented in a common population.
+Correspondingly, if all variables are represented in separate univariate populations, we must add an intermediate population to our network that represents a vectorial quantity $\vec z = (x_1, x_2)$ (cf.~\Cref{fig:nef_multivariate_functions_b}).
 We can construct such a representation from two univariate populations by computing the functions $f_1(x_1) = (x_1, 0)$ and $f_2(x_2) = (0, x_2)$ in the connections to the intermediate population.
 According to Theorem~\ref{thm:two_layer_universal} we can then decode any multivariate function from the intermediate population.
 
 \subsubsection{Potential issues with intermediate populations}
 In theory, the number of neurons required to cover a $d$-dimensional space rises exponentially with $d$.
-Representing a $d$-dimensional quantity in an intermediate population thus requires many neurons to achieve a certain decoding error for all target functions.
+Representing a $d$-dimensional quantity in an intermediate population can thus require a large number of neurons to achieve a certain decoding error for all target functions.
 In practice, it is quite difficult to judge the number of neurons required to decode a certain function $f$ a-priori; the decoding error heavily depends on $f$ and the encoding vectors $\vec e_i$.
 
 Another problem arises when modelling neurobiological systems.
-There may be no indication that an intermediate population exists in a particular biological circuit, but the function can be modelled well as a multivariate function.
-An example of this would be the aforementioned attention system, where a group of control neurons modulates another population without an intermediary \citep{bobier2014unifying}.
+There may be no indication that an intermediate population exists in a particular biological circuit, although the hypothesised high-level function is a multivariate function.
+An example of this would be the attention system in layer six of the cortex mentioned in the introduction, where a group of control neurons modulates another population without an intermediary \citep{bobier2014unifying}.
 
 Finally, there is the issue of noise.
 In spiking neural networks, every intermediate neuron population introduces additional noise due to static distortion and spike noise \citep[Section~2.2.2]{eliasmith2003neural}.
@@ -246,26 +244,26 @@ Input fed through these channels interacts nonlinearly, modelling information pr
 \end{figure}
 
 Mathematically, the response curve describing the average neural activity is now a multivariate function $\mathscr{G}[\xi_1, \ldots, \xi_k]$, where the $\xi_i$ are linear combinations of the pre-activities (\Cref{fig:dendritic_computation_net}).
-To compute $\phi(x_1, \ldots, x_\ell)$, the following must hold for each post-neuron $i$
+To compute $f(x_1, \ldots, x_\ell)$, the following must hold for each post-neuron $i$
 \begin{align}
 	\begin{aligned}
-	a_i\bigl(\phi(x_1, \ldots, x_\ell)\bigr) &\supposedEq
+	a_i\bigl(f(x_1, \ldots, x_\ell)\bigr) &\supposedEq
 	\mathscr{G} \bigl[
 		\langle \vec w_{1, i}^1, \vec a^\mathrm{pre}_1(x_1) \rangle + \ldots +
 		\langle \vec w_{\ell, i}^1, \vec a^\mathrm{pre}_\ell(x_\ell) \rangle, \ldots,\\
 %	&~\quad\quad\vdots, \\
-	&~\hspace{1.66em}
+	&~\hspace{1.86em}
 		\langle \vec w_{1, i}^k, \vec a^\mathrm{pre}_1(x_1) \rangle + \ldots +
 		\langle \vec w_{\ell, i}^k, \vec a^\mathrm{pre}_\ell(x_\ell) \rangle
 	\bigr]
 	\end{aligned}
 	\label{eqn:dendritic}
 \end{align}
-where $a_i(\phi(x_1, \ldots, x_\ell))$ expresses the normative tuning constraint defined in \cref{eqn:encoding}.
+where $a_i(f(x_1, \ldots, x_\ell))$ expresses the normative tuning constraint defined in \cref{eqn:encoding}.
 
 Note that we deliberately left the concept of an \enquote{input channel} open.
 An input channel could either refer to a different location in the dendritic tree, different synapse types (e.g., excitatory or inhibitory synapses), or even the influence of other signalling molecules.
-We discuss examples of model neurons with multiple input channels in \Cref{sec:nlif}.
+We discuss a particular neuron model family with multiple input channels in \Cref{sec:nlif}.
 
 \subsubsection{Mathematical analysis}
 More formally, using $\sigma(\xi_1, \ldots, \xi_\ell)$ as an abstract nonlinearity and assuming that we can compute any univariate function $g_i^j$ over $\xi_1, \ldots, \xi_\ell$, we have (\Cref{fig:dendritic_computation_fun})
@@ -288,7 +286,7 @@ For any fixed $\sigma : \mathbb{R}^k \longrightarrow \mathbb{Y}$, there always e
 	f(x_1, \ldots, x_\ell) = \sigma(\xi_1, \ldots, \xi_k) = \sigma\bigl( g^1_1(x_1) + \ldots + g^1_\ell(x_\ell), \ldots,  g^k_1(x_1) + \ldots + g^k_\ell(x_\ell)\bigr) \text{ for all } \vec x \in \Xrepr \,.
 \end{align*}
 \end{conjecture}
-\noindent While we do not have a rigorous proof, counting the degrees of freedom (DOF) required to describe an $\ell$-dimensional function $f$ suggests that this should be true.
+\noindent While a rigorous proof eludes us, counting the degrees of freedom (DOF) required to describe an $\ell$-dimensional function $f$ suggests that this should be true.
 Given $\oh$ orthogonal one-dimensional basis functions, the corresponding $\ell$-dimensional basis has $\oh^\ell$ basis functions.
 Correspondingly, $\oh^\ell$ DOF are required to describe an $\ell$-dimensional $f$ with a basis of order $\oh$.
 However, when using dendritic computation, we only use $k \ell$ one-dimensional functions; correspondingly, there are only $\oh k \ell$ DOF.
@@ -331,7 +329,7 @@ Still, this scheme can be implemented efficiently by separating the Gaussian fil
 }
 
 \subsubsection{Network models}
-To compare the above networks types, we could construct concrete networks and compare approximation errors for our randomly generated two-dimensional functions $\phi(x_1, x_2)$.
+To compare the above networks types, we could construct neural networks and compare approximation errors for our randomly generated two-dimensional functions $f(x_1, x_2)$.
 However, as a simplification, we can replace the pre-populations by the first $\oh$ Legendre polynomials $P_i(x)$.%
 \footnote{We discuss of Legendre polynomials in Section~4.2. Note that we use a discretised version of the Legendre basis, \enquote{Discrete Legendre Orthogonal Polynomials} \citep[DLOPs;][]{neuman1974discrete,stockel2021discrete}.}
 %TODO Reference to the Legendre polynomials
@@ -411,7 +409,7 @@ This is the case if only the first few basis functions can be decoded well from 
 
 We compare the three network types by varying the spatial low-pass filter size $\rho^{-1}$ and the basis order $\oh$.
 \Cref{fig:dendritic_computation_legendre_overview} provides an overview of the overall procedure.
-The one- and two-dimensional Legendre polynomials are depicted in \Cref{fig:dendritic_computation_legendre_overview_a}, randomly generated target functions are depcited in \Cref{fig:dendritic_computation_legendre_overview_b}.
+The one- and two-dimensional Legendre polynomials are depicted in \Cref{fig:dendritic_computation_legendre_overview_a}, randomly generated target functions are depicted in \Cref{fig:dendritic_computation_legendre_overview_b}.
 These functions are reconstructed using the function approximators defined above (\Cref{fig:dendritic_computation_legendre_overview_c,fig:dendritic_computation_legendre_overview_d,fig:dendritic_computation_legendre_overview_e}).
 
 As expected, the network type has a large influence on the reconstruction error.
@@ -454,7 +452,7 @@ Let $d$ and $d'$ be the number of basis functions that can be decoded from a one
 Dendritic computation has more DOF if $k \ell d > d'$, and could thus approximate a larger class of functions below some error threshold.
 
 This analysis should be taken with a grain of salt, since we do not take redundant DOF into account and rely on a questionable binary notion of a basis function being \enquote{decodable}.
-Still, as we will see in \Cref{sec:two_comp_lif}, dendritic computation can indeed outperform multi-layer networks in practice.
+Still, as we will see in \Cref{sec:two_comp_lif,sec:nlif_opt}, dendritic computation can indeed outperform multi-layer networks in practice.
 
 \subsubsection{Conclusion}
 Our numerical experiments confirm that, under optimal circumstances, dendritic computation schemes can only compute some functions better than purely additive networks.

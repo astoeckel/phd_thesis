@@ -42,7 +42,7 @@ Our typical choice of $J_i(\xi) = \alpha_i \xi + \beta_i$ introduces a bias curr
 As we elaborated in \Cref{sec:nef_limitations}, this is slightly implausible from a biological perspective.
 
 \Citet{tripp2007neural} demonstrate that it is possible to robustly solve for synaptic weights that approximate arbitrary post-synaptic current functions.
-We use this insight to directly approximate the target current $J_i(\langle \vec e_i, \vec x \rangle)$ and thus implicitly solve for the bias.
+We use this insight to directly approximate the target current $J_i(\langle \vec e_i, \vec x \rangle)$; as a side effect, we implicitly solve for the bias.
 Again, assuming that the post-synaptic current is linear in the pre-population activities, we must find a weight vector $\vec w_i$ such that the following regularised loss is minimised
 \begin{align}
 E = \frac{1}{\vol(\Xrepr)} \int_{\Xrepr} \left( J_i\bigl(\langle \vec e_i, \phi(\vec x)\rangle\bigr) - \langle \vec w_i, \vec a^\mathrm{pre}(\vec x) \rangle \right)^2 \, d\vec x + \lambda \| \vec w_i \|_\mathrm{2}^2\,.
@@ -69,7 +69,7 @@ Here, $N$ is the number of samples, $\mat W \in \mathbb{R}^{m \times \Npop}$ is 
 	}
 \end{figure}
 
-Importantly, we no longer solve for weights directly in the domain of represented values $\vec x$; this is in contrast to solving for decoders $\mat D$ according to eqn.~(2.??).
+Importantly, we no longer solve for weights directly in the domain of represented values $\vec x$; this is in contrast to solving for decoders $\mat D$ according to \cref{eqn:lstsq_loss}.
 Similarly, we do not solve for target activities $a_i$, as was suggested by our na\"ive loss function in \cref{eqn:dendritic_computation_optimisation}.
 Side-stepping the neural nonlinearity $G$ enables a simple least-squares solution.
 Furthermore, this optimisation scheme supports arbitrary current-translation functions $J_i$, providing modellers with a greater flexibility over the tuning curve constraint (cf.~\Cref{fig:current_translation_decoding_a,fig:current_translation_decoding_b,fig:current_translation_decoding_c}).
@@ -114,7 +114,7 @@ Decoding constants is hence \enquote{more difficult} than decoding the identity 
 
 In our example, and as depicted in \Cref{fig:bias_decoding_impact_d}, decoding $J_i$ doubles the RMSE between the desired and actual post-population tuning.
 %This can be countered by doubling the number of pre-neurons.
-However, as we will see in the next subsection, there are circumstances where the absence of an intrinsic bias is beneficial to network performance.
+However, as we will see in the next subsection, there are circumstances where the absence of an intrinsic bias is improves the network performance.
 
 \subsubsection{Accounting for multiple pre-populations}
 As we discussed in \Cref{sec:additive_net}, a welcome side effect of intrinsic current-translation is that standard NEF networks are additive.
@@ -201,7 +201,7 @@ Additionally, let $\mat W$ be the stacked weight matrices $(\mat W^+, \mat W^-) 
 \end{align}
 This is a standard nonnegative least-squares (NNLS) problem that can be solved in polynomial time \citep[Chapter~23]{lawson1995solving}.
 An overview of efficient algorithms to solve this kind of problem is given in \citet{chen2009nonnegativity}.%
-\footnote{Most linear algebra software packages bundle a solver for nonnegative least-squares; for example \texttt{scipy.optimize.nnls} in SciPy or \texttt{lsqnonneg} in Matlab. Alternatively, a gernal quadratic programming (\QP) solver can be used; this is what we do in our library \texttt{libbioneuronqp} that we discuss at the end of this chapter.}
+\footnote{Most linear algebra software packages bundle a solver for nonnegative least-squares; for example \texttt{scipy.optimize.nnls} in SciPy or \texttt{lsqnonneg} in Matlab. Alternatively, a gernal quadratic programming (\QP) solver can be used; this is what we do in our library \emph{libnlif} that we discuss in \Cref{app:libnlif}.}
 Of course, similarly to \cref{eqn:decode_current_additive}, the optimisation problem can be extended to take multiple pre-populations into account.
 
 \begin{figure}[p]
@@ -602,7 +602,7 @@ This confirms our suspicion that setting $J_\mathrm{th}$ to the true threshold c
 
 This is further confirmed by the experiment in \Cref{fig:subthreshold_experiment_c} where we plot the post-population representation error over different pre-activity noise magnitudes.
 For small amounts of noise \gls{subrelax} with $J_\mathrm{th} = \SI{1}{\nano\ampere}$ can lead to large improvements in the representation error; however, for larger noise magnitudes the overall benefit of \gls{subrelax} is smaller, with slightly reduced $J_\mathrm{th}$ performing the best.
-We provide additional results from this experiment in Appendix C.2.
+%We provide additional results from this experiment in Appendix C.2.
 
 Keep in mind that LIF rate neurons are a worst-case scenario with respect to sensitivity to pre-activity noise injected near the threshold.
 LIF rate neurons possess a very steep activity onset, where small changes in current lead to large fluctuations in activity.
