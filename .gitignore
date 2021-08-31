@@ -6,6 +6,9 @@
 /data/cache/
 __pycache__/
 .ipynb_checkpoints/
+perf.data
+perf.data.old
+*.egg-info
 *.aux
 *.bbl
 *.bcf
