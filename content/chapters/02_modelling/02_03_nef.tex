@@ -237,6 +237,7 @@ Arranging the samples and the corresponding population activities in matrices $\
 \begin{align}
 \min_{\Dec} \sum_{k = 1}^{\Nsmpls} \| \Dec \vec a(\vec x_k) - \vec x_k \|_2^2  + \| \sigma \Dec \|^2_\mathrm{F}
 &= \min_{\Dec} \| \mat A \Dec^T - \mat X \|_\mathrm{F}^2 + \sigma^2 \Nsmpls \| \Dec \|_\mathrm{F}^2 \,,
+\label{eqn:lstsq_loss}
 \end{align}
 where $\lambda = N \sigma^2$ is the regularisation factor.
 From a probabilistic perspective, this particular choice of $\lambda$ results in the exact maximum a-posteriori solution for $\mat D$ with the prior assumption that there is Gaussian noise with standard deviation $\sigma$ on the measurements $\mat A$ \citep[Chapter~6]{boyd2004convex}. 
@@ -524,6 +525,7 @@ Depending on the pre-population tuning, this can affect high-level function.
 	\textbf{(D)} Noisy LIF neuron response curves for resting potentials samples from the empirical distribution. Colours indicated in \emph{(C)}. Other LIF parameters fit to empirical data at $v_\mathrm{rest} = \SI{-64}{\milli\volt}$ (black crosses; cf.~Figure~1g in Chadderton et al.). Input currents $J$ are subject to Gaussian noise ($\sigma = \SI{10}{\pico\ampere}$). \textbf{(E)} Histogram of bias currents $\beta_i$ having the same average effect as varying $v_\mathrm{rest}$.
 	\textbf{(F)}~Tuning curves that can be realised using these bias currents for the target maximum rates.
 	Unfortunately, the empirically observed parameters do not result in tuning curve distributions assumed by the NEF \emph{(A)}.}
+	\label{fig:granule_jbias_distribution}
 	\vspace*{-0.5em}
 \end{figure}
 
