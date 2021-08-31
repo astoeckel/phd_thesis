@@ -69,27 +69,27 @@ def plot_decoding_example(axs,
         transform=ax1.transAxes,
     )
 
-    ax1.plot([0.2, 0.6], [-0.5, -0.5],
+    ax1.plot([0.3, 0.7], [-0.6, -0.6],
              color='k',
              linewidth=1.5,
              clip_on=False,
              solid_capstyle="butt")
-    ax1.text(0.4,
-             ax1_ylim[0] - 0.7,
+    ax1.text(0.5,
+             ax1_ylim[0] - 0.8,
              '$\\theta = 0.4\\,\\mathrm{s}$',
              ha='center',
              va='top',
              fontsize=8)
 
     if show_t_on:
-        ax1.plot([0.6, 0.8], [1.25, 1.25],
+        ax1.plot([0.7, 0.8], [1.25, 1.25],
                  color='k',
                  linewidth=1.5,
                  clip_on=False,
                  solid_capstyle="butt")
-        ax1.text(0.7,
+        ax1.text(0.75,
                  1.30,
-                 '$t_\\mathrm{on} = 0.2\\,\\mathrm{s}$',
+                 '$t_\\mathrm{on} = 0.1\\,\\mathrm{s}$',
                  ha='center',
                  va='bottom',
                  fontsize=8)
@@ -118,7 +118,7 @@ def plot_decoding_example(axs,
     ax1.text(
         0.0,
         2.0,
-        '$\\mathbf{{{}}}$'.format(name),
+        '$\\textbf{{{}}}$'.format(name),
         ha='left',
         va='top',
         fontsize=12,
@@ -135,7 +135,7 @@ def plot_decoding_example(axs,
 
     ax2.text(
         1.0,
-        0.8,
+        0.75,
         'Granule cell activities $\\mathbf{a}(t)$',
         ha='right',
         va='top',
@@ -175,7 +175,7 @@ def plot_decoding_example(axs,
                  linestyle=(1, (1, 1)),
                  zorder=2 * (i + 1))
     ax3.text(1.0,
-             1.05,
+             1.0,
              'Decoded delays ${\\hat u}(t - \\theta\')$',
              ha='right',
              va='top',

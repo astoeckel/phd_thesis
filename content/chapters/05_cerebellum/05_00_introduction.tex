@@ -1,34 +1,64 @@
 % !TeX spellcheck = en_GB
 
-Human cognition is ultimately grounded in neurophysiological processes.
-As suggested by Marr's \enquote{levels of analysis} \citep{marr1976understanding}, cognitive scientists tend to implement models of cognition at algorithmic and computational levels, without explicitly taking limitations of the underlying neural substrate into account \citep{eliasmith2015marr}.
+\begin{figure}
+	\centering
+	\includegraphics{media/chapters/05_cerebellum/marr_levels.pdf}%
+	{\phantomsubcaption\label{fig:marr_levels_a}}%
+	{\phantomsubcaption\label{fig:marr_levels_b}}%
+	{\phantomsubcaption\label{fig:marr_levels_c}}%
+	\caption[Marr and Poggio's levels of description]{Marr and Poggio's levels of description.
+	\textbf{(A, B)} Levels of description and corresponding examples from the original paper \citep{marr1976understanding}; coloured numbers highlight different realisations of the same computation.
+	\textbf{(C)} Levels of description for our model of eyeblink conditioning.
+	}
+	\label{fig:marr_levels}
+\end{figure}
 
-Depending on the hypothesis that is being explored, ignoring biological detail can be reasonable. Yet, a closer look at biology may help in two complementary ways.
-First, we can \emph{validate} hypotheses about cognition by determining whether it is possible to implement a particular algorithm under the constraints of the biological network in question.  
-Second, we can \emph{generate} new hypotheses by asking what class of algorithms a certain network could support.
+So far, we have focused on mapping abstract mathematical descriptions onto low-level biological mechanisms.
+For example, we have demonstrated that it is possible to compute a variety of mathematical functions while accounting for biological constraints such as Dale's principle.
+Furthermore, we showed that synaptic filters and neural dynamics can be exploited to realise temporal bases.
+In terms of Marr and Poggio's famous \enquote{levels of description} (quoted on the previous page; cf.~\Cref{fig:marr_levels}; \cite{marr1976understanding}), we have been concerned with levels three and four, that is, thinking about how algorithms can be \enquote{committed} to mechanisms, and how these mechanisms are in turn implemented in a (simulated) neural substrate.
 
-We believe that cognitive modelling must ultimately embrace a combination of top-down and bottom-up modelling to narrow down the vast space of possible cognitive science theories and to direct research attention within that space.
-However, a central roadblock to the adaptation of such methods is the availability of modelling tools that make it possible to specify detailed biological constraints (e.g., neural response curves, spike rates, synaptic time-constants, connectivity patters) while still being abstract enough to facilitate the specification of high-level cognitive function.
+Hence, the primary goal of this chapter is to provide an example of how the methods discussed above can be used to bridge all four levels of abstraction.
+Specifically, we implement a simple \enquote{cognitive} system in the form a model of eyeblink conditioning in the cerebellum---starting from the high-level computation (namely \enquote{implementing eyeblink conditioning}) down to the constrained cerebellar microcircuit (\Cref{fig:marr_levels_c}).
+Since constructing an intricately detailed model of the entire cerebellum is out of the scope for this thesis, we particularly focus on temporal representations in the Granule-Golgi circuit.
 
-One approach designed to help bridge this gap is the Neural Engineering Framework (NEF; \cite{eliasmith2003neural}), in conjunction with the related Semantic Pointer Architecture (SPA; \cite{eliasmith2013how}).
-Up until recently however, it has been unclear how to incorporate certain biological constraints that are often described in the neuroscience literature into NEF networks.
-For example, and despite initial progress in this direction \cite{parisien2008solving}, accounting for Dale's principle with purely excitatory and inhibitory neuron populations, as well as incorporating spatial connectivity constraints, has been relatively challenging with the existing NEF-based software tool, Nengo \cite{bekolay2014nengo}.
-Furthermore, there have been no studies on how adding these additional constraints influences the high-level function of NEF networks. In this paper, we attempt to address both issues.
+\subsubsection{Implications for cognitive modelling}
+Our methodology is remarkably different from the way in which many cognitive scientists and psychologists approach constructing cognitive models.
+In these disciplines, models tend to be at the computational and algorithmic levels, and do not explicitly take limitations of the neural substrate into account \citep{eliasmith2015marr}.
 
-Specifically, we describe recent advances in modeling techniques that partially alleviate the shortcomings of the NEF mentioned above.
-We then use these methods to construct a model of eyeblink conditioning in the cerebellum, with a focus on the generation of temporal basis function representations in the recurrent Granule-Golgi circuit.
+Ignoring biological detail can be reasonable depending on the hypothesis that is being explored. 
+Yet, as we discussed in \Cref{sec:nef}, a closer look at biology may help in two complementary ways.
+First, we can \emph{validate} hypotheses about cognition by determining whether it is possible to implement a particular algorithm in a constrained biological network. 
+Second, we can \emph{generate} new hypotheses by asking what class of algorithms a network could support.
 
-Building a model of temporal representation in the cerebellum is of particular interest, since it remains unclear how exactly the cerebellum manages to learn and reproduce the precise timings observed in eyeblink conditioning. Furthermore, the mechanisms underlying eyeblink conditioning are potentially exploited by cognitive processes as well. Recent evidence---ranging from studies in functional connectivity, neuronal tracing, clinical pathology, to evolutionary physiology---suggests that the tasks supported by the cerebellum are not restricted to motor control alone. The cerebellum may instead be recruited by various brain regions as a \enquote{co-processor} to support brain functions related to higher-order cognition, such as language-based thinking, working memory, perceptual prediction, and tasks requiring precise timings in general \citep{sullivan2010cognitive,
+We believe that cognitive modellers must ultimately embrace a combination of top-down and bottom-up modelling to narrow down the space of possible cognitive science theories and to direct research attention within that space.
+Central roadblocks to the adaptation of this methodology are the availability of modelling tools such as those discussed in this thesis, disseminating information on how to use these tools in practice, and understanding how low-level detail influences high-level function.
+Correspondingly, a second goal of this chapter is to study how biological constraints influence NEF networks on a functional level.
+
+\subsubsection{Implications for neuroscience}
+A closed-loop model of eyeblink conditioning in the cerebellum is also interesting from a neuroscience perspective.
+It is still unclear how exactly the cerebellum manages to learn and reproduce the timings observed in motor-learning tasks such as eyeblink conditioning.
+While earlier theoretical work suggests that the granule cell activities could span a temporal basis \citep{medina2000computer}, this idea has recently come under scrutiny \citep{johansson2014memory}.
+To some degree, this is because recordings of the granule activities are scarce, and the source of the hypothesised temporal tuning is unclear.
+
+Understanding how the cerebellum generates timings has far-reaching implications outside motor learning.
+Recent evidence---ranging from studies in functional connectivity, neuronal tracing, clinical pathology, to evolutionary physiology---suggests that the same mechanisms are potentially exploited by other cognitive processes as well.
+That is, the cerebellum may be recruited by various brain regions as a \enquote{co-processor} to support brain functions related to higher-order cognition, such as language-based thinking, working memory, perceptual prediction, and tasks requiring precise timings in general \citep{sullivan2010cognitive,
            buckner2013cerebellum,
 		   oreilly2008cerebellum,
-           e2014metaanalysis}.
+           e2014metaanalysis,
+           sanger2020expansion}.
 
-Our experiments suggest that---at least under the constraints we consider---the Granule-Golgi circuit is well-suited to encode temporal information using basis functions. This representation can be used in the context of a spiking neural network to learn delays by modulating synaptic weights in the granular-to-Purkinje projection.
-Furthermore, we generate hypotheses as to why various biological parameters (such as the sparse connectivity patterns and the time-constants of the neurotransmitters) are as observed.
+Our experiments suggest that---at least under the constraints we consider---the Granule-Golgi circuit is well-suited to encode temporal information using temporal representations.
+This representation can be used in the context of a spiking neural network to learn delays by modulating synaptic weights in the granular-to-Purkinje projection in accordance with the Marr-Albus hypothesis \citep{marr1969theory,albus1971theory,sanger2020expansion}.
+These results support earlier simulation work \citep{rossert2015edge}.
+We furthermore use our model to generate hypotheses as to why some biological parameters are as observed.
 
-The remainder of this paper is structured as follows.
-We first review the high-level function we hypothesize could be implemented in the Granule-Golgi circuit, followed by an overview of the eyeblink conditioning task, the particular neurophysiological constraints of the cerebellum, and high-level theories of cerebellar function.
-We then discuss five neural network implementations with an increasing amount of biological detail, along with the corresponding extensions to the NEF.
-We perform a series of experiments that explore the impact of individual parameters on the performance of the increasingly realistic system.
-We extend our model to perform the complete eyeblink conditioning task by incorporating the remaining cerebellar microcircuitry and compare the model behavior to empirical data.
-Finally, we provide a quick overview of \enquote{NengoBio,} the open-source addon to Nengo we developed to encode the aforementioned biological constraints.\footnote{See \url{https://github.com/astoeckel/nengo-bio}.}
+\subsubsection{Structure of this chapter}
+The remainder of this chapter is structured as follows.
+We first review the eyeblink conditioning task, the particular neurophysiological constraints of the cerebellum, and the theorised mechanisms underpinning delay learning.
+We then discuss five neural network implementations with an increasing number of biological constraints, followed by a series of experiments to explore the impact of biological detail on the high-level function.
+
+Finally, we extend our model to the complete eyeblink conditioning task by incorporating the remaining cerebellar microcircuitry, albeit without incorporating quite as much biological detail.
+We compare the output of this model to empirical data and show that we are able to---at least qualitatively---reproduce the behaviour of experimental animals.
+An overview of our modelling tool NengoBio is provided in \Cref{app:nengo_bio}.

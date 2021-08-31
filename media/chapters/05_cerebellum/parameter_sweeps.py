@@ -24,16 +24,16 @@ from benchmark_plots_common import *
 
 # Plot the figures for the paper
 files = [
+    utils.datafile("sweep_tau_wn_two_populations_dales_principle_detailed.h5"),
     utils.datafile(
-        "cerebellum_benchmark_data/sweep_tau_wn_two_populations_dales_principle_detailed_2020_10_27_14_24_59.h5"
+        "sweep_n_pcn_granule_convergence_wn_two_populations_dales_principle_detailed.h5"
     ),
     utils.datafile(
-        "cerebellum_benchmark_data/sweep_n_pcn_granule_convergence_wn_two_populations_dales_principle_detailed_2020_10_27_15_09_20.h5"
-    ),
-    utils.datafile(
-        "cerebellum_benchmark_data/sweep_n_golgi_granule_convergence_wn_two_populations_dales_principle_detailed_2020_10_27_15_54_05.h5"
+        "sweep_n_golgi_granule_convergence_wn_two_populations_dales_principle_detailed.h5"
     ),
 ]
+
+default_values = [6, 3, 3]
 
 fig, axs = plt.subplots(1, 3, figsize=(5, 2.0))
 
@@ -45,16 +45,28 @@ for i, fn in enumerate(files):
         ax.set_yticklabels([])
     utils.outside_ticks(ax)
 
+    ax.arrow(default_values[i],
+             -0.055,
+             0.0,
+             0.02,
+             width=0.2,
+             head_width=0.5,
+             head_length=0.04,
+             linewidth=0.5,
+             edgecolor='white',
+             facecolor='k',
+             clip_on=False,
+             zorder=100)
+
     ax.text(-0.025,
             1.15,
-            "$\\mathbf{{{}}}$".format(chr(ord('A') + i)),
+            "$\\textbf{{{}}}$".format(chr(ord('A') + i)),
             va='top',
             ha='left',
             fontsize=12,
             color='black',
             transform=ax.transAxes,
             bbox=dict(facecolor='white', linewidth=0, pad=0.4))
-
 
 utils.save(fig)
 

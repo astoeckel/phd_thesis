@@ -6,23 +6,23 @@
 \vspace{15pt}
 
 \begin{OpeningQuote}
-The CNS [Central Nervous System] needs to be understood at four nearly independent levels of description: (1) that at which the nature of a computation is expressed; (2) that at which the algorithms that implement a computation are characterized; (3) that at which an algorithm is committed to particular mechanisms; and (4) that at which the mechanisms are realized in hardware.
+The CNS [Central Nervous System] needs to be understood at four nearly independent levels of description: \emph{(1)} that at which the nature of a computation is expressed; \emph{(2)} that at which the algorithms that implement a computation are characterized; \emph{(3)} that at which an algorithm is committed to particular mechanisms; and \emph{(4)} that at which the mechanisms are realized in hardware.
 In general, the nature of a computation is determined by the problem to be solved, the mechanisms that are used depend upon the available hardware, and the particular algorithms chosen depend on the problem and on the available mechanisms.
 \OpeningQuoteSource{David Marr and Tomaso Poggio}{From Understanding Computation to Understanding Neural Circuitry (1976)}
 \end{OpeningQuote}
 
 \begin{PriorPublication}
-This chapter is, with permission from the publisher, in large parts directly adapted from \citet{stockel2021connecting}.
+This chapter is, with permission from the publisher, in edited and extended from adapted from \citet{stockel2021connecting}.
 In turn, this publication is based on work presented at the Cognitive Science Society Conference (\enquote{CogSci}; \cite{stockel2020biologically}) and at the International Conference on Cognitive Modelling (\enquote{ICCM}; \cite{stockel2020connecting}).
 \end{PriorPublication}
 
 \begin{Contributions}
-The author was responsible for conducting the experiments presented in this chapter, contributing the underlying theoretical work (cf.~previous sections), writing, creating all figures, and conducting literature review.
-Terrence C.~Stewart helped with designing the overall network, exploring the parameter space, and writing the paper, in particular the \enquote{Levels of Biological Detail} section.
-We heavily edited this section to reduce redundancy with earlier parts of this thesis.
-Chris Eliasmith supervised this work and provided important feedback.
-The novelty of this work lies in demonstrating that the modelling techniques presented earlier can, together with biological constraints, be used to systematically construct models of complex biological systems.
-Our work provides evidence that the Granule-Golgi circuit could generate a temporal basis, a hypothesis that is openly debated in neuroscience.
+The author was responsible for conducting the experiments presented in this chapter, contributing the underlying theoretical work (cf.~previous sections), writing, creating all figures, and conducting the literature review.
+Terrence C.~Stewart helped with designing the final network, exploring the parameter space, and writing the paper.
+Chris Eliasmith supervised this work and provided helpful feedback.
+The novelty of this work lies in demonstrating that we can use the modelling techniques presented above to construct systems that adhere to detailed neurophysiological constraints.
+Our results suggest that the Granule-Golgi circuit can, under mild assumptions, generate temporal representations.
+Furthermore, by systematically varying neurophysiological parameters in our simulation, we find that the parameters observed in nature tend to be near-optimal for the high-level function we are trying to implement.
 \end{Contributions}
 
 \clearpage
@@ -34,11 +34,10 @@ Our work provides evidence that the Granule-Golgi circuit could generate a tempo
 
 \clearpage
 \setcounter{subsection}{1}
-\input{content/chapters/05_cerebellum/05_02_levels}
+\input{content/chapters/05_cerebellum/05_02_granule_golgi}
 
-\clearpage
 \setcounter{subsection}{2}
-\input{content/chapters/05_cerebellum/05_03_experiments}
+\input{content/chapters/05_cerebellum/05_03_eyeblink}
 
 \clearpage
 \setcounter{subsection}{3}

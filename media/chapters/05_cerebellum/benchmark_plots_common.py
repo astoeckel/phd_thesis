@@ -132,11 +132,12 @@ def plot_benchmark_result(filename, ax=None, title=None, show_title=True, do_plo
 
     def params(param):
         """Redistributes the parameters from a table into a dict."""
-        idx, seed, delays, kwargs = param
+        idx, seed, delays, dirname, kwargs = param
         return {
             "idx": idx,
             "seed": seed,
             "delays": delays,
+            "dirname": dirname,
             "kwargs": kwargs
         }
 

@@ -29,8 +29,8 @@ def min_radius(p_th=0.9, sigma=0.25, n=1000):
 
 
 def plot_spatial_data(spatial_data):
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(FIG_WIDTH, 2.0), gridspec_kw={
-        "wspace": 0.2
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(7.35, 2.25), gridspec_kw={
+        "wspace": 0.3
     })
 
     x_golgi = spatial_data["golgi_locations"]
@@ -41,29 +41,29 @@ def plot_spatial_data(spatial_data):
                    extent=[1, 10000, 1, 100],
                    interpolation='none',
                    vmin=0.0,
-                   vmax=1.0)
+                   vmax=1.0,
+                   cmap='Blues')
     ax1.set_aspect('auto')
     ax1.set_xticks([1, 2000, 4000, 6000, 8000])
     ax1.set_xlabel('Granule cell index $i$')
-    ax1.set_ylabel('Golgi cell index $j$', labelpad=-1.0)
+    ax1.set_ylabel('Golgi cell index $j$')
     utils.outside_ticks(ax1)
 
-    rect = plt.Rectangle((7050, 70), 2700, 25, facecolor='white')
+    rect = plt.Rectangle((6725, 75), 2750, 21, facecolor='white')
     ax1.add_artist(rect)
 
-    cax = fig.add_axes([0.384, 0.773, 0.077, 0.03])
+    cax = fig.add_axes([0.36, 0.79, 0.077, 0.03])
     cb = plt.colorbar(I, cax=cax, orientation='horizontal')
     cb.outline.set_visible(False)
     cax.text(0.5,
              -2.5,
              '$p_{ij}$',
-             fontsize=8,
              ha='center',
              va='bottom',
              transform=cax.transAxes)
     utils.outside_ticks(cax)
 
-    cmap = cm.get_cmap('viridis')
+    cmap = cm.get_cmap('Blues')
     for j, p_th in enumerate(np.linspace(0.25, 0.9, 5)):
         r = min_radius(p_th)
         for i in range(x_golgi.shape[0]):
@@ -86,14 +86,14 @@ def plot_spatial_data(spatial_data):
                 x_golgi[:, 1],
                 marker='+',
                 color='#f57900',
-                s=30,
+                s=35,
                 label='Golgi',
                 zorder=2000)
 
     ax2.set_xlim(-0.4, 0.4)
-    ax2.set_ylim(-0.2, 0.2)
+    ax2.set_ylim(-0.275, 0.275)
     ax2.set_xlabel('Spatial location $x_1$')
-    ax2.set_ylabel('Spatial location $x_2$', labelpad=-1.0)
+    ax2.set_ylabel('Spatial location $x_2$')
     utils.outside_ticks(ax2)
 
     ax2.legend(loc='upper right',
@@ -110,17 +110,17 @@ def plot_spatial_data(spatial_data):
                handlelength=1.25,
                handletextpad=0.2).set_zorder(10000)
 
-    ax1.text(-0.12,
-             0.9,
-             '$\\mathbf{A}$',
+    ax1.text(-0.135,
+             0.925,
+             '$\\textbf{A}$',
              ha='right',
              va='bottom',
              fontsize=12,
              transform=ax1.transAxes)
 
-    ax2.text(-0.12,
-             0.9,
-             '$\\mathbf{B}$',
+    ax2.text(-0.14,
+             0.925,
+             '$\\textbf{B}$',
              ha='right',
              va='bottom',
              fontsize=12,

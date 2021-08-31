@@ -17,63 +17,66 @@
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import os
+import tarfile
 
 #
 # WEIGHT HISTOGRAM DATA
 #
 
 
-def load_weight_hist(dirname, threshold=1e-15, mode="pcn_to_gr"):
+def load_weight_hist(tarfilename, threshold=1e-15, mode="pcn_to_gr"):
     Ws_hist = {}
     Ws_mag = {}
-    for fn in os.listdir(dirname):
-        if fn.endswith('.h5'):
-            with h5py.File(os.path.join(dirname, fn), 'r') as f:
-                params = json.loads(f['params'].attrs['params'])
+    with tarfile.open(tarfilename, 'r') as tf:
+        for fn in tf.getnames():
+            if fn.endswith('.h5'):
+                print("Processing", fn, "from", tarfilename)
+                with h5py.File(tf.extractfile(fn), 'r') as f:
+                    params = json.loads(f['params'].attrs['params'])
 
-                if 'bias_mode' in params:
-                    bias_mode = params['bias_mode']
-                else:
-                    bias_mode = 'realistic_pcn_intercepts'
-
-                if 'decode_bias_granule' in params:
-                    if not params['decode_bias_granule']:
-                        bias_mode = 'use_jbias'
-
-                if not bias_mode in Ws_hist:
-                    Ws_hist[bias_mode] = {}
-                    Ws_mag[bias_mode] = {}
-
-                if mode == "pcn_to_gr":
-                    if 'n_pcn_granule_convergence' in params:
-                        conv = params['n_pcn_granule_convergence']
+                    if 'bias_mode' in params:
+                        bias_mode = params['bias_mode']
                     else:
-                        conv = None
-                elif mode == "go_to_gr":
-                    if 'n_golgi_granule_convergence' in params:
-                        conv = params['n_golgi_granule_convergence']
-                    else:
-                        conv = None
+                        bias_mode = 'realistic_pcn_intercepts'
 
-                if mode == "pcn_to_gr":
-                    key = 'weights_conn_pcn_go_to_gr_excitatory'
-                    W = np.abs(f[key])
-                    W_subs = W[:100, :]
-                elif mode == "go_to_gr":
-                    key = 'weights_conn_pcn_go_to_gr_inhibitory'
-                    W = np.abs(f[key])
-                    W_subs = W[100:, :]
-                kind = key.split('_')[-1]
-                if not conv in Ws_hist[bias_mode]:
-                    Ws_hist[bias_mode][conv] = []
-                    Ws_mag[bias_mode][conv] = []
-                Ws_hist[bias_mode][conv] += list(
-                    np.sum(W_subs > threshold, axis=0))
-                Ws_mag[bias_mode][conv] += list(W_subs[W_subs > 0].flatten())
+                    if 'decode_bias_granule' in params:
+                        if not params['decode_bias_granule']:
+                            bias_mode = 'use_jbias'
+
+                    if not bias_mode in Ws_hist:
+                        Ws_hist[bias_mode] = {}
+                        Ws_mag[bias_mode] = {}
+
+                    if mode == "pcn_to_gr":
+                        if 'n_pcn_granule_convergence' in params:
+                            conv = params['n_pcn_granule_convergence']
+                        else:
+                            conv = None
+                    elif mode == "go_to_gr":
+                        if 'n_golgi_granule_convergence' in params:
+                            conv = params['n_golgi_granule_convergence']
+                        else:
+                            conv = None
+
+                    if mode == "pcn_to_gr":
+                        key = 'weights_conn_pcn_go_to_gr_excitatory'
+                        W = np.abs(f[key])
+                        W_subs = W[:100, :]
+                    elif mode == "go_to_gr":
+                        key = 'weights_conn_pcn_go_to_gr_inhibitory'
+                        W = np.abs(f[key])
+                        W_subs = W[100:, :]
+                    kind = key.split('_')[-1]
+                    if not conv in Ws_hist[bias_mode]:
+                        Ws_hist[bias_mode][conv] = []
+                        Ws_mag[bias_mode][conv] = []
+                    Ws_hist[bias_mode][conv] += list(
+                        np.sum(W_subs > threshold, axis=0))
+                    Ws_mag[bias_mode][conv] += list(W_subs[W_subs > 0].flatten())
     return Ws_hist, Ws_mag
 
 
-Ws_hist, Ws_mag = load_weight_hist(utils.datafile('cerebellum_weights_data'),
+Ws_hist, Ws_mag = load_weight_hist(utils.datafile('weights.tar'),
                                    mode="go_to_gr")
 
 BIAS_MODE_TO_LABEL = {
@@ -157,7 +160,7 @@ axs[-1].set_xticklabels(np.arange(10))
 
 axs[0].text(-0.025,
             1.7,
-            "$\\mathbf{D}$",
+            "$\\textbf{D}$",
             va='top',
             ha='left',
             fontsize=12,
