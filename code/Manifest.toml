@@ -287,7 +287,7 @@ runs = [
 is_multithreaded = true
 
 ["chapters/04_temporal_tuning/heterogeneous_recurrence_exploration.py"]
-commit = "d58bec4d1a42afbeb028bd223d907ded40727f72"
+commit = "d4358a8d0cd4e5588ec4819255a7eec217f6dd4c"
 dockerfile = "experiments_base"
 generates = ["heterogeneous_recurrence_exploration.h5"]
 is_multithreaded = true
@@ -300,7 +300,7 @@ generates = "cerebellum_detailed_neurons_example.h5"
 is_multithreaded = true
 
 ["chapters/05_cerebellum/generate_benchmark_data.py"]
-commit = "d4358a8d0cd4e5588ec4819255a7eec217f6dd4c"
+commit = "fb320ed663281d79d265ac512c80dc9b35c18bac"
 dockerfile = "experiments_base"
 is_multithreaded = true
 generates = [
