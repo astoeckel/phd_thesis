@@ -11,6 +11,7 @@ import multiprocessing
 import random
 import env_guard
 import h5py
+import json
 
 from temporal_encoder_common import *
 
@@ -30,7 +31,7 @@ N_FILTERS = len(FILTERS)
 N_REPEAT = 100
 
 N_FREQS = 31
-FREQS = np.logspace(-1, 2, N_FREQS)
+FREQS = list(np.logspace(-1, 2, N_FREQS))
 
 
 def solve(flts_A, flts_B, flt_tar):
@@ -151,10 +152,10 @@ def main():
     fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data',
                       "heterogeneous_recurrence_exploration.h5")
     with h5py.File(fn, 'w') as f:
-        f.attrs["filters"] = FILTERS
-        f.attrs["networks"] = NETWORKS
-        f.attrs["targets"] = TARGETS
-        f.attrs["freqs"] = FREQS
+        f.attrs["filters"] = json.dumps(FILTERS)
+        f.attrs["networks"] = json.dumps(NETWORKS)
+        f.attrs["targets"] = json.dumps(TARGETS)
+        f.attrs["freqs"] = json.dumps(FREQS)
 
         errs = f.create_dataset("errs",
                                 shape=(N_TARGETS, N_NETWORKS, N_FILTERS,
