@@ -287,7 +287,7 @@ runs = [
 is_multithreaded = true
 
 ["chapters/04_temporal_tuning/heterogeneous_recurrence_exploration.py"]
-commit = "d4358a8d0cd4e5588ec4819255a7eec217f6dd4c"
+commit = "046c63d3804a39f394fb48ce00f46b411cb0989d"
 dockerfile = "experiments_base"
 generates = ["heterogeneous_recurrence_exploration.h5"]
 is_multithreaded = true
