@@ -16,19 +16,19 @@ import json
 from temporal_encoder_common import *
 
 TAUS_INT = (100e-3, 120e-3, 10e-3, 30e-3)
-TAUS_PASS = (200e-3, 220e-3, 100e-3, 120e-3)
+TAUS_LOWPASS = (200e-3, 220e-3, 100e-3, 120e-3)
 TAUS_REF = (100e-3, 100e-3, 100e-3, 100e-3)
 
-TARGETS = ["integrator", "pass-through"]
+TARGETS = ["integrator", "lowpass"]
 N_TARGETS = len(TARGETS)
 
 NETWORKS = ["ref", "ff", "rec"]
 N_NETWORKS = len(NETWORKS)
 
-FILTERS = [1, 2, 3, 5, 10]
+FILTERS = [1, 2, 3, 5]
 N_FILTERS = len(FILTERS)
 
-N_REPEAT = 100
+N_REPEAT = 1000
 
 N_FREQS = 31
 FREQS = list(np.logspace(-1, 2, N_FREQS))
@@ -96,9 +96,9 @@ def execute_single(idcs):
     if target == "integrator":
         flt_tar = Filters.step()
         tau0A, tau1A, tau0B, tau1B = TAUS_INT
-    elif target == "pass-through":
-        flt_tar = Filters.lowpass(1e-3)
-        tau0A, tau1A, tau0B, tau1B = TAUS_PASS
+    elif target == "lowpass":
+        flt_tar = Filters.lowpass(10e-3)
+        tau0A, tau1A, tau0B, tau1B = TAUS_LOWPASS
     if net == "ref":
         tau0A, tau1A, tau0B, tau1B = TAUS_REF
 
