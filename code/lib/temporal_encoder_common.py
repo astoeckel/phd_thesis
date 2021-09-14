@@ -25,10 +25,8 @@ class Filters:
 
     @staticmethod
     def lowpass_laplace(tau, order=0):
-        scale = 1.0 / (tau**order)
-        numer = ((tau**order) * scale, )
         denom = np.polynomial.Polynomial([tau, 1.0])**(order + 1)
-        return (numer, tuple(denom.coef))
+        return ((1.0,), tuple(denom.coef))
 
     @staticmethod
     def dirac(t=0.0):
