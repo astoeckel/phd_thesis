@@ -292,6 +292,12 @@ dockerfile = "experiments_base"
 generates = ["heterogeneous_recurrence_exploration.h5"]
 is_multithreaded = true
 
+["chapters/04_temporal_tuning/heterogeneous_recurrence_exploration_xs_flt.py"]
+commit = "c3a291acd312be9902272aadae9b2587de860c5b"
+dockerfile = "experiments_base"
+generates = ["heterogeneous_recurrence_exploration_xs_flt.h5"]
+is_multithreaded = true
+
 
 ["chapters/05_cerebellum/generate_cerebellum_detailed_neurons_example.py"]
 commit = "fb320ed663281d79d265ac512c80dc9b35c18bac"
