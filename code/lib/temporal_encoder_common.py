@@ -29,6 +29,21 @@ class Filters:
         return ((1.0,), tuple(denom.coef))
 
     @staticmethod
+    def lowpass_laplace_chained(*taus):
+        denom = 1.0
+        for tau in taus:
+            denom = denom * np.polynomial.Polynomial([tau, 1.0])
+        return ((1.0,), tuple(denom.coef))
+
+    @staticmethod
+    def lowpass_chained(*taus):
+        def mk_lowpass_chained(ts, dt):
+            _, xs = scipy.signal.impulse(Filters.lowpass_laplace_chained(*taus), T=ts)
+            xs /= (np.sum(xs) * dt)
+            return xs
+        return mk_lowpass_chained
+
+    @staticmethod
     def dirac(t=0.0):
         def mk_dirac(ts, dt):
             xs = np.zeros_like(ts)
