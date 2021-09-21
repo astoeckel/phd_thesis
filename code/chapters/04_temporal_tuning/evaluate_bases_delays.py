@@ -11,6 +11,7 @@ import multiprocessing
 import random
 import env_guard
 import h5py
+import json
 
 from basis_delay_analysis_common import *
 import dlop_ldn_function_bases as bases
@@ -100,8 +101,8 @@ def main():
     fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data',
                       "evaluate_bases_delays.h5")
     with h5py.File(fn, 'w') as f:
-        f.attrs["bases"] = BASES
-        f.attrs["windows"] = WINDOWS
+        f.attrs["bases"] = json.dumps(BASES)
+        f.attrs["windows"] = json.dumps(WINDOWS)
         f.attrs["qs"] = QS
         f.attrs["thetas"] = THETAS
 
