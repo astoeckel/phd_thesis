@@ -299,7 +299,7 @@ generates = ["heterogeneous_recurrence_exploration_xs_flt.h5"]
 is_multithreaded = true
 
 ["chapters/04_temporal_tuning/evaluate_bases_delays.py"]
-commit = "c4eb27c0d63ff5ef57348ebc2972d00a0a0d42cb"
+commit = "afe50dd94150b7d690b4ea5e9daf82a97c462c3b"
 dockerfile = "experiments_base"
 generates = ["evaluate_bases_delays.h5"]
 is_multithreaded = true
