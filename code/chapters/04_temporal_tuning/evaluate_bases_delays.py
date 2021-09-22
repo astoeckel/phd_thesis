@@ -54,48 +54,68 @@ N_QS = 31
 QS = np.unique([2 * int(q / 2) + 1 for q in np.linspace(Q_MIN, Q_MAX, N_QS)])
 N_QS = len(QS)
 
-# Generate the training and test data for all thetas
-print("Generating dataset....")
+# Number of training and test samples
 N_TRAIN = 101
 N_TEST = 100
-rng = np.random.RandomState(58201)
-THETAS, XS_TEST_ALL, YS_TEST_ALL, XS_TRAIN_ALL, YS_TRAIN_ALL = generate_full_dataset(
-    N_THETAS, N_TEST, N_TRAIN, N_SIG, N_H, rng)
-
 
 def execute_single(idcs):
-    # Fetch the parameters
-    i_basis, i_window, i_q, i_theta = idcs
-    q = QS[i_q]
-    basis = BASES[i_basis]
-    window = WINDOWS[i_window]
+    fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data',
+                      "evaluate_bases_delays_dataset.h5")
+    with h5py.File(fn, 'r') as f:
+        XS_TEST_ALL = f["xs_test_all"]
+        YS_TEST_ALL = f["ys_test_all"]
+        XS_TRAIN_ALL = f["xs_train_all"]
+        YS_TRAIN_ALL = f["ys_train_all"]
 
-    # Fetch the test and training data
-    xs_test, ys_test = XS_TEST_ALL[i_theta], YS_TEST_ALL[i_theta]
-    xs_train, ys_train = XS_TRAIN_ALL[i_theta], YS_TRAIN_ALL[i_theta]
+        # Fetch the parameters
+        i_basis, i_window, i_q, i_theta = idcs
+        q = QS[i_q]
+        basis = BASES[i_basis]
+        window = WINDOWS[i_window]
 
-    # Generate the filter
-    ts_H, H = mk_impulse_response(basis, window, q=q, dt=DT)
+        # Fetch the test and training data
+        xs_test = np.array(XS_TEST_ALL[i_theta])
+        ys_test = np.array(YS_TEST_ALL[i_theta])
+        xs_train = np.array(XS_TRAIN_ALL[i_theta])
+        ys_train = np.array(YS_TRAIN_ALL[i_theta])
 
-    # Convolve the training data with the basis
-    xs_train_conv = convolve(H.T, xs_train)
+        # Generate the filter
+        ts_H, H = mk_impulse_response(basis, window, q=q, dt=DT)
 
-    # Solve for decoding weights
-    D = np.linalg.lstsq(xs_train_conv.reshape(-1, q),
-                        ys_train.reshape(-1),
-                        rcond=1e-4)[0]
+        # Convolve the training data with the basis
+        xs_train_conv = convolve(H.T, xs_train)
 
-    # Use the decoding weights to compute the delayed test signal
-    xs_test_conv = convolve(H.T, xs_test)
-    ys_test_hat = xs_test_conv @ D
+        # Solve for decoding weights
+        D = np.linalg.lstsq(xs_train_conv.reshape(-1, q),
+                            ys_train.reshape(-1),
+                            rcond=1e-4)[0]
 
-    # Compute the decoding error
-    Es = np.sqrt(np.mean(np.square(ys_test_hat - ys_test), axis=1))
+        # Use the decoding weights to compute the delayed test signal
+        xs_test_conv = convolve(H.T, xs_test)
+        ys_test_hat = xs_test_conv @ D
 
-    return idcs, Es
+        # Compute the decoding error
+        Es = np.sqrt(np.mean(np.square(ys_test_hat - ys_test), axis=1))
+
+        return idcs, Es
 
 
 def main():
+    # Generate the training and test data for all thetas
+    print("Generating dataset....")
+    rng = np.random.RandomState(58201)
+    THETAS, XS_TEST_ALL, YS_TEST_ALL, XS_TRAIN_ALL, YS_TRAIN_ALL = generate_full_dataset(
+        N_THETAS, N_TEST, N_TRAIN, N_SIG, N_H, rng)
+
+    fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data',
+                      "evaluate_bases_delays_dataset.h5")
+    with h5py.File(fn, 'w') as f:
+        f.create_dataset("thetas", data=THETAS)
+        f.create_dataset("xs_test_all", data=XS_TEST_ALL)
+        f.create_dataset("ys_test_all", data=YS_TEST_ALL)
+        f.create_dataset("xs_train_all", data=XS_TEST_ALL)
+        f.create_dataset("ys_train_all", data=YS_TEST_ALL)
+
     print("Executing experiments...")
 
     fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data',
