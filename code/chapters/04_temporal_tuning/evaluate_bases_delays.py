@@ -56,8 +56,8 @@ N_QS = len(QS)
 
 # Generate the training and test data for all thetas
 print("Generating dataset....")
-N_TRAIN = 1001
-N_TEST = 1000
+N_TRAIN = 101
+N_TEST = 100
 rng = np.random.RandomState(58201)
 THETAS, XS_TEST_ALL, YS_TEST_ALL, XS_TRAIN_ALL, YS_TRAIN_ALL = generate_full_dataset(
     N_THETAS, N_TEST, N_TRAIN, N_SIG, N_H, rng)
