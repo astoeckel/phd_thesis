@@ -309,7 +309,7 @@ generates = ["evaluate_bases_delays.h5"]
 is_multithreaded = true
 
 ["chapters/04_temporal_tuning/evaluate_bases_delays_freq_sweep.py"]
-commit = "3137fb0db0facb22abc21e89c5b3677d77d9041d"
+commit = "8ea5a089fcc881c0a40fdc1517b527ef38a290b8"
 dockerfile = "experiments_base"
 generates = ["evaluate_bases_delays_freq_sweep.h5"]
 is_multithreaded = true
