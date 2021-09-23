@@ -32,7 +32,7 @@ DT = 0.25e-2
 N_SIG = int(T / DT + 1e-9)
 THETA = 1.0
 N_H = int(THETA / DT + 1e-9)
-Q = 63
+Q = 31
 
 # Number of samples used when determining the basis LTI system
 N = 10000
