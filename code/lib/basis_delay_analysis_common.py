@@ -29,10 +29,7 @@ def eval_lti(A, B, ts):
     return np.array([scipy.linalg.expm(A * t) @ B for t in ts])
 
 
-def reconstruct_lti(H,
-                    T=1.0,
-                    dampen=False,
-                    return_discrete=False):
+def reconstruct_lti(H, T=1.0, dampen=False, return_discrete=False):
     # Fetch the number of state dimensions and the number of samples
     q, N = H.shape
 
@@ -75,7 +72,15 @@ def reconstruct_lti(H,
     return A, B
 
 
-def mk_impulse_response(basis, window, q=7, theta=1.0, T=10.0, dt=1e-2, N_solve=20000):
+def mk_impulse_response(basis,
+                        window,
+                        q=7,
+                        theta=1.0,
+                        T=10.0,
+                        dt=1e-2,
+                        N_solve=20000,
+                        return_sys=False,
+                        use_closed_form=True):
     import dlop_ldn_function_bases as bases
 
     def mk_mod_fourier_basis(q, N):
@@ -112,14 +117,13 @@ def mk_impulse_response(basis, window, q=7, theta=1.0, T=10.0, dt=1e-2, N_solve=
     if window == "bartlett" or (not window):
         A, B = reconstruct_lti(H, theta)
     elif window == "erasure":
-        if basis == "mod_fourier":
-            pass
-        if basis == "legendre":
+        if basis == "legendre" and use_closed_form:
             A, B = bases.mk_ldn_lti(q, rescale=True)
         else:
-            A, B = reconstruct_lti(H,
-                                   theta,
-                                   dampen="erasure")
+            A, B = reconstruct_lti(H, theta, dampen="erasure")
+
+    if return_sys:
+        return A, B
 
     # Either just copy the sampled function (optimal rectangle window) or
     # evaluate the LTI system
