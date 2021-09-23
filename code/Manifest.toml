@@ -286,6 +286,10 @@ runs = [
 ]
 is_multithreaded = true
 
+#
+# Chapter 4 Experiments
+#
+
 ["chapters/04_temporal_tuning/heterogeneous_recurrence_exploration.py"]
 commit = "046c63d3804a39f394fb48ce00f46b411cb0989d"
 dockerfile = "experiments_base"
@@ -303,6 +307,16 @@ commit = "e8648e30e275da09f9e11272b7facc5fb07b67ef"
 dockerfile = "experiments_base"
 generates = ["evaluate_bases_delays.h5"]
 is_multithreaded = true
+
+["chapters/04_temporal_tuning/evaluate_bases_delays_freq_sweep.py"]
+commit = "3137fb0db0facb22abc21e89c5b3677d77d9041d"
+dockerfile = "experiments_base"
+generates = ["evaluate_bases_delays_freq_sweep.h5"]
+is_multithreaded = true
+
+#
+# Chapter 5 Experiments
+#
 
 ["chapters/05_cerebellum/generate_cerebellum_detailed_neurons_example.py"]
 commit = "fb320ed663281d79d265ac512c80dc9b35c18bac"
