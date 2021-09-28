@@ -29,6 +29,16 @@ def eval_lti(A, B, ts):
     return np.array([scipy.linalg.expm(A * t) @ B for t in ts])
 
 
+def eval_lti_euler(A, B, N, dt):
+    import scipy.linalg
+    Ad = scipy.linalg.expm(A * dt)
+    res = np.zeros((N, A.shape[0]))
+    res[0, :] = B
+    for i in range(1, N):
+        res[i, :] = Ad @ res[i - 1, :]
+    return res
+
+
 def reconstruct_lti(H, T=1.0, dampen=False, return_discrete=False):
     # Fetch the number of state dimensions and the number of samples
     q, N = H.shape
@@ -80,7 +90,8 @@ def mk_impulse_response(basis,
                         dt=1e-2,
                         N_solve=20000,
                         return_sys=False,
-                        use_closed_form=True):
+                        use_closed_form=True,
+                        use_euler=False):
     import dlop_ldn_function_bases as bases
 
     def mk_mod_fourier_basis(q, N):
@@ -132,7 +143,10 @@ def mk_impulse_response(basis,
     if window == "optimal":
         res[:N] = (H / np.max(np.abs(H), axis=1)[:, None]).T
     else:
-        res = eval_lti(A, B, ts)
+        if use_euler:
+            res = eval_lti_euler(A, B, len(ts), dt)
+        else:
+            res = eval_lti(A, B, ts)
 
     return ts, res
 
@@ -201,13 +215,29 @@ class FilteredGaussianSignal:
 
 
 # Function used to generate the input/target sample pairs
-def generate_dataset(N_smpls, N_sig, N, theta, rng, freq_high=5.0):
+def generate_dataset(N_smpls,
+                     N_sig,
+                     N,
+                     theta,
+                     rng,
+                     freq_high=5.0,
+                     signal_type="lowpass"):
     N_delay = int(np.clip(np.floor(N * theta), 0, N))
-    sig = FilteredGaussianSignal(N_smpls,
-                                 dt=1.0 / N,
-                                 freq_high=freq_high,
-                                 rng=rng)
-    xs = sig(N_sig).T
+    if signal_type == "lowpass":
+        sig = FilteredGaussianSignal(N_smpls,
+                                     dt=1.0 / N,
+                                     freq_high=freq_high,
+                                     rng=rng)
+        xs = sig(N_sig).T
+    elif signal_type == "bandlimit":
+        import nengo
+        xs = np.zeros((N_smpls, N_sig))
+        for i in range(N_smpls):
+            sig = nengo.processes.WhiteSignal(period=N_sig / N,
+                                              high=freq_high,
+                                              seed=rng.randint(2 << 31))
+            xs[i] = sig.run(N_sig / N, dt=1.0 / N).flatten()
+
     ys = np.concatenate((np.zeros(
         (N_smpls, N_delay)), xs[:, :(N_sig - N_delay)]),
                         axis=1)
@@ -220,7 +250,8 @@ def generate_full_dataset(N_thetas,
                           N_sig,
                           N,
                           rng,
-                          freq_high=5.0):
+                          freq_high=5.0,
+                          signal_type="lowpass"):
     # Backup the current RNG state
     state = rng.get_state()
 
@@ -231,9 +262,10 @@ def generate_full_dataset(N_thetas,
     for i, theta in enumerate(thetas):
         rng.set_state(state)
         xs_test[i], ys_test[i] = generate_dataset(N_test, N_sig, N, theta, rng,
-                                                  freq_high)
+                                                  freq_high, signal_type)
         xs_train[i], ys_train[i] = generate_dataset(N_train, N_sig, N, theta,
-                                                    rng, freq_high)
+                                                    rng, freq_high,
+                                                    signal_type)
 
     return thetas, xs_test, ys_test, xs_train, ys_train
 
