@@ -314,6 +314,18 @@ dockerfile = "experiments_base"
 generates = ["evaluate_bases_delays_freq_sweep.h5"]
 is_multithreaded = true
 
+["chapters/04_temporal_tuning/evaluate_bases_delays_bandlimited.py"]
+commit = "ca6c0e55dcefb29c91913f3bc962082be41e3d36"
+dockerfile = "experiments_base"
+generates = ["evaluate_bases_delays_bandlimited.h5"]
+is_multithreaded = true
+
+["chapters/04_temporal_tuning/evaluate_synaptic_weight_computation.py"]
+commit = "06aa64869617bf2bb54c0b45df18d946028e27eb"
+dockerfile = "experiments_base"
+generates = ["evaluate_synaptic_weight_computation.h5"]
+is_multithreaded = true
+
 #
 # Chapter 5 Experiments
 #
