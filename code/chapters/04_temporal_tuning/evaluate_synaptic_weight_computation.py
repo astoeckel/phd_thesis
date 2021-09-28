@@ -358,7 +358,7 @@ def main():
         f.attrs["solver_modes"] = json.dumps(SOLVER_MODES)
         f.attrs["modes"] = json.dumps(MODES)
         f.attrs["qs"] = json.dumps([int(q) for q in QS])
-        f.attrs["neurons"] = json.dumps(list(NEURONS))
+        f.attrs["neurons"] = json.dumps([int(x) for x in NEURONS])
         f.attrs["xs_sigma_test"] = json.dumps(list(XS_SIGMA_TEST))
 
         errs_tuning = f.create_dataset("errs_tuning",
