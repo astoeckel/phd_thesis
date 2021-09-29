@@ -321,7 +321,7 @@ generates = ["evaluate_bases_delays_bandlimited.h5"]
 is_multithreaded = true
 
 ["chapters/04_temporal_tuning/evaluate_synaptic_weight_computation.py"]
-commit = "06aa64869617bf2bb54c0b45df18d946028e27eb"
+commit = "9b7e2bb90723ba85dfc3cd6648b1c20fadb546c6"
 dockerfile = "experiments_base"
 generates = ["evaluate_synaptic_weight_computation.h5"]
 is_multithreaded = true
