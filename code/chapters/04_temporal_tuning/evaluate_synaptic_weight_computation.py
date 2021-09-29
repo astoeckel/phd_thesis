@@ -384,7 +384,8 @@ def main():
         random.shuffle(idcs)
 
         with env_guard.SingleThreadEnvGuard():
-            with multiprocessing.get_context('spawn').Pool() as pool:
+#            with multiprocessing.get_context('spawn').Pool() as pool:
+            with multiprocessing.Pool() as pool:
                 for idcs, Es_tuning, Es_delay, in tqdm.tqdm(
                         pool.imap_unordered(execute_single,
                                             idcs), total=len(idcs)):
