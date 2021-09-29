@@ -32,6 +32,13 @@ import posix_ipc
 
 import logging
 
+THREADING_ENV_VARS = {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+}
+
 logger = logging.getLogger(__name__)
 
 
@@ -173,13 +180,23 @@ def _docker_run(image_id, repository_dir, cmd, *args, interactive=False):
     with tempfile.TemporaryDirectory() as home_dir:
         args = list(
             filter(bool, [
-                "docker", "run", "--rm",
-                "-it" if interactive else "-t", "-u", "{:d}:{:d}".format(
-                    os.getuid(), os.getpid()), "-v", "{}:{}:z".format(
-                        home_dir, "/home/user"), "-v", "{}:{}:z".format(
-                            repository_dir, "/work"), "-e", "HOME=/home/user",
-                "-e", "USER=user", "-w", "/work", image_id, cmd, *args
-            ]))
+                "docker",
+                "run",
+                "--rm",
+                "-it" if interactive else "-t",
+                "-u",
+                "{:d}:{:d}".format(os.getuid(), os.getpid()),
+                "-v",
+                "{}:{}:z".format(home_dir, "/home/user"),
+                "-v",
+                "{}:{}:z".format(repository_dir, "/work"),
+                "-e",
+                "HOME=/home/user",
+                "-e",
+                "USER=user",
+            ] + sum([["-e", key + "=" + value]
+                     for key, value in THREADING_ENV_VARS.items()], []) +
+                   ["-w", "/work", image_id, cmd, *args]))
         res = subprocess.run(args, bufsize=0)
         if res.returncode != 0:
             raise RuntimeError("Error while executing the given command!")
