@@ -201,13 +201,29 @@ class FilteredGaussianSignal:
 
 
 # Function used to generate the input/target sample pairs
-def generate_dataset(N_smpls, N_sig, N, theta, rng, freq_high=5.0):
+def generate_dataset(N_smpls,
+                     N_sig,
+                     N,
+                     theta,
+                     rng,
+                     freq_high=5.0,
+                     signal_type="lowpass"):
     N_delay = int(np.clip(np.floor(N * theta), 0, N))
-    sig = FilteredGaussianSignal(N_smpls,
-                                 dt=1.0 / N,
-                                 freq_high=freq_high,
-                                 rng=rng)
-    xs = sig(N_sig).T
+    if signal_type == "lowpass":
+        sig = FilteredGaussianSignal(N_smpls,
+                                     dt=1.0 / N,
+                                     freq_high=freq_high,
+                                     rng=rng)
+        xs = sig(N_sig).T
+    elif signal_type == "bandlimit":
+        import nengo
+        xs = np.zeros((N_smpls, N_sig))
+        for i in range(N_smpls):
+            sig = nengo.processes.WhiteSignal(period=N_sig / N,
+                                              high=freq_high,
+                                              seed=rng.randint(2 << 31))
+            xs[i] = sig.run(N_sig / N, dt=1.0 / N).flatten()
+
     ys = np.concatenate((np.zeros(
         (N_smpls, N_delay)), xs[:, :(N_sig - N_delay)]),
                         axis=1)
@@ -220,7 +236,8 @@ def generate_full_dataset(N_thetas,
                           N_sig,
                           N,
                           rng,
-                          freq_high=5.0):
+                          freq_high=5.0,
+                          signal_type="lowpass"):
     # Backup the current RNG state
     state = rng.get_state()
 
@@ -231,9 +248,9 @@ def generate_full_dataset(N_thetas,
     for i, theta in enumerate(thetas):
         rng.set_state(state)
         xs_test[i], ys_test[i] = generate_dataset(N_test, N_sig, N, theta, rng,
-                                                  freq_high)
+                                                  freq_high, signal_type=signal_type)
         xs_train[i], ys_train[i] = generate_dataset(N_train, N_sig, N, theta,
-                                                    rng, freq_high)
+                                                    rng, freq_high, signal_type=signal_type)
 
     return thetas, xs_test, ys_test, xs_train, ys_train
 
