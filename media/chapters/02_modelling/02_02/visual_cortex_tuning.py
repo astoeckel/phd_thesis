@@ -1,10 +1,17 @@
 # See data/hubel_wiesel_1959_digitization
-spike_times = [[], [0.054], [0.03, 0.128],
-               [0.00926, 0.09088, 0.14391, 0.29092, 0.37257, 0.48277, 0.68278],
-               [
-                   0.02081, 0.04227, 0.07145, 0.09863, 0.12738, 0.16381,
-                   0.19339, 0.2744, 0.39203
-               ], [0.01234, 0.06376], [], []]
+spike_times = [
+    [],
+    [0.054],
+    [0.03, 0.128],
+    [0.00926, 0.09088, 0.14391, 0.29092, 0.37257, 0.48277, 0.68278],
+    [
+        0.02081, 0.04227, 0.07145, 0.09863, 0.12738, 0.16381, 0.19339, 0.2744,
+        0.39203
+    ],
+    [0.01234, 0.06376],
+    [],
+    [],
+]
 
 # Reverse the list for counter-clockwise rotation
 spike_times = spike_times[0:1] + spike_times[::-1]
@@ -12,14 +19,17 @@ spike_times = spike_times[0:1] + spike_times[::-1]
 fig, (ax1, ax2) = plt.subplots(1,
                                2,
                                figsize=(6.35, 2.2),
-                               gridspec_kw={"wspace": 0.4, "width_ratios": [4.5, 3]})
+                               gridspec_kw={
+                                   "wspace": 0.4,
+                                   "width_ratios": [4.5, 3]
+                               })
 
 for spine in ["left", "bottom"]:
     ax1.spines[spine].set_visible(False)
 ax1.set_xticks([])
 ax1.set_yticks([])
 
-ax1.set_xlim(-1, 4)	
+ax1.set_xlim(-1, 4)
 ax1.set_ylim(0.6, 7.5)
 
 for i, angle in enumerate(np.arange(0, 180, 22.5)):
@@ -42,11 +52,11 @@ for i, angle in enumerate(np.arange(0, 180, 22.5)):
                                  clip_on=False)
     ax1.add_artist(rect)
 
-#    ax1.plot([x0 - 0.2 * np.cos(phi), x0 + 0.2 * np.cos(phi)],
-#             [y0 + 0.35 * np.sin(phi), y0 - 0.35 * np.sin(phi)],
-#             color=utils.oranges[2],
-#             linewidth=3,
-#             clip_on=False)
+    #    ax1.plot([x0 - 0.2 * np.cos(phi), x0 + 0.2 * np.cos(phi)],
+    #             [y0 + 0.35 * np.sin(phi), y0 - 0.35 * np.sin(phi)],
+    #             color=utils.oranges[2],
+    #             linewidth=3,
+    #             clip_on=False)
     ax1.plot([x0 - 0.2 * np.cos(phi), x0 + 0.2 * np.cos(phi)],
              [y0 - 0.35 * np.sin(phi), y0 + 0.35 * np.sin(phi)],
              color=utils.oranges[2],
@@ -107,7 +117,8 @@ ax2.text(-0.2,
 
 ax2.plot(np.arange(0, 181, 22.5), [len(x) for x in spike_times], 'k+--')
 ax2.set_xticks(np.arange(0, 181, 45))
-ax2.set_xticklabels(['{:0.0f}\\textdegree{{}}'.format(x) for x in np.arange(0, 181, 45)])
+ax2.set_xticklabels(
+    ['{:0.0f}\\textdegree{{}}'.format(x) for x in np.arange(0, 181, 45)])
 ax2.set_xlim(0, 180)
 ax2.set_ylim(-0.5, 10)
 ax2.set_title('{Tuning curve}', y=1.025, va="bottom")

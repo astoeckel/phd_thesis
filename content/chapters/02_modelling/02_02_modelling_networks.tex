@@ -137,8 +137,8 @@ LTI systems are fully characterised by their \emph{impulse response} $h(t)$ and 
 \begin{align}
 	g(t)
 		&= (h \ast u)(t)
-		 = \int_0^t h(\tau) u(\tau - t) \,\mathrm{d}\tau
-		 = \int_0^t h(\tau) \sum\nolimits_{i}  w_i \sum\nolimits_{j} \delta(t_{ij} - \tau) \,\mathrm{d}\tau \,.
+		 = \int_0^\infty h(\tau) u(t - \tau) \,\mathrm{d}\tau
+		 = \int_0^\infty h(\tau) \sum\nolimits_{i}  w_i \sum\nolimits_{j} \delta(t_{ij} - \tau) \,\mathrm{d}\tau \,.
 	\label{eqn:synapse_impulse}
 \end{align}
 For the first-order dynamics in \cref{eqn:low_pass_first_order}, the impulse response is $h(t) = \exp(-t/\tau)$ for $t \geq 0$ (and $h(t)= 0$ if $t < 0$); impulse responses of the second-order system are depicted in \Cref{fig:synapse_filter_examples_time_constants}.
@@ -163,7 +163,7 @@ This incurs a high computational cost, especially when considering detailed comp
 
 Fortunately, important electrophysiological properties of neurons can be captured by less detailed, computationally inexpensive, models \citep[cf.][Chapter~14]{koch1999biophysics}.
 For example, the Izhikevich \citep{izhikevich2004which} and Adaptive Exponential \citep{brette2005adaptive} point neuron models require only two state variables, but are capable of reproducing spike patterns observed in nature.
-Here, we focus on the even simpler \enquote{leaky integrate-and-fire} (LIF) model\index{leaky integrate-and-fire model}.
+Here, we focus on the even simpler \enquote{leaky integrate-and-fire} (LIF) model.
 
 \subsubsection{The leaky integrate-and-fire model}
 
@@ -224,7 +224,7 @@ This is depicted in \Cref{fig:lif}.
 \Cref{fig:neuron_voltage_traces} depicts a comparison between the Hodgkin-Huxley-type and LIF dynamics.
 The reset and threshold potential of the LIF neuron model have been tuned to match the sub-threshold membrane potentials observed in the Hodgkin-Huxley neuron.
 In both cases---apart from the obviously missing super-threshold dynamics---the inter-spike-interval decreases the larger $J$, leading to a higher spike rate.
-This suggests a characterisation of neurons in terms of their \emph{response curve}\index{neuron!response curve} $G[J]$ (\Cref{fig:neuron_response_curves})
+This suggests a characterisation of neurons in terms of their \emph{response curve} $G[J]$ (\Cref{fig:neuron_response_curves})
 \begin{align}
 	G[J] &= \lim_{T \to \infty} \frac{n_\mathrm{spikes}(J, T)}{T} \,, & \text{where } n_\mathrm{spikes}(J, T) &= \text{\#spikes for input $J$ over a period $T$} \,.
 	\label{eqn:response_curve}
@@ -386,7 +386,7 @@ This characterizes how the stimulus propagates through the brain up to the recor
 
 In the recording depicted in \Cref{fig:visual_cortex_tuning}, we find that the neuron is most sensitive to---or, \emph{tuned} to---a certain orientation $\varphi$.
 We could say that in this specific case, vertical bars are the \emph{preferred stimulus} of the neuron.
-Generally, such a mapping from a stimulus property $\varphi$ onto the average neural activity $a(\varphi)$ is called a \emph{tuning curve} \citep[e.g.,][p.~1112]{vandenbos2015apa}\index{neuron!tuning curve}\index{tuning curve}.
+Generally, such a mapping from a stimulus property $\varphi$ onto the average neural activity $a(\varphi)$ is called a \emph{tuning curve} \citep[e.g.,][p.~1112]{vandenbos2015apa}.
 
 \subsubsection{Receptive fields}
 
@@ -398,14 +398,14 @@ Generally, such a mapping from a stimulus property $\varphi$ onto the average ne
 	Negative  values (red) indicate that neural activity is reduced if a stimulus is present at that location, positive values (blue) indicate an increase in activity.}
 	\label{fig:gabor}
 \end{figure}
-The concept of \emph{receptive fields}\index{neuron!receptive field}\index{receptive field} is closely related to tuning curves.
+The concept of \emph{receptive fields} is closely related to tuning curves.
 This is best illustrated in the context of stimuli that can be described as an intensity over a two-dimensional surface---such as vision or touch.
 Generally, the receptive field of a neuron is the collection of points $(\xi_1, \xi_2)$ at which the presence of a stimulus---a point of light or mechanical pressure---triggers a neural response.
 However, as evidenced by \citet{hubel1962receptive}, neural receptive fields are not only characterised in terms of the locations where a stimulus \emph{increases} the average neural activity, but also where the presence of a stimulus \emph{decreases} activity.
 
 Mathematically, we can describe this in terms of a function $e(\xi_1, \xi_2)$ that assigns a weight to each stimulus location $(\xi_1, \xi_2)$.
 This function $e$ is the receptive field.
-\emph{Gabor filters}\index{Gabor filter} are a class of mathematical functions that fit observed receptive fields in the visual cortex well \citep{marcelja1980mathematical,field1986structure}.%
+\emph{Gabor filters} are a class of mathematical functions that fit observed receptive fields in the visual cortex well \citep{marcelja1980mathematical,field1986structure}.%
 \footnote{Gabor filters are sinusoidals scaled by a radial Gaussian envelope. Such functions are maximally localised in time and space, as pointed out in the context of Gabor's Fourier uncertainty principle \citep{gabor1946theory}.}
 Examples are depicted in \Cref{fig:gabor}.
 
@@ -467,7 +467,7 @@ They allow precise inferences from imprecise or ambiguous observations. This is 
 For example, we can imagine that a single neuron represents a scalar value $x \in [-1, 1]$ as expressed by its tuning curve $a(x)$.
 Unfortunately, the firing rate $a$ cannot be measured without error.
 That is, neurons produce spontaneous activity that, as far as we can tell, is not related to a stimulus.
-This is part due to noise inherent to neurobiological processes \citep[cf.][Section~2.2.1]{eliasmith2003neural}, and in part due to the Fourier uncertainty principle\index{Fourier!uncertainty principle}.%
+This is part due to noise inherent to neurobiological processes \citep[cf.][Section~2.2.1]{eliasmith2003neural}, and in part due to the Fourier uncertainty principle.%
 \footnote{We can either estimate the frequency (i.e., rate) of a signal with a high precision at a low temporal resolution, or estimate the frequency with a low precision at a high temporal resolution \citep{gabor1946theory}.}
 Hence, when trying to \emph{decode} the represented value $x$ from the neural activity, there is a large degree of uncertainty.
 Adding neurons that are tuned to the same quantity $x$, but with different tuning curves to the population drastically reduces this uncertainty from a information-theoretic perspective \citep{ma2009population}.

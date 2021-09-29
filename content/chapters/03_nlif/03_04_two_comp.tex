@@ -421,7 +421,7 @@ All remaining neuron parameters can be found in \Cref{tbl:two_comp_neuron_parame
 \end{figure}
 
 In each trial, we simulate the network over \SI{10}{\second} at a time-resolution of \SI{100}{\micro\second}.
-Inputs $x_1(t)$ and $x_2(t)$ are moving along a fourth-order space-filling Hilbert curve\index{Hilbert curve} covering $[-1, 1]^2$ \citep{hilbert1891uber}.
+Inputs $x_1(t)$ and $x_2(t)$ are moving along a fourth-order space-filling Hilbert curve covering $[-1, 1]^2$ \citep{hilbert1891uber}.
 The activities of the output population are decoded and filtered with a first-order exponential low-pass at $\tau = \SI{100}{\milli\second}$.
 To determine the approximation error, we pass the target $f(x_1(t), x_2(t))$ through exactly the same filter chain.
 Our final error $E_\mathrm{net}$ is the \NRMSE between the decoded output and the filtered target signal over time.

@@ -12,6 +12,7 @@
 \usepackage{rotating}
 \usepackage{nicematrix}
 \usepackage{minted}
+\usepackage{nicefrac}
 \usepackage[ruled,vlined,linesnumbered,algochapter]{algorithm2e}
 \renewcommand\AlCapFnt{\sffamily\small\bfseries}
 \renewcommand\AlCapNameFnt{\sffamily\small}
@@ -109,5 +110,13 @@
 \declaretheorem[name=Conjecture,sibling=theorem]{conjecture}
 \declaretheorem[name=Proposition,sibling=theorem]{proposition}
 \declaretheorem[name=Lemma,sibling=theorem]{lemma}
+
+\declaretheoremstyle[
+	headfont=\normalfont\bfseries,
+	notefont=\normalfont,
+	notebraces={(}{)},
+	bodyfont=\normalfont,
+]{veryplainstyle}
+\declaretheorem[name=Example,numberwithin=chapter,style=veryplainstyle]{example}
 
 \declaretheorem[name=Definition,numberwithin=chapter]{definition}

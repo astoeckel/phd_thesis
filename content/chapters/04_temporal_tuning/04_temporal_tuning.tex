@@ -1,0 +1,44 @@
+% !TeX spellcheck = en_GB
+\chapter{Temporal Tuning}
+\label{chp:temporal_tuning}
+
+\vspace{20pt}
+
+\begin{OpeningQuote}
+Complex effects, such as representing visual motion, are the outcome of the dynamics of neural networks. This means that while network properties are dependent on the properties of the neurons in the network, they are nevertheless not identical to cellular properties, nor to \emph{simple} combinations of cellular properties. Interactions of neurons in networks is required for complex effects, but it is dynamical, not a simple wind-up doll affair.
+\OpeningQuoteSource{Particia S. Churchland and Terrence J. Sejnowski}{The Computational Brain (1992)}
+\end{OpeningQuote}
+
+\begin{PriorPublication}
+Some of the material in this chapter has previously been published in the form of two technical reports, namely \citet{stockel2021constructing}, where we derive feedback matrices for polynomial temporal basis functions, and \citet{stockel2021discrete}, where we systematically compare different temporal function bases.
+\end{PriorPublication}
+
+\begin{Contributions}
+This chapter has been heavily inspired by Volker and Eliasmith's work on the Legendre Delay Network (LDN) and integrating higher-order synapses into the NEF \citep{voelker2018improving,voelker2019}, as well as Chilkuri and Eliasmith's recent work on efficiently training deep neural networks that utilise the Legendre Delay Network \citep{chilkuri2021parallelizing}.
+Novel work in this chapter includes generalising the third NEF principle to take temporal tuning into account, as well as demonstrating that it is possible to build networks that fulfil desired temporal tuning by (iteratively) solving convex optimisation problems.
+Furthermore, we provide a simple derivation of the LDN LTI system from first principles.
+Lastly, we show that thinking about dynamics in terms of orthogonal temporal bases in the context of ANNs is beneficial as well, and that we can outperform contemporary methods for stream-processing such as LSTMs by a wide margin in benchmark tasks.
+\end{Contributions}
+
+\clearpage
+\input{content/chapters/04_temporal_tuning/04_00_introduction}
+
+\clearpage
+\setcounter{section}{0}
+\input{content/chapters/04_temporal_tuning/04_01_temporal_tuning}
+
+\clearpage
+\setcounter{section}{1}
+\input{content/chapters/04_temporal_tuning/04_02_temporal_basis_functions}
+
+\clearpage
+\setcounter{section}{2}
+\input{content/chapters/04_temporal_tuning/04_03_weight_solving}
+
+%\clearpage
+%\setcounter{section}{3}
+%\input{content/chapters/04_temporal_tuning/04_04_applications_to_ml}
+%
+%\clearpage
+%\setcounter{section}{4}
+%\input{content/chapters/04_temporal_tuning/04_05_conclusion}

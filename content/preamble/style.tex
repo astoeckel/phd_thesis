@@ -95,24 +95,19 @@
 
 \definecolor{shadecolor}{gray}{0.9}
 
-\newenvironment{PriorPublication}{
-\begin{figure}[b!]
-\begin{shaded}
-\small%
-\sffamily%
-\textbf{Material in this chapter from prior publications}\\[0.25cm]
+\newenvironment{FloatingBox}[1]{
+	\begin{figure}[b!]
+	\begin{shaded}
+	\small%
+	\sffamily%
+	\textbf{#1}\\[0.25cm]
 }{
-\end{shaded}
-\end{figure}
+	\end{shaded}
+	\end{figure}
 }
 
-\newenvironment{Contributions}{
-\begin{figure}[b!]
-\begin{shaded}
-\small%
-\sffamily%
-\textbf{Contributions in this chapter}\\[0.25cm]
-}{
-\end{shaded}
-\end{figure}
-}
+\newenvironment{PriorPublication}{\begin{FloatingBox}{Material in this chapter from prior publications}}{\end{FloatingBox}}
+
+\newenvironment{Contributions}{\begin{FloatingBox}{Contributions in this chapter}}{\end{FloatingBox}}
+
+\newenvironment{Notation}{\begin{FloatingBox}{Notation}}{\end{FloatingBox}}

@@ -1,0 +1,183 @@
+\chapter{Mathematical Notation and Reference}
+\label{app:mathematical_notation}
+
+\begin{PriorPublication}
+This appendix, in particular \Cref{app:linear_algebra}, is partially based on material previously published as a technical report \citep{stockel2021discrete}.
+\end{PriorPublication}
+
+Some care has been taken to make the mathematical notation in this thesis as consistent as possible.
+Unfortunately, as this thesis covers material from different disciplines, the notation chosen here may not be exactly what a reader coming from a specific discipline might expect.
+The goal of this appendix is to clarify our notation and to provide a reference for some basic mathematical concepts that we did not to include in the main text.
+
+\section{Notational conventions}
+
+\begin{table}
+\centering
+\caption{Typographical conventions used to denote different mathematical objects.}
+\label{tbl:typography}
+\small
+\begin{tabular}{p{4cm} p{3cm} p{7.5cm}}
+	\toprule
+	\emph{Symbols} & \emph{Objects} & \emph{Description} \\
+	\midrule
+	$d$, $i$, $j$, $k$, $\ell$, $m$, $n$, $M$, $N$ & Integers & By convention, these symbols denote integers, typically used as index variables or to denote cardinalities. \\
+	\midrule
+	$a$, $f$, $g$, $u$, $v$, $x$, $y$, $\ldots$ \newline $\alpha$, $\beta$, $\gamma$, $\ldots$ \newline $G$, $H$, $J$, $\ldots$ & \raggedright Scalars and functions & All other italic letters (Greek or Latin) denote scalars, usually elements of the real number-line \Reals. Alternatively, these letters are used to denote functions, including probability variables.\\
+	\midrule
+	$\vec a$, $\vec b$, $\vec u$, $\vec x$, $\vec y$, $\vec z$, $\ldots$ & \raggedright Vectors and some vector\--valued functions & Bold, lower-case Latin letters denote column vectors, typically elements of the $d$-dimensional real vector space $\Reals^{n}$. Alternatively, these letters may denote vector-valued functions to explicitly disambiguate between scalar and vector-valued functions.\\
+	\midrule
+	$\tmp a$, $\tmp b$, $\tmp u$, $\tmp x$, $\tmp y$, $\tmp z$, $\ldots$ & \raggedright Functions over time & Lowercase Latin letters in Fraktur script are used to explicitly denote real- or vector-valued functions over time.
+	To improve readability, we only use this notation if it is necessary to disambiguate between temporal and non-temporal quantities.\\
+	\midrule
+	$\mat A$, $\mat B$, $\mat C$, $\mat D$, $\ldots$ \newline
+	$\mat \Upsilon$, $\mat \Gamma$, $\ldots$ & Matrices & Bold upper-case Greek or Latin letters denote matrices $\Reals^{m \times n}$. \\
+	\midrule
+	$\mathbb{B}$, $\mathbb{N}$, $\mathbb{R}$, $\mathbb{S}$, $\mathbb{Q}$, $\mathbb{X}$, $\ldots$ & Sets & Double-struck uppercase Latin letters denote sets, i.e., collections of mathematical objects. \\
+	\midrule
+	$\mathcal{G}$, $\mathcal{H}$, $\ldots$ & Special symbols & Other symbols, such as calligraphic letters are used sparsely throughout this document for further disambiguation.\\ 
+	\bottomrule
+\end{tabular}
+\end{table}
+
+We follow the typographical guidelines outlined in \Cref{tbl:typography}.
+Symbols used throughout this document follow 
+
+\section{Linear Algebra}
+\label{app:linear_algebra}
+
+The purpose of this section is to provide a quick reference for some terms from linear algebra that are used throughout this document.
+Of course, this appendix cannot provide a comprehensive introduction to linear algebra.
+In particular, we will---for brevity---assume that our vector spaces are always $\mathbb{R}^d$ with scalar elements from $\mathbb{R}$.
+Readers wishing to learn more about linear algebra are referred to the excellent and freely available introductory book by \citet{hefferon2020linear}.
+
+\begin{definition}[Linear function]
+A \emph{linear function} is a function $f : \Reals^n \longrightarrow \Reals^{m}$ that fulfills the following property
+\begin{align*}
+	f(a \vec x + b \vec y) &= a f(\vec x) + b f(\vec y) \quad \quad \text{for all } \vec x, \vec y \in \mathbb{R}^n\,, a, b \in \mathbb{R} \,.
+\end{align*}
+\end{definition}
+
+\begin{definition}[Matrix]
+A \emph{matrix} $\mat A$ is a member of the set of all possible linear functions mapping $\Reals^n$ onto $\Reals^m$.
+All matrices can be represented as a grid of $m \times n$ real numbers.
+\begin{align*}
+	\mat A = \begin{pmatrix}
+		a_{1, 1} & \ldots & a_{1, n} \\
+		\vdots & & \vdots \\
+		a_{m, 1} & \ldots & a_{m, n}
+	\end{pmatrix} \,,
+\end{align*}
+\end{definition}
+
+\subsubsection{Matrices as linear functions}
+Matrices over a vector space are defined as spanning the set of all possible linear operators.
+That is, if $f : \Reals^n \longrightarrow \Reals^m$ is 
+
+The choice of the number of rows $m$ and columns $n$ in a matrix may sometimes seem arbitrary.
+Where possible, we use the following convention.
+A $\mat A \in \Reals^{m \times n}$ can be seen as a linear operator mapping from $\Reals^{n}$ onto $\Reals^{m}$.
+
+
+\subsection{Function Spaces}
+\label{app:functional_analysis}
+
+Throughout this thesis, and \Cref{sec:temporal_bases} in particular, we use some concepts from functional analysis that may not be familiar to all readers.
+The goal of this section is to quickly review of these concepts.
+We closely follow \citet{young1988introduction} and strongly advise the reader to consult this book for a more thorough (and undoubtedly more correct) treatment of the topic.
+A recommended gentle introduction to linear algebra itself is \citet{hefferon2020linear}.
+Since we are not concerned with complex numbers, we generally define all concepts over $\mathbb{R}$ instead of $\mathbb{C}$.
+
+The concept of vector spaces in linear algebra is general enough to include infinite-dimensional spaces, or, in other words, spaces that can only be spanned by an infinite number of basis vectors.
+A mathematically useful subset of possible vector spaces that encompasses both finite- and infinite-dimensional spaces are so-called \enquote{Hilbert spaces}, a prominent example being the $L^2(a, b)$ space.
+
+\begin{definition}[{Inner product space, induced norm, induced metric; cf.~\cite{young1988introduction}, Definitions 1.2, 1.6, Theorem 2.3}]
+ 	An \emph{inner product space} is a vector space\footnote{A vector space is a set $V$ with an addition and scalar multiplication operation over a field $F$. These operations must fulfil a set of requirements; see \cite[Definition 1.1]{hefferon2020linear}.} $V$ with an associated inner product $\langle \cdot, \cdot \rangle : V \times V \longrightarrow \mathbb{R}$. The inner product must fulfil the following properties
+ 	\begin{enumerate}
+ 		\item \emph{Symmetry:} $\langle \vec x, \vec y \rangle = \langle \vec y, \vec x \rangle\,$.
+ 		\item \emph{Linearity:} $\langle \alpha \vec x + \vec y, \vec z \rangle = \alpha \langle \vec x, \vec y \rangle + \langle \vec y, \vec z \rangle$ for any $\alpha \in \mathbb{F}$.
+ 		\item \emph{Positive definite:} $\langle \vec x, \vec x \rangle > 0$ if $\vec x \neq 0\,$.
+ 	\end{enumerate}
+ 	If $\langle \vec x, \vec y \rangle = 0$, then $\vec x$ and $\vec y$ are called orthogonal. The norm $\|\vec x\| = \sqrt{\langle \vec x, \vec x \rangle}$ is the \emph{induced norm} of an inner product space; the metric $d(\vec x, \vec y) = \|\vec x - \vec y\|$ is its \emph{induced metric}.
+\end{definition}
+
+\begin{definition}[Function space]
+ 	A \emph{function space} is an inner product space with $V = \{ f \mid f : X \longrightarrow Y\}$. In other words, each $f \in V$ is a function mapping from a domain $X$ onto a codomain $Y$.
+ 	In this report we are concerned with $X, Y \subseteq \mathbb{R}$.
+\end{definition}
+
+\begin{definition}[Function basis]
+ 	A \emph{function basis} of a function space $V$ is an infinite sequence $(e_n)_{n \in \mathbb{N}}$ of linearly independent functions $e_n \in V$ that span $V$.
+ 	This is equivalent to demanding (cf.~Theorem~1.12~in \cite{hefferon2020linear}) that each function $f \in V$ must be representable as a \emph{unique} linear combination of $e_n$.
+ 	There exists a unique sequence $(\xi_n)_{n \in \mathbb{N}}$ over $\mathbb{R}$ such that $f(x) = \sum_{n = 0}^\infty \xi_n e_n(x)$ for each $f \in V$.
+ 	Conversely, each function $f$ constructed through such a linear combination must be an element of $V$.
+\end{definition}
+
+\begin{definition}[Orthogonal and orthonormal function bases]
+ 	A function basis is \emph{orthogonal} if $\langle f_i, f_j \rangle = 0 \Leftrightarrow i \neq j$. A function basis is \emph{orthonormal} if, additionally,  $\langle f_i, f_j \rangle = 1 \Leftrightarrow i = j$.%
+ 	\footnote{Note that the concept of a (function) basis being orthogonal is confusingly different from that of a matrix $\mat A$ being orthogonal, which is defined as $\mat A^T \mat A = \mat I$ and thus closer to the concept of an orthonormal basis.}
+\end{definition}
+
+\begin{example}[{Continuous function space $\mathcal{C}[a, b]$}]
+An example of a function space would be the set of continuous scalar functions over an interval $[a, b]$, denoted as
+\begin{align*}
+ 	\mathcal{C}[a, b] &= \{ f \mid f : [a, b] \longrightarrow \mathbb{R} \text{ and } f \text{ is continuous} \} \,.
+\end{align*}
+This set is a vector space when coupled with addition $(f + g)(x) = f(x) + g(x)$ and scalar multiplication $(\lambda f)(x) = \lambda f(x)$ for $\lambda \in \mathbb{R}$. Furthermore, it can be shown that the following inner product over $\mathcal{C}[a, b]$ fulfils the above properties:
+\begin{align}
+ 	\langle f, g \rangle &= \int_a^b f(x) g(x) \,\mathrm{d}x \,.
+ 	\label{eqn:C_inner_product}
+\end{align}
+\end{example}
+
+One might be inclined to think that the concept of a continuous function space $\mathcal{C}[a, b]$ is sufficient for most purposes. However, when trying to find a basis that spans $\mathcal{C}[a, b]$, one would eventually notice that any candidate basis can be used to generate discontinuous functions. Thus, the candidate basis does not span $\mathcal{C}[a, b]$, but a slightly larger space.
+The next example illustrates this.
+
+\begin{figure}[t]
+\centering
+\includegraphics{media/chapters/ZA_math_background/fourier_sign_example.pdf}
+ 	\caption[Approximating the discontinuous sign function using continuous functions]{Approximating the discontinuous sign function (bottom right) using a sum of continuous sine waves according to \cref{eqn:sign_sine}.
+ 	Cauchy sequences of continuous functions can converge to a discontinuous function.}
+ 	\label{fig:fourier_sign_example}
+\end{figure}
+
+\begin{example}[Sign function as a series of continuous functions]
+Consider the following sequence of basis functions $(f'_n)_{n \in \mathbb{N}}$ over $\mathcal{C}[-\pi, \pi]$
+\begin{align}
+ 	f'_0(x) &= \frac{1}{\sqrt{2\pi}} \,,&
+ 	f'_{2n + 1}(x) &= \frac{\sin\big(nx\big)}{\sqrt{\pi}} \,, &
+ 	f'_{2n} &= \frac{\cos(nx)}{\sqrt{\pi}} \,.
+ 	\label{eqn:fourier_series_pi}
+\end{align}
+This basis is a variant of the \enquote{canonical Fourier series}, an orthonormal function basis.
+Each individual $f'_n$ is obviously in $\mathcal{C}[-\pi, \pi]$, and a linear combination of these basis functions can approximate any function in $\mathcal{C}[-\pi, \pi]$ (this follows from Theorem 5.1 in \cite{young1988introduction}).
+However, the same basis can be used to express discontinuous functions.
+For example, one can show that a weighted series of the sine terms of $f_n$ is equal to the sign function (see also \Cref{fig:fourier_sign_example}):
+\begin{align}
+ 	\mathrm{sign}(x) &= \lim_{q \to \infty}\sum_{n = 1}^q \frac{4 \sin\big((2n - 1)x\big)}{(2n - 1) \pi} = \begin{cases}
+ 		1 & \text{if } x > 0 \,,\\
+ 		0 & \text{if } x = 0 \,,\\
+ 		-1 & \text{if } x < 0 \,.
+ 	\end{cases}
+ 	\label{eqn:sign_sine}
+\end{align}
+Hence $\mathcal{C}[-\pi, \pi]$ has no basis that spans the space, which is slightly problematic.
+\end{example}
+
+The notion of a \enquote{Hilbert space} restricts inner product spaces to those in which \enquote{well-behaved} sequences, so-called Cauchy sequences, converge to an element within that space.
+The sum of sines sequence implicitly defined in \cref{eqn:sign_sine} is an example of such a Cauchy sequence.
+Correspondingly, the function space $\mathcal{C}[a, b]$ cannot be a Hilbert space.
+
+\begin{definition}[{Hilbert space; cf.~\cite{young1988introduction}, Definition 3.4}]
+ 	A \emph{Hilbert space} is an inner product space $V$ in which all Cauchy sequences (relative to the metric induced by the inner product) converge to an element in $V$.
+\end{definition}
+
+\begin{example}[{The Hilbert space $L^2(a, b)$; cf.~\cite{young1988introduction}, Example 3.5, Theorem 5.1}]
+The Fourier series in \cref{eqn:fourier_series_pi} spans $L^2(-\pi, \pi)$. In general $L^2(a, b)$ is a function space $V$ with the inner product defined in \cref{eqn:C_inner_product}. Each $f \in V$ is a function $f : [a, b] \longrightarrow \mathbb{R}$ for which the following Lebesgue integral converges; i.e., the function is square Lebesgue integrable:
+\begin{align*}
+   	\int_{a}^b f(x)^2 \,\mathrm{d}t < \infty \,, \quad \text{ where \enquote{$\textstyle\int$} is the Lebesque integral.}
+\end{align*}
+Note that $L^2(a, b)$ is a superset of all square Riemann integrable functions.
+\end{example}
+
+Since the canonical Fourier series defined in \cref{eqn:fourier_series_pi} spans $L^2(-\pi, \pi)$, any function in $L^2(-\pi, \pi)$ can be represented as a linear combination of Fourier basis functions.
+Of course, the same holds for any orthonormal function basis.

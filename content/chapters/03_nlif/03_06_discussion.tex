@@ -46,12 +46,12 @@ In light of these limitations, we would like to re-emphasize that, as stated in 
 Instead, we hope to provide a useful tool that captures essential aspects of dendritic computation---a nonlinear interaction between input channels---while being computationally cheap and mathematically tractable, but still grounded in biophysics.
 
 In particular, we saw that both the two- and three-compartment neuron improve the multivariate function approximation performance of a single neuron population, while using more than tree compartments resulted in diminishing returns.
-From a purely functional perspective, there thus seems to be no reason to use more complex model of \emph{passive} dendritic computation beyond two and three-compartment neurons.
+From a purely functional perspective, there thus seems to be no reason to use more complex models of \emph{passive} dendritic computation beyond two and three-compartment neurons.
 
 \subsubsection{Future work}
 A potential application of our work outside neurobiological modelling is programming neuromorphic hardware (\Cref{sec:neuromorphic}).
-Especially when considering mixed analogue-digital neuromorphic hardware, it should be possible to achieve a higher energy efficiency by implementing two- or three-compartment neuron model and performing local analog computation.
-Potential future work would be to validate our methods on a neuromorphic platform that implements dendritic trees, such as the \emph{BrainScales 2} system \citep{schemmel2017accelerated}, or general-purpose analogue circuit emulators such as FPAAs \citep[e.g.,][]{george2016programmable}.
+Especially when considering mixed analogue-digital neuromorphic hardware, it should be possible to achieve a higher energy efficiency by implementing two- or three-compartment neuron models and performing local analog computation.
+Potential future work would be to validate our methods on a neuromorphic platform that implements dendritic trees, such as the \emph{BrainScales 2} system \citep{schemmel2017accelerated}, or analogue circuit emulators such as FPAAs \citep[e.g.,][]{george2016programmable}.
 
 Other open threads that warrant further investigation include ruling out that the diminishing returns for three- and four-compartment neurons are not just due to our weight solver converging to suboptimal solutions compared to other solvers.
 It could also be interesting to find ways to improve the prediction of the $x$-intercept in our surrogate dendritic nonlinearity, and to further strengthen the mathematical foundation of the material in this chapter.

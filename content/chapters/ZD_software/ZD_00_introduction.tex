@@ -1,0 +1,13 @@
+% !TeX spellcheck = en_GB
+
+We developed several software libraries to conduct the research in this thesis, most notably \emph{libnlif} and \emph{NengoBio}.
+Our weight and parameter solvers, as well as simulators for the \nlif neurons discussed in \Cref{chp:nlif} are implemented in \emph{libnlif}.%
+\footnote{
+Note that \emph{libnlif} supersedes \emph{libbioneuronqp} in a mostly backwards compatible way.
+For legacy reasons, the source code of the experiments in \Cref{sec:two_comp_lif} still relies on \emph{libbioneuronqp}, as well as an older version of the code that eventually became \emph{libnlif} (initially published as supplementary material for \cite{stoeckel2021}).
+}
+The second library, NengoBio is an extension of the Nengo neural network simulation package \citep{bekolay2014nengo}.
+Specifically, NengoBio implements the extensions to the NEF outlined in \Cref{sec:nef_extension} and interfaces with \emph{libnlif} for two compartment weight solving and simulation.
+We use NengoBio as a part of our cerebellum model (cf.~\Cref{chp:cerebellum} and \cite{stockel2021connecting}).
+
+Although these libraries are less interesting from a scientific perspective, we would still like to provide a quick overview of the software architecture and give some usage examples.

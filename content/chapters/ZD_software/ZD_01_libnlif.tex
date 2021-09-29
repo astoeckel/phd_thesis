@@ -1,0 +1,172 @@
+% !TeX spellcheck = en_GB
+
+\section{An $n$-LIF Weight Solver and Simulator: libnlif}
+\label{app:libnlif}
+
+\emph{libnlif} is a hybrid Python and C++ library that facilitates working with \nlif neurons, specifically implementing the techniques discussed in \Cref{sec:nlif} onward.
+This includes providing a simple API for describing and simulating \nlif neurons, as well as an implementation of the various synaptic weight and parameter optimisers from \Cref{sec:two_comp_lif,sec:nlif_opt}.
+
+\subsection{Describing $n$-LIF Neurons}
+
+The user-facing API for describing neuron models is heavily inspired by Nengo.
+For example, a standard LIF neuron with current-based input (cf.~\Cref{fig:nlif_a}) can be constructed as follows:
+\begin{pythoncode}
+import nlif
+
+with nlif.Neuron() as lif: # Create a new neuron description 
+	with nlif.Soma(v_th=-50e-3, tau_ref=2e-3, tau_spike=1e-3, C_m=1e-9) as soma:
+		gL = nlif.CondChan(g=50e-9, E_rev=-80e-3) # Static leak channel
+		J = nlif.CurChan(mul=1.0)                 # Current-based input channel
+
+lif_assm = two_comp_lif.assemble() # Assemble an immutable representation
+\end{pythoncode}
+Similarly, the following code describes the two-compartment LIF neuron (cf.~\Cref{fig:nlif_c}):
+\begin{pythoncode}
+with nlif.Neuron() as two_comp_lif:
+	with nlif.Soma(v_th=-50e-3, tau_ref=2e-3, tau_spike=1e-3, C_m=1e-9) as soma:
+		gL = nlif.CondChan(g=50e-9, E_rev=-65e-3)  # Static leak channel
+	with nlif.Compartment(C_m=1e-9) as dendrites:
+		gL = nlif.CondChan(g=50e-9, E_rev=-65e-3)  # Static leak channel
+		gE = nlif.CondChan(E_rev=0e-3)             # Excitatory input channel
+		gI = nlif.CondChan(E_rev=-75e-3)           # Inhibitory input channel
+	nlif.Connection(soma, dendrites, g_c=50e-9)
+two_comp_lif_assm = two_comp_lif.assemble()
+\end{pythoncode}
+This overall pattern extends to arbitrary connectivity graphs.
+Individual objects and the graph structure are validated for adherence to the \nlif constraints (\Cref{sec:nlif_description}) in the \texttt{assemble} method.
+The Python \enquote{with} statement is used to establish an object hierarchy; this is accomplished by overriding the \texttt{\_\_enter\_\_} and \texttt{\_\_exit\_\_} functions and tracking the current parent object in a thread-local stack.
+Objects are automatically labelled according to their local variable name whenever a \enquote{with}-scope is left.
+
+Calling the \enquote{\texttt{to\_svg}} method on the assembled neuron object (or simply evaluating the object in a Jupyter cell) generates an annotated \enquote{ball-and-stick} representation of the neuron (similar to those depicted in~\Cref{fig:nlif}) using \emph{GraphViz} \citep{ellson2004graphviz}.
+
+\subsection{Simulating $n$-LIF Neurons}
+
+\begin{figure}
+	\centering
+	\includegraphics{media/chapters/ZD_software/libnlif_simulation_example.pdf}
+	\label{fig:libnlif_simulation_example}
+	\caption[Output of the \emph{libnlif} two-compartment LIF simulation code example]{Output of the \emph{libnlif} two-compartment LIF simulation code example. Output spikes are available as individual spike times at sub-sample resolution or as a discretised sum of Dirac deltas.}
+\end{figure}
+
+The assembled $n$-LIF object holds the system matrices \mnAp, \mnBp, \vnap, \vnbp, \mnL (\Cref{sec:nlif_description}).
+These matrices can be accessed through the \texttt{A}, \texttt{B}, \texttt{a\_const}, \texttt{b\_const} and \texttt{L} properties and are used by \emph{libnlif} to simulate the dynamics of the neuron.
+Specifically, the neural dynamics can be simulated using the \texttt{nlif.Simulator} object and one of the available \texttt{simulate} methods:
+\begin{pythoncode}
+dt, ss, T = 1e-4, 10, 1.0     # Simulation time-step, sub-sampling and end-time
+ts = np.arange(0, T, ss * dt) # Sample points
+gEs = np.linspace(0.0, 200e-9, len(ts)) # Sampled input conductances
+with nlif.Simulator(two_comp_lif_assm, dt=dt, ss=ss,
+                    record_voltages=True, record_spike_times=True) as sim:
+	res = sim.simulate({      # Also: simulate_poisson, simulate_filtered
+		gE: gEs,              # Sampled input
+		gI: 10e-9})           # Constant input
+plt.plot(ts, res.v)           # Discretised output pulses are stored in res.out
+\end{pythoncode}
+The output of this code is depicted in \Cref{fig:libnlif_simulation_example}.
+Other variants of the \enquote{simulate} method include \texttt{simulate\_poisson}, which generates artificial Poisson-distributed spike noise \citep[e.g.,][Section~1.4]{abbott2001theoretical} and treats the given inputs as expectation values, as well as \texttt{simulate\_filtered}, which filters the input using a first-order low-pass.
+
+\subsubsection{Automatic simulator generation and compilation}
+Instantiating the \texttt{Simulator} class transparently generates a dynamically linked library that implements a specialised simulator.
+The library is based on a templated \citep[Chapter~23]{stroustrup2013programming} C++ simulator (cf.~\texttt{simulator.hpp});
+substituting in the specific system matrices and simulator options and compile-time maximises run-time performance.
+The code is compiled using a custom C++ build system (see \texttt{cmodule.py}) that calls out to the GNU Compiler Collection\footnote{See \url{https://gcc.gnu.org/} for more information.} and caches the generated object files according to their input file hashes.
+Reentrancy of the build system is ensured by employing an idempotency mechanism based on temporary target files and the atomic \enquote{rename} filesystem operation \citep[pp.~1816-1820]{2018ieee}.
+The compiled library is loaded via the Python \texttt{ctypes} foreign function interface; the C++ code directly operates on the memory regions that back the Numpy arrays.
+
+
+Internally, the simulator uses the Eigen linear algebra library \citep{eigenweb}.
+The dynamical system is integrated under a zero-order hold assumption by solving for the system state at time $t + \Delta t$ according to the closed-form matrix exponential form \cref{eqn:nlif_dynamics}.
+
+\subsubsection{Input sweeps}
+
+\begin{figure}
+	\centering
+	\includegraphics{media/chapters/ZD_software/libnlif_rate_empirical_example.pdf}
+	\caption[Output of the \emph{libnlif} \enquote{rate\_empirical} function for different noise parameters]{Output of the \emph{libnlif} two-compartment LIF \texttt{rate\_empirical} rate example. The specified $\lambda$ corresponds to the rate of the Poisson spike source; the low-pass filter time constant $\tau$ is set to $\SI{5}{\milli\second}$.}
+	\label{fig:libnlif_rate_empirical_example}
+\end{figure}
+
+The assembled neuron object provides convenience functions for sampling the multi-variate response curves $\mathscr{G}(\vec g)$ (eq.~\ref{eqn:def_response_curve_g}).
+The following code simulates the neuron for \SI{100}{\second} and estimates the average firing rate by taking the inverse of the median inter-spike interval.
+The optional \texttt{noise}, \texttt{rate}, and \texttt{tau} parameters specify Poisson-distributed spike-noise.
+\begin{pythoncode}
+gEs, gIs = np.linspace(0, 1e-6, 20), np.linspace(0, 1e-6, 20) 
+gEss, gIss = np.meshgrid(gEs, gIs)        # Generate a dense sample grid
+rates = two_comp_lif_assm.rate_empirical( # Simulate the neuron at each sample
+	{gE: gEss, gI: gIss}, T=100.0, noise=True, rate=10000, tau=5e-3)
+\end{pythoncode}
+Evaluation of the sample points is distributed across all available processor cores.
+The output of the above code-snippet (with a $100 \times 100$ grid) is visualised in \Cref{fig:libnlif_rate_empirical_example} for different rates $\lambda$.
+
+\subsection{Predicting Somatic Currents and Solving For Parameters and Weights}
+
+\begin{figure}
+	\centering
+	\includegraphics{media/chapters/ZD_software/libnlif_parameter_estimation.pdf}%
+	{\phantomsubcaption\label{fig:libnlif_parameter_estimation_a}}%
+	{\phantomsubcaption\label{fig:libnlif_parameter_estimation_b}}%
+	{\phantomsubcaption\label{fig:libnlif_parameter_estimation_c}}%
+	\caption[Two-compartment LIF parameter optimisation using \emph{libnlif}]{Two-compartment LIF parameter optimisation using \emph{libnlif}.
+	Filled contours are the empirical error measurements, dashed white lines the predicted somatic currents.}
+	\label{fig:libnlif_parameter_estimation}
+\end{figure}
+
+The assembled neuron object can also predict somatic currents according to \cref{eqn:h_model}.
+To this end, we must first compute the reduced system matrices \mrAp, \mrBp, \vrap, \vrbp, \mrL, \vrc:
+\begin{pythoncode}
+sys = two_comp_lif_assm.reduced_system(v_som=None) # v_som = 0.5*(v_reset+v_th)
+\end{pythoncode}
+%Here, \texttt{v\_som=None} implies that the average somatic potential \vSom is computed as the mean between the reset and threshold potential.
+The reduced system matrices are stored in the \texttt{A}, \texttt{B}, \texttt{a\_const}, \texttt{b\_const}, \texttt{L} and \texttt{c} properties of the \texttt{sys} object.
+Currents can be predicted as follows:
+\begin{pythoncode}
+i_som_pred = two_comp_lif_assm.i_som({gE: gEss, gI: gIss}, reduced_system=sys)
+\end{pythoncode}
+
+\subsubsection{Estimating model parameters}
+As depicted in \Cref{fig:libnlif_parameter_estimation_a}, \texttt{i\_som\_pred} is not very accurate without further calibration.
+The \texttt{nlif.parameter\_optimisation} package implements the optimisation methods discussed in \Cref{sec:nlif_opt_parameters}, including our 
+our soft trust-region based \SQP:
+\begin{pythoncode}
+gs_train = two_comp_lif_assm.canonicalise_input({gE: gEss, gI: gIss})
+Js_train = two_comp_lif_assm.lif_rate_inv(rates) # Invert the response curve
+valid = rates > 12.5                             # Discard subthreshold samples
+sys = sys.condition()                            # Condition the reduced system
+sys_opt, errs_train = nlif.parameter_optimisation.optimise_trust_region(
+	sys, gs_train=gs_train[valid], Js_train=Js_train[valid], N_epochs=10)
+\end{pythoncode}
+The optimised system is stored in \texttt{sys\_opt} and can be passed to the above \texttt{i\_som} method to obtain improved current predictions (\Cref{fig:libnlif_parameter_estimation_b,fig:libnlif_parameter_estimation_c}).
+Just like the \nlif simulator, the trust-region optimiser relies on a dynamically compiled C++ library that in turn makes use of the Eigen and OSQP libraries (\cite{stellato2020osqp}; see \texttt{nlif\_solver\_parameters.cpp}).
+
+\subsubsection{Solving for synaptic weights}
+
+\begin{figure}
+	\includegraphics{media/chapters/ZD_software/libnlif_weight_solver.pdf}
+	\caption[Nonnegative multiplication in two-compartment LIF neurons using \emph{libnlif}]{Nonnegative multiplication in two-compartment LIF neurons using \emph{libnlif}. Coloured contours and dotted lines show the decoded currents; dashed lines are the target.}
+\end{figure}
+
+The synaptic weight solvers discussed in \Cref{sec:nlif_opt_weights} are provided in the \texttt{nlif.weight\_optimisation} package.
+For example, to find synaptic weights that approximate non-negative multiplication we can use the following code:
+\begin{pythoncode}
+# Sample the represented space
+xs, ys = np.linspace(-1, 1, 101), np.linspace(-1, 1, 101)
+xss, yss = np.meshgrid(xs, ys)
+Xs = np.array((xss.flatten(), yss.flatten())).T
+
+# Obtain the target current function and pre-activities
+Js = 0.5 * (1.0 + Xs[:, 0]) * (1.0 + Xs[:, 1]) * 1e-9
+As = [...] # (N_smpls x m_pre); use the NEF tuning curve equations here
+
+# Perform the actual training
+idcs = np.random.randint(0, Xs.shape[0], 256)  # Training samples
+W_mask = np.ones((2, As.shape[1]), dtype=bool) # All-to-all connectivity
+W, errs_train = nlif.weight_optimisation.optimise_trust_region(sys_opt,
+    As_train=As[idcs], Js_train=Js[idcs], W_mask=W_mask, N_epochs=10)
+
+# Compute the decoded currents
+Js_dec = two_comp_lif_assm.i_som(As @ W.T, reduced_system=sys_opt)
+\end{pythoncode}
+Again, the optimiser is implemented in a C++ library (see \texttt{nlif\_solver\_weights.cpp}).
+Since the generated quadratic programs tend to be moderately large (on the order of thousands of variables, depending on the number of pre-neurons and samples), the code makes extensive use of sparse matrices.
+To prevent heap reallocations while populating the matrices, the code pre-calculates the number of non-zero entries per column and sequentially writes the matrix coefficients to memory.
+The low-level \texttt{nlif.Solver} class wraps the C++ code more directly and supports concurrent optimisation across multiple post-neurons.

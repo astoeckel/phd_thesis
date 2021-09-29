@@ -13,7 +13,7 @@
 	\label{fig:nef_overview}
 \end{figure}
 
-As we mentioned at the beginning of this chapter, the Neural Engineering Framework\index{Neural Engineering Framework} (NEF; \cite{eliasmith2003neural}) is a modelling framework for neurobiological systems.
+As we mentioned at the beginning of this chapter, the Neural Engineering Framework (NEF; \cite{eliasmith2003neural}) is a modelling framework for neurobiological systems.
 The NEF combines techniques from engineering and mathematics---particularly control and dynamical systems theory---with the neurobiological concepts discussed before.
 The goal is to allow researchers to map high-level descriptions of cognitive phenomena onto low-level spiking neural networks.
 As such, the NEF provides a synthesis of bottom-up and top-down modelling, and is an attempt at a theory of neuroscience that spans multiple levels of analysis.
@@ -22,7 +22,7 @@ To use the NEF, researchers systematically apply three \enquote{principles} that
 These principles exploit neural nonlinearities and synaptic filters to describe how vectorial quantities can be represented, transformed, and made to follow certain dynamics in a spiking neural computational fabric.
 The resulting neural networks adhere to mechanistic constraints, such as neural connectivity, maximum firing rates, tuning properties, and synaptic time-constants.
 This is illustrated schematically in \Cref{fig:nef_overview}.
-A software tool that automates the process of translating mathematical models into spiking neural networks using the NEF principles is part of the Nengo\index{Nengo} spiking neural network simulator package \citep{bekolay2014nengo}.\footnote{See \url{https://www.nengo.ai/} for more information on Nengo. Nengo is free for non-commercial use.}
+A software tool that automates the process of translating mathematical models into spiking neural networks using the NEF principles is part of the Nengo spiking neural network simulator package \citep{bekolay2014nengo}.\footnote{See \url{https://www.nengo.ai/} for more information on Nengo. Nengo is free for non-commercial use.}
 
 
 %\begin{enumerate}[1.]
@@ -81,7 +81,7 @@ The scientific applications discussed above were the primary motivation for the 
 However, coincidentally, the same methods are useful as a programming model for neuromorphic computers \citep{boahen2017neuromorph}.
 
 \subsubsection{Neuromorphic computers}
-This term\index{neuromorphic computer} refers to computer systems that---to some degree---mimic information processing in the brain.
+This term refers to computer systems that---to some degree---mimic information processing in the brain.
 This typically implies numerous simple computational units, \emph{neurons}, connected via a flexible interconnect \citep{furber2016largescale}.
 Beyond these basic characteristics there is no consensus as for what exactly constitutes a \enquote{neuromorphic computer}.
 However, most neuromorphic hardware systems execute computations asynchronously and possess provisions for sparse event-based signalling.
@@ -92,8 +92,8 @@ Hence, the underlying communication infrastructure is solely responsible for sig
 Current neuromorphic computers can be roughly split into two categories, depending on the specific realisation of the computing elements.
 Computation either takes place in analogue model circuits, similar to the LIF circuit discussed above, or digital processors with varying degrees of programmability.
 % TODO: Add reference to the LIF circuit
-Examples of systems in the former \enquote{mixed-signal}\index{neuromorphic computer!mixed signal} category include Braindrop\index{Braindrop} \citep{neckar2019braindrop} and BrainScaleS\index{BrainScaleS} \citep{schemmel2010waferscale}.
-Systems that fall into the latter \enquote{purely digital}\index{neuromorphic computer!digital} category are SpiNNaker\index{SpiNNaker} \citep{furber2013overview} and Loihi\index{Loihi} \citep{davies2018loihi}. See \citet{furber2016largescale} for a more comprehensive, albeit slightly outdated list.
+Examples of systems in the former \enquote{mixed-signal} category include Braindrop \citep{neckar2019braindrop} and BrainScaleS \citep{schemmel2010waferscale}.
+Systems that fall into the latter \enquote{purely digital} category are SpiNNaker \citep{furber2013overview} and Loihi \citep{davies2018loihi}. See \citet{furber2016largescale} for a more comprehensive, albeit slightly outdated list.
 
 \subsubsection{Applications of neuromorphic computing}
 The primary motivation behind neuromorphic hardware is to construct computing hardware that approaches the energy efficiency of biological brains \citep{boahen2017neuromorph}.
@@ -146,7 +146,7 @@ The assumption that populations represent vectors $\vec x \in \mathbb{R}^d$ is--
 Many mathematical objects have useful equivalent vectorial representations, including functions \citep[Chapter 3]{eliasmith2003neural}, probability densities \citep[Chapter 9]{eliasmith2003neural}, and symbols (via vector symbolic architectures; see \cite{gayler2003vector}, \cite{eliasmith2012largescale} and \cite{eliasmith2013how}).
 % TODO: Reference review of function spaces
 
-Additionally, there is strong evidence that the activities of neural populations form smooth low-dimensional manifolds\index{manifold} in a high-dimensional activity space \citep{gallego2017neural,stringer2019highdimensional}.
+Additionally, there is strong evidence that the activities of neural populations form smooth low-dimensional manifolds in a high-dimensional activity space \citep{gallego2017neural,stringer2019highdimensional}.
 There exists a mapping $\vec a: \mathbb{R}^d \longrightarrow \mathbb{R}^{\Npop}$ (with $d \ll \Npop$) between a low-dimensional vector $\vec x \in \mathbb{R}^d$ and the average neural activities $\vec a(\vec x) \in \mathbb{R}^{\Npop}$, where \Npop is the number of neurons in the population.
 If the population exhibits activities $\vec a(\vec x)$ associated with a value $\vec x$, then the population \emph{represents} a \Ndim-dimensional quantity $\vec x$.
 
@@ -210,7 +210,7 @@ We denote the set of represented values as a compact set \Xrepr with finite, non
 
 Unless more specific data are available, we can for example assume that $\vec x$ are within a hyperball of radius $r$, i.e., $\Xrepr = r \Ball^d$.
 The encoding vectors $\vec e_i$ can be sampled from the unit hypersphere $\mathbb{S}^d$.
-For monotone increasing response curves $G$, gain $\alpha$ and bias $\beta$ can be computed for each neuron by sampling an \enquote{$x$-intercept}\index{x-intercept} value $\xi_0$ from the interval $[-r, r]$ and a maximum rate $a_\mathrm{max}$ and to solve for $\alpha$, $\beta$ such that the following equations hold:
+For monotone increasing response curves $G$, gain $\alpha$ and bias $\beta$ can be computed for each neuron by sampling an \enquote{$x$-intercept} value $\xi_0$ from the interval $[-r, r]$ and a maximum rate $a_\mathrm{max}$ and to solve for $\alpha$, $\beta$ such that the following equations hold:
 \begin{align*}
 	\alpha \xi_0 + \beta &= J_0 = G^{-1}[0] \,, &
 	\alpha r + \beta &= J_\mathrm{max} = G^{-1}[a_\mathrm{max}] \,, & \text{where } G^{-1}[a] &\coloneqq \max \big\{ J \mid G[J] = a \big\} \,.
@@ -352,7 +352,7 @@ Along with the linearity of homogeneous synaptic filters, this is what enables N
 	\includegraphics{media/chapters/02_modelling/02_03/instantaneous_spike_rate.pdf}%
 	{\phantomsubcaption\label{fig:instantaneous_spike_rate_a}}%
 	{\phantomsubcaption\label{fig:first_order_low_pass}}%
-	\caption[Estimating the instantaneous firing rate using a synaptic filter]{Estimating the instantaneous firing rate using a first-order exponential synaptic filter. \textbf{(A)} Blue line depicts a spike train (short black lines at the bottom) filtered by a first-order exponential low-pass filter $h(t)$ with $\tau = \SI{0.1}{\second}$. The black line is the \enquote{ground-trouth} rate underlying the spike train (using a $\Delta\Sigma$-modulator).
+	\caption[Estimating the instantaneous firing rate using a synaptic filter]{Estimating the instantaneous firing rate using a first-order exponential synaptic filter. \textbf{(A)} Blue line depicts a spike train (short black lines at the bottom) filtered by a first-order exponential low-pass filter $h(t)$ with $\tau = \SI{0.1}{\second}$. The black line is the \enquote{ground-truth} rate underlying the spike train (using a $\Delta\Sigma$-modulator).
 	Apart from a phase shift and some added noise, the low-pass filtered spike train tracks the ground truth well.
 	\textbf{(B)} Visualisation of the synaptic filter $h(t)$. We assume that spikes are Dirac deltas and that the filter has unit DC-gain, i.e., the area under the curve is one.}
 	\label{fig:instantaneous_spike_rate}
@@ -365,7 +365,7 @@ Fortunately, this is less of a problem than it may seem.
 Synaptic dynamics (cf.~\Cref{sec:synaptic_transmission}) act as a filter that estimates the pre-synaptic \emph{instantaneous firing rate} of a spike train.
 The instantaneous firing rate is the spike rate $a_i$ of a neuron at a single point in time $t$.
 Of course, this is a quite paradoxical notion.
-As mentioned before, by the Fourier uncertainty principle\index{Fourier uncertainty principle}, we cannot measure an event rate without averaging over time; the smaller the time-window, the smaller the frequency resolution (cf.~\cite{gabor1946theory}).
+As mentioned before, by the Fourier uncertainty principle, we cannot measure an event rate without averaging over time; the smaller the time-window, the smaller the frequency resolution (cf.~\cite{gabor1946theory}).
 
 Still, low-pass filters can be reasonably effective at inferring the state of a process generating binary events.
 This is illustrated in \Cref{fig:instantaneous_spike_rate}.
@@ -438,11 +438,12 @@ Treating both the integral in \cref{eqn:lti_integral_equation} and the low-pass 
 	\label{eqn:original_vs_modified_lti}
 \end{align}
 Rearranging the second equation and comparing coefficients to the first equation we get
-\begin{align*}
+\begin{align}
 	X(s) &= \frac{1}{s} \frac{\mat A' - \mat I}{\tau} X(s) + \frac{\mat B'}{\tau} U(s) &
 	\leadsto \quad \quad \mat A' &= \tau \mat A + \mat I \,, &
 	\mat B' &= \tau \mat B \,.
-\end{align*}
+	\label{eqn:nef_transform_a_b}
+\end{align}
 For arbitrary dynamics $f(\vec x, \vec u, t)$ we similarly obtain $f'(\vec x, \vec u, t) = \tau f(\vec x, \vec u, t) + \vec x$ \citep[Chapter~8]{eliasmith2003neural}.
 In other words, to compensate for low-pass filter dynamics, we scale the dynamics by $\tau$ and feed back $\vec x$ to \enquote{remind} the system of its current state.
 

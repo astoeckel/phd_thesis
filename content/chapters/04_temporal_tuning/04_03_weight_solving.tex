@@ -1,0 +1,87 @@
+% !TeX spellcheck = en_GB
+
+\section{Accounting for Neural Nonlinearities}
+\label{sec:recurrent_weights}
+
+Our weight optimisation problem in \cref{eqn:weight_optimise_currents_temporal} can, under some mild circumstances, optimally solve for weights that realise a desired LTI system---at least in \emph{linear} networks.
+%In cases where optimal solutions cannot be obtained our techniques tend to approximate the desired dynamics well.
+While focusing on linear networks is not a major obstacle---linear activations can be emulated in networks of nonlinear neurons---%
+%Specifically, in the spirit of the  \NEF dynamics principle (cf.~\Cref{sec:nef_dynamics}; \cite{eliasmith2003neural}, Chapter~8), we can realise an LTI system with state-space matrices $\mat A$, $\mat B$, by solving for $\mat A'$, $\mat B'$ in a linear network that compensate for some combination of synaptic filters.
+%---either by providing some sampled temporal tuning%
+%\footnote{
+%When solving for $\mat A'$, $\mat B'$ we can directly provide some desired temporal tuning, for example a windowed temporal basis---that is, we do not necessarily have to use the autoregression method from \Cref{sec:lti_autoregression} to first determine a continuous LTI system $\mat A$, $\mat B$.
+%}
+%or by discretising the impulse response of an existing linear system with state-space matrices $\mat A$, $\mat B$.
+%Multiplying these matrices with the encoders and identity decoders of the nonlinear population then implements our linear network in a nonlinear substrate.
+%In this case, each neuron represents a linear combination of the state variables as is determined by its encoder $\vec e_i$.
+%
+%Indeed, merely translating linear dynamics into nonlinear networks as described above can be extremely useful in practice.
+%As we discuss below in the context of \emph{adaptive filters}, representing generalised Fourier coefficients $\mat m(t)$ in a nonlinear neural population allows us to learn nonlinear dynamics.
+%
+%However,
+it can be beneficial to directly solve for dense weight matrices in networks of nonlinear neurons.
+For example, doing so allows us to solve for linearly independent temporal tuning, giving modellers fine control over each individual neuron.
+%as we discussed in \Cref{sec:temporal_tuning_curves}, this may be useful when modelling specific biological systems.
+Additionally, just as above, we can take heterogeneous synaptic filters into account, but now at the level of individual synapses---in principle, each synapse could be its own synaptic filter (cf.~\Cref{fig:nef_dynamics_neurons_b}).
+%Finally, as we will demonstrate below, we can compensate for and, to some degree, harness intrinsic \emph{neural} dynamics.
+
+In this section, we first discuss solving for synaptic weights in nonlinear networks.
+The primary challenge lies in generating test signals $\mathfrak{x}_k$ that uniformly cover the neural activity space.
+We propose a linearly constrained least-squares approach for generating $\mathfrak{x}_k$ uniformly distributed neural activations.
+%This allows us to solve for both the identity decoder $\mat D$ and the dynamics matrices $\mat A'$, $\mat B'$ in one step.
+We then account for the intrinsic dynamics of LIF neurons in low-firing rate regimes by estimating a temporal current-translation function.
+Finally, we demonstrate that it is possible to use the techniques discussed here to build adaptive filters that learn nonlinear dynamics.
+
+\subsection{Solving for Weights in Networks of Nonlinear Neurons}
+\label{sec:solve_dynamics_nonlinear_neurons}
+
+On the surface, switching from linear units to nonlinear networks barely affects our weight optimisation problem \cref{eqn:weight_optimise_currents_temporal}.
+Recall that this equation was given as
+\begin{align}
+	E &= \sum_{k = 1}^N \left[
+		J_i \Big( \! \int_0^\infty \!\!\! \big\langle \mathfrak{e}_i(\tau), f(\mathfrak{x}_k(-\tau)) \big\rangle \, \mathit{d\tau} \Big) \,\,-\,\,
+		\sum_{j = 1}^m w_{ij} \! \int_0^\infty \!\!\! h_{ij}(\tau) \mathfrak{a}_j(\mathfrak{x}_k, -\tau) \,\mathrm{d}\tau
+	\right]^2 \,.
+	\tag{4.7}
+\end{align}
+In linear networks, the current-translation function $J_i$ and the pre-population tuning curve $a_j$ are linear, and we typically had less than a hundred independent \enquote{units} $m$.
+While we continue to assume that $J_i$ is linear,%
+\footnote{
+As we discussed in \Cref{sec:nef_limitations}, this implies that each neuron possesses its own \enquote{intrinsic} bias current.
+We saw in \Cref{sec:nef_decode_current} that we can usually decode biases directly from the pre-population.
+}
+the tuning-curve $\mathfrak{a}_j$ is now non-linear in $\mathfrak{x}_k$, and we consider a few hundred up to a thousand pre-population neurons $m$.
+
+This results in two new challenges.
+First, the selection of $\mathfrak{x}_k$ is more difficult with non-linear $\mathfrak{a}_j$.
+In particular, we need to ensure that the range of possible activities for each neuron is densely sampled.
+This is in contrast to linear neurons, where two different sample points sufficed to fully characterise the neuron.
+
+
+\subsubsection{Selecting temporal encoders}
+
+\begin{figure}
+	\includegraphics{media/chapters/04_temporal_tuning/vectorial_temporal_encoder.pdf}
+	\caption[Linearly combining basis functions to obtain temporal encoders]{Linearly combining basis functions to obtain temporal encoders. \textbf{(A)} Starting with a set of basis functions $\mathfrak{b}_i(t)$, we can generate temporal tuning for each neuron by linearly combining these basis functions using an encoding vector $\vec{\hat e}$.
+	\textbf{(B)} When choosing normalised $\vec{\hat e}$ (e.g., $\| \vec{\hat e} \| = 1$), this vector is directly equivalent to the spatial encoder $\vec e$ when realising an LTI system as multiple spatial dimeneions in the \NEF; each \enquote{direction} corresponds to a different temporal encoding.
+	}
+\end{figure}
+
+\begin{figure}[p]
+	\includegraphics{media/chapters/04_temporal_tuning/signal_sampling.pdf}
+	\caption{}
+\end{figure}
+
+
+\subsubsection{Sampling input signals}
+
+
+\begin{figure}
+	
+	\caption{}
+\end{figure}
+
+\subsection{Accounting for Neural Dynamics}
+
+\subsection{Learning Nonlinear Dynamics Using Neural Adaptive Filters}
+\label{sec:adaptive_filter} 

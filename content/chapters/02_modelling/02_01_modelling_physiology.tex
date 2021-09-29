@@ -21,8 +21,8 @@
 \end{figure}
 
 Neurons come in various sizes, shapes, and degrees of interconnectedness.
-Ramón y Cajal's\index{Ramón y Cajal, Santiago} drawings (schematically redrawn in \Cref{fig:neuron_sketches}) offer a glimpse of the morphological diversity found in the nervous system.
-Some neurons possess only few branches (also \emph{projections}\index{neuron!projection}) and have a comparably simple structure, whereas others, such as Cerebellar Purkinje cells, feature sprawling dendritic trees more deserving of the name \enquote{dendritic forest}.
+Ramón y Cajal's drawings (schematically redrawn in \Cref{fig:neuron_sketches}) offer a glimpse of the morphological diversity found in the nervous system.
+Some neurons possess only few branches (also \emph{projections}) and have a comparably simple structure, whereas others, such as Cerebellar Purkinje cells, feature sprawling dendritic trees more deserving of the name \enquote{dendritic forest}.
 
 It should come as no surprise that the following review of neural morphology and physiology cannot do justice to the incredible complexity observed in nature.
 Our goal is to instead focus on structural and functional elements commonly observed across all neurons.
@@ -46,14 +46,14 @@ Readers interested in a more thorough introduction to neuroscience are encourage
 
 From the perspective of computer science---and as suggested by the neuron doctrine---neurons are fundamental units of computation in biological systems.
 Specifically, neurons employ weak bioelectric signals, variations in their membrane potential, to compute.
-As depicted in the lower portion of \Cref{fig:neuron_signal_overview}, these variations can either be gradual, as is the case when the neuron is in its \emph{subthreshold} regime\index{membrane potential!subthreshold}, or manifest themselves as rapid swings between the highest and lowest voltages that can be produced by a neuron; in this case the neuron is in its \emph{superthreshold} regime.
-These rapid voltage changes are called \emph{action potentials}\index{action potential}, or, more colloquially, \enquote{\emph{spikes}}, harking back to their prominent appearance on oscillograms.
+As depicted in the lower portion of \Cref{fig:neuron_signal_overview}, these variations can either be gradual, as is the case when the neuron is in its \emph{subthreshold} regime, or manifest themselves as rapid swings between the highest and lowest voltages that can be produced by a neuron; in this case the neuron is in its \emph{superthreshold} regime.
+These rapid voltage changes are called \emph{action potentials}, or, more colloquially, \enquote{\emph{spikes}}, harking back to their prominent appearance on oscillograms.
 % TODO: Index: spike -> action potential
 
 Typically, gradual subthreshold potentials are not directly accessible from other parts of the network;
 this analogue code is solely part of a neuron's internal state.
 Hence, from the perspective of other neurons in the network, a neuron is either \enquote{silent} or \enquote{spiking}.
-This binary nature of neurons fascinated early computer scientists such as \citet{vonneumann1958computer}\index{Von Neumann,John} and led to the development of the first artificial neural networks by \citet{mcculloch1943logical}.
+This binary nature of neurons fascinated early computer scientists such as \citet{vonneumann1958computer} and led to the development of the first artificial neural networks by \citet{mcculloch1943logical}.
 
 Neuroscientists typically divide neural information processing into four stages: input, integration, conduction, and output \citep[Chapter 2]{kandel2012principles}.
 These stages roughly correspond to different features of neural structure, as depicted in \Cref{fig:neuron_signal_overview}.
@@ -65,7 +65,7 @@ Invertebrate unipolar cells only possess a single branch that protrudes from the
 This branch is referred to as \enquote{axon} although it carries both input and output \citep[Chapter~2]{kandel2012principles}.}
 Dendrites are tree-like structures protruding out of the cell body, typically less than two millimetres long \citep[Chapter~1]{bear2016neuroscience}.
 They are usually classified according to their location relative to the cell body.
-For example, in pyramidal cells (cf.~\Cref{fig:neuron_sketches_pyramidal}) dendrites directly connected to the soma are called \emph{basal}\index{dendrite!basal}; dendrites indirectly connected to the soma through longer projections are called \emph{apical}\index{dendrite!apical}.
+For example, in pyramidal cells (cf.~\Cref{fig:neuron_sketches_pyramidal}) dendrites directly connected to the soma are called \emph{basal}; dendrites indirectly connected to the soma through longer projections are called \emph{apical}.
 Apical dendrites are sometimes additionally divided---using standard anatomical terminology---into parts referred to as \emph{proxmial} or \emph{distal}; that is, they are either closer or father away from the soma \citep[e.g.,][Figure~5]{seamans1997contributions}.
 
 Synapses form the coupling sites between neurons and---in the case of chemical synapses discussed below---establish a unidirectional flow of information.
@@ -75,14 +75,14 @@ Some neurons in the periphery of the nervous system act as sensors; they transdu
 The neuron's \emph{integration region} is formed by the cell body and, to some degree, the dendritic tree itself.
 Signals from several pre-synaptic neurons interact here.
 This interaction may elicit the generation of an output signal.
-As we mentioned before, this output takes the form of an \emph{action potential}\index{action potential} in most vertebrate neurons \citep[Chapter~2]{kandel2012principles}.
+As we mentioned before, this output takes the form of an \emph{action potential} in most vertebrate neurons \citep[Chapter~2]{kandel2012principles}.
 Crucially, and in contrast to artificial neural networks, the integration process has a temporal component; the input \emph{history} is relevant for the generation of the output, and not just the momentary input.
 
-The \emph{conductive region} corresponds to a neuron's axon\index{axon}.
+The \emph{conductive region} corresponds to a neuron's axon.
 The axon carries signals generated by the neuron to other parts of the nervous system.
 Two features of the axon work in tandem to ensure signal integrity \citep[Chapter~7]{kandel2012principles}.
-First, the axon is electrically well insulated, being tightly wrapped in Schwann's cells\index{Schwann's cell}, a type of glial cell\index{glial cell}.
-Second, axons actively renew action potentials at Nodes of Ranvier\index{Node of Ranvier}, gaps between neighbouring Schwann's cells.
+First, the axon is electrically well insulated, being tightly wrapped in Schwann's cells, a type of glial cell.
+Second, axons actively renew action potentials at Nodes of Ranvier, gaps between neighbouring Schwann's cells.
 Conduction is unidirectional in the sense that action potentials only travel away from the origin of excitation.
 Notably, in larger animals such as humans, individual neurons conduct signals across micrometres (between neighbouring neurons), centimetres (connecting different parts of the brain), and metres (motor neurons in the spinal cord).%
 
@@ -110,11 +110,11 @@ In the periphery, axon terminals may be coupled to muscle fibres, where the arri
 	Illustrations (B, C) adapted from \citet{reichert2000neurobiologie}, Figures 2.8 and 2.10.}
 \end{figure}
 
-As mentioned above, neurons process information by systematically varying their membrane potential\index{membrane potential}\index{potential!membrane} \vMem (more precisely, their \emph{transmembrane} potential).
+As mentioned above, neurons process information by systematically varying their membrane potential \vMem (more precisely, their \emph{transmembrane} potential).
 The membrane potential is the electrical potential between the inside and outside of a cell.
 The boundary between these regions is formed by the cell membrane, a double-layer of lipids.%
 \footnote{To be clear, \emph{all} biological cells possess bioelectrical properties, including a membrane potential.
-This was for example analysed in detail by Julius Bernstein\index{Bernstein, Julius} in the early 1900s \citep{bernstein1912elektrobiologie}. Membrane potentials are important for homeostasis and cell-to-cell communication \citep{moorhouse2016membrane}.
+This was for example analysed in detail by Julius Bernstein in the early 1900s \citep{bernstein1912elektrobiologie}. Membrane potentials are important for homeostasis and cell-to-cell communication \citep{moorhouse2016membrane}.
 For example, electrical gradients between cells are crucial for laying out the body plan of organisms \citep{levin2014molecular}.
 Neurons should be thought of as cells shaped by evolution to excel at bioelectrical signalling, but are not unique in their use of bioelectricity.}
 By convention, if the \emph{inside} is more positively charged than the outside, we report a positive voltage (\Cref{fig:neuron_membrane_potential_membrane}).
@@ -123,7 +123,7 @@ Measuring the membrane potential when a neuron is at rest---that is, when the ce
 In mammals, \vRest ranges from \SIrange{-50}{-85}{\milli\volt} depending on the cell type \citep{moorhouse2016membrane}.
 
 Upon closer investigation, the presence of a non-zero resting potential is rather surprising.
-The inside and outside of the cell are filled with watery solutions: the intracellular fluid (\enquote{cytoplasm}\index{cytoplasm}) and the extracellular fluid.
+The inside and outside of the cell are filled with watery solutions: the intracellular fluid (\enquote{cytoplasm}) and the extracellular fluid.
 Both fluids are electrically neutral.
 That is, although the fluids contain ions and anionic charge carriers in solution, the overall positive and negative charges are balanced.
 There should be no measurable electrical potential (\Cref{fig:neuron_membrane_potential_membrane_isolated}).
@@ -138,12 +138,12 @@ There should be no measurable electrical potential (\Cref{fig:neuron_membrane_po
 	{\phantomsubcaption\label{fig:ion_channels_gate}}%
 	\caption[Schematic illustration of ion channels  embedded into the cell membrane]{Schematic illustration of ion channels embedded in the cell membrane. Ion channels are pores that selectively let ions of a certain species pass. Selectivity is achieved by exploiting the radius and charge distributions of the ion and its watery hull. \textbf{(A)} Although the $\mathrm{K^+}$ ion is larger than the $\mathrm{Na^+}$ ion, its watery hull is more compact, and it can pass through narrower channels. \textbf{(B)}  $\mathrm{Na^+}$ selectivity is achieved by a negative binding site in the channel that stabilises the $\mathrm{K^+}$ ion and its hull to let it pass.  \textbf{(C)} Ion channels can change their conformation depending on external factors (e.g.~mechanical forces, chemicals, electrical potentials); here, a chemical ligand opens a channel. Inspired by \citet[Figure~5-1, p.~102 and Figure~5-6, p.~109]{kandel2012principles}; see ibid.~for more information.}
 \end{figure}
-The resting potential can be explained if we assume that the cell membrane is selectively permeable to some ions through so-called \emph{ion channels}\index{ion channel}.
+The resting potential can be explained if we assume that the cell membrane is selectively permeable to some ions through so-called \emph{ion channels}.
 The presence of ion channels has been postulated for a long time, though it is only thanks to relatively recent studies that we understand the molecular machinery that underpins selective permeability \citep[Chapter~5]{kandel2012principles}.
 
 Ion channels are porous proteins embedded in the cell membrane.
 They accomplish the impressive feat of acting as an \enquote{atomic sieve}.
-This \enquote{sieve} only lets a single ion of a certain kind (in chemical parlance: \emph{ion species}\index{ion species}) pass at a time, as is illustrated in \Cref{fig:ion_channels_k,fig:ion_channels_na}.
+This \enquote{sieve} only lets a single ion of a certain kind (in chemical parlance: \emph{ion species}) pass at a time, as is illustrated in \Cref{fig:ion_channels_k,fig:ion_channels_na}.
 Furthermore, as we will see both in the context of action potential generation and synaptic transmission, these proteins can change their shape, or \emph{conformation}, depending on various external circumstances, effectively opening or closing the channel (\Cref{fig:ion_channels_gate}).
 
 Of course, the mere presence of selectively permeable channels does not explain the membrane potential.
@@ -156,20 +156,20 @@ This ionic flow disturbs the charge balance of the intra- and extracellular flui
 In turn, this potential results in an electric force that counters the osmotic pressure.
 In our $\mathrm{K}^+$ example, the intracellular fluid becomes negatively charged and the ensuing electric attraction reduces the net force acting on the $\mathrm{K}^+$ ions.
 The system converges to an equilibrium point where the electric and osmotic forces cancel out (\Cref{fig:neuron_membrane_potential_membrane_channel}).
-The membrane potential at this point is called the \emph{equilibrium}\index{equilibrium potential}\index{potential!equilibrium} or \emph{reversal potential}\index{reversal potential}\index{potential!reversal}, as the ionic flow direction reverses at this point.
+The membrane potential at this point is called the \emph{equilibrium} or \emph{reversal potential}, as the ionic flow direction reverses at this point.
 For clarity, we use the term reversal potential when talking about the equilibrium potential for a membrane permeable to a \emph{single} ion.
 
 
 \subsubsection{A single selectively permeable ion channel: The Nernst equation}
-For a single charge carrier $X$, the reversal potential $E_X$ can be computed using the Nernst equation\index{Nernst equation} \citep{nernst1888kinetik}:%
-\footnote{The Nernst equation was published in 1888, before there were established theories about bioelectricity. Nernst studied the electrochemistry of electrolytes separated by membranes and this research was later incorporated into analyses of biological cell membranes by Ostwald and later Bernstein \citep[see][Chapter~5]{bernstein1912elektrobiologie}\index{Bernstein, Julius}.}
+For a single charge carrier $X$, the reversal potential $E_X$ can be computed using the Nernst equation \citep{nernst1888kinetik}:%
+\footnote{The Nernst equation was published in 1888, before there were established theories about bioelectricity. Nernst studied the electrochemistry of electrolytes separated by membranes and this research was later incorporated into analyses of biological cell membranes by Ostwald and later Bernstein \citep[see][Chapter~5]{bernstein1912elektrobiologie}.}
 \newcommand{\Cout}[1]{\ensuremath{[\mathrm{#1}]_\mathrm{out}}}
 \newcommand{\Cin}[1]{\ensuremath{[\mathrm{#1}]_\mathrm{in}}}
 \begin{align}
 	E_X &= -\frac{RT}{zF} \log \left( \frac{\Cin{X}}{\Cout{X}} \right) \,,
 	\label{eqn:nernst}
 \end{align}
-where $R$ is the gas constant, $T$ is the temperature, $z$ is the charge number, or valence\index{valence}, of the particle (e.g., $z = 2$ for $\mathrm{Ca}^{2+}$ and $-1$ for $\mathrm{Cl}^-$) and $F$ is the Faraday constant. \Cout{X} and \Cin{X} are the concentrations (count per volume) of particles $X$ outside and inside the cell, respectively.
+where $R$ is the gas constant, $T$ is the temperature, $z$ is the charge number, or valence, of the particle (e.g., $z = 2$ for $\mathrm{Ca}^{2+}$ and $-1$ for $\mathrm{Cl}^-$) and $F$ is the Faraday constant. \Cout{X} and \Cin{X} are the concentrations (count per volume) of particles $X$ outside and inside the cell, respectively.
 Note that the number of ions flowing through the cell membrane is rather minuscule compared to the total number of ions in solution; \Cout{X} and \Cin{X} essentially do not change over time.%
 \footnote{The ion concentrations in the intra- and extracellular fluid are maintained by ion pumps in the cell membrane. These pumps are secondary for a cell's short-term bioelectrical properties, but are indispensible in the long run.}
 
@@ -271,7 +271,7 @@ The membrane potential converges to a new equilibrium state $E$ somewhere betwee
 Mathematically, we summarise the relative permeability of the cell membrane for an ion species $X$ as a quantity $P_X$.
 Instructively, $P_X$ can be interpreted as the total number of open ion channels for an ion species $X$.
 
-We can compute the overall equilibrium potential using the Goldman-Huxley-Katz equation\index{Goldman-Huxley-Katz equation} \citep{goldman1943potential,hodgkin1949effect}.
+We can compute the overall equilibrium potential using the Goldman-Huxley-Katz equation \citep{goldman1943potential,hodgkin1949effect}.
 For the three ion species listed above we have
 \begin{align}
 	E &= \frac{RT}{F} \log \left( \frac{
@@ -316,11 +316,11 @@ Assuming that $P_X$ represents the number of open channels for an ion species $X
 	\label{eqn:ionic_current}
 \end{align}
 where $g_X$ is the \emph{conductance} of a \enquote{virtual} channel summarizing all $P_X$ channels.%
-\footnote{The conductance\index{conductance} $g$ of a resistor (measured in Siemens\index{Siemens}; unit symbol $\si{\siemens} = \si{\per\ohm}$) is the inverse of its resistance $R$.
+\footnote{The conductance $g$ of a resistor (measured in Siemens; unit symbol $\si{\siemens} = \si{\per\ohm}$) is the inverse of its resistance $R$.
 This unit is commonly used in neuroscience to simplify some equations.
 For example, a conductance of zero can be used to describe an open circuit, whereas resistances would take on unwieldy infinite values in this case.}
 To obtain the equilibrium potential $E$ for multiple ion channels, we arrange the resistor-voltage-source pairs in parallel (\Cref{fig:electrical_circuit_membrane}).
-According to Kirchoff's circuit laws\index{Kirchoff's circuit laws} we have
+According to Kirchoff's circuit laws we have
 \begin{align}
 	\sum_X J_X(E) = \sum_X g_X (E - E_X) &= 0 \Leftrightarrow E = \frac{\sum_X g_X E_X}{\sum_X g_X} \,, \quad \quad \text{for } \sum_X g_X > 0 \,.
 	\label{eqn:circuit_equilibrium}
@@ -333,7 +333,7 @@ And for the ion species discussed above we get
 Put differently, the equilibrium potential is modelled as a weighted sum of reversal potentials, with the weights being the channel conductances.
 However, note that \cref{eqn:ionic_current,eqn:circuit_equilibrium} assume a linear relationship between permeabilities and conductances.
 Mathematically, conductance and permeability are two distinct concepts \citep{enderle2011bioelectric}.
-Still, although linearity does not follow from the empirically well-tested Goldman equation, the linear approximation preserves the overall qualitative behaviour. We discuss this in more detail in \Cref{app:goldman_equiv_circuit_diff}.
+Still, although linearity does not follow from the empirically well-tested Goldman equation, the linear approximation preserves the overall qualitative behaviour.% We discuss this in more detail in \Cref{app:goldman_equiv_circuit_diff}.
 
 Correspondingly, the above \enquote{equivalent circuit} forms the basis of most neuron models.
 The model is simple, conductances can be fit to experimental data, and---as we will see next---the equivalent circuit lends itself to a dynamical description of the cell membrane by simply adding a capacitor to the model circuit.
@@ -353,8 +353,8 @@ Measuring the membrane potential $\vMem(t)$ over time $t$ we observe the followi
 	\setlength{\itemsep}{0.25em}
 	\vspace*{-0.25em}
 	\item \emph{Subthreshold dynamics.} Small current pulses charge the cell membrane over time. The membrane potential \vMem rises while the input persists, and then decays back to \vRest (\Cref{fig:action_potentials_subthreshold}).
-	\item \emph{Superthreshold dynamics.} If the current pulse is energetic enough for the membrane potential to reach a soft threshold value $v_\mathrm{th}$, the neuron generates an action potential; \vMem suddenly rises towards positive numbers (\emph{depolarisation}\index{neuron!depolarisation}), and then falls to voltages below \vRest (\emph{repolarisation}\index{neuron!repolarisation})---the neuron is \emph{hyperpolarised}\index{neuron!hyperpolarisation}. Over time, \vMem converges back to  \vRest.  This is depcited in \Cref{fig:action_potentials_superthreshold}.
-	\item \emph{Refractory period.} While the neuron is hyperpolarised, it is significantly harder to evoke another action potential. This phase is referred to as the \emph{refractory period}\index{neuron!refractory period} (\Cref{fig:action_potentials_refractory}).%
+	\item \emph{Superthreshold dynamics.} If the current pulse is energetic enough for the membrane potential to reach a soft threshold value $v_\mathrm{th}$, the neuron generates an action potential; \vMem suddenly rises towards positive numbers (\emph{depolarisation}), and then falls to voltages below \vRest (\emph{repolarisation})---the neuron is \emph{hyperpolarised}. Over time, \vMem converges back to  \vRest.  This is depcited in \Cref{fig:action_potentials_superthreshold}.
+	\item \emph{Refractory period.} While the neuron is hyperpolarised, it is significantly harder to evoke another action potential. This phase is referred to as the \emph{refractory period} (\Cref{fig:action_potentials_refractory}).%
 	\footnote{Technically, modellers distinguish between \emph{absolute} and \emph{relative} refractory periods. During the absolute refractory period the neuron cannot produce action potentials; during the relative refractory period merely large input currents are required \citep[Section~2.3.2]{izhikevich2007dynamical}.}
 \end{enumerate}
 
@@ -367,7 +367,7 @@ The important idea of Hodgkin-Huxley-type models is that the channel conductance
 That is, the permeability of the membrane for potassium and sodium changes depending on the membrane potential due to voltage-dependent ion channels.
 Hodgkin and Huxley model the dynamics of these channels using three dimensionless \enquote{gating} variables $m(t)$, $h(t)$, $n(t)$.
 Revised models differ from the original in terms of the concrete dynamics of these variables.
-In our examples, we use dynamics adapted from a model of pyramidal cells in the hippocampus described by \citet[Chapter~4, pp.~92-94; \Cref{app:hippocampal_hh}]{traub1991neuronal}.
+In our examples, we use dynamics adapted from a model of pyramidal cells in the hippocampus described by \citet[Chapter~4, pp.~92-94]{traub1991neuronal}.
 
 \begin{figure}[p]
 	\includegraphics{media/chapters/02_modelling/02_01/action_potentials.pdf}
@@ -395,7 +395,7 @@ We just need to make two conceptual changes to account for the linear subthresho
 
 \subsubsection{Subthreshold dynamics}
 To model the linear subthreshold dynamics, we simply add a capacitor with capacitance $C_\mathrm{m}$ to the circuit model.
-This \emph{membrane capacitance}\index{neuron!membrane capacitance} is physically motivated by the cell membrane separating two electrically charged bodies.
+This \emph{membrane capacitance} is physically motivated by the cell membrane separating two electrically charged bodies.
 Any such system inherently possesses capacitive properties.%
 \footnote{To be clear, the membrane capacitance is not specific to the Hodgkin-Huxley model. In fact, this assumption preceded the Hodgkin-Huxley model by several decades (e.g., \cite{lapicque1907recherches}). We discuss the corresponding LIF neuron model first proposed by Lapicque later in this chapter.}
 Given an input current $J(t)$, the sub-threshold dynamics can be described in terms of the following differential equation
@@ -441,16 +441,18 @@ where $\hat g_\mathrm{K^+}$ and $\hat g_\mathrm{Na^+}$ are the maximum conductan
 %	\dot h(t) &= f_h(v(t), h(t)) \,, &
 %	\dot n(t) &= f_n(v(t), n(t)) \,.
 %\end{align*}
-The dynamics of the gating variables (cf.~\Cref{app:hippocampal_hh}) produce a tight feedback loop between $\vMem(t)$ and the conductances.
+The dynamics of the gating variables% (cf.~\Cref{app:hippocampal_hh})
+produce a tight feedback loop between $\vMem(t)$ and the conductances.
 
 \Cref{fig:action_potentials_hh_conductances_conductances} depicts the resulting conductances over time.
 In particular, $g_\mathrm{Na^+}(t)$ rises rapidly once a certain threshold potential is exceeded.
 This drives the cell towards the positive sodium reversal potential $E_\mathrm{Na^+}$; the cell becomes depolarised.
 In turn, the positive membrane potential triggers a rise in potassium conductivity $g_\mathrm{K^+}(t)$, while the gating variable $h(t)$ shuts the sodium current off. This drives the cell towards the negative potassium reversal potential $E_\mathrm{K^+}$; the cell becomes hyperpolarised, while the potassium conductance remains relatively high for a short time.
 This accounts for refractoriness, as large $J$ are required to counter the potassium current.
+Interested readers may find a thorough discussion of the dynamics of Hodgkin-Huxley-like neurons in \citet{izhikevich2007dynamical}.
 
-A detailed description of the superthreshold dynamics is provided in \Cref{app:hippocampal_hh}, including the unabridged equations and additional diagrams.
-An even more thorough discussion of the dynamics of Hodgkin-Huxley-like neurons may be found in \citet{izhikevich2007dynamical}.
+%A detailed description of the superthreshold dynamics is provided in \Cref{app:hippocampal_hh}, including the unabridged equations and additional diagrams.
+%An even more thorough discussion of the dynamics of Hodgkin-Huxley-like neurons may be found in \citet{izhikevich2007dynamical}.
 
 \subsection{Compartmental Neuron Models}
 \label{sec:comp}

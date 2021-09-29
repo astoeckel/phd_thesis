@@ -7,8 +7,8 @@ In this section, we provide proofs for the claims made in \Cref{chp:nlif}, where
 
 \subsection{Proof of \Cref{thm:xor_general}}
 
-The theorem as stated above posits that there are always functions $f$ that cannot be approximated using an additive network with a fixed nonlinearity $\sigma$.
-We can prove this by constructing an $f$ that is constant along the sides of a rectangle, but maps onto a different value on the inside.
+In \Cref{sec:additive_net} we claimed that there are always functions $f$ that cannot be approximated using an additive network with a fixed nonlinearity $\sigma$.
+We prove this by constructing an $f$ that is constant along the sides of a rectangle, but maps onto a different value on the inside.
 
 \ThmXorGeneral*
 
@@ -112,8 +112,7 @@ This universality of two-layer networks of this form is a well known fact, and h
 In the terminology of the authors, the above equation describes a $\Sigma$-network, and $\sigma$ is a \enquote{squashing function}.
 A notable difference to our theorem is that Hornik et al., define $\alpha_i \langle \vec e_i, \vec x \rangle + \beta_i$ to be all possible affine functions mapping from $\mathbb{R}^\ell$ onto $\mathbb{R}$, while we limit the affine functions to those required to cover the unit-ball $\mathbb{B}^\ell$.
 
-A complete proof of this theorem is out of scope for this thesis, and we kindly direct the reader at \citet{hornik1989multilayer}.
-However, we would like to provide some geometric intuition as for why this theorem holds.
+Instead of providing a complete proof, we would like to suggest geometrically why this theorem holds.
 Consider the case where $\sigma$ is a step-function, i.e., $\sigma(\xi) = 1$ if $\xi > 0$, otherwise $\sigma(\xi) = 0$.
 In the case of a one-dimensional network, and as is depicted in \Cref{fig:universality_proof_a}, it is apparent that as the number of neurons $n$ goes to infinity, we can enclose any point on the $x$-axis with arbitrary precision by subtracting two appropriate neuron tuning curves with equal encoder.
 By scaling the two tuning curves, we can hence assign a value $f(x)$ to each represented value $x$.
@@ -247,8 +246,6 @@ Our original claim follows trivially.
 %\end{align*}
 %This equality can only hold if $\vec x$ is orthogonal to $\vec{\epsilon}$, i.e., $\langle \vec x, \vec \epsilon \rangle = 0$.
 %\end{proof}
-
-\pagebreak
 
 \subsection{Proof of \Cref{thm:nlif_product_terms}}
 \label{app:nlif_product_terms}

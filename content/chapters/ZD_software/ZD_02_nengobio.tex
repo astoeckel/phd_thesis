@@ -1,0 +1,159 @@
+% !TeX spellcheck = en_GB
+
+\section{More Biologically Plausible Nengo Models: NengoBio}
+\label{app:nengo_bio}
+
+NengoBio is an add-on to the Nengo neural network simulator package \citep{bekolay2014nengo} that implements the extensions to the NEF discussed in \Cref{sec:nef_extension}.
+At its core, NengoBio adds support for multi-channel neurons and for optimising weights in current-space.
+We accomplish this by hooking into Nengo's build system and dynamically rewriting the operator graph (see \cite{gosmann2017automatic} for a description of the operator graph).
+
+NengoBio can account for Dale's principle, provide special syntactic sugar for interneuron populations, enforce sparsity constraints, and support dendritic computation with two-compartment LIF neurons.
+We discuss these features in more detail in the following subsections.
+
+\subsection{Accounting for Dale's Principle}
+
+Dale's principle can be enforced by replacing Nengo's original \texttt{Ensemble} and \texttt{Connection} objects with those provided by NengoBio and setting the \texttt{p\_exc} or \texttt{p\_inh} properties when constructing the pre-population.
+The following code-snippet demonstrates this
+\begin{pythoncode}
+import numpy as np; import nengo; import nengo_bio as bio
+
+with nengo.Network() as model:
+	# Construct the input and two NengoBio ensembles
+    input = nengo.Node(lambda t: np.sin(2.0 * np.pi * t))
+    ens1 = bio.Ensemble(n_neurons=100, dimensions=1, p_exc=1.0)
+    ens2 = bio.Ensemble(n_neurons=100, dimensions=1)
+
+	# Nengo connections can target bio.Ensemble objects
+    nengo.Connection(input, ens1)
+
+	# NengoBio connections can only be between bio.Ensemble objects. bio.Decode
+	# (default) forces decoding bias currents; bio.JBias implies intrinsic biases.
+    bio.Connection(ens1, ens2, bias_mode=bio.Decode)
+\end{pythoncode}
+This is implemented using the NNLS method discussed in \Cref{sec:nef_nonneg}.
+Values between zero and one for \texttt{p\_exc} sets the probability with which a neuron is marked as excitatory.
+Not setting \texttt{p\_exc} disables Dale's principle for outgoing connections.
+
+NengoBio hooks into the Nengo GUI visualiser%
+\footnote{See \url{https://github.com/nengo/nengo_gui} for more details.}
+to highlight purely excitatory or inhibitory connections; with some minor modifications (i.e., repeating the imports and \enquote{with} block), the code-snippets in this section can be copied into the visualiser for exploration.
+
+\subsection{Inhibitory Interneuron Populations and Communication Channels}
+\label{sec:nengo_bio_inhibitory}
+
+In \Cref{sec:nef_nonneg}, we discussed two interesting network architectures that benefit from current-space weight solving: networks with inhibitory interneuron populations and purely inhibitory communication channels.
+Both network types can be easily implemented in NengoBio.
+
+\subsubsection{Inhibitory interneurons}
+In biology, inhibitory input to a neuron population is often routed through inhibitory interneurons.
+This results in the network architecture depicted in \Cref{fig:inhibitory_interneurons}.
+We suggested constructing such networks by assuming that both the interneurons and the excitatory pre-population represent the same value $\vec x$.
+NengoBio provides special syntax for this: specifying a set \texttt{\{ens1, \textellipsis, ensN\}} as a pre-population in a connection results in these ensembles being treated as a virtual pre-population that represents a common value:
+\begin{pythoncode}
+# Create the three ensembles
+ens_exc = bio.Ensemble(n_neurons=100, dimensions=1, p_exc=1.0)
+ens_inh = bio.Ensemble(n_neurons=100, dimensions=1, p_inh=1.0)
+ens_tar = bio.Ensemble(n_neurons=100, dimensions=1)
+
+# Setup connections, treat {ens_exc, ens_inh} as a single population
+nengo.Connection(input, ens_exc)
+bio.Connection(ens_exc, ens_inh)
+bio.Connection({ens_exc, ens_inh}, ens_tar, function=lambda x: x**2)
+\end{pythoncode}
+
+\subsubsection{Purely inhibitory communication channels}
+We can construct purely inhibitory communication channels---and even compute functions along these channels---as long as the target population receives \emph{some} other form of excitatory input.
+As suggested in \Cref{eqn:inhibitory_communication_channel}, this can be accomplished by ignoring the excitatory pre-population in the represented space, but using the pre-activities to solve for excitatory input.
+\begin{pythoncode}
+# Random input for the excitatory ensemble; should not influence the computation
+input_noise = nengo.Node(nengo.processes.WhiteSignal(high=5.0, period=10.0))
+
+# Setup connections, treat (ens_inh, ens_exc) as a single population
+nengo.Connection(input_noise, ens_exc)
+nengo.Connection(input, ens_inh)
+bio.Connection((ens_inh, ens_exc), ens_tar, function=lambda x: x[0]**2)
+\end{pythoncode}
+Note that we listed the two pre-populations as a tuple \texttt{(ens1, \textellipsis, ensN)}.
+This instructs NengoBio to form a virtual pre-population where the represented values of the populations are stacked.
+Here, the two pre-populations represent one-dimensional quantities---correspondingly, the post-population receives a two-dimensional value.
+In the above code, we simply ignore the second dimension that originates from the excitatory pre-neuron.
+
+\subsection{Sparsity Constraints}
+\label{sec:nengo_bio_sparsity}
+
+\begin{figure}
+	\centering
+	\includegraphics{media/chapters/ZD_software/nengo_bio_spatial_connectivity.pdf}
+	\caption[Spatial connectivity constraints in NengoBio]{
+		Spatial connectivity constraints in NengoBio.
+		\textbf{(A)} Location of each neuron and connections.
+		\textbf{(B)} Normalised connection probabilities.
+		\textbf{(C)} Testing the communication channel.
+	}
+	\label{fig:nengo_bio_spatial_connectivity}
+\end{figure}
+
+As we discussed in \Cref{chp:cerbellum}, neurobiological microcircuits are often characterised in terms of their convergence and divergence numbers.
+NengoBio can account for these constraints.
+
+\subsubsection{Specifying convergence and/or divergence}
+Connectivity constraints can be specified by passing a \texttt{Connectivity} object to a connection.
+For example, the following code-snippet establishes random connectivity that takes the given convergence numbers into account:
+\begin{pythoncode}
+ens_src = bio.Ensemble(n_neurons=100, dimensions=1)
+ens_tar = bio.Ensemble(n_neurons=100, dimensions=1)
+bio.Connection(ens_src, ens_tar, # Can alternatively pass "divergence" (or both)
+               connectivity=bio.ConstrainedConnectivity(convergence=5))
+\end{pythoncode}
+%#It is possible to alternatively specify the divergence of the connection.
+%When specifying both convergence and divergence NengoBio will treat the values as upper bounds.
+
+\subsubsection{Spatially constrained connectivity}
+NengoBio also supports spatially constrained connectivity.
+Each ensemble can be assigned an array or distribution of locations in $n$-dimensional space; this location information is then used to compute connection probabilities:
+\begin{pythoncode}
+ens_src = bio.Ensemble(n_neurons=25, dimensions=1,
+                       locations=bio.NeuralSheetDist(dimensions=2))
+ens_tar = bio.Ensemble(n_neurons=100, dimensions=1,
+                       locations=bio.NeuralSheetDist(dimensions=2))
+bio.Connection(ens_src, ens_tar, connectivity=
+               bio.SpatiallyConstrainedConnectivity(convergence=5, sigma=0.25))
+\end{pythoncode}
+Here, \texttt{NeuralSheetDist} is a random distribution that arranges neurons along a Hilbert curve to ensure approximate equidistance and that neurons with similar indices are close together in space.
+The probability matrix and final connectivity of this network are depicted in \Cref{fig:nengo_bio_spatial_connectivity}.
+
+\subsection{Dendritic Computation}
+Dendritic computation in NengoBio relies on the tuple-syntax for specifying a virtual pre-population with stacked represented values (\Cref{sec:nengo_bio_inhibitory}).
+As we discussed in detail in \Cref{chp:nlif}, we can only compute additive functions in the pre-populations with standard current-based LIF neurons.
+In NengoBio, simply setting the neuron type of an ensemble to the two-compartment LIF neuron enables the computation of nonlinear multivariate functions:
+\begin{pythoncode}
+# Input nodes and pre-populations with 30% inhibitory neurons
+inp_x1, inp_x2 = nengo.Node(size_in=1), nengo.Node(size_in=1)
+ens_x1 = bio.Ensemble(n_neurons=100, dimensions=1, p_inh=0.3)
+ens_x2 = bio.Ensemble(n_neurons=100, dimensions=1, p_inh=0.3)
+nengo.Connection(inp_x1, ens_x1)
+nengo.Connection(inp_x2, ens_x2)
+
+# Create a population of two-compartment LIF neurons, use lower maximum rates
+# because of the current limit imposed by the conductance-based synapses
+ens_tar = bio.Ensemble(n_neurons=100, dimensions=1,
+                       neuron_type=bio.neurons.TwoCompLIF(),
+                       max_rates=nengo.dists.Uniform(75, 100))
+
+# Compute nonnegative multiplication. Map the input from [-1, 1]^2 onto [0, 1]
+# and the output from [0, 1] onto [-1, 1]. Use the quadratic programming solver
+# with subthreshold relaxation to improve performance.
+bio.Connection((ens_x1, ens_x2), ens_tar,
+               function=lambda x: 0.5 * (x[0] + 1.0) * (x[1] + 1.0) - 1.0,
+               solver=bio.solvers.QPSolver(relax=True))
+\end{pythoncode}
+When using the two-compartment LIF neuron, NengoBio automatically calibrates the two-compartment neuron parameters using the method presented in \Cref{sec:two_comp_lif_fit_model}.
+In particular, NengoBio performs a series of neuron simulations to determine the excitatory and inhibitory conductance range that produces the specified maximum firing rates.
+
+The \texttt{QPSolver} class uses the non-sequential quadratic program discussed in \Cref{sec:two_comp_synaptic_weights} to compute synaptic weights.
+An implementation of this non-sequential weight solver is provided by \emph{libnlif} in addition to the sequential soft trust-region based algorithms.
+
+As of writing, NengoBio does \emph{not} support \nlif-neurons with more than two compartments.
+Given our implementation of the parameter and weight solver implementations in \emph{libnlif}, this is not a technical challenge per se, but instead hinges on finding a good API that allows users to specify possible synaptic sites.
+For example, some pre-populations may only connect to basal compartments, whereas others only target apical compartments.
+It is unclear how users would specify this at an abstract level.

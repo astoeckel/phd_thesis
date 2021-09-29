@@ -1,5 +1,6 @@
 % !TeX spellcheck = en_GB
 \documentclass[letterpaper,twoside,12pt]{memoir}
+\usepackage{morewrites}
 
 \input{content/preamble/style}
 \input{content/preamble/packages}
@@ -44,8 +45,6 @@
 
 \addbibresource{bibliography.bib}
 
-\makeindex
-
 % Starts creation of a glossary.
 \makeglossaries
 \input{content/frontmatter/glossary}
@@ -72,41 +71,46 @@
 %
 %	\mainmatter
 %
-%%	\setcounter{chapter}{0}
-%%	\include{chapters/chapter_introduction}
+%	\setcounter{chapter}{0}
+%	\include{content/chapters/01_introduction/01_introduction}
 %
 %	\setcounter{chapter}{1}
 %	\include{content/chapters/02_modelling/02_modelling}
+%
+%	\setcounter{chapter}{2}
+%	\include{content/chapters/03_nlif/03_nlif}
 
-	\setcounter{chapter}{2}
-	\include{content/chapters/03_nlif/03_nlif}
+	\setcounter{chapter}{3}
+	\include{content/chapters/04_temporal_tuning/04_temporal_tuning}
 
-	%\setcounter{chapter}{3}
-	%TODO
-
-	%\setcounter{chapter}{4}
-	%\include{chapters/chapter_cerebellum}
-
+%	\setcounter{chapter}{4}
+%	\include{content/chapters/05_cerebellum/05_cerebellum}
+%
+%	\setcounter{chapter}{6}
+%	\include{content/chapters/06_conclusion/06_conclusion}
+%
 %	\printbibliography
 %
-%	\appendix
-%	%\setcounter{chapter}{0}
-%	%\include{chapters/appendix_mathematics}
+	\appendix
+%	\setcounter{chapter}{0}
+%	\include{content/chapters/ZA_math_background/ZA_math_background}
 %
 %	\setcounter{chapter}{1}
 %	\include{content/chapters/ZB_details/ZB_details}
+
+	\setcounter{chapter}{2}
+	\include{content/chapters/ZC_data/ZC_data}
 %
-%	\setcounter{chapter}{2}
-%	\include{content/chapters/ZC_data/ZC_data}
+%	\setcounter{chapter}{3}
+%	\include{content/chapters/ZD_software/ZD_software}
 %
 %	\backmatter
 %
-	\begingroup
-	\small
-
-	\printglossary[type=main,style=mainglossary]
-
-	\printindex
-	\endgroup
+%	\begingroup
+%	\small
+%
+%	\printglossary[type=main,style=mainglossary]
+%
+%	\endgroup
 
 \end{document}
