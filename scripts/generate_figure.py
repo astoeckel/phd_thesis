@@ -43,6 +43,7 @@ def execute_figure_script(utils):
         \usepackage{libertine}
         \usepackage{libertinust1math}
         \usepackage{mathrsfs}
+        \usepackage{amssymb}
         \renewcommand*\familydefault{\sfdefault}
         \renewcommand{\vec}[1]{\mathbf{#1}}
         \newcommand{\mat}[1]{\mathbf{#1}}
