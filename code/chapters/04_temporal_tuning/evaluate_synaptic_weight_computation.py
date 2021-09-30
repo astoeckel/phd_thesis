@@ -13,6 +13,17 @@ import env_guard
 import h5py
 import json
 
+import lif_utils
+import nonneg_common
+import basis_delay_analysis_common
+import temporal_encoder_common
+from temporal_encoder_common import Filters
+import dlop_ldn_function_bases as bases
+
+import nengo
+nengo.rc.set('decoder_cache', 'enabled', 'False')
+
+
 #
 # Parameters
 #
@@ -110,9 +121,6 @@ def simulate_network_ref(n_neurons,
                          xs,
                          dt,
                          tau=TAU):
-    import nengo
-    nengo.rc.set('decoder_cache', 'enabled', 'False')
-
     # Instantiate the network
     with nengo.Network() as model:
         nd_in = nengo.Node(lambda t: xs[int(t / dt) % len(xs)])
@@ -148,16 +156,6 @@ def simulate_network_ref(n_neurons,
 
 
 def execute_single(idcs):
-    import lif_utils
-    import nonneg_common
-    import basis_delay_analysis_common
-    import temporal_encoder_common
-    from temporal_encoder_common import Filters
-    import dlop_ldn_function_bases as bases
-
-    import nengo
-    nengo.rc.set('decoder_cache', 'enabled', 'False')
-
     i_solver_modes, i_modes, i_qs, i_neurons, i_repeat = idcs
 
     # Set the random seed, just in case something uses np.random
