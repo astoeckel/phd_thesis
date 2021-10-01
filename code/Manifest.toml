@@ -325,84 +325,164 @@ commit = "5de575089502d30611f295f66461ffe8600136a7"
 dockerfile = "experiments_base"
 runs = [
 	{
-		args=["20", "0"],
+		args=["40", "0"],
 		generates=["evaluate_synaptic_weight_computation_0.h5"]
 	},
 	{
-		args=["20", "1"],
+		args=["40", "1"],
 		generates=["evaluate_synaptic_weight_computation_1.h5"]
 	},
 	{
-		args=["20", "2"],
+		args=["40", "2"],
 		generates=["evaluate_synaptic_weight_computation_2.h5"]
 	},
 	{
-		args=["20", "3"],
+		args=["40", "3"],
 		generates=["evaluate_synaptic_weight_computation_3.h5"]
 	},
 	{
-		args=["20", "4"],
+		args=["40", "4"],
 		generates=["evaluate_synaptic_weight_computation_4.h5"]
 	},
 	{
-		args=["20", "5"],
+		args=["40", "5"],
 		generates=["evaluate_synaptic_weight_computation_5.h5"]
 	},
 	{
-		args=["20", "6"],
+		args=["40", "6"],
 		generates=["evaluate_synaptic_weight_computation_6.h5"]
 	},
 	{
-		args=["20", "7"],
+		args=["40", "7"],
 		generates=["evaluate_synaptic_weight_computation_7.h5"]
 	},
 	{
-		args=["20", "8"],
+		args=["40", "8"],
 		generates=["evaluate_synaptic_weight_computation_8.h5"]
 	},
 	{
-		args=["20", "9"],
+		args=["40", "9"],
 		generates=["evaluate_synaptic_weight_computation_9.h5"]
 	},
 	{
-		args=["20", "10"],
+		args=["40", "10"],
 		generates=["evaluate_synaptic_weight_computation_10.h5"]
 	},
 	{
-		args=["20", "11"],
+		args=["40", "11"],
 		generates=["evaluate_synaptic_weight_computation_11.h5"]
 	},
 	{
-		args=["20", "12"],
+		args=["40", "12"],
 		generates=["evaluate_synaptic_weight_computation_12.h5"]
 	},
 	{
-		args=["20", "13"],
+		args=["40", "13"],
 		generates=["evaluate_synaptic_weight_computation_13.h5"]
 	},
 	{
-		args=["20", "14"],
+		args=["40", "14"],
 		generates=["evaluate_synaptic_weight_computation_14.h5"]
 	},
 	{
-		args=["20", "15"],
+		args=["40", "15"],
 		generates=["evaluate_synaptic_weight_computation_15.h5"]
 	},
 	{
-		args=["20", "16"],
+		args=["40", "16"],
 		generates=["evaluate_synaptic_weight_computation_16.h5"]
 	},
 	{
-		args=["20", "17"],
+		args=["40", "17"],
 		generates=["evaluate_synaptic_weight_computation_17.h5"]
 	},
 	{
-		args=["20", "18"],
+		args=["40", "18"],
 		generates=["evaluate_synaptic_weight_computation_18.h5"]
 	},
 	{
-		args=["20", "19"],
+		args=["40", "19"],
 		generates=["evaluate_synaptic_weight_computation_19.h5"]
+	},
+	{
+		args=["40", "20"],
+		generates=["evaluate_synaptic_weight_computation_20.h5"]
+	},
+	{
+		args=["40", "21"],
+		generates=["evaluate_synaptic_weight_computation_21.h5"]
+	},
+	{
+		args=["40", "22"],
+		generates=["evaluate_synaptic_weight_computation_22.h5"]
+	},
+	{
+		args=["40", "23"],
+		generates=["evaluate_synaptic_weight_computation_23.h5"]
+	},
+	{
+		args=["40", "24"],
+		generates=["evaluate_synaptic_weight_computation_24.h5"]
+	},
+	{
+		args=["40", "25"],
+		generates=["evaluate_synaptic_weight_computation_25.h5"]
+	},
+	{
+		args=["40", "26"],
+		generates=["evaluate_synaptic_weight_computation_26.h5"]
+	},
+	{
+		args=["40", "27"],
+		generates=["evaluate_synaptic_weight_computation_27.h5"]
+	},
+	{
+		args=["40", "28"],
+		generates=["evaluate_synaptic_weight_computation_28.h5"]
+	},
+	{
+		args=["40", "29"],
+		generates=["evaluate_synaptic_weight_computation_29.h5"]
+	},
+	{
+		args=["40", "30"],
+		generates=["evaluate_synaptic_weight_computation_30.h5"]
+	},
+	{
+		args=["40", "31"],
+		generates=["evaluate_synaptic_weight_computation_31.h5"]
+	},
+	{
+		args=["40", "32"],
+		generates=["evaluate_synaptic_weight_computation_32.h5"]
+	},
+	{
+		args=["40", "33"],
+		generates=["evaluate_synaptic_weight_computation_33.h5"]
+	},
+	{
+		args=["40", "34"],
+		generates=["evaluate_synaptic_weight_computation_34.h5"]
+	},
+	{
+		args=["40", "35"],
+		generates=["evaluate_synaptic_weight_computation_35.h5"]
+	},
+	{
+		args=["40", "36"],
+		generates=["evaluate_synaptic_weight_computation_36.h5"]
+	},
+	{
+		args=["40", "37"],
+		generates=["evaluate_synaptic_weight_computation_37.h5"]
+	},
+	{
+		args=["40", "38"],
+		generates=["evaluate_synaptic_weight_computation_38.h5"]
+	},
+	{
+		args=["40", "39"],
+		generates=["evaluate_synaptic_weight_computation_39.h5"]
 	},
 ]
 is_multithreaded = true
