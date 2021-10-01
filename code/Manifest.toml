@@ -321,9 +321,50 @@ generates = ["evaluate_bases_delays_bandlimited.h5"]
 is_multithreaded = true
 
 ["chapters/04_temporal_tuning/evaluate_synaptic_weight_computation.py"]
-commit = "98cf3dd975668dd8157a9b3513902b5df43e8f41"
+commit = "5de575089502d30611f295f66461ffe8600136a7"
 dockerfile = "experiments_base"
-generates = ["evaluate_synaptic_weight_computation.h5"]
+runs = [
+	{
+		args=["10", "0"],
+		generates=["evaluate_synaptic_weight_computation_0.h5"]
+	},
+	{
+		args=["10", "1"],
+		generates=["evaluate_synaptic_weight_computation_1.h5"]
+	},
+	{
+		args=["10", "2"],
+		generates=["evaluate_synaptic_weight_computation_2.h5"]
+	},
+	{
+		args=["10", "3"],
+		generates=["evaluate_synaptic_weight_computation_3.h5"]
+	},
+	{
+		args=["10", "4"],
+		generates=["evaluate_synaptic_weight_computation_4.h5"]
+	},
+	{
+		args=["10", "5"],
+		generates=["evaluate_synaptic_weight_computation_5.h5"]
+	},
+	{
+		args=["10", "6"],
+		generates=["evaluate_synaptic_weight_computation_6.h5"]
+	},
+	{
+		args=["10", "7"],
+		generates=["evaluate_synaptic_weight_computation_7.h5"]
+	},
+	{
+		args=["10", "7"],
+		generates=["evaluate_synaptic_weight_computation_8.h5"]
+	},
+	{
+		args=["10", "9"],
+		generates=["evaluate_synaptic_weight_computation_9.h5"]
+	},
+]
 is_multithreaded = true
 
 #
