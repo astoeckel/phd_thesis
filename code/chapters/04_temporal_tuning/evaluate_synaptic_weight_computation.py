@@ -391,12 +391,14 @@ def main():
         errs_tuning = f.create_dataset("errs_tuning",
                                        shape=(N_SOLVER_MODES, N_MODES, N_QS,
                                               N_NEURONS, N_REPEAT,
-                                              N_XS_SIGMA_TEST, N_REPEAT_TEST))
+                                              N_XS_SIGMA_TEST, N_REPEAT_TEST),
+                                       compression="gzip")
         errs_tuning[...] = np.nan
         errs_delay = f.create_dataset(
             "errs_delay",
             shape=(N_SOLVER_MODES, N_MODES, N_QS, N_NEURONS, N_REPEAT,
-                   N_XS_SIGMA_TEST, N_REPEAT_TEST, N_DELAYS_TEST))
+                   N_XS_SIGMA_TEST, N_REPEAT_TEST, N_DELAYS_TEST),
+            compression="gzip")
         errs_delay[...] = np.nan
 
         def idcs_valid(idcs):
