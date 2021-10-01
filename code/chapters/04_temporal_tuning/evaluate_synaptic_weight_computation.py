@@ -5,13 +5,12 @@ import os, sys
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'lib'))
 
 import itertools
-import tqdm
 import numpy as np
-import multiprocessing
 import random
 import env_guard
 import h5py
 import json
+import working_multiprocessing_pool
 
 import lif_utils
 import nonneg_common
@@ -120,37 +119,33 @@ def simulate_network_ref(n_neurons,
                          xs,
                          dt,
                          tau=TAU):
-#    # Instantiate the network
-#    with nengo.Network() as model:
-#        nd_in = nengo.Node(lambda t: xs[int(t / dt) % len(xs)])
-#        ens_x = nengo.Ensemble(
-#            n_neurons=n_neurons,
-#            dimensions=dimensions,
-#            bias=bias,
-#            gain=gain,
-#            encoders=encoders,
-#        )
+    # Instantiate the network
+    with nengo.Network() as model:
+        nd_in = nengo.Node(lambda t: xs[int(t / dt) % len(xs)])
+        ens_x = nengo.Ensemble(
+            n_neurons=n_neurons,
+            dimensions=dimensions,
+            bias=bias,
+            gain=gain,
+            encoders=encoders,
+        )
 
-#        nengo.Connection(nd_in,
-#                         ens_x,
-#                         transform=tau * B.reshape(-1, 1),
-#                         synapse=tau)
-#        nengo.Connection(ens_x,
-#                         ens_x,
-#                         transform=tau * A + np.eye(A.shape[0]),
-#                         synapse=tau)
+        nengo.Connection(nd_in,
+                         ens_x,
+                         transform=tau * B.reshape(-1, 1),
+                         synapse=tau)
+        nengo.Connection(ens_x,
+                         ens_x,
+                         transform=tau * A + np.eye(A.shape[0]),
+                         synapse=tau)
 
-#        p_x = nengo.Probe(ens_x.neurons, synapse=None)
+        p_x = nengo.Probe(ens_x.neurons, synapse=None)
 
-#    # Run the simulation
-#    with nengo.Simulator(model, progress_bar=False) as sim:
-#        sim.run(len(xs) * dt)
+    # Run the simulation
+    with nengo.Simulator(model, progress_bar=False) as sim:
+        sim.run(len(xs) * dt)
 
-#    return sim.trange(), np.copy(sim.data[p_x])
-
-    ts = np.arange(0, len(xs)) * dt
-    As = np.zeros((len(xs), n_neurons))
-    return ts, As
+    return sim.trange(), np.copy(sim.data[p_x])
 
 #
 # Experiment runner
@@ -365,44 +360,25 @@ def execute_single(idcs):
 
 
 def main():
-    if len(sys.argv) > 1:
-        n_partitions = int(sys.argv[1])
-        partition_idx = int(sys.argv[2])
-    else:
-        n_partitions = 1
-        partition_idx = 0
+    def task_init():
+        if len(sys.argv) > 1:
+            n_partitions = int(sys.argv[1])
+            partition_idx = int(sys.argv[2])
+        else:
+            n_partitions = 1
+            partition_idx = 0
 
-    assert n_partitions > 0
-    assert partition_idx < n_partitions
-    assert partition_idx >= 0
+        assert n_partitions > 0
+        assert partition_idx < n_partitions
+        assert partition_idx >= 0
 
-    if n_partitions == 1:
-        fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data',
-                          "evaluate_synaptic_weight_computation.h5")
-    else:
-        fn = os.path.join(
-            os.path.dirname(__file__), '..', '..', '..', 'data',
-            "evaluate_synaptic_weight_computation_{}.h5".format(partition_idx))
-
-    with h5py.File(fn, 'w') as f:
-        f.attrs["solver_modes"] = json.dumps(SOLVER_MODES)
-        f.attrs["modes"] = json.dumps(MODES)
-        f.attrs["qs"] = json.dumps([int(q) for q in QS])
-        f.attrs["neurons"] = json.dumps([int(x) for x in NEURONS])
-        f.attrs["xs_sigma_test"] = json.dumps(list(XS_SIGMA_TEST))
-
-        errs_tuning = f.create_dataset("errs_tuning",
-                                       shape=(N_SOLVER_MODES, N_MODES, N_QS,
-                                              N_NEURONS, N_REPEAT,
-                                              N_XS_SIGMA_TEST, N_REPEAT_TEST),
-                                       compression="gzip")
-        errs_tuning[...] = np.nan
-        errs_delay = f.create_dataset(
-            "errs_delay",
-            shape=(N_SOLVER_MODES, N_MODES, N_QS, N_NEURONS, N_REPEAT,
-                   N_XS_SIGMA_TEST, N_REPEAT_TEST, N_DELAYS_TEST),
-            compression="gzip")
-        errs_delay[...] = np.nan
+        if n_partitions == 1:
+            fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data',
+                              "evaluate_synaptic_weight_computation.h5")
+        else:
+            fn = os.path.join(
+                os.path.dirname(__file__), '..', '..', '..', 'data',
+                "evaluate_synaptic_weight_computation_{}.h5".format(partition_idx))
 
         def idcs_valid(idcs):
             return (SOLVER_MODES[idcs[0]] != "nef") or (MODES[idcs[1]] !=
@@ -426,15 +402,39 @@ def main():
             f"Partition {partition_idx} out of {n_partitions} (i0={i0}, i1={i1}); total={len(idcs)}"
         )
 
-        with env_guard.SingleThreadEnvGuard():
-            with multiprocessing.get_context('spawn').Pool(
-                    maxtasksperchild=1) as pool:
-                for idcs, Es_tuning, Es_delay, in tqdm.tqdm(
-                        pool.imap_unordered(execute_single, idcs[i0:i1]),
-                        total=i1 - i0):
-                    errs_tuning[idcs] = Es_tuning
-                    errs_delay[idcs] = Es_delay
-                    f.flush()
+        f = h5py.File(fn, 'w')
+
+        f.attrs["solver_modes"] = json.dumps(SOLVER_MODES)
+        f.attrs["modes"] = json.dumps(MODES)
+        f.attrs["qs"] = json.dumps([int(q) for q in QS])
+        f.attrs["neurons"] = json.dumps([int(x) for x in NEURONS])
+        f.attrs["xs_sigma_test"] = json.dumps(list(XS_SIGMA_TEST))
+
+        errs_tuning = f.create_dataset(
+            "errs_tuning",
+            shape=(N_SOLVER_MODES, N_MODES, N_QS, N_NEURONS, N_REPEAT,
+                   N_XS_SIGMA_TEST, N_REPEAT_TEST),
+            compression="gzip")
+        errs_tuning[...] = np.nan
+        errs_delay = f.create_dataset(
+            "errs_delay",
+            shape=(N_SOLVER_MODES, N_MODES, N_QS, N_NEURONS, N_REPEAT,
+                   N_XS_SIGMA_TEST, N_REPEAT_TEST, N_DELAYS_TEST),
+            compression="gzip")
+        errs_delay[...] = np.nan
+
+        return idcs[i0:i1], f
+
+    def task_serialise(res, f):
+        idcs, Es_tuning, Es_delay = res
+        f["errs_tuning"][idcs] = Es_tuning
+        f["errs_delay"][idcs] = Es_delay
+        f.flush()
+
+    f = working_multiprocessing_pool.run(sys.argv, task_init, execute_single,
+                                     task_serialise)
+    if not f is None:
+        f.close()
 
 
 if __name__ == "__main__":
