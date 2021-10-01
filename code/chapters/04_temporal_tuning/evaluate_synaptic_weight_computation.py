@@ -21,8 +21,8 @@ from temporal_encoder_common import Filters
 import dlop_ldn_function_bases as bases
 
 import nengo
-nengo.rc.set('decoder_cache', 'enabled', 'False')
 
+nengo.rc.set('decoder_cache', 'enabled', 'False')
 
 #
 # Parameters
@@ -35,17 +35,16 @@ T_SIM = 10.0
 
 THETA = 1.0
 TAU = 100e-3
-TAU_DECODE = 20e-3
+TAU_DECODE = 100e-3
 XS_SIGMA = 2.0
 
 N_DIMS_CSTR = 3
 
-#SOLVER_MODES = ["nef", "biased_xs", "unbiased_xs"]
 SOLVER_MODES = ["nef", "biased_xs", "unbiased_xs"]
 N_SOLVER_MODES = len(SOLVER_MODES)
 
 MODES = [
-    "non_lindep_cosine",
+    #    "non_lindep_cosine",
     "mod_fourier_bartlett",
     "mod_fourier_erasure",
     "legendre_erasure",
@@ -55,7 +54,7 @@ N_MODES = len(MODES)
 QS = np.array([3, 5, 7])
 N_QS = len(QS)
 
-N_NEURONS = 11
+N_NEURONS = 7
 NEURONS = np.unique(np.geomspace(10, 1000, N_NEURONS, dtype=int))
 N_NEURONS = len(NEURONS)
 
@@ -64,7 +63,7 @@ N_DELAYS_TEST = 20
 XS_SIGMA_TEST = [2.0]
 N_XS_SIGMA_TEST = len(XS_SIGMA_TEST)
 
-N_REPEAT = 10
+N_REPEAT = 100
 
 N_REPEAT_TEST = 10
 
@@ -155,6 +154,23 @@ def simulate_network_ref(n_neurons,
 #
 
 
+def mk_cosine_bartlett_basis_with_spread(q,
+                                         N,
+                                         T=1.0,
+                                         dt=1e-3,
+                                         phi_max=2.0,
+                                         decay_min=1.5,
+                                         decay_max=1.5,
+                                         rng=np.random):
+    phis = np.linspace(0, phi_max, q) * 2.0 * np.pi
+    phases = rng.uniform(0, np.pi, q)
+    t1 = rng.uniform(decay_min, decay_max, q) * T
+    ts = np.arange(N) * dt
+    return (
+        np.cos(ts[None, :] * phis[:, None] / t1[:, None] + phases[:, None]) *
+        (1.0 - ts[None, :] / t1[:, None]) * (ts[None, :] <= t1[:, None]))
+
+
 def execute_single(idcs):
     i_solver_modes, i_modes, i_qs, i_neurons, i_repeat = idcs
 
@@ -182,15 +198,9 @@ def execute_single(idcs):
     N_train = len(ts_train)
     N_theta = int(THETA / DT)
     if mode == "non_lindep_cosine":
-        Ms = np.zeros((N_train, n_temporal_dimensions))
-        f_max = 0.5 * (q - 1)  # Maximum frequency to use
-        phis = np.linspace(0, 2.0 * np.pi * f_max, n_temporal_dimensions)
-        for i in range(n_temporal_dimensions):
-            decay = int(np.random.uniform(N_theta * 0.5,
-                                          N_theta * 1.5))  # +-50%
-            Ms[:decay,
-               i] = np.cos(phis[i] * ts_train[:decay] / THETA) * np.linspace(
-                   1, 0, decay)
+        Ms = mk_cosine_bartlett_basis_with_spread(n_temporal_dimensions,
+                                                  N_train,
+                                                  phi_max=0.5 * (q - 1)).T
     else:
         basis, window = mode.rsplit("_", 1)
         args = dict(basis=basis,
@@ -352,8 +362,25 @@ def execute_single(idcs):
 
 
 def main():
-    fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data',
-                      "evaluate_synaptic_weight_computation.h5")
+    if len(sys.argv) > 1:
+        n_partitions = int(sys.argv[1])
+        partition_idx = int(sys.argv[2])
+    else:
+        n_partitions = 1
+        partition_idx = 0
+
+    assert n_partitions > 0
+    assert partition_idx < n_partitions
+    assert partition_idx >= 0
+
+    if n_partitions == 1:
+        fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data',
+                          "evaluate_synaptic_weight_computation.h5")
+    else:
+        fn = os.path.join(
+            os.path.dirname(__file__), '..', '..', '..', 'data',
+            "evaluate_synaptic_weight_computation_{}.h5".format(partition_idx))
+
     with h5py.File(fn, 'w') as f:
         f.attrs["solver_modes"] = json.dumps(SOLVER_MODES)
         f.attrs["modes"] = json.dumps(MODES)
@@ -365,10 +392,12 @@ def main():
                                        shape=(N_SOLVER_MODES, N_MODES, N_QS,
                                               N_NEURONS, N_REPEAT,
                                               N_XS_SIGMA_TEST, N_REPEAT_TEST))
+        errs_tuning[...] = np.nan
         errs_delay = f.create_dataset(
             "errs_delay",
             shape=(N_SOLVER_MODES, N_MODES, N_QS, N_NEURONS, N_REPEAT,
                    N_XS_SIGMA_TEST, N_REPEAT_TEST, N_DELAYS_TEST))
+        errs_delay[...] = np.nan
 
         def idcs_valid(idcs):
             return (SOLVER_MODES[idcs[0]] != "nef") or (MODES[idcs[1]] !=
@@ -381,16 +410,27 @@ def main():
                                   range(N_QS), range(N_NEURONS),
                                   range(N_REPEAT))))
 
+        # Always shuffle the indices in the right way to not ruin the indexing
+        np.random.seed(57482)
         random.shuffle(idcs)
 
+        partitions = np.linspace(0, len(idcs), n_partitions + 1, dtype=int)
+        i0 = partitions[partition_idx]
+        i1 = partitions[partition_idx + 1]
+        print(
+            f"Partition {partition_idx} out of {n_partitions} (i0={i0}, i1={i1}); total={len(idcs)}"
+        )
+
         with env_guard.SingleThreadEnvGuard():
-            with multiprocessing.get_context('spawn').Pool(maxtasksperchild=1) as pool:
+            with multiprocessing.get_context('spawn').Pool(
+                    maxtasksperchild=1) as pool:
                 for idcs, Es_tuning, Es_delay, in tqdm.tqdm(
-                        pool.imap_unordered(execute_single,
-                                            idcs), total=len(idcs)):
+                        pool.imap_unordered(execute_single, idcs[i0:i1]),
+                        total=i1 - i0):
                     errs_tuning[idcs] = Es_tuning
                     errs_delay[idcs] = Es_delay
                     f.flush()
+
 
 if __name__ == "__main__":
     main()
