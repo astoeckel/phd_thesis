@@ -120,34 +120,37 @@ def simulate_network_ref(n_neurons,
                          xs,
                          dt,
                          tau=TAU):
-    # Instantiate the network
-    with nengo.Network() as model:
-        nd_in = nengo.Node(lambda t: xs[int(t / dt) % len(xs)])
-        ens_x = nengo.Ensemble(
-            n_neurons=n_neurons,
-            dimensions=dimensions,
-            bias=bias,
-            gain=gain,
-            encoders=encoders,
-        )
+#    # Instantiate the network
+#    with nengo.Network() as model:
+#        nd_in = nengo.Node(lambda t: xs[int(t / dt) % len(xs)])
+#        ens_x = nengo.Ensemble(
+#            n_neurons=n_neurons,
+#            dimensions=dimensions,
+#            bias=bias,
+#            gain=gain,
+#            encoders=encoders,
+#        )
 
-        nengo.Connection(nd_in,
-                         ens_x,
-                         transform=tau * B.reshape(-1, 1),
-                         synapse=tau)
-        nengo.Connection(ens_x,
-                         ens_x,
-                         transform=tau * A + np.eye(A.shape[0]),
-                         synapse=tau)
+#        nengo.Connection(nd_in,
+#                         ens_x,
+#                         transform=tau * B.reshape(-1, 1),
+#                         synapse=tau)
+#        nengo.Connection(ens_x,
+#                         ens_x,
+#                         transform=tau * A + np.eye(A.shape[0]),
+#                         synapse=tau)
 
-        p_x = nengo.Probe(ens_x.neurons, synapse=None)
+#        p_x = nengo.Probe(ens_x.neurons, synapse=None)
 
-    # Run the simulation
-    with nengo.Simulator(model, progress_bar=False) as sim:
-        sim.run(len(xs) * dt)
+#    # Run the simulation
+#    with nengo.Simulator(model, progress_bar=False) as sim:
+#        sim.run(len(xs) * dt)
 
-    return sim.trange(), np.copy(sim.data[p_x])
+#    return sim.trange(), np.copy(sim.data[p_x])
 
+    ts = np.arange(0, len(xs)) * dt
+    As = np.zeros((len(xs), n_neurons))
+    return ts, As
 
 #
 # Experiment runner
