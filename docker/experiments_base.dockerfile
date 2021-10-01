@@ -19,7 +19,8 @@ RUN pip3 install \
 	cython==0.29.22 \
 	brian2==2.4.2 \
 	scikit-learn==0.24.2 \
-	autograd==1.3
+	autograd==1.3 \
+	cvxopt==1.2.6
 
 RUN mkdir -p /opt
 
