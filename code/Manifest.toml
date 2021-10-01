@@ -325,44 +325,84 @@ commit = "5de575089502d30611f295f66461ffe8600136a7"
 dockerfile = "experiments_base"
 runs = [
 	{
-		args=["10", "0"],
+		args=["20", "0"],
 		generates=["evaluate_synaptic_weight_computation_0.h5"]
 	},
 	{
-		args=["10", "1"],
+		args=["20", "1"],
 		generates=["evaluate_synaptic_weight_computation_1.h5"]
 	},
 	{
-		args=["10", "2"],
+		args=["20", "2"],
 		generates=["evaluate_synaptic_weight_computation_2.h5"]
 	},
 	{
-		args=["10", "3"],
+		args=["20", "3"],
 		generates=["evaluate_synaptic_weight_computation_3.h5"]
 	},
 	{
-		args=["10", "4"],
+		args=["20", "4"],
 		generates=["evaluate_synaptic_weight_computation_4.h5"]
 	},
 	{
-		args=["10", "5"],
+		args=["20", "5"],
 		generates=["evaluate_synaptic_weight_computation_5.h5"]
 	},
 	{
-		args=["10", "6"],
+		args=["20", "6"],
 		generates=["evaluate_synaptic_weight_computation_6.h5"]
 	},
 	{
-		args=["10", "7"],
+		args=["20", "7"],
 		generates=["evaluate_synaptic_weight_computation_7.h5"]
 	},
 	{
-		args=["10", "8"],
+		args=["20", "8"],
 		generates=["evaluate_synaptic_weight_computation_8.h5"]
 	},
 	{
-		args=["10", "9"],
+		args=["20", "9"],
 		generates=["evaluate_synaptic_weight_computation_9.h5"]
+	},
+	{
+		args=["20", "10"],
+		generates=["evaluate_synaptic_weight_computation_10.h5"]
+	},
+	{
+		args=["20", "11"],
+		generates=["evaluate_synaptic_weight_computation_11.h5"]
+	},
+	{
+		args=["20", "12"],
+		generates=["evaluate_synaptic_weight_computation_12.h5"]
+	},
+	{
+		args=["20", "13"],
+		generates=["evaluate_synaptic_weight_computation_13.h5"]
+	},
+	{
+		args=["20", "14"],
+		generates=["evaluate_synaptic_weight_computation_14.h5"]
+	},
+	{
+		args=["20", "15"],
+		generates=["evaluate_synaptic_weight_computation_15.h5"]
+	},
+	{
+		args=["20", "16"],
+		generates=["evaluate_synaptic_weight_computation_16.h5"]
+	},
+	{
+		args=["20", "17"],
+		generates=["evaluate_synaptic_weight_computation_17.h5"]
+	},
+	{
+		args=["20", "18"],
+		generates=["evaluate_synaptic_weight_computation_18.h5"]
+	},
+	{
+		args=["20", "19"],
+		generates=["evaluate_synaptic_weight_computation_19.h5"]
 	},
 ]
 is_multithreaded = true
