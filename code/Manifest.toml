@@ -321,168 +321,648 @@ generates = ["evaluate_bases_delays_bandlimited.h5"]
 is_multithreaded = true
 
 ["chapters/04_temporal_tuning/evaluate_synaptic_weight_computation.py"]
-commit = "5de575089502d30611f295f66461ffe8600136a7"
+commit = "76177570e101f798260421409646796322c29146"
 dockerfile = "experiments_base"
 runs = [
 	{
-		args=["40", "0"],
+		args=["160", "0"],
 		generates=["evaluate_synaptic_weight_computation_0.h5"]
 	},
 	{
-		args=["40", "1"],
+		args=["160", "1"],
 		generates=["evaluate_synaptic_weight_computation_1.h5"]
 	},
 	{
-		args=["40", "2"],
+		args=["160", "2"],
 		generates=["evaluate_synaptic_weight_computation_2.h5"]
 	},
 	{
-		args=["40", "3"],
+		args=["160", "3"],
 		generates=["evaluate_synaptic_weight_computation_3.h5"]
 	},
 	{
-		args=["40", "4"],
+		args=["160", "4"],
 		generates=["evaluate_synaptic_weight_computation_4.h5"]
 	},
 	{
-		args=["40", "5"],
+		args=["160", "5"],
 		generates=["evaluate_synaptic_weight_computation_5.h5"]
 	},
 	{
-		args=["40", "6"],
+		args=["160", "6"],
 		generates=["evaluate_synaptic_weight_computation_6.h5"]
 	},
 	{
-		args=["40", "7"],
+		args=["160", "7"],
 		generates=["evaluate_synaptic_weight_computation_7.h5"]
 	},
 	{
-		args=["40", "8"],
+		args=["160", "8"],
 		generates=["evaluate_synaptic_weight_computation_8.h5"]
 	},
 	{
-		args=["40", "9"],
+		args=["160", "9"],
 		generates=["evaluate_synaptic_weight_computation_9.h5"]
 	},
 	{
-		args=["40", "10"],
+		args=["160", "10"],
 		generates=["evaluate_synaptic_weight_computation_10.h5"]
 	},
 	{
-		args=["40", "11"],
+		args=["160", "11"],
 		generates=["evaluate_synaptic_weight_computation_11.h5"]
 	},
 	{
-		args=["40", "12"],
+		args=["160", "12"],
 		generates=["evaluate_synaptic_weight_computation_12.h5"]
 	},
 	{
-		args=["40", "13"],
+		args=["160", "13"],
 		generates=["evaluate_synaptic_weight_computation_13.h5"]
 	},
 	{
-		args=["40", "14"],
+		args=["160", "14"],
 		generates=["evaluate_synaptic_weight_computation_14.h5"]
 	},
 	{
-		args=["40", "15"],
+		args=["160", "15"],
 		generates=["evaluate_synaptic_weight_computation_15.h5"]
 	},
 	{
-		args=["40", "16"],
+		args=["160", "16"],
 		generates=["evaluate_synaptic_weight_computation_16.h5"]
 	},
 	{
-		args=["40", "17"],
+		args=["160", "17"],
 		generates=["evaluate_synaptic_weight_computation_17.h5"]
 	},
 	{
-		args=["40", "18"],
+		args=["160", "18"],
 		generates=["evaluate_synaptic_weight_computation_18.h5"]
 	},
 	{
-		args=["40", "19"],
+		args=["160", "19"],
 		generates=["evaluate_synaptic_weight_computation_19.h5"]
 	},
 	{
-		args=["40", "20"],
+		args=["160", "20"],
 		generates=["evaluate_synaptic_weight_computation_20.h5"]
 	},
 	{
-		args=["40", "21"],
+		args=["160", "21"],
 		generates=["evaluate_synaptic_weight_computation_21.h5"]
 	},
 	{
-		args=["40", "22"],
+		args=["160", "22"],
 		generates=["evaluate_synaptic_weight_computation_22.h5"]
 	},
 	{
-		args=["40", "23"],
+		args=["160", "23"],
 		generates=["evaluate_synaptic_weight_computation_23.h5"]
 	},
 	{
-		args=["40", "24"],
+		args=["160", "24"],
 		generates=["evaluate_synaptic_weight_computation_24.h5"]
 	},
 	{
-		args=["40", "25"],
+		args=["160", "25"],
 		generates=["evaluate_synaptic_weight_computation_25.h5"]
 	},
 	{
-		args=["40", "26"],
+		args=["160", "26"],
 		generates=["evaluate_synaptic_weight_computation_26.h5"]
 	},
 	{
-		args=["40", "27"],
+		args=["160", "27"],
 		generates=["evaluate_synaptic_weight_computation_27.h5"]
 	},
 	{
-		args=["40", "28"],
+		args=["160", "28"],
 		generates=["evaluate_synaptic_weight_computation_28.h5"]
 	},
 	{
-		args=["40", "29"],
+		args=["160", "29"],
 		generates=["evaluate_synaptic_weight_computation_29.h5"]
 	},
 	{
-		args=["40", "30"],
+		args=["160", "30"],
 		generates=["evaluate_synaptic_weight_computation_30.h5"]
 	},
 	{
-		args=["40", "31"],
+		args=["160", "31"],
 		generates=["evaluate_synaptic_weight_computation_31.h5"]
 	},
 	{
-		args=["40", "32"],
+		args=["160", "32"],
 		generates=["evaluate_synaptic_weight_computation_32.h5"]
 	},
 	{
-		args=["40", "33"],
+		args=["160", "33"],
 		generates=["evaluate_synaptic_weight_computation_33.h5"]
 	},
 	{
-		args=["40", "34"],
+		args=["160", "34"],
 		generates=["evaluate_synaptic_weight_computation_34.h5"]
 	},
 	{
-		args=["40", "35"],
+		args=["160", "35"],
 		generates=["evaluate_synaptic_weight_computation_35.h5"]
 	},
 	{
-		args=["40", "36"],
+		args=["160", "36"],
 		generates=["evaluate_synaptic_weight_computation_36.h5"]
 	},
 	{
-		args=["40", "37"],
+		args=["160", "37"],
 		generates=["evaluate_synaptic_weight_computation_37.h5"]
 	},
 	{
-		args=["40", "38"],
+		args=["160", "38"],
 		generates=["evaluate_synaptic_weight_computation_38.h5"]
 	},
 	{
-		args=["40", "39"],
+		args=["160", "39"],
 		generates=["evaluate_synaptic_weight_computation_39.h5"]
+	},
+	{
+		args=["160", "40"],
+		generates=["evaluate_synaptic_weight_computation_40.h5"]
+	},
+	{
+		args=["160", "41"],
+		generates=["evaluate_synaptic_weight_computation_41.h5"]
+	},
+	{
+		args=["160", "42"],
+		generates=["evaluate_synaptic_weight_computation_42.h5"]
+	},
+	{
+		args=["160", "43"],
+		generates=["evaluate_synaptic_weight_computation_43.h5"]
+	},
+	{
+		args=["160", "44"],
+		generates=["evaluate_synaptic_weight_computation_44.h5"]
+	},
+	{
+		args=["160", "45"],
+		generates=["evaluate_synaptic_weight_computation_45.h5"]
+	},
+	{
+		args=["160", "46"],
+		generates=["evaluate_synaptic_weight_computation_46.h5"]
+	},
+	{
+		args=["160", "47"],
+		generates=["evaluate_synaptic_weight_computation_47.h5"]
+	},
+	{
+		args=["160", "48"],
+		generates=["evaluate_synaptic_weight_computation_48.h5"]
+	},
+	{
+		args=["160", "49"],
+		generates=["evaluate_synaptic_weight_computation_49.h5"]
+	},
+	{
+		args=["160", "50"],
+		generates=["evaluate_synaptic_weight_computation_50.h5"]
+	},
+	{
+		args=["160", "51"],
+		generates=["evaluate_synaptic_weight_computation_51.h5"]
+	},
+	{
+		args=["160", "52"],
+		generates=["evaluate_synaptic_weight_computation_52.h5"]
+	},
+	{
+		args=["160", "53"],
+		generates=["evaluate_synaptic_weight_computation_53.h5"]
+	},
+	{
+		args=["160", "54"],
+		generates=["evaluate_synaptic_weight_computation_54.h5"]
+	},
+	{
+		args=["160", "55"],
+		generates=["evaluate_synaptic_weight_computation_55.h5"]
+	},
+	{
+		args=["160", "56"],
+		generates=["evaluate_synaptic_weight_computation_56.h5"]
+	},
+	{
+		args=["160", "57"],
+		generates=["evaluate_synaptic_weight_computation_57.h5"]
+	},
+	{
+		args=["160", "58"],
+		generates=["evaluate_synaptic_weight_computation_58.h5"]
+	},
+	{
+		args=["160", "59"],
+		generates=["evaluate_synaptic_weight_computation_59.h5"]
+	},
+	{
+		args=["160", "60"],
+		generates=["evaluate_synaptic_weight_computation_60.h5"]
+	},
+	{
+		args=["160", "61"],
+		generates=["evaluate_synaptic_weight_computation_61.h5"]
+	},
+	{
+		args=["160", "62"],
+		generates=["evaluate_synaptic_weight_computation_62.h5"]
+	},
+	{
+		args=["160", "63"],
+		generates=["evaluate_synaptic_weight_computation_63.h5"]
+	},
+	{
+		args=["160", "64"],
+		generates=["evaluate_synaptic_weight_computation_64.h5"]
+	},
+	{
+		args=["160", "65"],
+		generates=["evaluate_synaptic_weight_computation_65.h5"]
+	},
+	{
+		args=["160", "66"],
+		generates=["evaluate_synaptic_weight_computation_66.h5"]
+	},
+	{
+		args=["160", "67"],
+		generates=["evaluate_synaptic_weight_computation_67.h5"]
+	},
+	{
+		args=["160", "68"],
+		generates=["evaluate_synaptic_weight_computation_68.h5"]
+	},
+	{
+		args=["160", "69"],
+		generates=["evaluate_synaptic_weight_computation_69.h5"]
+	},
+	{
+		args=["160", "70"],
+		generates=["evaluate_synaptic_weight_computation_70.h5"]
+	},
+	{
+		args=["160", "71"],
+		generates=["evaluate_synaptic_weight_computation_71.h5"]
+	},
+	{
+		args=["160", "72"],
+		generates=["evaluate_synaptic_weight_computation_72.h5"]
+	},
+	{
+		args=["160", "73"],
+		generates=["evaluate_synaptic_weight_computation_73.h5"]
+	},
+	{
+		args=["160", "74"],
+		generates=["evaluate_synaptic_weight_computation_74.h5"]
+	},
+	{
+		args=["160", "75"],
+		generates=["evaluate_synaptic_weight_computation_75.h5"]
+	},
+	{
+		args=["160", "76"],
+		generates=["evaluate_synaptic_weight_computation_76.h5"]
+	},
+	{
+		args=["160", "77"],
+		generates=["evaluate_synaptic_weight_computation_77.h5"]
+	},
+	{
+		args=["160", "78"],
+		generates=["evaluate_synaptic_weight_computation_78.h5"]
+	},
+	{
+		args=["160", "79"],
+		generates=["evaluate_synaptic_weight_computation_79.h5"]
+	},
+	{
+		args=["160", "80"],
+		generates=["evaluate_synaptic_weight_computation_80.h5"]
+	},
+	{
+		args=["160", "81"],
+		generates=["evaluate_synaptic_weight_computation_81.h5"]
+	},
+	{
+		args=["160", "82"],
+		generates=["evaluate_synaptic_weight_computation_82.h5"]
+	},
+	{
+		args=["160", "83"],
+		generates=["evaluate_synaptic_weight_computation_83.h5"]
+	},
+	{
+		args=["160", "84"],
+		generates=["evaluate_synaptic_weight_computation_84.h5"]
+	},
+	{
+		args=["160", "85"],
+		generates=["evaluate_synaptic_weight_computation_85.h5"]
+	},
+	{
+		args=["160", "86"],
+		generates=["evaluate_synaptic_weight_computation_86.h5"]
+	},
+	{
+		args=["160", "87"],
+		generates=["evaluate_synaptic_weight_computation_87.h5"]
+	},
+	{
+		args=["160", "88"],
+		generates=["evaluate_synaptic_weight_computation_88.h5"]
+	},
+	{
+		args=["160", "89"],
+		generates=["evaluate_synaptic_weight_computation_89.h5"]
+	},
+	{
+		args=["160", "90"],
+		generates=["evaluate_synaptic_weight_computation_90.h5"]
+	},
+	{
+		args=["160", "91"],
+		generates=["evaluate_synaptic_weight_computation_91.h5"]
+	},
+	{
+		args=["160", "92"],
+		generates=["evaluate_synaptic_weight_computation_92.h5"]
+	},
+	{
+		args=["160", "93"],
+		generates=["evaluate_synaptic_weight_computation_93.h5"]
+	},
+	{
+		args=["160", "94"],
+		generates=["evaluate_synaptic_weight_computation_94.h5"]
+	},
+	{
+		args=["160", "95"],
+		generates=["evaluate_synaptic_weight_computation_95.h5"]
+	},
+	{
+		args=["160", "96"],
+		generates=["evaluate_synaptic_weight_computation_96.h5"]
+	},
+	{
+		args=["160", "97"],
+		generates=["evaluate_synaptic_weight_computation_97.h5"]
+	},
+	{
+		args=["160", "98"],
+		generates=["evaluate_synaptic_weight_computation_98.h5"]
+	},
+	{
+		args=["160", "99"],
+		generates=["evaluate_synaptic_weight_computation_99.h5"]
+	},
+	{
+		args=["160", "100"],
+		generates=["evaluate_synaptic_weight_computation_100.h5"]
+	},
+	{
+		args=["160", "101"],
+		generates=["evaluate_synaptic_weight_computation_101.h5"]
+	},
+	{
+		args=["160", "102"],
+		generates=["evaluate_synaptic_weight_computation_102.h5"]
+	},
+	{
+		args=["160", "103"],
+		generates=["evaluate_synaptic_weight_computation_103.h5"]
+	},
+	{
+		args=["160", "104"],
+		generates=["evaluate_synaptic_weight_computation_104.h5"]
+	},
+	{
+		args=["160", "105"],
+		generates=["evaluate_synaptic_weight_computation_105.h5"]
+	},
+	{
+		args=["160", "106"],
+		generates=["evaluate_synaptic_weight_computation_106.h5"]
+	},
+	{
+		args=["160", "107"],
+		generates=["evaluate_synaptic_weight_computation_107.h5"]
+	},
+	{
+		args=["160", "108"],
+		generates=["evaluate_synaptic_weight_computation_108.h5"]
+	},
+	{
+		args=["160", "109"],
+		generates=["evaluate_synaptic_weight_computation_109.h5"]
+	},
+	{
+		args=["160", "110"],
+		generates=["evaluate_synaptic_weight_computation_110.h5"]
+	},
+	{
+		args=["160", "111"],
+		generates=["evaluate_synaptic_weight_computation_111.h5"]
+	},
+	{
+		args=["160", "112"],
+		generates=["evaluate_synaptic_weight_computation_112.h5"]
+	},
+	{
+		args=["160", "113"],
+		generates=["evaluate_synaptic_weight_computation_113.h5"]
+	},
+	{
+		args=["160", "114"],
+		generates=["evaluate_synaptic_weight_computation_114.h5"]
+	},
+	{
+		args=["160", "115"],
+		generates=["evaluate_synaptic_weight_computation_115.h5"]
+	},
+	{
+		args=["160", "116"],
+		generates=["evaluate_synaptic_weight_computation_116.h5"]
+	},
+	{
+		args=["160", "117"],
+		generates=["evaluate_synaptic_weight_computation_117.h5"]
+	},
+	{
+		args=["160", "118"],
+		generates=["evaluate_synaptic_weight_computation_118.h5"]
+	},
+	{
+		args=["160", "119"],
+		generates=["evaluate_synaptic_weight_computation_119.h5"]
+	},
+	{
+		args=["160", "120"],
+		generates=["evaluate_synaptic_weight_computation_120.h5"]
+	},
+	{
+		args=["160", "121"],
+		generates=["evaluate_synaptic_weight_computation_121.h5"]
+	},
+	{
+		args=["160", "122"],
+		generates=["evaluate_synaptic_weight_computation_122.h5"]
+	},
+	{
+		args=["160", "123"],
+		generates=["evaluate_synaptic_weight_computation_123.h5"]
+	},
+	{
+		args=["160", "124"],
+		generates=["evaluate_synaptic_weight_computation_124.h5"]
+	},
+	{
+		args=["160", "125"],
+		generates=["evaluate_synaptic_weight_computation_125.h5"]
+	},
+	{
+		args=["160", "126"],
+		generates=["evaluate_synaptic_weight_computation_126.h5"]
+	},
+	{
+		args=["160", "127"],
+		generates=["evaluate_synaptic_weight_computation_127.h5"]
+	},
+	{
+		args=["160", "128"],
+		generates=["evaluate_synaptic_weight_computation_128.h5"]
+	},
+	{
+		args=["160", "129"],
+		generates=["evaluate_synaptic_weight_computation_129.h5"]
+	},
+	{
+		args=["160", "130"],
+		generates=["evaluate_synaptic_weight_computation_130.h5"]
+	},
+	{
+		args=["160", "131"],
+		generates=["evaluate_synaptic_weight_computation_131.h5"]
+	},
+	{
+		args=["160", "132"],
+		generates=["evaluate_synaptic_weight_computation_132.h5"]
+	},
+	{
+		args=["160", "133"],
+		generates=["evaluate_synaptic_weight_computation_133.h5"]
+	},
+	{
+		args=["160", "134"],
+		generates=["evaluate_synaptic_weight_computation_134.h5"]
+	},
+	{
+		args=["160", "135"],
+		generates=["evaluate_synaptic_weight_computation_135.h5"]
+	},
+	{
+		args=["160", "136"],
+		generates=["evaluate_synaptic_weight_computation_136.h5"]
+	},
+	{
+		args=["160", "137"],
+		generates=["evaluate_synaptic_weight_computation_137.h5"]
+	},
+	{
+		args=["160", "138"],
+		generates=["evaluate_synaptic_weight_computation_138.h5"]
+	},
+	{
+		args=["160", "139"],
+		generates=["evaluate_synaptic_weight_computation_139.h5"]
+	},
+	{
+		args=["160", "140"],
+		generates=["evaluate_synaptic_weight_computation_140.h5"]
+	},
+	{
+		args=["160", "141"],
+		generates=["evaluate_synaptic_weight_computation_141.h5"]
+	},
+	{
+		args=["160", "142"],
+		generates=["evaluate_synaptic_weight_computation_142.h5"]
+	},
+	{
+		args=["160", "143"],
+		generates=["evaluate_synaptic_weight_computation_143.h5"]
+	},
+	{
+		args=["160", "144"],
+		generates=["evaluate_synaptic_weight_computation_144.h5"]
+	},
+	{
+		args=["160", "145"],
+		generates=["evaluate_synaptic_weight_computation_145.h5"]
+	},
+	{
+		args=["160", "146"],
+		generates=["evaluate_synaptic_weight_computation_146.h5"]
+	},
+	{
+		args=["160", "147"],
+		generates=["evaluate_synaptic_weight_computation_147.h5"]
+	},
+	{
+		args=["160", "148"],
+		generates=["evaluate_synaptic_weight_computation_148.h5"]
+	},
+	{
+		args=["160", "149"],
+		generates=["evaluate_synaptic_weight_computation_149.h5"]
+	},
+	{
+		args=["160", "150"],
+		generates=["evaluate_synaptic_weight_computation_150.h5"]
+	},
+	{
+		args=["160", "151"],
+		generates=["evaluate_synaptic_weight_computation_151.h5"]
+	},
+	{
+		args=["160", "152"],
+		generates=["evaluate_synaptic_weight_computation_152.h5"]
+	},
+	{
+		args=["160", "153"],
+		generates=["evaluate_synaptic_weight_computation_153.h5"]
+	},
+	{
+		args=["160", "154"],
+		generates=["evaluate_synaptic_weight_computation_154.h5"]
+	},
+	{
+		args=["160", "155"],
+		generates=["evaluate_synaptic_weight_computation_155.h5"]
+	},
+	{
+		args=["160", "156"],
+		generates=["evaluate_synaptic_weight_computation_156.h5"]
+	},
+	{
+		args=["160", "157"],
+		generates=["evaluate_synaptic_weight_computation_157.h5"]
+	},
+	{
+		args=["160", "158"],
+		generates=["evaluate_synaptic_weight_computation_158.h5"]
+	},
+	{
+		args=["160", "159"],
+		generates=["evaluate_synaptic_weight_computation_159.h5"]
 	},
 ]
 is_multithreaded = true
