@@ -413,7 +413,7 @@ def main():
                                   range(N_REPEAT))))
 
         # Always shuffle the indices in the right way to not ruin the indexing
-        np.random.seed(57482)
+        random.seed(57482)
         random.shuffle(idcs)
 
         partitions = np.linspace(0, len(idcs), n_partitions + 1, dtype=int)
