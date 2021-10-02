@@ -30,7 +30,7 @@ nengo.rc.set('decoder_cache', 'enabled', 'False')
 
 DT = 1e-3
 T_TRAIN = 3.0  # When computing the weights
-N_TRAIN_SMPLS = 100  # Training samples
+N_TRAIN_SMPLS = 1000  # Training samples
 T_SIM = 10.0
 
 THETA = 1.0
