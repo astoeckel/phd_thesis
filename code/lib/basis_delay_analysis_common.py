@@ -91,7 +91,8 @@ def mk_impulse_response(basis,
                         N_solve=20000,
                         return_sys=False,
                         use_closed_form=True,
-                        use_euler=False):
+                        use_euler=False,
+                        rescale_ldn=True):
     import dlop_ldn_function_bases as bases
 
     def mk_mod_fourier_basis(q, N):
@@ -129,7 +130,7 @@ def mk_impulse_response(basis,
         A, B = reconstruct_lti(H, theta)
     elif window == "erasure":
         if basis == "legendre" and use_closed_form:
-            A, B = bases.mk_ldn_lti(q, rescale=True)
+            A, B = bases.mk_ldn_lti(q, rescale=rescale_ldn)
         else:
             A, B = reconstruct_lti(H, theta, dampen="erasure")
 

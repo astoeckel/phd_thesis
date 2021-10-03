@@ -208,7 +208,8 @@ def execute_single(idcs):
                     q=n_temporal_dimensions,
                     T=T_TRAIN,
                     dt=DT,
-                    use_euler=True)
+                    use_euler=True,
+                    rescale_ldn=False)
         _, Ms = basis_delay_analysis_common.mk_impulse_response(**args)
         if solver_mode == "nef":
             args["return_sys"] = True
