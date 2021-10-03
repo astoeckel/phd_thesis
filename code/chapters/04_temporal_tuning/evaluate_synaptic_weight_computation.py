@@ -36,7 +36,7 @@ T_SIM = 10.0
 THETA = 1.0
 TAU = 100e-3
 TAU_DECODE = 25e-3
-XS_SIGMA = 5.0
+XS_SIGMA = 3.0
 
 N_DIMS_CSTR = 3
 
@@ -60,7 +60,7 @@ N_NEURONS = len(NEURONS)
 
 N_DELAYS_TEST = 20
 
-XS_SIGMA_TEST = [5.0]
+XS_SIGMA_TEST = [3.0]
 N_XS_SIGMA_TEST = len(XS_SIGMA_TEST)
 
 N_REPEAT = 100
@@ -171,7 +171,7 @@ def mk_cosine_bartlett_basis_with_spread(q,
         (1.0 - ts[None, :] / t1[:, None]) * (ts[None, :] <= t1[:, None]))
 
 
-def execute_single(idcs):
+def execute_single(idcs, return_test_data=False):
     i_solver_modes, i_modes, i_qs, i_neurons, i_repeat = idcs
 
     # Set the random seed, just in case something uses np.random
@@ -244,7 +244,7 @@ def execute_single(idcs):
             biased=biased,
             bias_cstr_count=bias_cstr_count,
             rng=rng,
-            silent=True)
+            silent=not return_test_data)
 
     # Simulate the network
     def run_simulation(xs):
@@ -332,6 +332,7 @@ def execute_single(idcs):
             # Compute the delay decoding errors
             smpls = rng.uniform(0, N_sim, 250).astype(
                 int)  # Subsample temporally when computing the decoders
+            xs_test_decs = []
             for i_delay in range(N_DELAYS_TEST):
                 N_shift = N_shifts[i_delay]
                 xs_train_tar = np.concatenate(
@@ -348,11 +349,16 @@ def execute_single(idcs):
                 xs_test_tar_flt = nengo.Lowpass(TAU_DECODE).filtfilt(
                     xs_test_tar, dt=DT)
                 xs_test_dec = As_test_flt @ D
+                if return_test_data:
+                    xs_test_decs.append(xs_test_dec)
 
                 rmse = np.sqrt(
                     np.mean(np.square(xs_test_dec - xs_test_tar_flt)))
                 Es_delay[i_xs_sigma, i_repeat_test,
                          i_delay] = rmse / xs_test_rms
+
+    if return_test_data:
+        return ts, xs_test, xs_test_flt, xs_test_decs, Es_tuning, Es_delay
 
     return idcs, Es_tuning, Es_delay
 
