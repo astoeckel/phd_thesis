@@ -50,11 +50,9 @@ N_MODES = len(MODES)
 QS = np.array([3, 5, 7])
 N_QS = len(QS)
 
-N_TAU_SIGMAS = 21
+N_TAU_SIGMAS = 11
 TAU_SIGMAS = np.linspace(0, TAU_MU, N_TAU_SIGMAS)
 N_TAU_SIGMAS = len(TAU_SIGMAS)
-
-N_DELAYS_TEST = 20
 
 N_REPEAT = 100
 
