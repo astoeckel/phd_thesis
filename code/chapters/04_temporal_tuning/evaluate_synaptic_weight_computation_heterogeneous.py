@@ -103,7 +103,7 @@ def simulate_network(n_neurons, dimensions, gain, bias, encoders, flts,
         p_x = nengo.Probe(ens_x.neurons, synapse=None)
 
     # Run the simulation
-    with nengo.Simulator(model, progress_bar=True) as sim:
+    with nengo.Simulator(model, progress_bar=False) as sim:
         sim.run(len(xs) * dt)
 
     return sim.trange(), np.copy(sim.data[p_x])
@@ -204,7 +204,7 @@ def execute_single(idcs):
             T=T_TRAIN,
             biased=False,
             rng=rng,
-            silent=False)
+            silent=True)
 
     W_in, W_rec, Es_solver = solve(flts_rec_map)
     W_in_ref, W_rec_ref, Es_solver_ref = solve(
@@ -292,11 +292,11 @@ def main():
 
     if n_partitions == 1:
         fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data',
-                          "evaluate_synaptic_weight_computation.h5")
+                          "evaluate_synaptic_weight_computation_heterogeneous.h5")
     else:
         fn = os.path.join(
             os.path.dirname(__file__), '..', '..', '..', 'data',
-            "evaluate_synaptic_weight_computation_{}.h5".format(partition_idx))
+            "evaluate_synaptic_weight_computation_heterogeneous_{}.h5".format(partition_idx))
 
     with h5py.File(fn, 'w') as f:
         f.attrs["modes"] = json.dumps(MODES)
