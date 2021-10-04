@@ -369,7 +369,7 @@ is_multithreaded = true
 
 
 ["chapters/04_temporal_tuning/evaluate_synaptic_weight_computation_heterogeneous.py"]
-commit = "00d6e602882618761b602c3d6ee3792d49d69fbe"
+commit = "c42e19e358f83246afdfa56b975ae19fba8df697"
 dockerfile = "experiments_base"
 runs = [
 	{
