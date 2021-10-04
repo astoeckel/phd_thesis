@@ -171,7 +171,7 @@ def mk_cosine_bartlett_basis_with_spread(q,
         (1.0 - ts[None, :] / t1[:, None]) * (ts[None, :] <= t1[:, None]))
 
 
-def execute_single(idcs, return_test_data=False):
+def execute_single(idcs, return_test_data=False, inject_xs_test=None):
     i_solver_modes, i_modes, i_qs, i_neurons, i_repeat = idcs
 
     # Set the random seed, just in case something uses np.random
@@ -293,6 +293,8 @@ def execute_single(idcs, return_test_data=False):
                                                      DT,
                                                      sigma=xs_sigma_test,
                                                      rng=rng)
+            if not inject_xs_test is None:
+                xs_test = np.copy(inject_xs_test)
 
             xs_train_flt = nengo.Lowpass(TAU_DECODE).filtfilt(xs_train, dt=DT)
             xs_test_flt = nengo.Lowpass(TAU_DECODE).filtfilt(xs_test, dt=DT)
@@ -358,7 +360,7 @@ def execute_single(idcs, return_test_data=False):
                          i_delay] = rmse / xs_test_rms
 
     if return_test_data:
-        return ts, xs_test, xs_test_flt, xs_test_decs, Es_tuning, Es_delay
+        return ts, xs_test, xs_test_flt, xs_test_decs, As_test, As_test_flt, Es_tuning, Es_delay
 
     return idcs, Es_tuning, Es_delay
 

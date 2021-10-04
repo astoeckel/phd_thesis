@@ -96,6 +96,7 @@ _fourier_basis_cache = {}
 def mk_sig(N,
            dt,
            sigma=7.5,
+           scale=1.0,
            rng=np.random,
            i_smpl=None,
            Ms=None,
@@ -124,7 +125,7 @@ def mk_sig(N,
     xs = (H.T @ X_F)[::-1]  # This could be an FFT
     peak_min, peak_max = np.min(xs), np.max(xs)
     offs = -0.5 * (peak_max + peak_min)
-    scale = 2.0 / (peak_max - peak_min)
+    scale = scale * 2.0 / (peak_max - peak_min)
     if not biased:
         return (xs + offs) * scale
     else:
@@ -149,7 +150,7 @@ def mk_sig(N,
 #    alpha = np.linalg.lstsq(A, Xi, rcond=1e-2)[0]
 #    return Ms[::-1, dims] @ alpha
 
-# Transform Ms into the target domain
+    # Transform Ms into the target domain
     M_H = H @ Ms[:, dims]  # This could be an FFT
 
     # Generate a target activiation
@@ -293,7 +294,8 @@ def solve_for_recurrent_population_weights(G,
                                            silent=False,
                                            Ms=None,
                                            biased=True,
-                                           bias_cstr_count=None):
+                                           bias_cstr_count=None,
+                                           xs_scale=1.0):
     """
     G:   Neural non-linearity
     Es:  Non-temporal encoders (determines the dimensionality of the neuron
@@ -349,6 +351,7 @@ def solve_for_recurrent_population_weights(G,
         xs = mk_sig(N,
                     dt,
                     sigma=xs_sigma,
+                    scale=xs_scale,
                     rng=rng,
                     Ms=Ms,
                     i_smpl=i_smpl,
