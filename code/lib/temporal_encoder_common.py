@@ -392,3 +392,141 @@ def solve_for_recurrent_population_weights(G,
                                      N_neurons).transpose(2, 0, 1)
     return W_in, W_rec
 
+
+def solve_for_recurrent_population_weights_heterogeneous_filters(G,
+                                           gains,
+                                           biases,
+                                           A,
+                                           B,
+                                           TEs,
+                                           flts,
+                                           flts_rec_map,
+                                           N_smpls=1000,
+                                           xs_sigma=5.0,
+                                           dt=1e-3,
+                                           T=10.0,
+                                           reg=0.01,
+                                           rng=np.random,
+                                           silent=False,
+                                           Ms=None,
+                                           biased=True,
+                                           bias_cstr_count=None,
+                                           xs_scale=1.0):
+    """
+    G:   Neural non-linearity
+    Es:  Non-temporal encoders (determines the dimensionality of the neuron
+         population.
+    gains, biases: Neural gains and biases
+    A: Target LTI system feedback matrix
+    B: Target LTI system input matrix
+    TEs: Temporal encoders
+    flt_in, flt_rec: List of filters (returned by Filters.mk_*) for the
+        feed-forward and recurrent connection. For the sake of simplicity,
+        each neuron has access to the same filters.
+    """
+
+    assert (Ms is None) != ((A is None) or (B is None))
+
+    # Boring bookkeeping
+    TEs = np.atleast_2d(TEs)
+    N_neurons = TEs.shape[0]
+    N_flts = len(flts)
+    gains, biases = np.atleast_1d(gains), np.atleast_1d(biases)
+    flts_rec_map = np.atleast_2d(flts_rec_map)
+    assert (TEs.shape[0] == gains.shape[0] == biases.shape[0])
+    if Ms is None:
+        A = np.atleast_2d(A)
+        B = np.atleast_1d(B).flatten()
+        q = N_temporal_dimensions = A.shape[0]
+        assert A.shape[0] == A.shape[1] == B.shape[0]
+    else:
+        Ms = np.atleast_2d(Ms)
+        q = N_temporal_dimensions = Ms.shape[1]
+    assert TEs.shape[1] == q
+    assert flts_rec_map.shape == (N_neurons, N_neurons)
+
+    # Evaluate all filters
+    ts = np.arange(0, T, dt)
+    N = len(ts)
+    hs = np.array([flt(ts, dt) for flt in flts])
+
+    # Compute the impulse response of the desired LTI system
+    if Ms is None:
+        Ms = cached_lti_impulse_response(A, B, ts)
+    else:
+        assert Ms.shape[0] == N
+
+    # Assemble the X and Y matrices that are being passed to the least-squares
+    # algorithm
+    #N_pre = 1 + N_neurons
+    N_pre = N_flts + N_neurons
+
+    X = np.zeros((N_smpls, N_neurons, N_pre))
+    Y = np.zeros((N_smpls, N_neurons))
+
+    x_in_scale = 1.0 * N_neurons  # Compensate for the input not being neural activitie
+    for i_smpl in tqdm.tqdm(range(N_smpls), disable=silent):
+        # Sample an input sequence; increase the magnitude to prevent regularisation problems
+        xs = mk_sig(N,
+                    dt,
+                    sigma=xs_sigma,
+                    scale=xs_scale,
+                    rng=rng,
+                    Ms=Ms,
+                    i_smpl=i_smpl,
+                    biased=biased,
+                    bias_cstr_count=bias_cstr_count)
+
+        # Filter the input with all filters used in the input connections
+        xs_flt = np.zeros(N_flts)
+#        for i_flt in np.unique(flts_in_map):
+        for i_flt in range(N_flts):
+            xs_flt[i_flt] = np.convolve(xs, hs[i_flt], 'valid') * dt
+
+        # Pass the input through the desired impulse responses
+        ms_flt = np.zeros((N, q))
+        for i_q in range(q):
+            ms_flt[:, i_q] = scipy.signal.fftconvolve(xs, Ms[:, i_q], 'full')[:N] * dt
+
+        # For each filter, and each pre-neuron, compute the activity at the
+        # post-neuron at time zero
+        As_pre = np.zeros((N_neurons, N_flts))
+        for i_pre in range(N_neurons):
+            A_pre = G(gains[i_pre] * (ms_flt @ TEs[i_pre]) + biases[i_pre])
+            for i_flt in np.unique(flts_rec_map):
+                As_pre[i_pre, i_flt] = np.convolve(A_pre, hs[i_flt], 'valid') * dt
+
+        # Now re-arrange the matrices computed above into a series of
+        # least-squares problems, one for each neuron
+        for i_post in range(N_neurons):
+            I = 0
+            # Input
+            #X[i_smpl, i_post, I] = xs_flt[flts_in_map[i_pre]] * x_in_scale
+            for i_flt in range(N_flts):
+                X[i_smpl, i_post, I] = xs_flt[i_flt] * x_in_scale
+                I += 1
+
+            # Recurrent connection
+            for i_pre in range(N_neurons):
+                X[i_smpl, i_post, I] = As_pre[i_pre, flts_rec_map[i_post, i_pre]]
+                I += 1
+
+        # Compute the target input current of each post-neuron
+        for i_post in range(N_neurons):
+            Y[i_smpl, i_post] = (ms_flt[-1] @ TEs[i_post])
+
+
+    # Solve the least-squares problems one at a time
+    W = np.zeros((N_neurons, N_pre))
+    Es = np.zeros(N_neurons)
+    for i in range(N_neurons):
+        XTX = X[:, i].T @ X[:, i] + N_smpls * np.square(reg * np.max(X)) * np.eye(N_pre)
+        XTY = X[:, i].T @ Y[:, i]
+        W[i] = np.linalg.solve(XTX, XTY)
+        Es[i] = np.sqrt(np.mean(np.square(X[:, i] @ W[i] - Y[:, i])))
+
+    W_in = W[:, :N_flts] * x_in_scale
+    W_rec = W[:, N_flts:]
+
+    return W_in, W_rec, Es
+
