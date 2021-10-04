@@ -42,7 +42,7 @@ TAU_DECODE = 25e-3
 XS_SIGMA = 3.0
 
 MODES = [
-    "non_lindep_cosine",
+#    "non_lindep_cosine",
     "legendre_erasure",
 ]
 N_MODES = len(MODES)
