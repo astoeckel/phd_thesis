@@ -415,6 +415,14 @@ runs = [
 ]
 is_multithreaded = true
 
+
+["chapters/04_temporal_tuning/evaluate_synaptic_weight_computation_freq_sweep.py"]
+commit = "6afbd5accdcf4a98fa0ebb4ad8722c83a06fa5b5"
+dockerfile = "experiments_base"
+generates=["evaluate_synaptic_weight_computation_freq_sweep.h5"]
+is_multithreaded = true
+
+
 #
 # Chapter 5 Experiments
 #
