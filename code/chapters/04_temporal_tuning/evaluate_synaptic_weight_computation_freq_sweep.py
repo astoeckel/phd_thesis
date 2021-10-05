@@ -59,10 +59,10 @@ N_NEURONS = len(NEURONS)
 
 N_DELAYS_TEST = 20
 
-XS_SIGMA_TEST = np.linspace(1.0, 5.0, 21)
+XS_SIGMA_TEST = np.linspace(1.0, 10.0, 21)
 N_XS_SIGMA_TEST = len(XS_SIGMA_TEST)
 
-N_REPEAT = 10
+N_REPEAT = 100
 
 N_REPEAT_TEST = 10
 
@@ -276,7 +276,6 @@ def execute_single(idcs, return_test_data=False, inject_xs_test=None):
     N_shifts = np.linspace(0, THETA / DT, N_DELAYS_TEST + 1, dtype=int)[:-1]
 
     for i_xs_sigma in range(N_XS_SIGMA_TEST):
-        print(idcs, i_xs_sigma)
         for i_repeat_test in range(N_REPEAT_TEST):
             # Use the same test signals for each network
             rng = np.random.RandomState(340043 * i_repeat + 2814 * i_repeat_test + 213)
