@@ -353,7 +353,7 @@ def main():
         )
 
         with env_guard.SingleThreadEnvGuard():
-            with multiprocessing.get_context('spawn').Pool(1,
+            with multiprocessing.get_context('spawn').Pool(
                     maxtasksperchild=1) as pool:
                 for idcs, Es_solver, Es_solver_ref, Es_tuning, Es_tuning_ref in tqdm.tqdm(
                         pool.imap_unordered(execute_single, idcs[i0:i1]),
