@@ -36,14 +36,13 @@ N_TRAIN_SMPLS = 250  # Training samples
 N_NEURONS = 100
 
 THETA = 1.0
-TAU_MU = 250e-3
-TAU_MIN = 5e-3
+TAU_MU = 100e-3
+TAU_MIN = 1e-3
 TAU_DECODE = 25e-3
 XS_SIGMA = 3.0
 
 MODES = [
-#    "non_lindep_cosine",
-    "legendre_erasure",
+    "mod_fourier_erasure",
 ]
 N_MODES = len(MODES)
 
@@ -53,6 +52,8 @@ N_QS = len(QS)
 N_TAU_SIGMAS = 11
 TAU_SIGMAS = np.linspace(0, TAU_MU, N_TAU_SIGMAS)
 N_TAU_SIGMAS = len(TAU_SIGMAS)
+
+FLTS_IN = np.geomspace(1e-3, 200e-3, 9)
 
 N_REPEAT = 100
 
@@ -68,7 +69,7 @@ def LP(*args):
 
 
 def simulate_network(n_neurons, dimensions, gain, bias, encoders, flts,
-                     flts_rec_map, W_in, W_rec, xs, dt):
+                     flts_in_map, flts_rec_map, W_in, W_rec, xs, dt):
 
     # There seems to be some small random process within negno that (very
     # slightly) influences the results...
@@ -85,13 +86,15 @@ def simulate_network(n_neurons, dimensions, gain, bias, encoders, flts,
             encoders=encoders,
         )
 
-        for i, tau in enumerate(flts):
+        for i, flt_idx in enumerate(flts_in_map):
+            tau = flts[flt_idx]
             nengo.Connection(nd_in,
                              ens_x.neurons,
                              transform=(W_in[:, i:(i + 1)]),
                              synapse=LP(tau))
-            mask_rec = flts_rec_map == i
 
+        for i, tau in enumerate(flts):
+            mask_rec = flts_rec_map == i
             if np.any(mask_rec):
                 nengo.Connection(ens_x.neurons,
                                  ens_x.neurons,
@@ -173,21 +176,24 @@ def execute_single(idcs):
     # Filters to use
     rng = np.random.RandomState(7892 * i_repeat + 535)
 
-    def mk_flts(shape, digits=1):
-        taus = np.clip(rng.normal(TAU_MU, tau_sigma, shape), TAU_MIN, None)
-        taus = np.exp(np.round(np.log(taus), digits))
-        return taus
+    def round_flts(taus, digits=1):
+        return np.exp(np.round(np.log(taus), digits))
 
-    flts_rec = mk_flts((n_neurons, n_neurons))
-    flts = np.unique(flts_rec)
+    def mk_flts(shape, digits=1):
+        return np.clip(rng.normal(TAU_MU, tau_sigma, shape), TAU_MIN, None)
+
+    flts_in = round_flts(FLTS_IN)
+    flts_rec = round_flts(mk_flts((n_neurons, n_neurons)))
+    flts = np.unique(np.concatenate((flts_rec.flatten(), flts_in.flatten())))
     flts_map = {value: idx for idx, value in enumerate(flts)}
+    flts_in_map = np.array([flts_map[flt] for flt in flts_in.flat])
     flts_rec_map = np.array([flts_map[flt] for flt in flts_rec.flat
                              ]).reshape(n_neurons, n_neurons)
     i_mu = np.argmin(np.abs(flts - TAU_MU))
 
     # Solve for weights
 
-    def solve(flts_rec_map):
+    def solve(flts_in_map, flts_rec_map):
         rng = np.random.RandomState(7193 * i_repeat + 481)
         return temporal_encoder_common.solve_for_recurrent_population_weights_heterogeneous_filters(
             G,
@@ -196,6 +202,7 @@ def execute_single(idcs):
             None,
             None,
             Es, [Filters.lowpass(tau) for tau in flts],
+            flts_in_map,
             flts_rec_map,
             Ms=Ms,
             N_smpls=N_TRAIN_SMPLS,
@@ -204,8 +211,9 @@ def execute_single(idcs):
             rng=rng,
             silent=True)
 
-    W_in, W_rec, Es_solver = solve(flts_rec_map)
+    W_in, W_rec, Es_solver = solve(flts_in_map, flts_rec_map)
     W_in_ref, W_rec_ref, Es_solver_ref = solve(
+        flts_in_map,
         np.ones((n_neurons, n_neurons), dtype=int) * i_mu)
 
     # Simulate the network and compute the tuning error
@@ -214,7 +222,8 @@ def execute_single(idcs):
 
         for i_repeat_test in range(N_REPEAT_TEST):
             # Use the same test signals for each network
-            rng = np.random.RandomState(340043 * i_repeat + 2814 * i_repeat_test + 213)
+            rng = np.random.RandomState(340043 * i_repeat +
+                                        2814 * i_repeat_test + 213)
 
             # Generate a a test signal for the tuning error computation
             N_sim = int(T_SIM / DT)
@@ -231,6 +240,7 @@ def execute_single(idcs):
                                            bias=biases,
                                            encoders=Es,
                                            flts=flts,
+                                           flts_in_map=flts_in_map,
                                            flts_rec_map=flts_rec_map,
                                            W_in=W_in,
                                            W_rec=W_rec,
@@ -289,12 +299,14 @@ def main():
     assert partition_idx >= 0
 
     if n_partitions == 1:
-        fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data',
-                          "evaluate_synaptic_weight_computation_heterogeneous.h5")
+        fn = os.path.join(
+            os.path.dirname(__file__), '..', '..', '..', 'data',
+            "evaluate_synaptic_weight_computation_heterogeneous.h5")
     else:
         fn = os.path.join(
             os.path.dirname(__file__), '..', '..', '..', 'data',
-            "evaluate_synaptic_weight_computation_heterogeneous_{}.h5".format(partition_idx))
+            "evaluate_synaptic_weight_computation_heterogeneous_{}.h5".format(
+                partition_idx))
 
     with h5py.File(fn, 'w') as f:
         f.attrs["modes"] = json.dumps(MODES)
@@ -341,7 +353,7 @@ def main():
         )
 
         with env_guard.SingleThreadEnvGuard():
-            with multiprocessing.get_context('spawn').Pool(
+            with multiprocessing.get_context('spawn').Pool(1,
                     maxtasksperchild=1) as pool:
                 for idcs, Es_solver, Es_solver_ref, Es_tuning, Es_tuning_ref in tqdm.tqdm(
                         pool.imap_unordered(execute_single, idcs[i0:i1]),

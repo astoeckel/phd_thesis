@@ -400,6 +400,7 @@ def solve_for_recurrent_population_weights_heterogeneous_filters(G,
                                            B,
                                            TEs,
                                            flts,
+                                           flts_in_map,
                                            flts_rec_map,
                                            N_smpls=1000,
                                            xs_sigma=5.0,
@@ -458,8 +459,11 @@ def solve_for_recurrent_population_weights_heterogeneous_filters(G,
 
     # Assemble the X and Y matrices that are being passed to the least-squares
     # algorithm
-    #N_pre = 1 + N_neurons
-    N_pre = N_flts + N_neurons
+    N_flts_in = len(flts_in_map)
+    N_pre = N_flts_in + N_neurons
+
+    flts_in_map_u = np.unique(flts_in_map)
+    flts_rec_map_u = np.unique(flts_rec_map)
 
     X = np.zeros((N_smpls, N_neurons, N_pre))
     Y = np.zeros((N_smpls, N_neurons))
@@ -479,8 +483,7 @@ def solve_for_recurrent_population_weights_heterogeneous_filters(G,
 
         # Filter the input with all filters used in the input connections
         xs_flt = np.zeros(N_flts)
-#        for i_flt in np.unique(flts_in_map):
-        for i_flt in range(N_flts):
+        for i_flt in flts_in_map_u:
             xs_flt[i_flt] = np.convolve(xs, hs[i_flt], 'valid') * dt
 
         # Pass the input through the desired impulse responses
@@ -493,7 +496,7 @@ def solve_for_recurrent_population_weights_heterogeneous_filters(G,
         As_pre = np.zeros((N_neurons, N_flts))
         for i_pre in range(N_neurons):
             A_pre = G(gains[i_pre] * (ms_flt @ TEs[i_pre]) + biases[i_pre])
-            for i_flt in np.unique(flts_rec_map):
+            for i_flt in flts_rec_map_u:
                 As_pre[i_pre, i_flt] = np.convolve(A_pre, hs[i_flt], 'valid') * dt
 
         # Now re-arrange the matrices computed above into a series of
@@ -501,9 +504,8 @@ def solve_for_recurrent_population_weights_heterogeneous_filters(G,
         for i_post in range(N_neurons):
             I = 0
             # Input
-            #X[i_smpl, i_post, I] = xs_flt[flts_in_map[i_pre]] * x_in_scale
-            for i_flt in range(N_flts):
-                X[i_smpl, i_post, I] = xs_flt[i_flt] * x_in_scale
+            for i_pre in range(N_flts_in):
+                X[i_smpl, i_post, I] = xs_flt[flts_in_map[i_pre]] * x_in_scale
                 I += 1
 
             # Recurrent connection
@@ -525,8 +527,8 @@ def solve_for_recurrent_population_weights_heterogeneous_filters(G,
         W[i] = np.linalg.solve(XTX, XTY)
         Es[i] = np.sqrt(np.mean(np.square(X[:, i] @ W[i] - Y[:, i])))
 
-    W_in = W[:, :N_flts] * x_in_scale
-    W_rec = W[:, N_flts:]
+    W_in = W[:, :N_flts_in] * x_in_scale
+    W_rec = W[:, N_flts_in:]
 
     return W_in, W_rec, Es
 
