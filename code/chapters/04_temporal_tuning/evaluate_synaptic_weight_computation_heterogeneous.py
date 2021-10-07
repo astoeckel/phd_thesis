@@ -53,7 +53,7 @@ N_TAU_SIGMAS = 11
 TAU_SIGMAS = np.linspace(0, TAU_MU, N_TAU_SIGMAS)
 N_TAU_SIGMAS = len(TAU_SIGMAS)
 
-FLTS_IN = np.geomspace(1e-3, 200e-3, 9)
+FLTS_IN = np.geomspace(1e-3, 400e-3, 11)
 
 N_REPEAT = 100
 
