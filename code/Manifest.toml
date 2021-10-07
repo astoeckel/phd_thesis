@@ -423,6 +423,12 @@ generates=["evaluate_synaptic_weight_computation_freq_sweep.h5"]
 is_multithreaded = true
 
 
+["chapters/04_temporal_tuning/spatio_temporal_network.py"]
+commit = "e6655e2eb407b62ba4b3a229b19c615ff2e845c4"
+dockerfile = "experiments_base"
+generates=["spatio_temporal_network.h5"]
+is_multithreaded = true
+
 #
 # Chapter 5 Experiments
 #
