@@ -429,6 +429,14 @@ dockerfile = "experiments_base"
 generates=["spatio_temporal_network.h5"]
 is_multithreaded = true
 
+
+["chapters/04_temporal_tuning/spatio_temporal_network_analysis.py"]
+commit = "b9cef061be3e8044b15b65626457061498ba80c5"
+dockerfile = "experiments_base"
+generates=["spatio_temporal_network_analysis.h5"]
+is_multithreaded = true
+
+
 #
 # Chapter 5 Experiments
 #
