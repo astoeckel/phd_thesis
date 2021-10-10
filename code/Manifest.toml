@@ -438,7 +438,7 @@ is_multithreaded = true
 
 
 ["chapters/04_temporal_tuning/esn_decode_delays_1d.py"]
-commit = "088f75fd7cd6f99fa5a234aa35e36ac34b35875f"
+commit = "380ceb2a21f142d4671c066e095cefdc1d598989"
 dockerfile = "experiments_base"
 generates=["esn_decode_delays_1d.h5"]
 is_multithreaded = true
