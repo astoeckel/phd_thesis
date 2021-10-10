@@ -51,7 +51,7 @@ DELAYS_2D = np.linspace(0, 1, 31 + 1)[:-1]
 N_DELAYS_2D = len(DELAYS_2D)
 
 
-def run_2d_delay_decoder_experiment(idcs):
+def run_2d_delayed_multiplication_experiment(idcs):
     i_delay1, i_delay2 = idcs
 
     # Copy the echo state network
