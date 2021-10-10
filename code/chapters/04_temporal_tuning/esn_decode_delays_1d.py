@@ -85,7 +85,7 @@ def main():
                 errs_1d[idcs] = E
 
     fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data',
-                      "esn_decode_delays.h5")
+                      "esn_decode_delays_1d.h5")
 
     with h5py.File(fn, "w") as f:
         f.create_dataset("delays_1d", data=DELAYS_1D)
