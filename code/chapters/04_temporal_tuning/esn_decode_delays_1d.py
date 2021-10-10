@@ -45,7 +45,7 @@ ESN_INST = pyESN.ESN(n_inputs=2,
                      n_outputs=1,
                      n_reservoir=1000,
                      teacher_forcing=True,
-                     spectral_radius=0.95)
+                     spectral_radius=0.8)
 
 N_DIMS = 2
 
