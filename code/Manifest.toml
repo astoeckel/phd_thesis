@@ -457,6 +457,14 @@ dockerfile = "experiments_base"
 generates=["ldn_bibo_stability.h5"]
 is_multithreaded = true
 
+
+["chapters/04_temporal_tuning/ldn_spectrum.py"]
+commit = "15a5eccf32b8e6f03c1dc947a9521f004ffe0a1e"
+dockerfile = "experiments_base"
+generates=["ldn_spectrum.h5"]
+is_multithreaded = true
+
+
 #
 # Chapter 5 Experiments
 #
