@@ -18,7 +18,7 @@ modes = ["zoh", "euler", "midpoint", "runge_kutta"]
 Ns = np.arange(1, 1000, dtype=np.int)
 qs = np.arange(1, 51)
 
-N_JITTER = 10
+N_JITTER = 1000
 
 
 def mexpfin(A, o):
@@ -121,7 +121,7 @@ def main():
                                   shape=(len(modes), len(qs), len(Ns)))
 
         with env_guard.SingleThreadEnvGuard():
-            with multiprocessing.get_context('spawn').Pool(16) as pool:
+            with multiprocessing.get_context('spawn').Pool() as pool:
                 for (i, j, k), lambda_, nrmse, sigma in tqdm.tqdm(
                         pool.imap_unordered(run_single,
                                             params), total=len(params)):
