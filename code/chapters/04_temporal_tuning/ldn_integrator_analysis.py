@@ -56,7 +56,7 @@ def run_single(params):
     max_Ls = np.zeros(N_JITTER)
     for i in range(N_JITTER):
         L = np.linalg.eigvals(A + (0.01 / N) * np.random.randn(q, q))
-        max_Ls[i] = np.max(np.abs(L))
+        max_Ls[i] = np.max(np.abs((1.0 + L))) # Update equation growth factor
     lambda_ = np.mean(max_Ls)
 
     #    x = np.zeros(q)
