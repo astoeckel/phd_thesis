@@ -45,29 +45,31 @@ def bandlimited_white_noise(fmax, N, seed=0):
 
 
 def run(idcs):
-    i_q, i_freq, i_trial = idcs
+    i_q, i_freq = idcs
 
-    # Generate the reference signal and the band-limited input signal
-    sig_orig = bandlimited_white_noise(N, N, seed=i_trial)
-    sig_lim = bandlimited_white_noise(FREQS[i_freq], N, seed=i_trial)
+    Es = np.zeros(N_TRIALS)
+    for i_trial in range(N_TRIALS):
+        # Generate the reference signal and the band-limited input signal
+        sig_orig = bandlimited_white_noise(N, N, seed=i_trial)
+        sig_lim = bandlimited_white_noise(FREQS[i_freq], N, seed=i_trial)
 
-    # Feed all signals through the LDN filter
-    H, H_inv = Hs[i_q], Hs_inv[i_q]
-    sig_orig_rec = H_inv @ (H @ sig_orig)
-    sig_lim_rec = H_inv @ (H @ sig_lim)
+        # Feed all signals through the LDN filter
+        H, H_inv = Hs[i_q], Hs_inv[i_q]
+        sig_orig_rec = H_inv @ (H @ sig_orig)
+        sig_lim_rec = H_inv @ (H @ sig_lim)
 
-    # Compute the original signal rms
-    rms = np.sqrt(np.mean(np.square(sig_orig_rec)))
+        # Compute the original signal rms
+        rms = np.sqrt(np.mean(np.square(sig_orig_rec)))
 
-    # Compute the error
-    E = np.sqrt(np.mean(np.square(sig_lim_rec - sig_orig_rec))) / rms
+        # Compute the error
+        Es[i_trial] = np.sqrt(np.mean(np.square(sig_lim_rec - sig_orig_rec))) / rms
 
-    return idcs, E
+    return idcs, Es
 
 
 def main():
     params = list(
-        itertools.product(range(N_QS), range(N_FREQS), range(N_TRIALS)))
+        itertools.product(range(N_QS), range(N_FREQS)))
     random.shuffle(params)
 
     fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data',
@@ -81,10 +83,10 @@ def main():
                                 compression="gzip")
 
         with env_guard.SingleThreadEnvGuard():
-            with multiprocessing.get_context('spawn').Pool(16) as pool:
-                for idcs, E in tqdm.tqdm(pool.imap_unordered(run, params),
+            with multiprocessing.get_context('spawn').Pool() as pool:
+                for idcs, Es in tqdm.tqdm(pool.imap_unordered(run, params),
                                          total=len(params)):
-                    errs[idcs] = E
+                    errs[idcs] = Es
 
 
 if __name__ == "__main__":
