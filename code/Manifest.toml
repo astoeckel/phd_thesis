@@ -452,7 +452,7 @@ is_multithreaded = true
 
 
 ["chapters/04_temporal_tuning/ldn_integrator_analysis.py"]
-commit = "91546688bc7650b10e5f868b2ccf4d16da41390b"
+commit = "06008b3b190a3a92fbffe832b8d3a73a4ef619c4"
 dockerfile = "experiments_base"
 generates=["ldn_integrator_analysis.h5"]
 is_multithreaded = true
