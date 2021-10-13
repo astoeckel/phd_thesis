@@ -451,15 +451,15 @@ generates=["esn_decode_delays_2d.h5"]
 is_multithreaded = true
 
 
-["chapters/04_temporal_tuning/ldn_bibo_stability.py"]
-commit = "7177b05f42144bb6a0eab2f149ecb3f3e49e0a12"
+["chapters/04_temporal_tuning/ldn_integrator_analysis.py"]
+commit = "f6f4819ed5e5a9965af80edebd7ac34a0e59ab1a"
 dockerfile = "experiments_base"
-generates=["ldn_bibo_stability.h5"]
+generates=["ldn_integrator_analysis.h5"]
 is_multithreaded = true
 
 
 ["chapters/04_temporal_tuning/ldn_spectrum.py"]
-commit = "15a5eccf32b8e6f03c1dc947a9521f004ffe0a1e"
+commit = "be86f8d9aaba71124065306c0f1f9d2fc899a17a"
 dockerfile = "experiments_base"
 generates=["ldn_spectrum.h5"]
 is_multithreaded = true
