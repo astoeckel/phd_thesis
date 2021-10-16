@@ -112,6 +112,7 @@ def mk_impulse_response(basis,
         "cosine": bases.mk_cosine_basis,
         "mod_fourier": mk_mod_fourier_basis,
         "legendre": bases.mk_dlop_basis,
+        "haar": bases.mk_haar_basis,
     }[basis]
 
     # When using the Bartlett window, adapt the basis generation function itself

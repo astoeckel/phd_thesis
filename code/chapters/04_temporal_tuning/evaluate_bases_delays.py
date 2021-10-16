@@ -39,7 +39,7 @@ Q_MIN = 3
 Q_MAX = 63
 
 # Bases to try
-BASES = ["fourier", "cosine", "mod_fourier", "legendre"]
+BASES = ["fourier", "cosine", "mod_fourier", "legendre", "haar"]
 N_BASES = len(BASES)
 
 # Windows to try
