@@ -474,7 +474,7 @@ is_multithreaded = true
 
 ["chapters/04_temporal_tuning/mod_fourier_integrator_analysis.py"]
 commit = "1b297ebf52e0f88c55cef7a57d596aae4d01bcef"
-dockerfile = "tensorflow"
+dockerfile = "experiments_base"
 generates=["mod_fourier_integrator_analysis.h5"]
 is_multithreaded = true
 
