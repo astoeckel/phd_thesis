@@ -466,7 +466,7 @@ is_multithreaded = true
 
 
 ["chapters/04_temporal_tuning/lmu_psmnist.py"]
-commit = "698729a9e00144614753b6b7dc962562e9219c85"
+commit = "0c53cf7b6d977261a8b976715b0cf7d50cc064be"
 dockerfile = "tensorflow"
 generates=["lmu_psmnist.npz"]
 is_multithreaded = true
