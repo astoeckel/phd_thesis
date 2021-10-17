@@ -465,6 +465,12 @@ generates=["ldn_spectrum.h5"]
 is_multithreaded = true
 
 
+["chapters/04_temporal_tuning/lmu_psmnist.py"]
+commit = "a9fbac561ed149634799648cd1c95dbb887efe93"
+dockerfile = "tensorflow"
+generates=["lmu_psmnist.npz"]
+is_multithreaded = true
+
 #
 # Chapter 5 Experiments
 #
