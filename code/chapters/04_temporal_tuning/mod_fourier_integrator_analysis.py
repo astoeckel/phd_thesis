@@ -15,8 +15,8 @@ import scipy.linalg
 import dlop_ldn_function_bases as bases
 
 modes = ["zoh", "euler", "midpoint", "runge_kutta"]
-Ns = np.arange(1, 1000, dtype=np.int)
-qs = np.arange(1, 51, 2)
+Ns = np.arange(1, 1000, 1, dtype=np.int)
+qs = np.arange(1, 102, 2)
 
 N_JITTER = 1000
 
