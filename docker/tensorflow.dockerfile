@@ -8,7 +8,7 @@ RUN apt-get update \
 RUN pip3 install \
 	tqdm==4.59.0 \
 	cython==0.29.22 \
-	tensorflow==2.5.0-dev20210114
+	tensorflow==2.5.0
 
 RUN mkdir -p /opt
 
