@@ -207,10 +207,9 @@ if __name__ == '__main__':
         n_slices = 1
         i_slice = 1
 
-    #qs = [468]
-    qs = [101]
+    qs = [468]
     basis_idcs = range(len(BASES))
-    seeds = range(11)
+    seeds = range(51)
     params = list([((i, j, k, l), basis_idx, q, train, seed)
                    for i, basis_idx in enumerate(basis_idcs)
                    for j, q in enumerate(qs)
@@ -233,6 +232,8 @@ if __name__ == '__main__':
                                                total=len(params)):
             errs[i, j, k, l] = E
             trajs[i, j, k, l] = traj
+#        for i in tqdm.tqdm(range(len(params))):
+#            (i, j, k, l), E, traj = run_single_experiment(params[i], verbose=True, use_gpu=True, use_single_cpu=False)
 
     fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data',
                       "lmu_psmnist.npz")
