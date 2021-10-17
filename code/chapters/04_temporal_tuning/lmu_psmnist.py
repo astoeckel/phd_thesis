@@ -78,16 +78,16 @@ def mk_psmnist_dataset(n_validate=10000, seed=103891, batch_size=100):
 
 
 BASES = [
-    (bases.mk_ldn_basis, "ldn"),  #0
+#    (bases.mk_ldn_basis, "ldn"),  #0
     (utils.mk_mod_fourier_basis, "mod_fourier"),  #1
-    (bases.mk_dlop_basis, "dlop"),  #2
-    (bases.mk_fourier_basis, "fourier"),  #3
-    (bases.mk_cosine_basis, "cosine"),  #4
-    (bases.mk_haar_basis, "haar"),  #5
-    (None, "random"),  #6
+#    (bases.mk_dlop_basis, "dlop"),  #2
+#    (bases.mk_fourier_basis, "fourier"),  #3
+#    (bases.mk_cosine_basis, "cosine"),  #4
+#    (bases.mk_haar_basis, "haar"),  #5
+#    (None, "random"),  #6
 ]
 
-N_EPOCHS = 10
+N_EPOCHS = 100
 
 
 def run_single_experiment(params,
@@ -209,7 +209,7 @@ if __name__ == '__main__':
 
     qs = [468]
     basis_idcs = range(len(BASES))
-    seeds = range(51)
+    seeds = range(101)
     params = list([((i, j, k, l), basis_idx, q, train, seed)
                    for i, basis_idx in enumerate(basis_idcs)
                    for j, q in enumerate(qs)
