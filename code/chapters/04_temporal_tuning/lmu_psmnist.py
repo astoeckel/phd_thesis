@@ -207,7 +207,8 @@ if __name__ == '__main__':
         n_slices = 1
         i_slice = 1
 
-    qs = [468]
+    #qs = [468]
+    qs = [200]
     basis_idcs = range(len(BASES))
     seeds = range(11)
     params = list([((i, j, k, l), basis_idx, q, train, seed)
