@@ -471,6 +471,13 @@ dockerfile = "tensorflow"
 generates=["lmu_psmnist.npz"]
 is_multithreaded = true
 
+
+["chapters/04_temporal_tuning/mod_fourier_integrator_analysis.py"]
+commit = "1b297ebf52e0f88c55cef7a57d596aae4d01bcef"
+dockerfile = "tensorflow"
+generates=["mod_fourier_integrator_analysis.h5"]
+is_multithreaded = true
+
 #
 # Chapter 5 Experiments
 #
