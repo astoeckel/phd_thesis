@@ -5,9 +5,7 @@ RUN apt-get update \
 	&& apt-get -y install \
 		python3-numpy python3-scipy python3-matplotlib python3-pip python3-h5py
 
-RUN python3 --version
-
-RUN pip3 --version
+RUN pip3 install -U pip
 
 RUN pip3 install \
 	tqdm==4.59.0 \
