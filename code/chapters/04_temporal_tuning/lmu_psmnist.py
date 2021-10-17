@@ -78,7 +78,7 @@ BASES = [
     (None, "random"),                     #6
 ]
 
-N_EPOCHS = 100
+N_EPOCHS = 10
 
 def run_single_experiment(params, verbose=False, return_model=False, use_gpu=False, use_single_cpu=True):
     import tensorflow as tf
@@ -187,7 +187,8 @@ if __name__ == '__main__':
         n_slices = 1
         i_slice = 1
 
-    qs = [468]
+    qs = [101]
+    #qs = [468]
     #qs = np.unique(np.logspace(np.log2(1), np.log2(468), 21, base=2, dtype=np.int))
     basis_idcs = range(len(BASES))
 #    if len(qs) == 1:
