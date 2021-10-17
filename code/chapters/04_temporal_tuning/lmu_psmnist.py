@@ -15,11 +15,14 @@ import datetime
 
 import dlop_ldn_function_bases as bases
 
+def dataset_file(fn):
+    return os.path.join(os.path.dirname(__file__), '../../../data/datasets', fn)
+
 MNIST = {
-    "train_imgs": utils.read_idxgz('../../../data/datasets/train-images-idx3-ubyte.gz'),
-    "train_lbls": utils.read_idxgz('../../../data/datasets/train-labels-idx1-ubyte.gz'),
-    "test_imgs": utils.read_idxgz('../../../data/datasets/t10k-images-idx3-ubyte.gz'),
-    "test_lbls": utils.read_idxgz('../../../data/datasets/t10k-labels-idx1-ubyte.gz')
+    "train_imgs": utils.read_idxgz(dataset_file('train-images-idx3-ubyte.gz')),
+    "train_lbls": utils.read_idxgz(dataset_file('train-labels-idx1-ubyte.gz')),
+    "test_imgs": utils.read_idxgz(dataset_file('t10k-images-idx3-ubyte.gz')),
+    "test_lbls": utils.read_idxgz(dataset_file('t10k-labels-idx1-ubyte.gz'))
 }
 
 def mk_psmnist_dataset(n_validate=10000, seed=103891, batch_size=100):
@@ -66,13 +69,13 @@ def mk_psmnist_dataset(n_validate=10000, seed=103891, batch_size=100):
 
 
 BASES = [
-#    (bases.mk_ldn_basis, "ldn"),          #0
+    (bases.mk_ldn_basis, "ldn"),          #0
     (utils.mk_mod_fourier_basis, "mod_fourier"), #1
-#    (bases.mk_dlop_basis, "dlop"),        #2
-#    (bases.mk_fourier_basis, "fourier"),  #3
-#    (bases.mk_cosine_basis, "cosine"),    #4
-#    (bases.mk_haar_basis, "haar"),        #5
-#    (None, "random"),                     #6
+    (bases.mk_dlop_basis, "dlop"),        #2
+    (bases.mk_fourier_basis, "fourier"),  #3
+    (bases.mk_cosine_basis, "cosine"),    #4
+    (bases.mk_haar_basis, "haar"),        #5
+    (None, "random"),                     #6
 ]
 
 N_EPOCHS = 100
@@ -187,10 +190,10 @@ if __name__ == '__main__':
     qs = [468]
     #qs = np.unique(np.logspace(np.log2(1), np.log2(468), 21, base=2, dtype=np.int))
     basis_idcs = range(len(BASES))
-    if len(qs) == 1:
-        seeds = range(101)
-    else:
-        seeds = range(11)
+#    if len(qs) == 1:
+#        seeds = range(101)
+#    else:
+    seeds = range(11)
     params = list([
         ((i, j, k, l), basis_idx, q, train, seed)
         for i, basis_idx in enumerate(basis_idcs)
@@ -208,12 +211,11 @@ if __name__ == '__main__':
 
     errs = np.zeros((len(basis_idcs), len(qs), 2, len(seeds)))
     trajs = np.zeros((len(basis_idcs), len(qs), 2, len(seeds), N_EPOCHS, 2))
-#    with multiprocessing.get_context('spawn').Pool() as pool:
-#        for (i, j, k, l), E, traj in tqdm.tqdm(pool.imap_unordered(run_single_experiment, params), total=len(params)):
-    for i in tqdm.tqdm(range(len(params))):
-        (i, j, k, l), E, traj = run_single_experiment(params[i], verbose=True, use_gpu=True, use_single_cpu=False)
-        errs[i, j, k, l] = E
-        trajs[i, j, k, l] = traj
+    with multiprocessing.get_context('spawn').Pool() as pool:
+        for (i, j, k, l), E, traj in tqdm.tqdm(pool.imap_unordered(run_single_experiment, params), total=len(params)):
+            (i, j, k, l), E, traj = run_single_experiment(params[i], verbose=True, use_gpu=True, use_single_cpu=False)
+            errs[i, j, k, l] = E
+            trajs[i, j, k, l] = traj
 
     fn = datetime.datetime.now().strftime("psmnist_results_%Y_%m_%d_%H_%M_%S.npz")
     if len(qs) == 1:
