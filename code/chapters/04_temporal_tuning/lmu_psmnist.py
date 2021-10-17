@@ -214,7 +214,6 @@ if __name__ == '__main__':
     trajs = np.zeros((len(basis_idcs), len(qs), 2, len(seeds), N_EPOCHS, 2))
     with multiprocessing.get_context('spawn').Pool() as pool:
         for (i, j, k, l), E, traj in tqdm.tqdm(pool.imap_unordered(run_single_experiment, params), total=len(params)):
-            (i, j, k, l), E, traj = run_single_experiment(params[i], verbose=True, use_gpu=True, use_single_cpu=False)
             errs[i, j, k, l] = E
             trajs[i, j, k, l] = traj
 
