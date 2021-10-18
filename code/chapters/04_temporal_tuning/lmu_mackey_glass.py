@@ -30,7 +30,7 @@ BASES = [
 N_EPOCHS = 100
 
 
-def run_single_experiment(params, verbose=True, return_model=False):
+def run_single_experiment(params, verbose=False, return_model=False):
     import tensorflow as tf
     from temporal_basis_transformation_network.keras import TemporalBasisTrafo
 
