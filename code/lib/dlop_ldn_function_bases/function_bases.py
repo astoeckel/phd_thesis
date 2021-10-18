@@ -195,10 +195,15 @@ def reconstruct_lti(H,
     return A, B
 
 
-def mk_lti_basis(A, B, N=None, normalize=True, from_discrete_lti=False):
+def mk_lti_basis(A, B, N=None, N_smpl=None, normalize=True, from_discrete_lti=False):
     """
     Constructs a basis transformation matrix for the given LTI system. This
     function is used internally by mk_ldn_basis.
+
+    A: q x q LTI system feedback matrix
+    B: q LTI system input vectur
+    N: Window width. Defaults to q
+    N_smpl: Actual number of samples to return. Defaults to N
     """
     # Make sure A is a square matrix
     assert (A.ndim == 2) and (A.shape[0] == A.shape[1])
@@ -208,16 +213,20 @@ def mk_lti_basis(A, B, N=None, normalize=True, from_discrete_lti=False):
     B = B.flatten()
     assert (B.shape[0] == q)
 
-    # Fetch the number of samples
+    # Fetch the window width
     N = q if N is None else int(N)
     assert N > 0
 
+    # Fetch the number of samples
+    N_smpl = N if N_smpl is None else int(N_smpl)
+    assert N_smpl > 0
+
     # Generate the impulse response matrix
     At, Bt = (A, B) if from_discrete_lti else discretize_lti(1.0 / N, A, B)
-    res = np.zeros((q, N))
+    res = np.zeros((q, N_smpl))
     Aexp = np.eye(q)
-    for i in range(N):
-        res[:, N - i - 1] = Aexp @ Bt
+    for i in range(N_smpl):
+        res[:, N_smpl - i - 1] = Aexp @ Bt
         Aexp = At @ Aexp
     return (res / np.linalg.norm(res, axis=1)[:, None]) if normalize else res
 
