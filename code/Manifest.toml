@@ -473,9 +473,50 @@ is_multithreaded = true
 
 
 ["chapters/04_temporal_tuning/lmu_mackey_glass.py"]
-commit = "65860de9b8fb831136d958cc6e8ffbb7fb2333cd"
+commit = "1b27354cecb1397952448812616312d8bec85134"
 dockerfile = "tensorflow"
-generates=["lmu_mackey_glass.npz"]
+runs = [
+	{
+		args=["10", "0"],
+		generates=["lmu_mackey_glass_0.npz"]
+	},
+	{
+		args=["10", "1"],
+		generates=["lmu_mackey_glass_1.npz"]
+	},
+	{
+		args=["10", "2"],
+		generates=["lmu_mackey_glass_2.npz"]
+	},
+	{
+		args=["10", "3"],
+		generates=["lmu_mackey_glass_3.npz"]
+	},
+	{
+		args=["10", "4"],
+		generates=["lmu_mackey_glass_4.npz"]
+	},
+	{
+		args=["10", "5"],
+		generates=["lmu_mackey_glass_5.npz"]
+	},
+	{
+		args=["10", "6"],
+		generates=["lmu_mackey_glass_6.npz"]
+	},
+	{
+		args=["10", "7"],
+		generates=["lmu_mackey_glass_7.npz"]
+	},
+	{
+		args=["10", "8"],
+		generates=["lmu_mackey_glass_8.npz"]
+	},
+	{
+		args=["10", "9"],
+		generates=["lmu_mackey_glass_9.npz"]
+	},
+]
 is_multithreaded = true
 
 
