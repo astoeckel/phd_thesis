@@ -27,10 +27,10 @@ BASES = [
     (None, "random"),  # 6
 ]
 
-N_EPOCHS = 30
+N_EPOCHS = 100
 
 
-def run_single_experiment(params, verbose=False, return_model=False):
+def run_single_experiment(params, verbose=True, return_model=False):
     import tensorflow as tf
     from temporal_basis_transformation_network.keras import TemporalBasisTrafo
 
@@ -65,12 +65,10 @@ def run_single_experiment(params, verbose=False, return_model=False):
     # Generate the dataset
     Nm = 3 if ext_flt else 1
     N_wnd0, N_wnd1, N_wnd2, N_wnd3 = N_wnds = (17 * Nm, 9 * Nm, 9 * Nm, 5 * Nm)
-    ds_train, ds_val, ds_test = mk_mackey_glass_dataset(N_wnds=N_wnds,
-                                                        seed=seed,
-                                                        verbose=verbose)
+    ds_train, ds_val, ds_test = mk_mackey_glass_dataset(N_wnds=N_wnds, seed=seed, verbose=verbose)
     N_wnd = ds_train.element_spec[0].shape[1]
     N_pred = ds_train.element_spec[1].shape[1]
-    rms = 0.223
+    rms = 1.0
 
     # Run the experiment
     with tempfile.NamedTemporaryFile() as f:
@@ -78,33 +76,26 @@ def run_single_experiment(params, verbose=False, return_model=False):
         N_units1 = 10
         N_units2 = 10
         N_units3 = 10
-        q0, q1, q2, q3 = 17, 9, 9, 5
-        H0 = basis_ctor(q0, N_wnd0 // Nm, Nm)
-        H1 = basis_ctor(q1, N_wnd1 // Nm, Nm)
-        H2 = basis_ctor(q2, N_wnd2 // Nm, Nm)
-        H3 = basis_ctor(q3, N_wnd3 // Nm, Nm)
+        q0, q1, q2, q3 = N_wnd0 // Nm, N_wnd1 // Nm, N_wnd2 // Nm, N_wnd3 // Nm
+        H0 = basis_ctor(q0, q0, Nm)
+        H1 = basis_ctor(q1, q1, Nm)
+        H2 = basis_ctor(q2, q2, Nm)
+        H3 = basis_ctor(q3, q3, Nm)
         model = tf.keras.models.Sequential([
-            tf.keras.layers.Reshape(
-                (N_wnd, 1)),  # (N_wnd0 + N_wnd1 + N_wnd2 + N_wnd3, 1)
-            TemporalBasisTrafo(
-                H0, units=N_units0,
-                trainable=train),  # (N_wnd1 + N_wnd2 + N_wnd3, q * N_units0)
-            tf.keras.layers.Dense(
-                N_units1,
-                activation='relu'),  # (N_wnd1 + N_wnd2 + N_wnd3, N_units1)
-            TemporalBasisTrafo(
-                H1, units=N_units1,
-                trainable=train),  # (N_wnd2 + N_wnd3, q * N_units1)
-            tf.keras.layers.Dense(
-                N_units2, activation='relu'),  # (N_wnd2 + N_wnd3, N_units2)
-            TemporalBasisTrafo(H2, units=N_units2,
-                               trainable=train),  # (N_wnd3, q * N_units2)
-            tf.keras.layers.Dense(N_units3,
-                                  activation='relu'),  # (N_wnd3, N_units3)
-            TemporalBasisTrafo(H3, units=N_units3,
-                               trainable=train),  # (1, q * N_units3)
-            tf.keras.layers.Dense(N_pred, use_bias=False),  # (1, N_pred)
-            tf.keras.layers.Reshape((N_pred, ))  # (N_pred)
+          tf.keras.layers.Reshape((N_wnd, 1)),                       # (N_wnd0 + N_wnd1 + N_wnd2 + N_wnd3, 1)
+          TemporalBasisTrafo(H0, units=N_units0, trainable=train),   # (N_wnd1 + N_wnd2 + N_wnd3, q * N_units0)
+
+          tf.keras.layers.Dense(N_units1, activation='relu'),        # (N_wnd1 + N_wnd2 + N_wnd3, N_units1)
+          TemporalBasisTrafo(H1, units=N_units1, trainable=train),   # (N_wnd2 + N_wnd3, q * N_units1)
+
+          tf.keras.layers.Dense(N_units2, activation='relu'),        # (N_wnd2 + N_wnd3, N_units2)
+          TemporalBasisTrafo(H2, units=N_units2, trainable=train),   # (N_wnd3, q * N_units2)
+
+          tf.keras.layers.Dense(N_units3, activation='relu'),        # (N_wnd3, N_units3)
+          TemporalBasisTrafo(H3, units=N_units3, trainable=train),   # (1, q * N_units3)
+
+          tf.keras.layers.Dense(N_pred, use_bias=False),             # (1, N_pred)
+          tf.keras.layers.Reshape((N_pred,))                         # (N_pred)
         ])
 
         model_checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
@@ -145,28 +136,54 @@ def run_single_experiment(params, verbose=False, return_model=False):
 
 
 if __name__ == '__main__':
+    if len(sys.argv) > 1:
+        n_partitions = int(sys.argv[1])
+        partition_idx = int(sys.argv[2])
+    else:
+        n_partitions = 1
+        partition_idx = 0
+
+    assert n_partitions > 0
+    assert partition_idx < n_partitions
+    assert partition_idx >= 0
+
+    if n_partitions == 1:
+        fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data',
+                          "lmu_mackey_glass.npz")
+    else:
+        fn = os.path.join(
+            os.path.dirname(__file__), '..', '..', '..', 'data',
+            "lmu_mackey_glass_{}.npz".format(partition_idx))
+
     multiprocessing.freeze_support()
 
     basis_idcs = range(len(BASES))
-    seeds = range(51)
+    seeds = range(101)
     params = list([((i, j, k, l), basis_idx, ext_flt, train, seed)
                    for i, basis_idx in enumerate(basis_idcs)
                    for j, ext_flt in enumerate([False, True])
                    for k, train in enumerate([False, True])
                    for l, seed in enumerate(seeds)])
+
+    random.seed(587232)
     random.shuffle(params)
 
-    errs = np.zeros((len(basis_idcs), 2, 2, len(seeds)))
-    trajs = np.zeros((len(basis_idcs), 2, 2, len(seeds), N_EPOCHS, 2))
+    partitions = np.linspace(0, len(params), n_partitions + 1, dtype=int)
+    i0 = partitions[partition_idx]
+    i1 = partitions[partition_idx + 1]
+    print(
+        f"Partition {partition_idx} out of {n_partitions} (i0={i0}, i1={i1}); total={len(params)}"
+    )
+
+    errs = np.zeros((len(basis_idcs), 2, 2, len(seeds))) * np.nan
+    trajs = np.zeros((len(basis_idcs), 2, 2, len(seeds), N_EPOCHS, 2)) * np.nan
     with multiprocessing.get_context('spawn').Pool() as pool:
         for (i, j, k, l), E, traj in tqdm.tqdm(pool.imap_unordered(
-                run_single_experiment, params),
-                                               total=len(params)):
+                run_single_experiment, params[i0:i1]),
+                                               total=i1 - i0):
             errs[i, j, k, l] = E
             trajs[i, j, k, l] = traj
 
-    fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data',
-                      "lmu_mackey_glass.npz")
     np.savez(
         fn, **{
             "errs": errs,
