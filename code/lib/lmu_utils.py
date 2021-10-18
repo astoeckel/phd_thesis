@@ -23,10 +23,6 @@ import scipy.linalg
 import tqdm
 import dlop_ldn_function_bases as bases
 
-def mk_ldn_basis(q, N, Nmul=1):
-    A, B = bases.mk_ldn_lti(q)
-    return bases.mk_lti_basis(A, B, N, N * Nmul)
-
 
 def mk_mod_fourier_basis(q, N, Nmul=1, fac=0.9, Ninternal=1000):
     def mk_fourier_oscillator(q, mul=1.0):
@@ -127,7 +123,7 @@ def mackey_glass(N_smpls,
         # Perform the Runge-Kutta step
         xs[i] = xs[i - 1] + dt * (k1 + 2.0 * k2 + 2.0 * k3 + k4) / 6.0
 
-    return xs[N_delay:]
+    return (xs[N_delay:] - np.mean(xs[N_delay:])) / np.std(xs[N_delay:])
 
 
 def mk_mackey_glass_dataset(N_wnds,
