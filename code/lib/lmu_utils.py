@@ -28,7 +28,7 @@ def mk_ldn_basis(q, N, Nmul=1):
     return bases.mk_lti_basis(A, B, N, N * Nmul)
 
 
-def mk_mod_fourier_basis(q, N, Nmul=1, fac=0.9, Ninternal=10000):
+def mk_mod_fourier_basis(q, N, Nmul=1, fac=0.9, Ninternal=1000):
     def mk_fourier_oscillator(q, mul=1.0):
         B = (np.arange(0, q) + 1) % 2
         A = np.zeros((q, q))
@@ -60,6 +60,31 @@ def mk_mod_fourier_basis(q, N, Nmul=1, fac=0.9, Ninternal=10000):
     A = np.real(scipy.linalg.logm(Ad)) * Ninternal
 
     return bases.mk_lti_basis(A, B, N, N * Nmul)
+
+
+def mk_ext_ldn_basis(q, N, Nmul=1):
+    A, B = bases.mk_ldn_lti(q)
+    return bases.mk_lti_basis(A, B, N, N * Nmul)
+
+
+def mk_ext_dlop_basis(q, N, Nmul=1):
+    H = bases.mk_dlop_basis(q, N)
+    return np.concatenate((np.zeros((q, N * Nmul - N)), H), axis=1)
+
+
+def mk_ext_fourier_basis(q, N, Nmul=1):
+    H = bases.mk_fourier_basis(q, N)
+    return np.concatenate((np.zeros((q, N * Nmul - N)), H), axis=1)
+
+
+def mk_ext_cosine_basis(q, N, Nmul=1):
+    H = bases.mk_cosine_basis(q, N)
+    return np.concatenate((np.zeros((q, N * Nmul - N)), H), axis=1)
+
+
+def mk_ext_haar_basis(q, N, Nmul=1):
+    H = bases.mk_haar_basis(q, N)
+    return np.concatenate((np.zeros((q, N * Nmul - N)), H), axis=1)
 
 
 def mackey_glass(N_smpls,
