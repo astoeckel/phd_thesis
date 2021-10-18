@@ -472,6 +472,13 @@ generates=["lmu_psmnist.npz"]
 is_multithreaded = true
 
 
+["chapters/04_temporal_tuning/lmu_mackey_glass.py"]
+commit = "65860de9b8fb831136d958cc6e8ffbb7fb2333cd"
+dockerfile = "tensorflow"
+generates=["lmu_mackey_glass.npz"]
+is_multithreaded = true
+
+
 ["chapters/04_temporal_tuning/mod_fourier_integrator_analysis.py"]
 commit = "56a1e9e8ddbb42818f519b7d1898fc88042aefe5"
 dockerfile = "experiments_base"
