@@ -24,10 +24,11 @@ BASES = [
     (lmu_utils.mk_ext_fourier_basis, "fourier"),  # 3
     (lmu_utils.mk_ext_cosine_basis, "cosine"),  # 4
     (lmu_utils.mk_ext_haar_basis, "haar"),  # 5
-    (None, "random"),  # 6
+    (lmu_utils.mk_ext_eye_basis, "eye"),  # 6
+    (None, "random"),  # 7
 ]
 
-N_EPOCHS = 100
+N_EPOCHS = 200
 
 
 def run_single_experiment(params, verbose=False, return_model=False):

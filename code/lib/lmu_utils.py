@@ -82,6 +82,10 @@ def mk_ext_haar_basis(q, N, Nmul=1):
     H = bases.mk_haar_basis(q, N)
     return np.concatenate((np.zeros((q, N * Nmul - N)), H), axis=1)
 
+def mk_ext_eye_basis(q, N, Nmul=1):
+    assert q == N
+    H = np.eye(q)
+    return np.concatenate((np.zeros((q, N * Nmul - N)), H), axis=1)
 
 def mackey_glass(N_smpls,
                  tau=17.0,
