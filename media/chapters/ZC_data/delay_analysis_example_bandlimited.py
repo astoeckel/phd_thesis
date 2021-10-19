@@ -96,7 +96,8 @@ for i, (basis, window) in enumerate(BASES):
                   "\\textbf{{{}}}".format(chr(ord('A') + i)),
                   size=12,
                   va="baseline",
-                  ha="left", transform=ax_basis.transAxes)
+                  ha="left",
+                  transform=ax_basis.transAxes)
 
     rms = np.sqrt(np.mean(np.square(ys[0])))
     rmse = np.sqrt(np.mean(np.square(Es)))
@@ -111,8 +112,7 @@ for i, (basis, window) in enumerate(BASES):
     ax_basis.set_title("\\textbf{{{}}} {}".format(
         *{
             "lowpass": ("Low-pass filters", ""),
-            "mod_fourier": ("Modified Fourier",
-                            "(with information erasure)"),
+            "mod_fourier": ("Modified Fourier", "(with information erasure)"),
             "cosine": ("Cosine", "(with information erasure)"),
             "legendre": ("LDN", ""),
         }[basis]))

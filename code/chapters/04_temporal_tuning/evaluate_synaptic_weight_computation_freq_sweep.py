@@ -118,10 +118,11 @@ def simulate_network_ref(n_neurons,
                          B,
                          xs,
                          dt,
-                         tau=TAU):
+                         tau=TAU,
+                         return_weights=False):
     # Instantiate the network
     with nengo.Network() as model:
-        nd_in = nengo.Node(lambda t: xs[int(t / dt) % len(xs)])
+        nd_in = nengo.Node(lambda t: 0.0 if xs is None else xs[int(t / dt) % len(xs)])
         ens_x = nengo.Ensemble(
             n_neurons=n_neurons,
             dimensions=dimensions,
@@ -134,7 +135,7 @@ def simulate_network_ref(n_neurons,
                          ens_x,
                          transform=tau * B.reshape(-1, 1),
                          synapse=tau)
-        nengo.Connection(ens_x,
+        C = nengo.Connection(ens_x,
                          ens_x,
                          transform=tau * A + np.eye(A.shape[0]),
                          synapse=tau)
@@ -143,6 +144,8 @@ def simulate_network_ref(n_neurons,
 
     # Run the simulation
     with nengo.Simulator(model, progress_bar=False) as sim:
+        if return_weights:
+            return sim.data[ens_x].encoders @ sim.data[C].weights
         sim.run(len(xs) * dt)
 
     return sim.trange(), np.copy(sim.data[p_x])
@@ -170,7 +173,7 @@ def mk_cosine_bartlett_basis_with_spread(q,
         (1.0 - ts[None, :] / t1[:, None]) * (ts[None, :] <= t1[:, None]))
 
 
-def execute_single(idcs, return_test_data=False, inject_xs_test=None):
+def execute_single(idcs, return_weights=False, inject_xs_test=None):
     i_solver_modes, i_modes, i_qs, i_neurons, i_repeat = idcs
 
     # Set the random seed, just in case something uses np.random
@@ -243,7 +246,21 @@ def execute_single(idcs, return_test_data=False, inject_xs_test=None):
             biased=biased,
             bias_cstr_count=bias_cstr_count,
             rng=rng,
-            silent=not return_test_data)
+            silent=not return_weights)
+        if return_weights:
+            return W_rec
+    elif return_weights:
+        return simulate_network_ref(n_neurons=n_neurons,
+                                    dimensions=n_temporal_dimensions,
+                                    gain=gains,
+                                    bias=biases,
+                                    encoders=Es,
+                                    A=A,
+                                    B=B,
+                                    xs=None,
+                                    dt=DT,
+                                    tau=TAU,
+                                    return_weights=True)
 
     # Simulate the network
     def run_simulation(xs):
@@ -278,7 +295,8 @@ def execute_single(idcs, return_test_data=False, inject_xs_test=None):
     for i_xs_sigma in range(N_XS_SIGMA_TEST):
         for i_repeat_test in range(N_REPEAT_TEST):
             # Use the same test signals for each network
-            rng = np.random.RandomState(340043 * i_repeat + 2814 * i_repeat_test + 213)
+            rng = np.random.RandomState(340043 * i_repeat +
+                                        2814 * i_repeat_test + 213)
 
             # Generate a training and a test signal for the delay and tuning error
             # computation
@@ -350,16 +368,11 @@ def execute_single(idcs, return_test_data=False, inject_xs_test=None):
                 xs_test_tar_flt = nengo.Lowpass(TAU_DECODE).filtfilt(
                     xs_test_tar, dt=DT)
                 xs_test_dec = As_test_flt @ D
-                if return_test_data:
-                    xs_test_decs.append(xs_test_dec)
 
                 rmse = np.sqrt(
                     np.mean(np.square(xs_test_dec - xs_test_tar_flt)))
                 Es_delay[i_xs_sigma, i_repeat_test,
                          i_delay] = rmse / xs_test_rms
-
-    if return_test_data:
-        return ts, xs_test, xs_test_flt, xs_test_decs, As_test, As_test_flt, Es_tuning, Es_delay
 
     return idcs, Es_tuning, Es_delay
 
@@ -382,12 +395,14 @@ def main():
     assert partition_idx >= 0
 
     if n_partitions == 1:
-        fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data',
-                          "evaluate_synaptic_weight_computation_freq_sweep.h5")
+        fn = os.path.join(
+            os.path.dirname(__file__), '..', '..', '..', 'data',
+            "evaluate_synaptic_weight_computation_freq_sweep.h5")
     else:
         fn = os.path.join(
             os.path.dirname(__file__), '..', '..', '..', 'data',
-            "evaluate_synaptic_weight_computation_freq_sweep_{}.h5".format(partition_idx))
+            "evaluate_synaptic_weight_computation_freq_sweep_{}.h5".format(
+                partition_idx))
 
     with h5py.File(fn, 'w') as f:
         f.attrs["solver_modes"] = json.dumps(SOLVER_MODES)

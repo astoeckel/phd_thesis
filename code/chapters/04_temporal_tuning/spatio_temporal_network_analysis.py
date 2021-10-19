@@ -27,7 +27,8 @@ def shift(xs, t, dt=1e-3):
 
 datafile = os.path.join(
     os.path.dirname(__file__),
-    "../../../data/manual/chapters/04_temporal_tuning/212fd1234166fc1b_spatio_temporal_network.h5"
+    #"../../../data/manual/chapters/04_temporal_tuning/212fd1234166fc1b_spatio_temporal_network.h5"
+    "../../../data/spatio_temporal_network_nef.h5",
 )
 
 with h5py.File(datafile, "r") as f:
@@ -45,10 +46,10 @@ As_test_flt = nengo.Lowpass(100e-3).filtfilt(As_test)
 
 N_DIMS = 2
 
-DELAYS_1D = np.linspace(0, 1, 101 + 1)[:-1]
+DELAYS_1D = np.linspace(0, 1, 11 + 1)[:-1]
 N_DELAYS_1D = len(DELAYS_1D)
 
-DELAYS_2D = np.linspace(0, 1, 31 + 1)[:-1]
+DELAYS_2D = np.linspace(0, 1, 11 + 1)[:-1]
 N_DELAYS_2D = len(DELAYS_2D)
 
 
@@ -89,7 +90,7 @@ def main():
     params_1d = list(itertools.product(range(N_DIMS), range(N_DELAYS_1D)))
     errs_1d = np.zeros((N_DIMS, N_DELAYS_1D))
     with env_guard.SingleThreadEnvGuard():
-        with multiprocessing.get_context('spawn').Pool(16) as pool:
+        with multiprocessing.get_context('spawn').Pool(8) as pool:
             for idcs, E in tqdm.tqdm(pool.imap_unordered(
                     run_1d_delay_decoder_experiment, params_1d),
                                      total=len(params_1d)):
@@ -98,14 +99,14 @@ def main():
     params_2d = list(itertools.product(range(N_DELAYS_2D), range(N_DELAYS_2D)))
     errs_2d = np.zeros((N_DELAYS_2D, N_DELAYS_2D))
     with env_guard.SingleThreadEnvGuard():
-        with multiprocessing.get_context('spawn').Pool(16) as pool:
+        with multiprocessing.get_context('spawn').Pool(8) as pool:
             for idcs, E in tqdm.tqdm(pool.imap_unordered(
                     run_2d_delayed_multiplication_experiment, params_2d),
                                      total=len(params_2d)):
                 errs_2d[idcs] = E
 
     fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data',
-                      "spatio_temporal_network_analysis.h5")
+                      "spatio_temporal_network_analysis_nef.h5")
 
     with h5py.File(fn, "w") as f:
         f.create_dataset("delays_1d", data=DELAYS_1D)

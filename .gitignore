@@ -27,5 +27,6 @@ perf.data.old
 bibliography.bib
 *.blend1
 .datafile_cache.json
+.datafile_cache
 .gdb_history
 

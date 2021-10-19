@@ -64,7 +64,7 @@ We illustrate this concept in \Cref{fig:lti_basis_trafo_a,fig:lti_basis_trafo_b,
 	{\phantomsubcaption\label{fig:lti_basis_trafo_c}}%
 	{\phantomsubcaption\label{fig:lti_basis_trafo_d}}%
 	\kern-158mm\includegraphics{media/chapters/04_temporal_tuning/lti_basis_trafo_plots.pdf}\\[0.3cm]
-	\caption[Using an LTI system sliding basis transformation]{Using an LTI system $\dot{\vec m}(t) = \mat A \vec m(t) + \mat B u(t)$  as a sliding-window spectrum.
+	\caption[Using an LTI system to compute a sliding basis transformation]{Using an LTI system $\dot{\vec m}(t) = \mat A \vec m(t) + \mat B u(t)$ to compute a sliding-window spectrum.
 	\textbf{(A)} Any LTI system can either be implemented as using an integrator with feedback, or, as is depicted in \textbf{(B)}, by convolving $u(t)$ with the impulse response $\mathfrak{b}_i$ of each state dimension.
 	\textbf{(C)} Assume that $\mathfrak{b}_i$ was a basis function over a window $[0, \theta]$.
 	Then, each state dimension $m_i(t)$ is the convolution between $\mathfrak{b}_i$ and a slice of the input signal $u_{[t - \theta, t]}$.
@@ -196,7 +196,7 @@ This basis is depicted in \Cref{fig:legendre_series}. It spans $L^2(0, 1)$, just
 \subsubsection{Discrete Orthonormal Function Bases}
 Continuous basis functions are useful for mathematical analysis.
 However, in practice, we often divide the interval $[0, 1]$ into $N$ individual samples.
-Specifically, we use such discrete bases in our numerical method for deriving $\mat A$, $\mat B$, and at the end of this chapter in \Cref{sec:applications_to_ml} when we discuss applications to machine learning.
+Specifically, we use such discrete bases in our numerical method for deriving $\mat A$, $\mat B$, and at the end of this chapter in \Cref{sec:applications_to_ml}, when we discuss applications to machine learning.
 
 Of course, from a mathematical perspective, the notion of \enquote{discrete function bases} is at most moderately exciting---once we discretise functions over an interval, we end up with finite-dimensional vector spaces over $\mathbb{R}^N$.
 Still, there is some room for defining the concept of \enquote{discrete function bases} in relation to their continuous counterparts more rigorously.
@@ -349,17 +349,17 @@ We discuss this more thoroughly for continuous bases in the next subsection.
 For now, in the discrete case, assume that the impulse response of the discrete LTI system $\mat{\tilde A}$, $\mat{\tilde B}$ perfectly reconstructs the basis transformation matrix $\mat E \in \mathbb{R}^{q \times N}$.
 We can then reconstruct the input sample $u_{t - N + 1}$ from $\vec m_t$ using the Moore-Penrose pseudo-inverse $\mat E^+$:
 \begin{align*}
- 	u_{t - N + 1} &= (\mat E^+)_{N} \vec m_t \,, & \text{where } \mat E^+ = (\mat E^T \mat E)^{-1} \mat E^T\,.
+	u_{t - N + 1} &= (\mat E^+)_{N} \vec m_t \,, & \text{where } \mat E^+ = (\mat E^T \mat E)^{-1} \mat E^T\,.
 \end{align*}
-Let \enquote{$\odot$} denote the outer product.
+Let \enquote{$\otimes$} denote the outer product.
 The contribution of $u_{t - N + 1}$ to the state $\vec m_t$ is then given as
 \begin{align*}
- 	\vec m'_t &= ( \mat E^T)_N u_{t - N + 1} = ( \mat E^T)_N \odot (\mat E^+)_N\vec m_t \,.
+ 	\vec m'_t &= ( \mat E^T)_N u_{t - N + 1} = ( \mat E^T)_N \otimes (\mat E^+)_N\vec m_t \,.
 \end{align*}
 Sequentially interleaving an \enquote{update} and an \enquote{erasure} step we obtain
 \begin{align}
  	\vec m_t &\gets \mat{\tilde A} \vec m_{t - 1} + \mat{\tilde B} u_t \,, \tag{Update}\\
- 	\vec m_t &\gets \vec m_t - \vec m'_t = ( \mat I - ( \mat E^T )_N \odot (\mat E^+)_N ) \vec m_t \,. & \tag{Erasure}\\[-0.5em]
+ 	\vec m_t &\gets \vec m_t - \vec m'_t = ( \mat I - ( \mat E^T )_N \otimes (\mat E^+)_N ) \vec m_t \,. & \tag{Erasure}\\[-0.5em]
  	\cline{1-2}
  	\vec m_t &\gets
  		(\mat I - ( \mat E^T )_N \odot (\mat E^+)_N ) \mat{\tilde A} \vec m_t
@@ -407,8 +407,8 @@ This comes at the cost of the new basis being non-orthonormal, and thus informat
 For both this modified Fourier and Legendre basis, our method indeed approximates a rectangle window, yet introduces ringing artefacts over $[0, \theta]$.
 The method stabilises the cosine basis, but there are still residual oscillations for $t > \theta$---this is likely because the cosine basis is not realised well by our LTI system (see previous experiments).
 
-The feedback matrices $\mat A$ are depicted in \Cref{fig:construct_lti_feedback_matrices}.
-Their regular $\mat A$ suggests that we might be able to construct these matrices analytically; for example, the Fourier system feedback matrices merely construct a set of harmonic oscillators.
+The feedback matrices $\mat A$ are depicted in \Cref{fig:construct_lti_feedback_matrices}; their regularity suggests that we might be able to construct these matrices analytically.
+For example, the Fourier system feedback matrices describe harmonic oscillators, with information erasure introducing a dampening coupling.
 As we show next, the Legendre system can similarly be derived from first principles.
 
 \subsection{Closed-Form Solution for the Legendre Basis}
@@ -419,34 +419,6 @@ For example, as we show next, we can analytically construct an LTI system ${\mat
 In particular, we use a continuous variant of our above information erasure technique to construct a dampening term $\mat \Gamma$ that limits the impulse response of the system to $[0, \theta]$.
 Subtracting $\mat \Gamma$ from $\mat A$ we obtain a rescaled version of the LTI system underlying the Legendre Delay Network (LDN; \cite{voelker2018improving}).
 This idea is similar to \citet{gu2020hippo} and can, as we discuss in more detail in \citet{stockel2021constructing}, be applied to arbitrary polynomial bases.
-
-%\begin{figure}
-%	\small
-%	\includegraphics{media/chapters/04_temporal_tuning/leg_sys_example_header.pdf}
-%	\begin{minipage}[b]{0.5\textwidth}
-%	\begin{align*}
-%		\hspace*{0.5em}{\mat A} &= \begin{pmatrix}
-%			      0    &	      0    &	      0    &	      0    &	      0    &	      0    \\
-%			\cPos{2}   &	      0    &	      0    &	      0    &	      0    &	      0    \\
-%			      0    &	\cPos{6}   &	      0    &	      0    &	      0    &	      0    \\
-%			\cPos{2}   &	      0    &	\cPos{10}  &	      0    &	      0    &	      0    \\
-%			      0    &	\cPos{6}   &	      0    &	\cPos{14}  &	      0    &	      0    \\
-%			\cPos{2}   &	      0    &	\cPos{10}  &	      0    &	\cPos{18}  &	      0
-%		\end{pmatrix} &
-%		{\mat B} &= \begin{pmatrix}
-%			\cPos{1}   \\
-%			\cNeg{-1}  \\
-%			\cPos{1}   \\
-%			\cNeg{-1}  \\
-%			\cPos{1}   \\
-%			\cNeg{-1}
-%		\end{pmatrix}\\[0.475em]
-%	\end{align*}
-%	\end{minipage}%
-%	\includegraphics{media/chapters/04_temporal_tuning/leg_sys_example.pdf}
-%	\caption[Example of the Legendre system and the corresponding impulse response]{Example of the Legendre system for $q = 6$ and $\theta = 1$ \textbf{(A)} and the corresponding impulse response \textbf{(B)}. The impulse response of the system (coloured lines) perfectly traces out the first six shifted Legendre polynomials $\tilde P_i(\theta)$ normalised to $\tilde P_i(1) = 1$ (black dotted lines).}
-%	\label{fig:leg_sys_example}
-%\end{figure}
 
 \begin{restatable}{lemma}{LemLegSys}
 The impulse response of the linear time-invariant system $\theta \dot{\vec m}(t) = {\mat A} \vec m(t) + {\mat B} u(t)$ with $\vec m \in \mathbb{R}^q$, ${\mat A} \in \mathbb{R}^{q \times q}$ and ${\mat B} \in \mathbb{R}^{q \times 1}$
@@ -516,14 +488,14 @@ Then $\vec d(\theta') = (d_0(\theta'), \ldots, d_{q - 1}(\theta'))$ is called a 
 	\caption[Feedback matrices and impulse responses of the Legendre system]{Feedback matrices and impulse responses of the Legendre system.
 	\emph{Left:} The feedback matrix $\mat A$ of the corresponding system for $q = 6$ and $\theta = \SI{1}{\second}$. \emph{Right:} The corresponding impulse response.
 	\textbf{(A)} The undampened Legendre system as described in \Cref{lem:leg_sys}.
-	\textbf{(B)} The Legendre system with approximate rectangle window (cf.~\Cref{eqn:ldn_system}).¸
+	\textbf{(B)} The Legendre system with approximate rectangle window (cf.~eq.~\ref{eqn:ldn_system}).
 	}
 	\label{fig:ldn_example}
 \end{figure}
 
 Given the concept of a \enquote{delay decoder} we can construct an approximate version of the windowed LTI system in \cref{lem:rectangle_window} that reconstructs $u(t - \theta)$ from the system state $\vec m(t)$
 \begin{align}
-	\frac{\mathrm{d}}{\mathrm{d}t} \vec m(t)
+	\dot{\vec m}(t)
 		&= \mat A \vec m(t) + \mat B u(t) - \vec e(\theta) \langle \vec d(\theta), \vec m(t) \rangle
 		 = (\mat A - \mat \Gamma) \vec m(t) + \mat B u(t)
 	\label{eqn:information_erasure_approx} \,,
@@ -534,22 +506,20 @@ For the shifted Legendre polynomials $\tilde P_i(t \theta^{-1})$ with $\tilde P_
 	\big( \mat{\Gamma} \big)_{ij} &= e_i(\theta) d_j(\theta) = \frac{2j + 1}{\theta} \tilde P_{i - 1}(\theta \theta^{-1}) \tilde P_{j - 1}(\theta \theta^{-1}) = \frac{2j + 1}{\theta} \,.
 	\label{eqn:legendre_delay_reencoder}
 \end{align}
-Correspondingly, the feedback matrix $\mat A'$ of the LTI system generating the Legendre polynomials with approximated rectangle window is given as
+Correspondingly, the feedback matrix $\mat A' = \mat A - \mat \Gamma$ of the LTI system generating the Legendre polynomials with approximated rectangle window is given as
 \begin{align}
-	\begin{aligned}
-	\big( \mat A' \big)_{ij} &= (2j - 1) \begin{cases}
-		-1 & \text{if } i \leq j \text{ or } i + j \text{ is even} \,, \\
-		 1 & \text{if } i > j \text{ and } i + j \text{ is odd} \,,\\
+	\big( \mat A \big)_{ij} &= \frac{(2j - 1)}{\theta} \begin{cases}
+		-1 & \text{if } i \leq j \,, \\
+		(-1)^{i - j + 1} & \text{if } i > j  \,,\\
 	\end{cases} &
-	\big( \mat B' \big)_i &= (-1)^{i + 1} \,.
-	\end{aligned}
+	\big( \mat B \big)_i &= \frac{(-1)^{i + 1}}{\theta} \,.
 	\label{eqn:ldn_system}
 \end{align}
 The impulse response for $q = 6$ of this system is depicted in \Cref{fig:ldn_example_b}.
 
 If we divide each state dimension by $(2 i + 1)$, we obtain exactly the same system as the one described by \citet[Section 6.3.1, pp.~133-135]{voelker2019} in the context of the Legendre delay network.
-The LDN system has been derived from the Padé approximants of a Laplace domain delay $e^{-\theta s}$ and a subsequent conditioning coordinate transformation \citep{voelker2018improving}.
-%\Citet{voelker2019} points out that the impulse response of the linear time-invariant (LTI) system underlying the delay network traces out the shifted Legendre polynomials.
+Notably, this division operation simply swaps the $(2 j - 1)$ scaling factor in $\mat A$ with $(2 i - 1)$ (cf.~eq.~\ref{eqn:ldn_system_euler}).
+The LDN system has been derived from the Padé approximants of a Laplace domain delay $e^{-\theta s}$ and a subsequent coordinate transformation \citep{voelker2018improving}.
 From this perspective, the similarity of the impulse response to the Legendre polynomials is rather coincidental; our derivation strengthens the connection between the Legendre polynomials and the LDN.
 
 
@@ -654,7 +624,7 @@ As was already suggested by our earlier principal component analysis (cf.~\Cref{
 	{\phantomsubcaption\label{fig:delay_analysis_freq_sweep_b}}%
 	{\phantomsubcaption\label{fig:delay_analysis_freq_sweep_c}}%
 	\caption[Mean delay decoding error over the input signal frequency]{Mean delay decoding error over the input signal frequency.
-	Depicted is the median over $N = 100$ input sequences $u(t)$ of the mean delay decoding error with respect to the tested $\theta' / \theta \in [0, 1]$; $q$ is fixed at $q = 31$.
+	Depicted is the median over $N = 100$ input signals $u(t)$ of the mean delay decoding error with respect to the tested $\theta' / \theta \in [0, 1]$; $q$ is fixed at $q = 31$.
 	Shaded areas (barely visible) are the $25$th and $75$th percentile.
 	%LTI systems realising the modified Fourier basis outperform LTI systems generating the Legendre polynomials.
 	}

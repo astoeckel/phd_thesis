@@ -629,8 +629,10 @@ def solve_for_recurrent_population_weights_with_spatial_encoder(
         # post-neuron at time zero
         As_pre = np.zeros((N_neurons, N_flts_rec))
         for i_pre in range(N_neurons):
-            A_pre = G(gains[i_pre] *
-                      np.einsum('Ndq,d,q->N', ms_flt, Es[i_pre], TEs[i_pre]) +
+#            A_pre = G(gains[i_pre] *
+#                      np.einsum('Ndq,d,q->N', ms_flt, Es[i_pre], TEs[i_pre]) +
+#                      biases[i_pre])
+            A_pre = G(gains[i_pre] * ((ms_flt @ TEs[i_pre]) @ Es[i_pre]) +
                       biases[i_pre])
             for i_flt, h in enumerate(hs_rec):
                 As_pre[i_pre, i_flt] = np.convolve(A_pre, h, 'valid') * dt

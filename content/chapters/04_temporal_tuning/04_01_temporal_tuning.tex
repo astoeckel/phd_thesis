@@ -33,6 +33,7 @@ In this section, we build upon a linear filter model of temporal tuning \citep{w
 We first review some types of temporal response patterns observed in biology, describe our extension to the \NEF, and then discuss examples of how this theory can be used in practice.
 
 \subsection{Time Cells and Temporal Tuning}
+\label{sec:temporal_tuning_biology}
 
 \begin{figure}
 	\centering
@@ -109,9 +110,9 @@ As time progresses, the population activities tend to become more similar (\Cref
 		\sum_{i = 1}^q w_i e^{-\frac{t}{\tau}}
 	\quad \text{for } t \geq 0 \text{ and where } \alpha_\theta \text{ is such that } \int_{0}^\infty h_\theta(t) \,dt = 1 \,.
 \end{align*}
-This model is biologically plausible, reproduces empirical data, and has been proposed as a model for spatial representations in hippocampus as well.
-Still, as we discuss below, there are theoretical reasons why relying on sums of exponential filters can be suboptimal.
-\Citet{voelker2018improving} demonstrate that the recurrent Legendre Delay Network (LDN) similarly reproduces time cell data, while at the same time being mathematically optimal.
+This model is biologically plausible, qualitatively reproduces empirical data, and has been proposed as a model for spatial representations in hippocampus as well.
+Still, as we discuss below, there are theoretical reasons why relying on linear combinations of exponential filters can be suboptimal.
+\Citet{voelker2018improving} demonstrate that the recurrent Legendre Delay Network (LDN) similarly reproduces time cell data (see \Cref{sec:spiking_temporal_bases}).
 
 \subsubsection{Space-time receptive fields in visual cortex}
 
@@ -135,7 +136,7 @@ Still, as we discuss below, there are theoretical reasons why relying on sums of
 Linear models of simple cells in visual cortex were our main motivation for modelling tuning curves in the NEF as the dot-product between the stimulus $\vec x$ and a normalised encoder $\vec e$ (cf.~\Cref{sec:neural_tuning}).
 Similarly, linear models of the temporal behaviour of simple cells---beyond the previously discussed phasic response---serve as our basis for extending the NEF toward temporal tuning.
 
-The basic observation is that some cells in visual cortex reach their maximum firing rate for specific stimulus sequences.
+The basic observation is that some cells in visual cortex reach their maximum firing rate for specific stimulus signals.
 For example, some cells only react to edges moving in a certain direction at a specific velocity.
 %Historically, models of these directionality effects relied on nonlinear interactions in small model circuits \citep[e.g.,][]{emerson1977simple}.
 %Theoretical work by \citet{watson1983look,adelson1985spatiotemporal} suggested that neural activity could instead be modelled linearly.
@@ -172,12 +173,13 @@ Of course, this definition includes a wide range of imaginable functions and is 
 One particular class of temporal tuning curves that fits the NEF well are \enquote{linear temporal tuning curves}, inspired by the space-time receptive fields discussed above.
 
 \begin{definition}
+	\label{def:linear_temporal_tuning}
 	\emph{Linear temporal tuning curves} are a special class of temporal tuning curves.
 	Let $G[J]$ be a neural response curve, then the average activity of the $i$th post neuron is modelled as
 	\begin{align}
 		a_i(\vec{\mathfrak{x}})
-			= G\left[ J_i \left( \int_{0}^\infty \!\!\! \big\langle \vec{\mathfrak{e}}_i(\tau), \vec{\mathfrak{x}}(-\tau) \big\rangle 	\,\mathit{d\tau} \right) \right]
-		= G\left[ \alpha_i \! \int_{0}^\infty \!\!\! \big\langle \vec{\mathfrak{e}}_i(\tau), \vec{\mathfrak{x}}(-\tau) \big\rangle \,\mathit{d\tau} + \beta_i \right] \,,
+			= G\left[ J_i \left( \int_{0}^\infty \!\!\! \big\langle \vec{\mathfrak{e}}_i(\tau), \vec{\mathfrak{x}}(-\tau) \big\rangle 	\,\mathrm{d}\tau \right) \right]
+		= G\left[ \alpha_i \! \int_{0}^\infty \!\!\! \big\langle \vec{\mathfrak{e}}_i(\tau), \vec{\mathfrak{x}}(-\tau) \big\rangle \,\mathrm{d}\tau + \beta_i \right] \,,
 		\label{eqn:temporal_tuning_curve}
 	\end{align}
 	where the \emph{temporal encoder} $\vec{\mathfrak{e}}_i$ is a function $\vec{\mathfrak{e}}_i : \mathbb{R}^+ \longrightarrow \mathbb{R}^d$ over time. The temporal encoder describes both an impulse response and a spatial receptive field.
@@ -229,7 +231,7 @@ However, unless there are other temporal resources in the network---such as dive
 Of course, this raises the question of how to actually realise some desired temporal tuning.
 At least in theory, we could minimise the following least-squares loss function in current-space over the connection weights $w_{ij}$.
 
-Let $a_j(\mathfrak{x}, t)$ be the activity of the $j$th pre-neuron at time $t \leq 0$, $J_i$ the current-translation function, $h_{ij}$ the synaptic filter for the connection onto the $i$th post-neuron, and let $\mathfrak{x}_k : \mathbb{R}^- \longrightarrow \mathbb{X}$ be one of $N$ random input sequences with $\lim_{t \to -\infty} \mathfrak{x}_k(t) = 0$ and finite norm $\|\mathfrak{x}_k\|$.%
+Let $a_j(\mathfrak{x}, t)$ be the activity of the $j$th pre-neuron at time $t \leq 0$, $J_i$ the current-translation function, $h_{ij}$ the synaptic filter for the connection onto the $i$th post-neuron, and let $\mathfrak{x}_k : \mathbb{R}^- \longrightarrow \mathbb{X}$ be one of $N$ random input signals with $\lim_{t \to -\infty} \mathfrak{x}_k(t) = 0$ and finite norm $\|\mathfrak{x}_k\|$.%
 \footnote{The finite function norm is required to guarantee that $E$ is finite. For mathematical soundness, we could further restrict $\mathfrak{x}_k$ to some sane function space, e.g., the set of multivariate analytic functions.
 %However, as with most mathematical nitpickery, this does not really matter in practice.
 }
@@ -254,7 +256,7 @@ In practice, each $\mathfrak{x}_k$ must be of finite length and sampled.
 However, once all quantities have been appropriately sampled, minimising \cref{eqn:weight_optimise_currents_temporal} is ultimately the same optimisation problem as the one discussed in \Cref{sec:nef_subthreshold}.
 %Without subthreshold relaxation (i.e., $\mathcal{E}(j_1, j_2) = j_1 - j_2$), this loss function is in linear least-squares form.
 
-Instead, the primary challenge when solving this optimisation problem lies in selecting suitable input sequences $\mathfrak{x}_k$ \citep[cf.][Section~10.2.5]{verhaegen2007filtering}.
+Instead, the primary challenge when solving this optimisation problem lies in selecting suitable input signals $\mathfrak{x}_k$ \citep[cf.][Section~10.2.5]{verhaegen2007filtering}.
 This is particularly important if the desired dynamics cannot be realised precisely; the frequency content of the training signals then determines the input regime over which the approximation works well.
 We discuss this in more detail in the context of recurrent networks; in our examples we generally use low-pass filtered white noise as $\mathfrak{x}_k$.
 
@@ -378,7 +380,7 @@ In other words, temporal tuning curves are a direct generalisation of the standa
 		& \mathfrak{e}_i(t) &= \big(\!\exp( \mat A t ) \mat B \big)_i \,,
 		& h(t) &= \tau^{-1} e^{-t \tau^{-1}} \,.
 	\end{align*}
-	Let $\mathfrak{x}_k : \mathbb{R}^- \to \mathbb{R}$ be one of $N \geq n + 1$ arbitrary (with some mild constraints; see proof) input sequences.
+	Let $\mathfrak{x}_k : \mathbb{R}^- \to \mathbb{R}$ be one of $N \geq n + 1$ arbitrary (with some mild constraints; see proof) input signals.
 	If all $\mathfrak{e}_i$ and $\mathfrak{x}_k$ are pairwise linearly independent, $\mathfrak{e}_i$ the following least-squares loss has a unique minimum at $(b'_{i}, a'_{i, 1}, \ldots, a'_{in}) = ( \mat B', \mat A' )_i$ for all $i \in \{1, \ldots, n\}$, where $\mat A' = \tau \mat A + \mat I$, $\mat B' = \tau \mat B$:
 	\begin{align*}
 		E &=\sum_{k = 1}^{N} \left(
@@ -403,7 +405,7 @@ We provide a proof of this in \Cref{app:lstsq_nef_equivalence}.
 		Realising LTI systems using temporal tuning curves.
 		The depicted networks possess homogeneous first-order low-pass filters as synaptic filters.
 		The computed matrices $\mat A$, $\mat B$ are equal to the matrices obtained using the NEF dynamics principle down to two decimal places.
-		We use $N = 1000$ input sequences $\mathfrak{x}_k$ of length $T = \SI{10}{\second}$ sampled at $\Delta t = \SI{1}{\milli\second}$ consisting of white noise filtered with a second-order low-pass filter (time constant $\vartheta = \SI{100}{\milli\second}$).
+		We use $N = 1000$ input signals $\mathfrak{x}_k$ of length $T = \SI{10}{\second}$ sampled at $\Delta t = \SI{1}{\milli\second}$ consisting of white noise filtered with a second-order low-pass filter (time constant $\vartheta = \SI{100}{\milli\second}$).
 		Error values $E$ are the \NRMSE.
 		\textbf{(A)} Realising an integrator (step impulse-response).
 		Note that the system settles at a value slightly smaller than one for a unit pulse input (\emph{left}) due to the aforementioned imprecisions. For a white-noise input (\emph{right}) the result is effectively indistinguishable from the ground-truth solution.
@@ -461,7 +463,7 @@ Second, and most importantly, the strength of our approach lies in being agnosti
 	See \Cref{fig:recurrence_examples_2} for the architecture and the minimum/maximum filter time constants in each path.
 	Dashed line is a reference network with homogeneous first-order filters ($\tau = \SI{100}{\milli\second}$).
 	Shaded areas are the $25$th and $75$percentiles.
-	Same training procedure as in \Cref{fig:recurrence_examples_1}; training sequences $\mathfrak{x}_k$ are white noise filtered with a second-order low-pass filter with time constant \SI{100}{\milli\second}.
+	Same training procedure as in \Cref{fig:recurrence_examples_1}; training signals $\mathfrak{x}_k$ are white noise filtered with a second-order low-pass filter with time constant \SI{100}{\milli\second}.
 	\textbf{(A)}~Implementing an integrator.
 	Recurrence is required to implement the integrator.
 	\textbf{(B)}~Emulating a $\SI{10}{\milli\second}$ first-order low-pass well requires recurrence and two or more filters per path.
@@ -496,8 +498,8 @@ Numerically solving the weight optimisation problem in \cref{eqn:weight_optimise
 \begin{figure}
 	\centering
 	\includegraphics{media/chapters/04_temporal_tuning/heterogeneous_recurrence_exploration_xs_flt.pdf}
-	\caption[Effect of the input sequence distribution the system error]{Effect of the input sequence distribution the system error.
-	Same setup and legend as in \Cref{fig:heterogeneous_recurrence_exploration}, but for a recurrent network with three filters and with input sequences $\mathfrak{x}_k$ of varying bandwidth.
+	\caption[Effect of the input signal distribution the system error]{Effect of the input signal distribution the system error.
+	Same setup and legend as in \Cref{fig:heterogeneous_recurrence_exploration}, but for a recurrent network with three filters and with input signals $\mathfrak{x}_k$ of varying bandwidth.
 	Inputs are generated by low-pass filtering white noise with a second-order low-pass; the time-constant $\vartheta$ of that filter corresponds to the different line colours (dark blue corresponds high-bandwidth signals, orange to low-frequency signals).
 	Data is the median over $1000$ trials, shaded areas are the $25$th and $75$th percentile.
 	\textbf{(A)}~For the integrator, there is a trade-off between lower errors in a small frequency range, and larger, but consistent errors.
@@ -509,10 +511,10 @@ Numerically solving the weight optimisation problem in \cref{eqn:weight_optimise
 \subsubsection{Impact of the training samples $\mathfrak{x}_k$}
 The emphasis on \enquote{approximate} is important here.
 In contrast to the heterogeneous networks with first-order synaptic filter discussed in the context of \Cref{thm:temporal_lstsq}, there are no guarantees that the final network dynamics are \emph{exactly} the desired dynamics.
-Moreover, the ability of the network to generalise depends on the input sequences $\mathfrak{x}_k$ used for training.
+Moreover, the ability of the network to generalise depends on the input signals $\mathfrak{x}_k$ used for training.
 While this is the norm in most machine learning scenarios, the network in \Cref{thm:temporal_lstsq} did not have this constraint (cf.~\Cref{app:temporal_tuning_proofs}).
 
-We explore the effect of the training sequences on the final network in \Cref{fig:heterogeneous_recurrence_exploration_xs_flt}.
+We explore the effect of the training signals on the final network in \Cref{fig:heterogeneous_recurrence_exploration_xs_flt}.
 Specifically, we generate $\mathfrak{x}_k$ with different frequency content by varying the time-constant $\vartheta$ of the second-order low-pass filter that is applied to the generated white noise.
 Unsurprisingly, only supplying low-frequency inputs (i.e., using a large $\vartheta$) results in networks that achieve low errors for low-frequency inputs.
 A more wide-band input (i.e., using a small $\vartheta$) results in a compromise-solution with smaller errors for wide-band inputs, but (at least in the case of the integrator) both slightly higher errors for low-frequency inputs.
@@ -522,7 +524,7 @@ When solving for weights in a recurrent system using \cref{eqn:weight_optimise_c
 While, judging from our experience, exponentially decaying temporal tuning curves $\mathfrak{e}_i(t)$ result in stable network, it would be good to be able to characterise this more thoroughly.
 
 While we are still working on a more thorough analysis, we can at least draw some interesting parallels to the problem of least-squares system identification \citep[cf.][specifically Chapters~7-10]{verhaegen2007filtering}.
-That is, we can treat the desired dynamics $\mathfrak{e}_i(t)$ as if they were the output of a black-box system in response to our input sequences $\vec{\mathfrak{x}}_k(t)$.
+That is, we can treat the desired dynamics $\mathfrak{e}_i(t)$ as if they were the output of a black-box system in response to our input signals $\vec{\mathfrak{x}}_k(t)$.
 Our goal is to find model parameters $w_{ij}$ that predict the observed output.%
 \footnote{In our specific system identification problem is less complex than a general problem.
 We directly measure the state, and we do not have instantaneous impulse responses.

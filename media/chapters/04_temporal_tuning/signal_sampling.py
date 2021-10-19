@@ -38,8 +38,17 @@ def H_evelope(q, sigma=2.0, T=T):
 
 def mk_sig(ps):
     q = H.shape[0]
-    xi = ps * np.random.normal(0, 1, q)
-    return xi, H.T @ xi
+    X_F = ps * np.random.normal(0, 1, q)
+
+    # Generate the Fourier coefficients, scale the function to an RMS of 0.5
+    xs = (H.T @ X_F)[::-1]  # This could be an FFT
+    peak_min, peak_max = np.min(xs), np.max(xs)
+    offs = -0.5 * (peak_max + peak_min)
+    scale = 2.0 / (peak_max - peak_min)
+    X_F[0] += offs
+    X_F *= scale
+
+    return X_F, H.T @ X_F
 
 
 def power_spectrum(xi):
@@ -77,10 +86,10 @@ def draw_circle(ax):
 
 fig, axs = plt.subplots(2,
                         4,
-                        figsize=(7.5, 5.0),
+                        figsize=(7.45, 4.25),
                         gridspec_kw={
                             "wspace": 0.5,
-                            "hspace": 0.7,
+                            "hspace": 0.45,
                             "width_ratios": [3, 3, 3, 1]
                         })
 
@@ -102,7 +111,7 @@ for i in range(2):
                             ξ / dt)
             xs = (H.T @ xi)[::-1]
         else:
-            xs = xs[::-1] * 2.25
+            xs = xs[::-1]
 
         a = np.array([np.convolve(xs, M[:, j], 'valid')[0]
                       for j in range(2)]) * dt
@@ -111,11 +120,12 @@ for i in range(2):
 
     axs[i, 0].plot(fs, 10.0 * np.log10(ps), 'k--', lw=1.0, zorder=100)
     axs[i, 0].set_xlim(fs[0], fs[-1])
-    axs[i, 0].set_xlabel("Frequency $f$ ($\\mathrm{Hz}$)")
-    axs[i, 0].set_ylabel("$|\\chi_f|$ $\\mathrm{(dB)}$")
+    axs[i, 0].set_xlabel("Frequency $F_\\ell$ ($\\mathrm{Hz}$)")
+    axs[i, 0].set_ylabel("$\\sqrt{X_{\\ell - 1}^2 + X_{\ell}^2}$ $\\mathrm{(dB)}$")
     axs[i, 0].set_xlim(0, 4)
-    axs[i, 0].set_ylim(-15, 5)
-    axs[i, 0].set_title("Power spectrum", y=1.05)
+    axs[i, 0].set_ylim(-15, 10)
+    if i == 0:
+        axs[i, 0].set_title("Power spectrum", y=1.05)
 
     fs, Xs = power_spectrum(xi)
     if i == 1:
@@ -143,15 +153,16 @@ for i in range(2):
                        color='grey')
 
     if i == 1:
-        axs[i, 1].plot(ts, xs_orig, color='k', lw=0.5, linestyle='--')
+        axs[i, 1].plot(ts, xs_orig, color='k', lw=0.5, linestyle=':')
     axs[i, 1].plot(ts, xs, color=color, lw=1.0)
     axs[i, 1].set_xlim(0, T)
     axs[i, 1].set_xticks(np.arange(0, 5.1, 2))
     axs[i, 1].set_xticks(np.arange(0, 5.1, 1), minor=True)
     axs[i, 1].set_xlabel("Time $t$ ($\\mathrm{s}$)")
     axs[i, 1].set_ylabel("$\\mathfrak{x}_k(t)$")
-    axs[i, 1].set_ylim(-1.0, 1.0)
-    axs[i, 1].set_title("Time-domain", y=1.05)
+    axs[i, 1].set_ylim(-1.2, 1.2)
+    if i == 0:
+        axs[i, 1].set_title("Time-domain", y=1.05)
 
     draw_circle(axs[i, 2])
     utils.remove_frame(axs[i, 2])
@@ -205,9 +216,10 @@ for i in range(2):
                       lw=1.0,
                       clip_on=False,
                       zorder=104)
-    axs[i, 2].set_title("Basis and encoder projection", y=1.118, x=0.8)
+    if i == 0:
+        axs[i, 2].set_title("Basis and encoder projection", y=1.118, x=0.8)
 
-    text = "$\\hat e_{i}$"
+    text = "$e^\\mathrm{t}_{i}$"
     ha = ("center" if np.abs(e[0]) < 0.1 else
           ("right" if e[0] < 0.0 else "left"))
     va = ("center" if np.abs(e[1]) < 0.1 else
@@ -238,7 +250,7 @@ for i in range(2):
     for pc in violin_parts['bodies']:
         pc.set_facecolor(c3)
 
-    axs[i, 3].set_ylim(-1.0, 1.0)
+    axs[i, 3].set_ylim(-1.2, 1.2)
     axs[i, 3].spines["bottom"].set_visible(False)
     axs[i, 3].set_xticks([])
     axs[i, 3].set_ylabel("")
@@ -252,13 +264,13 @@ for i in range(2):
                       lw=1.0,
                       clip_on=False,
                       zorder=103)
-    axs[i, 3].set_ylabel("$(\\mathfrak{e}_i \\ast \\mathfrak{x}_k)(0)$")
+    axs[i, 3].set_ylabel("$\\langle \\vec{e}^\\mathrm{t}_i, \\vec{x}^\\mathrm{t}_k \\rangle$")
 
 fig.text(0.07, 0.95, "\\textbf{A}", size=12, ha="left", va="baseline")
 fig.text(0.5, 0.95, "\\textbf{Na\\\"ively sampled input signals} $\\mathfrak{x}_k$", ha="center", va="baseline")
 
-fig.text(0.07, 0.465, "\\textbf{B}", size=12, ha="left", va="baseline")
-fig.text(0.5, 0.465, "\\textbf{Sampling with correction}", ha="center", va="baseline")
+fig.text(0.07, 0.45, "\\textbf{B}", size=12, ha="left", va="baseline")
+fig.text(0.5, 0.45, "\\textbf{Uniform activation sampling}", ha="center", va="baseline")
 
 utils.save(fig)
 

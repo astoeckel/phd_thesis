@@ -34,3 +34,306 @@ However, the modified Fourier system still significantly outperforms the LDN.
 	Two stars indicate $p < 0.01$, three stars $p < 0.001$.}
 	\label{fig:delay_analysis_bandlimited}
 \end{figure}
+
+\subsection{Code and Data for the Machine Learning Experiments}
+\label{app:lmu_code}
+
+Below, we provide the source code describing the neural network architectures used in \Cref{sec:lmu_experiments}.
+The code relies on TensorFlow 2.5 \citep{abadi2016tensorflow} and uses its Keras API \citep{chollet2017deep} to describe the network.
+The \texttt{TemporalBasisTrafo} layer is our own work.%
+\footnote{See \url{https://github.com/astoeckel/temporal_basis_transformation_network} for more information.}
+
+\subsubsection{psMNIST}
+
+We use the following code to describe the network performing the psMNIST task:
+\begin{pythoncode}
+q = 468; N = 28 * 28; n = 346; H = mk_basis(q, N)
+model = tf.keras.models.Sequential([
+  tf.keras.layers.Reshape((N, 1)),             # (N, 1)
+  TemporalBasisTrafo(H, units=1),              # (1, q)
+  tf.keras.layers.Dropout(0.5),                # (1, q)
+  tf.keras.layers.Dense(n, activation="relu"), # (1, M)
+  tf.keras.layers.Dense(10, use_bias=False),   # (1, 10)
+  tf.keras.layers.Reshape((10,))               # (10)
+])
+\end{pythoncode}
+Comments \texttt{(Nt, Nd)} indicate the output dimensions of each layer.
+Here, \texttt{Nt} is the number of temporal samples; \texttt{Nd} is the number of spatial dimensions.
+The \texttt{TemporalBasisTrafo} layer consumes $N - 1$ temporal dimensions and converts them into $q$ spatial dimensions, where $N$ and $q$ are determined from the filter matrix $\mat H \in \mathbb{R}^{q \times N}$.
+The function \texttt{mk\_basis} generates a set of $q$ FIR filters of length $N$ corresponding to one of our basis transformation methods.%
+\footnote{We provide a handy library that generates different basis transformation matrices at \url{https://github.com/astoeckel/dlop_ldn_function_bases}. See \citet{stockel2021discrete} for more information.}
+
+\subsubsection{Mackey-Glass}
+
+\begin{figure}
+	\includegraphics{media/chapters/ZC_data/lmu_mackey_glass_filters.pdf}
+	\caption[FIR filters used in the Mackey-Glass experiment]{FIR filters used in the Mackey-Glass experiment. Each filter is three times as long as $q$. The impulse response of the LDN system and the modified Fourier basis extends beyond $q$.}
+	\label{fig:lmu_mackey_glass_filters}
+\end{figure}
+
+The network used for solving the Mackey-Glass task consists of four LMU layers.
+We extend the filter matrix $\mat H$ to be $\texttt{Wm} = 3$ times as long as the window width $N$ (cf.~\Cref{fig:lmu_mackey_glass_filters}).
+This is reflected in the call to the \texttt{mk\_ext\_basis} function and ensures that the ringing artefacts from the LDN and the modified Fourier basis are taken into account.
+The FIR filters for the \enquote{perfect} sliding-window spectra are padded with zeros; this merely introduces superfluous multiplications, but has no further effect on the computation.
+\begin{pythoncode}
+Wm = 3 # Window multiplier; the FIR filter is this times as long as the window
+N_units0, N_units1, N_units2, N_units3 = 1, 10, 10, 10
+N_wnd0, N_wnd1, N_wnd2, N_wnd3 = N_wnds = (17 * Wm, 9 * Wm, 9 * Wm, 5 * Wm)
+N_wnd = N_wnd0 + N_wnd1 + N_wnd2 + N_wnd3 - 3
+q0, q1, q2, q3 = 17, 9, 9, 5
+H0, H1 = mk_ext_basis(q0, N_wnd0 // Wm, Wm), mk_ext_basis(q1, N_wnd1 // Wm, Wm)
+H2, H3 = mk_ext_basis(q2, N_wnd2 // Wm, Wm), mk_ext_basis(q3, N_wnd3 // Wm, Wm)
+model = tf.keras.models.Sequential([
+  tf.keras.layers.Reshape((N_wnd, 1)),
+  # (N_wnd0 + N_wnd1 + N_wnd2 + N_wnd3 - 3, 1)
+  TemporalBasisTrafo(H0, n_units=N_units0),
+  # (N_wnd1 + N_wnd2 + N_wnd3 - 2, q0 * N_units0)
+  tf.keras.layers.Dense(N_units1, activation="relu"),
+  # (N_wnd1 + N_wnd2 + N_wnd3 - 2, N_units1)
+  TemporalBasisTrafo(H1, n_units=N_units1),
+  # (N_wnd2 + N_wnd3 - 1, q1 * N_units1)
+  tf.keras.layers.Dense(N_units2, activation="relu"),
+  # (N_wnd2 + N_wnd3 - 1, N_units2)
+  TemporalBasisTrafo(H2, n_units=N_units2),
+  # (N_wnd3, q2 * N_units2)
+  tf.keras.layers.Dense(N_units3, activation="relu"),
+  # (N_wnd3, N_units3)
+  TemporalBasisTrafo(H3, n_units=N_units3),
+  # (1, q3 * N_units3)
+  tf.keras.layers.Dense(N_pred, use_bias=False), # (1, N_pred)
+  tf.keras.layers.Reshape((N_pred,)) # (N_pred)
+])
+\end{pythoncode}
+Comments \texttt{(Nt, Nd)} indicate the output dimensions of each layer, where \texttt{Nt} is the number of temporal, and \texttt{Nd} the number of spatial dimensions.
+Each \texttt{TemporalBasisTrafo} consumes $\texttt{N\_wndX} - 1$ temporal dimensions, and replaces them by $\texttt{qX} * \texttt{N\_unitsX}$ spatial dimensions.
+
+\begin{figure}
+	\sffamily\small
+	\centering
+	\textbf{psMNIST experiment}\\[0.125cm]
+	\includegraphics{media/chapters/ZC_data/lmu_psmnist_trajs.pdf}\\[0.25cm]
+	\textbf{Mackey-Glass experiment}\\[0.125cm]
+	\includegraphics{media/chapters/ZC_data/lmu_mackey_glass_trajs.pdf}
+	\caption[Learning curves for the psMNIST and Mackey-Glass experiments]{Learning curves for the psMNIST and Mackey-Glass experiments. $y$-axis is the value of the loss function (categorical cross-entropy and logarithmic MSE, respectively; scale is the same across all plots). Lines are the median over $101$ trials; shaded areas are the 10th and 90th percentiles. Blue circle indicates the minimum median validation error.}
+	\label{fig:lmu_trajs}
+\end{figure}
+
+
+\begin{figure}[p]
+\centering
+\includegraphics{media/chapters/ZC_data/mackey_glass_results_not_extended.pdf}
+\caption[Prediction errors for the Mackey-Glass dataset with perfect rectangle windows]{Prediction errors for the Mackey-Glass dataset with perfect rectangle windows. See \Cref{fig:psmnist_results} for a description of the plot.
+Numerical values are given in \Cref{tbl:mackey_glass_results_ne}.}
+\label{fig:mackey_glass_ne}
+\end{figure}
+
+\begin{table}[p]
+	\caption[Prediction errors for the Mackey-Glass dataset with perfect rectangle windows]{Prediction errors for the Mackey-Glass dataset with perfect rectangle windows. See \Cref{tbl:psmnist_results} for a description of the table.}
+	\label{tbl:mackey_glass_results_ne}
+	\centering\small\sffamily
+	\setlength{\tabcolsep}{8.75pt}
+	\begin{tabular}{r  r r r r  r r r r}
+	\toprule
+	& \multicolumn{4}{c}{{\color{skyblue1}$\blacksquare$} \textbf{Fixed convolution}}
+	& \multicolumn{4}{c}{{\color{aluminium2}$\blacksquare$} \textbf{Learned convolution}} \\
+	\cmidrule(r){2-5}\cmidrule(l){6-9}
+	\emph{Basis} &
+	\emph{Mean} &
+	\emph{Median} &
+	\emph{Q1} &
+	\emph{Q3} &
+	\emph{Mean} &
+	\emph{Median} &
+	\emph{Q1} &
+	\emph{Q3} \\
+	\midrule
+	\symLTI~LDN &
+	 \cellcolor{CornflowerBlue!25}{4.80\%} &
+	 \cellcolor{CornflowerBlue!25}{4.60\%} &
+	 \cellcolor{CornflowerBlue!25}{4.03\%} &
+	 \cellcolor{CornflowerBlue!50}{5.35\%} &
+	 \cellcolor{CornflowerBlue!25}{4.69\%} &
+	 \cellcolor{CornflowerBlue!75}{4.41\%} &
+	 \cellcolor{CornflowerBlue!25}{3.84\%} &
+	5.45\% \\
+	\symLTI~Mod.~Fourier &
+	5.54\% &
+	5.35\% &
+	4.61\% &
+	6.34\% &
+	4.83\% &
+	4.70\% &
+	 \cellcolor{CornflowerBlue!50}{3.82\%} &
+	5.50\% \\
+	\symSDT~Fourier &
+	4.96\% &
+	4.78\% &
+	4.13\% &
+	5.59\% &
+	4.78\% &
+	4.61\% &
+	4.05\% &
+	 \cellcolor{CornflowerBlue!25}{5.44\%} \\
+	\symSDT~Cosine &
+	 \cellcolor{CornflowerBlue!75}{4.68\%} &
+	 \cellcolor{CornflowerBlue!50}{4.53\%} &
+	 \cellcolor{CornflowerBlue!75}{3.84\%} &
+	 \cellcolor{CornflowerBlue!75}{5.19\%} &
+	 \cellcolor{CornflowerBlue!75}{4.68\%} &
+	 \cellcolor{CornflowerBlue!25}{4.48\%} &
+	3.91\% &
+	 \cellcolor{CornflowerBlue!50}{5.28\%} \\
+	\symSDT~Haar &
+	4.95\% &
+	4.84\% &
+	4.05\% &
+	5.56\% &
+	4.78\% &
+	4.63\% &
+	 \cellcolor{CornflowerBlue!25}{3.84\%} &
+	5.45\% \\
+	\symFIR~DLOP &
+	 \cellcolor{CornflowerBlue!50}{4.79\%} &
+	 \cellcolor{CornflowerBlue!75}{4.52\%} &
+	 \cellcolor{CornflowerBlue!50}{3.88\%} &
+	 \cellcolor{CornflowerBlue!25}{5.50\%} &
+	 \cellcolor{CornflowerBlue!75}{4.68\%} &
+	 \cellcolor{CornflowerBlue!50}{4.42\%} &
+	 \cellcolor{CornflowerBlue!75}{3.78\%} &
+	 \cellcolor{CornflowerBlue!75}{5.23\%} \\
+	\symFIR~Random &
+	6.46\% &
+	6.15\% &
+	5.08\% &
+	7.34\% &
+	5.12\% &
+	4.89\% &
+	4.19\% &
+	5.62\% \\
+	\bottomrule
+	\end{tabular}
+\end{table}
+
+\begin{table}[p]
+	\newcommand{\sigA}{\ensuremath{\cdot}}
+	\newcommand{\sigB}{\ensuremath{\bullet\bullet}}
+	\newcommand{\sigC}{\ensuremath{\bullet\!\bullet\!\bullet}}
+	\caption[Statistical significance of the Mackey-Glass test errors with perfect rectangle windows]{Statistical significance of the Mackey-Glass test errors with perfect rectangle windows. The given significance levels are based on a two-sided Kolmogorov-Smirnov test.}
+	\label{tbl:mackey_glass_ne_significance}
+	\centering\small\sffamily
+	\setlength{\tabcolsep}{6.2pt}
+	\begin{tabular}{r r  c c c c c c c  c c c c c c c}
+	\toprule
+	& & \multicolumn{7}{c}{{\color{skyblue1}$\blacksquare$} \textbf{Fixed convolution}}
+	& \multicolumn{7}{c}{{\color{aluminium2}$\blacksquare$} \textbf{Learned convolution}} \\
+	\cmidrule(r){3-9}\cmidrule(l){10-16}
+	\emph{Basis} & & (1) & (2) & (3) & (4) & (5) & (6) & (7)  & (1) & (2) & (3) & (4) & (5) & (6) & (7) \\
+	\midrule
+	\symLTI~LDN & (1) &
+	 &
+	\sigB &
+	 &
+	 &
+	 &
+	 &
+	\sigC &
+	 &
+	 &
+	 &
+	 &
+	 &
+	 &
+	 \\
+	\symLTI~Mod.~Fourier & (2) &
+	\sigB &
+	 &
+	\sigA &
+	\sigC &
+	\sigB &
+	\sigC &
+	\sigB &
+	 &
+	 &
+	 &
+	 &
+	 &
+	 &
+	 \\
+	\symSDT~Fourier & (3) &
+	 &
+	\sigA &
+	 &
+	 &
+	 &
+	 &
+	\sigC &
+	 &
+	 &
+	 &
+	 &
+	 &
+	 &
+	 \\
+	\symSDT~Cosine & (4) &
+	 &
+	\sigC &
+	 &
+	 &
+	 &
+	 &
+	\sigC &
+	 &
+	 &
+	 &
+	 &
+	 &
+	 &
+	 \\
+	\symSDT~Haar & (5) &
+	 &
+	\sigB &
+	 &
+	 &
+	 &
+	 &
+	\sigC &
+	 &
+	 &
+	 &
+	 &
+	 &
+	 &
+	 \\
+	\symFIR~DLOP & (6) &
+	 &
+	\sigC &
+	 &
+	 &
+	 &
+	 &
+	\sigC &
+	 &
+	 &
+	 &
+	 &
+	 &
+	 &
+	 \\
+	\symFIR~Random & (7) &
+	\sigC &
+	\sigB &
+	\sigC &
+	\sigC &
+	\sigC &
+	\sigC &
+	 &
+	 &
+	 &
+	 &
+	 &
+	 &
+	 &
+	 \\
+	\bottomrule
+	\end{tabular}
+\end{table}

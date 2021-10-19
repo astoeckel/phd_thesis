@@ -71,35 +71,34 @@ axs1[1].set_title("\\textbf{(2) Rectangle}\nMod. Fourier")
 plot_contour(axs1[2], errs[2])
 axs1[2].set_title("\\textbf{(3) Rectangle}\nLegendre (LDN)")
 
-
 y_max_total = 0.0
 for i in range(3):
     errs_mean = np.mean(errs[i].reshape(-1, errs.shape[-1]), axis=0) * 100
     ax2.boxplot(errs_mean,
-                 positions=[i + 1],
-                 labels=[f"({i + 1})"],
-                 vert=False,
-                 widths=[0.5],
-                 bootstrap=99,
-                 notch=True,
-                 showfliers=False,
-                 flierprops={
-                     "marker": "d",
-                     "markersize": 3,
-                     "markerfacecolor": "k",
-                     "markeredgecolor": "k",
-                 },
-                 medianprops={
-                     "color": "k",
-                     "linestyle": ":",
-                     "linewidth": 0.7,
-                 },
-                 boxprops={
-                     "linewidth": 0.7,
-                 },
-                 whiskerprops={
-                     "linewidth": 0.7,
-                 })
+                positions=[i + 1],
+                labels=[f"({i + 1})"],
+                vert=False,
+                widths=[0.5],
+                bootstrap=99,
+                notch=True,
+                showfliers=False,
+                flierprops={
+                    "marker": "d",
+                    "markersize": 3,
+                    "markerfacecolor": "k",
+                    "markeredgecolor": "k",
+                },
+                medianprops={
+                    "color": "k",
+                    "linestyle": ":",
+                    "linewidth": 0.7,
+                },
+                boxprops={
+                    "linewidth": 0.7,
+                },
+                whiskerprops={
+                    "linewidth": 0.7,
+                })
     ax2.set_ylim(3.5, 0.5)
 
     for j in range(i + 1, 3):
@@ -119,21 +118,21 @@ for i in range(3):
         y_max_total = max(y_max, y_max_total) + 0.75
 
         ax2.plot([y_max_total, y_max_total], [i + 1, j + 1],
-                'k',
-                linewidth=0.7)
+                 'k',
+                 linewidth=0.7)
         ax2.plot([y_max_total, y_max_total - 0.2], [i + 1, i + 1],
-                'k',
-                linewidth=0.7)
+                 'k',
+                 linewidth=0.7)
         ax2.plot([y_max_total, y_max_total - 0.2], [j + 1, j + 1],
-                'k',
-                linewidth=0.7)
+                 'k',
+                 linewidth=0.7)
         ax2.text(y_max_total + 0.3,
-                0.5 * (i + j) + 1,
-                stars,
-                ha="center",
-                va="center",
-                size=8,
-                rotation=90)
+                 0.5 * (i + j) + 1,
+                 stars,
+                 ha="center",
+                 va="center",
+                 size=8,
+                 rotation=90)
 
 ax2.set_title("\\textbf{Mean delay decoding error}")
 ax2.set_xlabel("Mean NRMSE $E$ (\\%)")

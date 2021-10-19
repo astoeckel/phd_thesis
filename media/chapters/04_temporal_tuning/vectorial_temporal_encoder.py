@@ -16,7 +16,7 @@ M = eval_lti(A, B, ts)
 
 fig, axs = plt.subplots(1,
                         2,
-                        figsize=(7.0, 2.5),
+                        figsize=(7.0, 2.25),
                         gridspec_kw={"wspace": 0.575})
 
 #c1 = np.array(mpl.colors.to_rgb("tab:blue"))
@@ -37,13 +37,13 @@ axs[0].set_yticks([])
 axs[0].axhline(0.0, linestyle=':', color='grey', lw=0.5)
 axs[0].set_xlabel("Time $t$ (s)")
 
-utils.annotate(axs[0], 0.95, 0.75, 1.25, 0.75, "$\\mathfrak{b}_1(t)$")
+utils.annotate(axs[0], 0.95, 0.75, 1.25, 0.75, "$\\mathfrak{h}_1(t)$")
 utils.annotate(axs[0],
                0.69,
                0.4,
                1.0,
                -0.2,
-               "$\\mathfrak{b}_2(t)$",
+               "$\\mathfrak{h}_2(t)$",
                ha="left",
                va="top")
 
@@ -105,28 +105,28 @@ for i, phi in enumerate(np.linspace(-np.pi, np.pi, 9)[:-1]):
     sqrt_text = lambda x: "\\sqrt{2}" if x > 0 else "-\\sqrt{2}"
     int_text = lambda x: int(x) if int(x) == x else (sqrt_text(x))
     #text = "$e_{{{}}} = ({}, {})$".format(i + 1, int_text(e0), int_text(e1))
-    text = "$\\hat e_{{{}}}$".format(i + 1)
+    text = "$e^\\mathrm{{t}}_{{{}}}$".format(i + 1)
 
     ha = ("center" if np.abs(e0) < 0.1 else ("right" if e0 < 0.0 else "left"))
     va = ("center" if np.abs(e1) < 0.1 else ("bottom" if e1 > 0.0 else "top"))
     axs[1].text(1.06 * e0, 1.06 * e1, text, ha=ha, va=va)
 
 axs[0].text(-0.035,
-            1.1,
+            1.075,
             "\\textbf{A}",
             size=12,
             transform=axs[0].transAxes,
             ha="left",
             va="baseline")
 axs[0].text(0.5,
-            1.1,
-            "\\textbf{Basis functions} $\\mathfrak{b}(t)$",
+            1.075,
+            "\\textbf{Impulse responses} $\\mathfrak{h}(t)$",
             transform=axs[0].transAxes,
             ha="center",
             va="baseline")
 
 axs[1].text(-0.4,
-            1.109,
+            1.0725,
             "\\textbf{B}",
             size=12,
             transform=axs[1].transAxes,
@@ -134,8 +134,8 @@ axs[1].text(-0.4,
             va="baseline")
 axs[1].text(
     0.5,
-    1.109,
-    "\\textbf{Temporal encoders} $\\mathfrak{e}(t) = \\langle \\mathfrak{b}(t), \\vec{\\hat e} \\rangle$",
+    1.0725,
+    "\\textbf{Temporal encoders} $\\mathfrak{e}(t) = \\langle \\mathfrak{h}(t), \\vec{e}^\\mathrm{t} \\rangle$",
     transform=axs[1].transAxes,
     ha="center",
     va="baseline")

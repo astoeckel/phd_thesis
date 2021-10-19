@@ -33,7 +33,7 @@ WINDOW = "erasure"
 
 TAU = 100e-3
 
-T_TRAIN = 10.0
+T_TRAIN = 3.0
 N_SMPLS = 1000
 XS_SIGMA_TRAIN = 3.0
 XS_SIGMA_SIM = 1.0
@@ -50,6 +50,15 @@ def mk_encs(n, d, rng=np.random):
     encs = rng.normal(0, 1, (n, d))
     encs /= np.linalg.norm(encs, axis=1)[:, None]
     return encs
+
+
+def mk_gaussian_basis(q, N, T=1.0, dt=1e-3):
+    ts = np.arange(N) * dt
+    mus = np.random.uniform(-0.1, T, q)
+    sigmas = np.power(10.0, np.random.uniform(-1.0, -0.5, q))
+    res = np.exp(-np.square(ts[None, :] - mus[:, None]) /
+                  np.square(sigmas[:, None]))
+    return res / np.sum(res, axis=1)[:, None] / dt
 
 
 def execute_network(W_in, W_rec, gains, biases, T=T_SIM, dt=DT, tau=TAU):
@@ -99,20 +108,33 @@ def pack(As):
 def main():
     np.random.seed(58381)
 
+    if len(sys.argv) > 1 and sys.argv[1] == "gaussian":
+        BASIS = "gaussian"
+        N_NEURONS = 1000
+        fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data',
+                          "spatio_temporal_network_gaussian.h5")
+    else:
+        fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data',
+                          "spatio_temporal_network.h5")
+
     gains, biases, _ = nonneg_common.mk_ensemble(N_NEURONS, d=1)
     G = lif_utils.lif_rate
     TEs = mk_encs(N_NEURONS, N_TEMP_DIMS)
     Es = mk_encs(N_NEURONS, N_DIMS)
 
-    A, B = bases.mk_ldn_lti(N_TEMP_DIMS)
-
-    ts, Ms = basis_delay_analysis_common.mk_impulse_response(basis=BASIS,
-                                                             window=WINDOW,
-                                                             q=N_TEMP_DIMS,
-                                                             T=T_TRAIN,
-                                                             dt=DT,
-                                                             use_euler=True,
-                                                             rescale_ldn=False)
+    if BASIS == "gaussian":
+        N = int(T_TRAIN / DT + 1e-9)
+        Ms = mk_gaussian_basis(N_NEURONS, N).T
+        TEs = np.diag(np.random.choice([1.0, -1.0], N_NEURONS))
+    else:
+        _, Ms = basis_delay_analysis_common.mk_impulse_response(
+            basis=BASIS,
+            window=WINDOW,
+            q=N_TEMP_DIMS,
+            T=T_TRAIN,
+            dt=DT,
+            use_euler=True,
+            rescale_ldn=False)
 
     flts_in = [(TAU, )]
     flts_rec = [(TAU, )]
@@ -137,9 +159,6 @@ def main():
 
     xs_test, As_test = execute_network(W_in, W_rec, gains, biases)
     xs_train, As_train = execute_network(W_in, W_rec, gains, biases)
-
-    fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data',
-                      "spatio_temporal_network.h5")
 
     with h5py.File(fn, "w") as f:
         f.create_dataset("W_in", data=W_in)
