@@ -473,7 +473,7 @@ is_multithreaded = true
 
 
 ["chapters/04_temporal_tuning/lmu_mackey_glass.py"]
-commit = "6a056535537f673afb49608ee48e21732f750e84"
+commit = "b5af643ff7057c1f64e8bfa6a560c73bcac6688a"
 dockerfile = "tensorflow"
 runs = [
 	{
