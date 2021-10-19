@@ -399,7 +399,7 @@ def mk_ldn_basis(q, N=None, normalize=True):
     `normalize` to `False` to obtain the exact LDN impulse response, otherwise
     a normalized basis transformation matrix as defined in the TR is returned.
     """
-    return mk_lti_basis(*mk_ldn_lti(q), N, normalize)
+    return mk_lti_basis(*mk_ldn_lti(q), N, normalize=normalize)
 
 
 ## Discrete Legendre Orthogonal Polynomial Basis and Related Code
