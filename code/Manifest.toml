@@ -439,6 +439,12 @@ runs = [
 ]
 is_multithreaded = true
 
+["chapters/04_temporal_tuning/spatio_temporal_network_nef.py"]
+commit = "6c2f22ad75cc3037dff97d21016cba3cb682ec6f"
+dockerfile = "experiments_base"
+generates=["spatio_temporal_network_nef.h5"]
+is_multithreaded = true
+
 
 ["chapters/04_temporal_tuning/spatio_temporal_network_analysis.py"]
 dockerfile = "experiments_base"
