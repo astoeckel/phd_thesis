@@ -458,6 +458,11 @@ runs = [
 		commit = "1f6bd412d30db0a39916eb0b5e612b5e70d4b508",
 		args=["ae3bf70a32be60b6_spatio_temporal_network_matrices.h5", "matrices"],
 		generates=["spatio_temporal_network_analysis_matrices.h5"]
+	},
+	{
+		commit = "af2a58f131ec4ffe47b82ec5c2a7781d64ca6644",
+		args=["f7bccd7f2e07e97d_spatio_temporal_network_nef.h5", "nef"],
+		generates=["spatio_temporal_network_analysis_nef.h5"]
 	}
 ]
 
