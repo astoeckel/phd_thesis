@@ -25,11 +25,19 @@ def shift(xs, t, dt=1e-3):
     return np.concatenate((np.zeros(N_shift), xs))[:N]
 
 
-datafile = os.path.join(
-    os.path.dirname(__file__),
-    #"../../../data/manual/chapters/04_temporal_tuning/212fd1234166fc1b_spatio_temporal_network.h5"
-    "../../../data/spatio_temporal_network_nef.h5",
-)
+if len(sys.argv) == 3:
+    fn_in = sys.argv[1]
+    fn_suffix = "_" + sys.argv[2]
+elif len(sys.argv) == 1:
+    fn_in = "212fd1234166fc1b_spatio_temporal_network.h5"
+    fn_suffix = ""
+else:
+    print("Invalid command line")
+    sys.exit(1)
+
+datafile = os.path.join(os.path.dirname(__file__),
+                        "../../../data/manual/chapters/04_temporal_tuning/",
+                        fn_in)
 
 with h5py.File(datafile, "r") as f:
     As_shape = f["As_shape"][()]
@@ -46,10 +54,10 @@ As_test_flt = nengo.Lowpass(100e-3).filtfilt(As_test)
 
 N_DIMS = 2
 
-DELAYS_1D = np.linspace(0, 1, 11 + 1)[:-1]
+DELAYS_1D = np.linspace(0, 1, 31 + 1)[:-1]
 N_DELAYS_1D = len(DELAYS_1D)
 
-DELAYS_2D = np.linspace(0, 1, 11 + 1)[:-1]
+DELAYS_2D = np.linspace(0, 1, 31 + 1)[:-1]
 N_DELAYS_2D = len(DELAYS_2D)
 
 
@@ -64,7 +72,8 @@ def run_1d_delay_decoder_experiment(idcs):
     # Test the delay decoder on the test data
     xs_test_flt_shift = shift(xs_test_flt[:, i_dim], thetap)
     rms = np.sqrt(np.mean(np.square(xs_test_flt_shift)))
-    err = np.sqrt(np.mean(np.square(xs_test_flt_shift - As_test_flt @ D))) / rms
+    err = np.sqrt(np.mean(
+        np.square(xs_test_flt_shift - As_test_flt @ D))) / rms
 
     return idcs, err
 
@@ -75,13 +84,16 @@ def run_2d_delayed_multiplication_experiment(idcs):
     # Compute a delayed multiplication decoder on the training data
     thetap1 = DELAYS_2D[i_delay1]
     thetap2 = DELAYS_2D[i_delay2]
-    xs_train_flt_shift = shift(xs_train_flt[:, 0], thetap1) * shift(xs_train_flt[:, 1], thetap2)
+    xs_train_flt_shift = shift(xs_train_flt[:, 0], thetap1) * shift(
+        xs_train_flt[:, 1], thetap2)
     D = np.linalg.lstsq(As_train_flt, xs_train_flt_shift, rcond=1e-2)[0]
 
     # Test the delay decoder on the test data
-    xs_test_flt_shift = shift(xs_test_flt[:, 0], thetap1) * shift(xs_test_flt[:, 1], thetap2)
+    xs_test_flt_shift = shift(xs_test_flt[:, 0], thetap1) * shift(
+        xs_test_flt[:, 1], thetap2)
     rms = np.sqrt(np.mean(np.square(xs_test_flt_shift)))
-    err = np.sqrt(np.mean(np.square(xs_test_flt_shift - As_test_flt @ D))) / rms
+    err = np.sqrt(np.mean(
+        np.square(xs_test_flt_shift - As_test_flt @ D))) / rms
 
     return idcs, err
 
@@ -106,7 +118,7 @@ def main():
                 errs_2d[idcs] = E
 
     fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data',
-                      "spatio_temporal_network_analysis_nef.h5")
+                      "spatio_temporal_network_analysis" + fn_suffix + ".h5")
 
     with h5py.File(fn, "w") as f:
         f.create_dataset("delays_1d", data=DELAYS_1D)
