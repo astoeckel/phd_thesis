@@ -424,16 +424,37 @@ is_multithreaded = true
 
 
 ["chapters/04_temporal_tuning/spatio_temporal_network.py"]
-commit = "e6655e2eb407b62ba4b3a229b19c615ff2e845c4"
 dockerfile = "experiments_base"
-generates=["spatio_temporal_network.h5"]
+runs = [
+	{
+		commit = "e6655e2eb407b62ba4b3a229b19c615ff2e845c4",
+		args=[],
+		generates=["spatio_temporal_network.h5"]
+	},
+	{
+		commit="0d84be16c724815a60f6c54ad18ff65d0b6148aa",
+		args=["matrices"],
+		generates=["spatio_temporal_network_matrices.h5"]
+	},
+]
 is_multithreaded = true
 
 
 ["chapters/04_temporal_tuning/spatio_temporal_network_analysis.py"]
-commit = "b9cef061be3e8044b15b65626457061498ba80c5"
 dockerfile = "experiments_base"
-generates=["spatio_temporal_network_analysis.h5"]
+runs = [
+	{
+		commit = "b9cef061be3e8044b15b65626457061498ba80c5",
+		args=[],
+		generates=["spatio_temporal_network_analysis.h5"]
+	},
+	{
+		commit = "1f6bd412d30db0a39916eb0b5e612b5e70d4b508",
+		args=["ae3bf70a32be60b6_spatio_temporal_network_matrices.h5", "matrices"],
+		generates=["spatio_temporal_network_analysis_matrices.h5"]
+	}
+]
+
 is_multithreaded = true
 
 
