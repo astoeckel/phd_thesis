@@ -28,6 +28,8 @@ N_NEURONS = 1000
 N_TEMP_DIMS = 5
 N_DIMS = 2
 
+USE_SPATIOTEMPORAL_MATRICES = False
+
 BASIS = "legendre"
 WINDOW = "erasure"
 
@@ -106,27 +108,41 @@ def pack(As):
 
 
 def main():
+    global BASIS
+    global USE_SPATIOTEMPORAL_MATRICES
+
     np.random.seed(58381)
 
-    if len(sys.argv) > 1 and sys.argv[1] == "gaussian":
-        BASIS = "gaussian"
-        N_NEURONS = 1000
-        fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data',
-                          "spatio_temporal_network_gaussian.h5")
+    if len(sys.argv) > 1:
+        if sys.argv[1] == "gaussian":
+            BASIS = "gaussian"
+            fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data',
+                              "spatio_temporal_network_gaussian.h5")
+        elif sys.argv[1] == "matrices":
+            USE_SPATIOTEMPORAL_MATRICES = True
+            fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data',
+                              "spatio_temporal_network_matrices.h5")
     else:
         fn = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'data',
                           "spatio_temporal_network.h5")
 
     gains, biases, _ = nonneg_common.mk_ensemble(N_NEURONS, d=1)
     G = lif_utils.lif_rate
-    TEs = mk_encs(N_NEURONS, N_TEMP_DIMS)
-    Es = mk_encs(N_NEURONS, N_DIMS)
+    if USE_SPATIOTEMPORAL_MATRICES:
+        print("Generating spatiotemporal matrices...")
+        MEs = mk_encs(N_NEURONS, N_DIMS * N_TEMP_DIMS).reshape(N_NEURONS, N_DIMS, N_TEMP_DIMS)
+    else:
+        print("Generating spatial and temporal encoders...")
+        TEs = mk_encs(N_NEURONS, N_TEMP_DIMS)
+        Es = mk_encs(N_NEURONS, N_DIMS)
 
     if BASIS == "gaussian":
+        print("Generating Gaussian tuning curves")
         N = int(T_TRAIN / DT + 1e-9)
         Ms = mk_gaussian_basis(N_NEURONS, N).T
         TEs = np.diag(np.random.choice([1.0, -1.0], N_NEURONS))
     else:
+        print("Generating LDN impulse response")
         _, Ms = basis_delay_analysis_common.mk_impulse_response(
             basis=BASIS,
             window=WINDOW,
@@ -139,23 +155,43 @@ def main():
     flts_in = [(TAU, )]
     flts_rec = [(TAU, )]
 
-    W_in, W_rec, errs = temporal_encoder_common.solve_for_recurrent_population_weights_with_spatial_encoder(
-        G,
-        gains,
-        biases,
-        None,
-        None,
-        TEs,
-        Es,
-        [Filters.lowpass(*flt_in) for flt_in in flts_in],
-        [Filters.lowpass(*flt_rec) for flt_rec in flts_rec],
-        Ms=Ms,
-        N_smpls=N_SMPLS,
-        T=T_TRAIN,
-        dt=DT,
-        xs_sigma=XS_SIGMA_TRAIN,
-        biased=False,
-    )
+    if USE_SPATIOTEMPORAL_MATRICES:
+        print("Solving for weights with spatiotemporal matrices...")
+        W_in, W_rec, errs = temporal_encoder_common.solve_for_recurrent_population_weights_with_spatiotemporal_matrices(
+            G,
+            gains,
+            biases,
+            None,
+            None,
+            MEs,
+            [Filters.lowpass(*flt_in) for flt_in in flts_in],
+            [Filters.lowpass(*flt_rec) for flt_rec in flts_rec],
+            Ms=Ms,
+            N_smpls=N_SMPLS,
+            T=T_TRAIN,
+            dt=DT,
+            xs_sigma=XS_SIGMA_TRAIN,
+            biased=False,
+        )
+    else:
+        print("Solving for weights with temporal and spatial encoding vectors...")
+        W_in, W_rec, errs = temporal_encoder_common.solve_for_recurrent_population_weights_with_spatial_encoder(
+            G,
+            gains,
+            biases,
+            None,
+            None,
+            TEs,
+            Es,
+            [Filters.lowpass(*flt_in) for flt_in in flts_in],
+            [Filters.lowpass(*flt_rec) for flt_rec in flts_rec],
+            Ms=Ms,
+            N_smpls=N_SMPLS,
+            T=T_TRAIN,
+            dt=DT,
+            xs_sigma=XS_SIGMA_TRAIN,
+            biased=False,
+        )
 
     xs_test, As_test = execute_network(W_in, W_rec, gains, biases)
     xs_train, As_train = execute_network(W_in, W_rec, gains, biases)
@@ -165,8 +201,11 @@ def main():
         f.create_dataset("W_rec", data=W_rec)
         f.create_dataset("gains", data=gains)
         f.create_dataset("biases", data=biases)
-        f.create_dataset("Es", data=Es)
-        f.create_dataset("TEs", data=TEs)
+        if USE_SPATIOTEMPORAL_MATRICES:
+            f.create_dataset("MEs", data=MEs)
+        else:
+            f.create_dataset("Es", data=Es)
+            f.create_dataset("TEs", data=TEs)
         f.create_dataset("xs_train", data=xs_train)
         f.create_dataset("xs_test", data=xs_test)
         f.create_dataset("As_train", data=pack(As_train), compression="gzip")

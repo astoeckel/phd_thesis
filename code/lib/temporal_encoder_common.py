@@ -676,3 +676,139 @@ def solve_for_recurrent_population_weights_with_spatial_encoder(
 
     return W_in, W_rec, errs
 
+
+def solve_for_recurrent_population_weights_with_spatiotemporal_matrices(
+        G,
+        gains,
+        biases,
+        A,
+        B,
+        MEs,
+        flts_in,
+        flts_rec,
+        N_smpls=1000,
+        xs_sigma=5.0,
+        dt=1e-3,
+        T=10.0,
+        reg=0.01,
+        rng=np.random,
+        silent=False,
+        Ms=None,
+        biased=True,
+        bias_cstr_count=None,
+        xs_scale=1.0):
+    assert (Ms is None) != ((A is None) or (B is None))
+
+    # Boring bookkeeping
+    MEs = np.atleast_3d(MEs)
+    N_neurons = MEs.shape[0]
+    gains, biases = np.atleast_1d(gains), np.atleast_1d(biases)
+    assert (MEs.shape[0] == gains.shape[0] == biases.shape[0])
+    if Ms is None:
+        A = np.atleast_2d(A)
+        B = np.atleast_1d(B).flatten()
+        q = N_temporal_dimensions = A.shape[0]
+        assert A.shape[0] == A.shape[1] == B.shape[0]
+    else:
+        Ms = np.atleast_2d(Ms)
+        q = N_temporal_dimensions = Ms.shape[1]
+    N_dims = MEs.shape[1]
+    assert MEs.shape[2] == q
+
+    # Evaluate all filters
+    ts = np.arange(0, T, dt)
+    N = len(ts)
+    hs_in = np.array([flt(ts, dt) for flt in flts_in])
+    hs_rec = np.array([flt(ts, dt) for flt in flts_rec])
+
+    # Compute the impulse response of the desired LTI system
+    if Ms is None:
+        Ms = cached_lti_impulse_response(A, B, ts)
+    else:
+        assert Ms.shape[0] == N
+
+    # Assemble the X and Y matrices that are being passed to the least-squares
+    # algorithm
+    N_flts_in = len(flts_in)
+    N_flts_rec = len(flts_rec)
+    N_pre = N_dims * N_flts_in + N_neurons * N_flts_rec
+
+    X = np.zeros((N_smpls, N_neurons, N_pre))
+    Y = np.zeros((N_smpls, N_neurons))
+
+    x_in_scale = 1.0 * N_neurons  # Compensate for the input not being neural activitie
+    for i_smpl in tqdm.tqdm(range(N_smpls), disable=silent):
+        # Sample input sequences
+        xs = np.zeros((N, N_dims))
+        for i_dim in range(N_dims):
+            xs[:, i_dim] = mk_sig(N,
+                                  dt,
+                                  sigma=xs_sigma,
+                                  scale=xs_scale,
+                                  rng=rng,
+                                  Ms=Ms,
+                                  i_smpl=i_smpl,
+                                  biased=biased,
+                                  bias_cstr_count=bias_cstr_count)
+
+        # Filter the input with all filters used in the input connections
+        xs_flt = np.zeros((N_dims, N_flts_in))
+        for i_dim in range(N_dims):
+            for i_flt, h in enumerate(hs_in):
+                xs_flt[i_dim, i_flt] = np.convolve(xs[:, i_dim], h, 'valid') * dt
+
+        # Pass the input through the desired impulse responses
+        ms_flt = np.zeros((N, N_dims, q))
+        for i_dim in range(N_dims):
+            for i_q in range(q):
+                ms_flt[:, i_dim, i_q] = scipy.signal.fftconvolve(
+                    xs[:, i_dim], Ms[:, i_q], 'full')[:N] * dt
+
+        # For each filter, and each pre-neuron, compute the activity at the
+        # post-neuron at time zero
+        As_pre = np.zeros((N_neurons, N_flts_rec))
+        for i_pre in range(N_neurons):
+            A_pre = G(gains[i_pre] *
+                      np.einsum('Ndq,dq->N', ms_flt, MEs[i_pre]) +
+                      biases[i_pre])
+            for i_flt, h in enumerate(hs_rec):
+                As_pre[i_pre, i_flt] = np.convolve(A_pre, h, 'valid') * dt
+
+        # Now re-arrange the matrices computed above into a series of
+        # least-squares problems, one for each neuron
+        for i_post in range(N_neurons):
+            I = 0
+            # Input
+            for i_dim in range(N_dims):
+                for i_flt in range(N_flts_in):
+                    X[i_smpl, i_post,
+                      I] = xs_flt[i_dim, i_flt] * x_in_scale
+                    I += 1
+
+            # Recurrent connection
+            for i_pre in range(N_neurons):
+                for i_flt in range(N_flts_rec):
+                    X[i_smpl, i_post, I] = As_pre[i_pre, i_flt]
+                    I += 1
+
+        # Compute the target input current of each post-neuron
+        for i_post in range(N_neurons):
+            Y[i_smpl, i_post] = np.einsum('dq,dq->', ms_flt[-1], MEs[i_post])
+
+    # Solve the least-squares problems one at a time
+    W = np.zeros((N_neurons, N_pre))
+    errs = np.zeros(N_neurons)
+    for i in tqdm.tqdm(range(N_neurons), disable=silent):
+        XTX = X[:, i].T @ X[:, i] + N_smpls * np.square(
+            reg * np.max(X)) * np.eye(N_pre)
+        XTY = X[:, i].T @ Y[:, i]
+        W[i] = np.linalg.solve(XTX, XTY)
+        errs[i] = np.sqrt(np.mean(np.square(X[:, i] @ W[i] - Y[:, i])))
+
+    W_in = W[:, :N_flts_in*N_dims] * x_in_scale
+    W_rec = W[:, N_flts_in*N_dims:]
+
+    W_in = W_in.reshape(N_neurons, N_flts_in, N_dims).transpose(0, 2, 1)
+    W_rec = W_rec.reshape(N_neurons, N_flts_rec, N_neurons).transpose(0, 2, 1)
+
+    return W_in, W_rec, errs
