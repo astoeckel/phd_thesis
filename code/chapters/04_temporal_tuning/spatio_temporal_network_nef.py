@@ -28,9 +28,6 @@ N_NEURONS = 1000
 N_TEMP_DIMS = 5
 N_DIMS = 2
 
-BASIS = "legendre"
-WINDOW = "erasure"
-
 TAU = 100e-3
 
 T_TRAIN = 3.0
