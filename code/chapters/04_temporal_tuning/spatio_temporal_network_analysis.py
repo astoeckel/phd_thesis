@@ -102,7 +102,7 @@ def main():
     params_1d = list(itertools.product(range(N_DIMS), range(N_DELAYS_1D)))
     errs_1d = np.zeros((N_DIMS, N_DELAYS_1D))
     with env_guard.SingleThreadEnvGuard():
-        with multiprocessing.get_context('spawn').Pool(8) as pool:
+        with multiprocessing.get_context('spawn').Pool(16) as pool:
             for idcs, E in tqdm.tqdm(pool.imap_unordered(
                     run_1d_delay_decoder_experiment, params_1d),
                                      total=len(params_1d)):
@@ -111,7 +111,7 @@ def main():
     params_2d = list(itertools.product(range(N_DELAYS_2D), range(N_DELAYS_2D)))
     errs_2d = np.zeros((N_DELAYS_2D, N_DELAYS_2D))
     with env_guard.SingleThreadEnvGuard():
-        with multiprocessing.get_context('spawn').Pool(8) as pool:
+        with multiprocessing.get_context('spawn').Pool(16) as pool:
             for idcs, E in tqdm.tqdm(pool.imap_unordered(
                     run_2d_delayed_multiplication_experiment, params_2d),
                                      total=len(params_2d)):
