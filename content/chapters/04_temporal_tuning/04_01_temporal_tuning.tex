@@ -22,11 +22,10 @@
 	\label{fig:temporal_responses_examples}
 \end{figure}
 
-Some neurons in the brain exhibit pronounced temporal activity patterns \emph{in situ}.
-For example, as is illustrated in \Cref{fig:temporal_responses_examples}, their activities may extend beyond the stimulus period, cease before the stimulus has ended, repeat rhythmically, or be tuned to specific spatio-temporal patterns---or likely any combination of the above.
-Theoretical work (that we review below) suggests that diverse temporal responses form a representation of the past stimulus history \citep{howard2014unified,voelker2018improving} and could, for example, support delay learning in the cerebellum (\cite{fujita1982adaptive,medina2000computer}; see also \Cref{chp:cerebellum}).
-%Furthermore, temporal response patterns play an important role in time-perception \citep{buhusi2005what,allman2014properties}.
-While spatio-temporal neural responses have originally been extensively studied in visual cortex \citep[e.g.,][]{deangelis1993spatiotemporal,carandini1999linearity}, more recent evidence points at various brain areas---including hippocampus, striatum, and cerebellum---possessing neurons with pronounced temporal responses \citep{lusk2016cerebellar}.
+Some neurons in the brain exhibit pronounced temporal activity patterns.
+For example, as is illustrated in \Cref{fig:temporal_responses_examples}, their activities may extend beyond the stimulus period, cease before the stimulus has ended, repeat rhythmically, be tuned to specific spatiotemporal patterns, or any combination of thereof.
+Theoretical work suggests that diverse temporal responses form a representation of the past stimulus history \citep{grossberg1989neural,howard2014unified,voelker2018improving} and could, for example, support delay learning in the cerebellum (\cite{fujita1982adaptive,medina2000computer}; see also \Cref{chp:cerebellum}).
+While spatiotemporal neural responses have originally been extensively studied in visual cortex \citep[e.g.,][]{deangelis1993spatiotemporal,carandini1999linearity}, more recent evidence indicates that various brain areas---including hippocampus, striatum, and cerebellum---possess neurons with pronounced temporal responses \citep[e.g.,][]{lusk2016cerebellar}.
 
 In many cases, it is uncertain how these temporal response patterns come to be; that is, whether the temporal responses are a result of intrinsic neural properties, network-level effects, or a combination of both. 
 In this section, we build upon a linear filter model of temporal tuning \citep{watson1983look,adelson1985spatiotemporal} that is agnostic to these questions and that can be easily integrated into the NEF as a generalisation of the dynamics principle.
@@ -91,10 +90,10 @@ In the context of the Neural Engineering Framework, we would then use available 
 \end{figure}
 
 A more interesting example of temporal response patterns are so-called \enquote{time cells}, first described by \citet{pastalkova2008internally} in rat hippocampus.
-As illustrated in \Cref{fig:temporal_responses_examples_c}, time cells reach their peak activity a certain time $\theta$ after the stimulus onset at $t_0$.%
+As is illustrated in \Cref{fig:temporal_responses_examples_c}, time cells reach their peak activity a certain time $\theta$ after the stimulus onset at $t_0$.%
 \footnote{In the original \citet{pastalkova2008internally} experiment, the \enquote{stimulus onset} corresponds to the animal beginning to perform some behavioural task, namely running in a wheel.}
-This delay $\theta$ is specific to each cell and can be in the milliseconds to seconds range.
-Populations of time cells encode $t - t_0$, or, assuming continuous input signals, represent a compressed version of the stimulus history.
+This delay $\theta$ is specific to each cell and can be in the millisecond to seconds range.
+Populations of time cells encode the time since the stimulus onset $t - t_0$, or, assuming continuous input signals, a compressed version of the stimulus history.
 We discuss this in more detail below in \Cref{sec:temporal_bases}.
 
 Time cells have also been described in other brain regions, including medial prefrontal cortex (\cite{tiganj2016sequential}), striatum, and the cerebellum (see \cite{lusk2016cerebellar} for a review).
@@ -140,7 +139,7 @@ The basic observation is that some cells in visual cortex reach their maximum fi
 For example, some cells only react to edges moving in a certain direction at a specific velocity.
 %Historically, models of these directionality effects relied on nonlinear interactions in small model circuits \citep[e.g.,][]{emerson1977simple}.
 %Theoretical work by \citet{watson1983look,adelson1985spatiotemporal} suggested that neural activity could instead be modelled linearly.
-One possible way to construct a model of this spatio-temporal tuning is to use a \emph{space-time receptive field} $\mathfrak{e}(t; \xi_1, \xi_2)$, where $\xi_1$ and $\xi_2$ are coordinates in the visual field and $t \geq 0$ is time (\cite{watson1983look,adelson1985spatiotemporal}; see \cite{carandini1999linearity}, for a review).
+One possible way to construct a model of this spatiotemporal tuning is to use a \emph{space-time receptive field} $\mathfrak{e}(t; \xi_1, \xi_2)$, where $\xi_1$ and $\xi_2$ are coordinates in the visual field and $t \geq 0$ is time (\cite{watson1983look,adelson1985spatiotemporal}; see \cite{carandini1999linearity}, for a review).
 %\footnote{Since the space-time receptive field acts like a impulse response, non-negativity of $t$ is required to maintain causality of the filter.}
 Given stimulus history $\mathfrak{x}(t; \xi_1, \xi_2)$, the neural activity $a(\mathfrak{x})$ at $t = 0$ can be modelled by convolving over the instantaneous inner products between $\mathfrak{x}$ and $\mathfrak{e}$.
 Borrowing the gain and bias terms $\alpha$, $\beta$, as well as the response curve $G$ from the NEF, we have
@@ -158,7 +157,7 @@ An example of an artificial space-time recepitve field that qualitatively resemb
 
 \subsection{Temporal Tuning Curves and the Neural Engineering Framework}
 
-The above summary of biological temporal response patterns has hopefully provided some motivation as for why modelling temporal tuning can be useful.
+The above summary of biological temporal response patterns provided some motivation as for why modelling temporal tuning can be desirable.
 We now define this concept more rigorously and, in the next subsection, compare it to the original NEF dynamics principle.
 
 The most general definition of a \enquote{temporal tuning curve} is as \enquote{a function that maps the past history of a $d$-dimensional stimulus onto an average expected activation of a neuron}.
@@ -189,12 +188,12 @@ As before, we assume that the current translation function $J_i(\xi)$ is affine 
 
 As with standard tuning-curves, \cref{eqn:temporal_tuning_curve} is a \emph{normative constraint} (cf.~\Cref{sec:nef_representation}).
 However, in addition to what we had before, the temporal encoder $\vec{\mathfrak{e}}_i$ allows modellers to define some desired \emph{dynamics}.
-This effectively unifies the NEF dynamics and representation principles; the weight solver can draw upon the dynamics of the pre-population as well as temporal resources such as synaptic filters to approximate the desired dynamics.
+This effectively unifies the NEF dynamics and representation principles; as we discuss below, the weight solver can draw upon the dynamics of the pre-population as well as temporal resources such as synaptic filters to approximate the desired dynamics.
 
 \subsubsection{Normalisation and preferred temporal stimuli}
 In many cases, it may be useful to normalise the magnitude of the temporal encoder to an integral of one over time.
 In this way, and with some squinting, the temporal encoder can be interpreted as a \emph{preferred temporal stimulus}.%
-\footnote{Both the signal $\vec{\mathfrak{x}}$ and the encoder $\vec{\mathfrak{e}}$ must be normalised for the convolution between the encoder and the stimulus to correspond to the cosine similarity.
+\footnote{Both the signal $\vec{\mathfrak{x}}$ and the encoder $\vec{\mathfrak{e}}$ must be normalised for the convolution between the encoder and the stimulus to correspond to a cosine similarity.
 However, given its unbounded nature, it is unclear how the signal history $\vec{\mathfrak{x}}$ should be normalised.
 Essentially, we would have to normalise with respect to some window function.}
 \begin{align}
@@ -244,7 +243,7 @@ We have
 %	\right]^2 \,.
 %	\label{eqn:weight_optimise_currents_temporal}
 	E &= \sum_{k = 1}^N \left[
-		J_i \Big( \! \int_0^\infty \!\!\! \big\langle \mathfrak{e}_i(\tau), f(\mathfrak{x}_k(-\tau)) \big\rangle \, \mathit{d\tau} \Big) \,\,-\,\,
+		J_i \Big( \! \int_0^\infty \!\!\! \big\langle \mathfrak{e}_i(\tau), f(\mathfrak{x}_k)(-\tau) \big\rangle \, \mathit{d\tau} \Big) \,\,-\,\,
 		\sum_{j = 1}^m w_{ij} \! \int_0^\infty \!\!\! h_{ij}(\tau) a_j(\mathfrak{x}_k, -\tau) \,\mathrm{d}\tau
 	\right]^2 \,.
 	\label{eqn:weight_optimise_currents_temporal}
@@ -256,19 +255,19 @@ In practice, each $\mathfrak{x}_k$ must be of finite length and sampled.
 However, once all quantities have been appropriately sampled, minimising \cref{eqn:weight_optimise_currents_temporal} is ultimately the same optimisation problem as the one discussed in \Cref{sec:nef_subthreshold}.
 %Without subthreshold relaxation (i.e., $\mathcal{E}(j_1, j_2) = j_1 - j_2$), this loss function is in linear least-squares form.
 
-Instead, the primary challenge when solving this optimisation problem lies in selecting suitable input signals $\mathfrak{x}_k$ \citep[cf.][Section~10.2.5]{verhaegen2007filtering}.
+Indeed, the primary challenge when solving this optimisation problem lies in selecting suitable input signals $\mathfrak{x}_k$ \citep[cf.][Section~10.2.5]{verhaegen2007filtering}.
 This is particularly important if the desired dynamics cannot be realised precisely; the frequency content of the training signals then determines the input regime over which the approximation works well.
 We discuss this in more detail in the context of recurrent networks; in our examples we generally use low-pass filtered white noise as $\mathfrak{x}_k$.
 
 \subsection{Implementing Linear Time-Invariant Systems}
 \label{sec:temporal_tuning_lti}
 
-For the sake of simplicity, we first focus on linear networks and dynamical systems.
+For the sake of simplicity, we focus on linear networks and dynamical systems.
 In particular, we discuss realising linear time-invariant (LTI) systems in \emph{linear networks}.
 That is, we have linear response curves and current-translation (i.e., $G_i[J] = J$ and $J_i(\xi) = \xi$); each \enquote{neuron} corresponds to a separate represented dimension.
 
 This restriction is less severe as it may seem.
-LTI systems are quite useful, and we can always use the NEF representation principle (\Cref{sec:nef_representation}) to construct populations that represent $d$ dimensional quantities while using identity decoders to linearise the neural responses.
+LTI systems are quite useful, and we can use the NEF representation and transformation principles (\Cref{sec:nef_representation,sec:nef_transformation}) to emulate linear networks within nonlinear neurons.
 Still, we discuss examples with more complex nonlinear networks and dynamics in \Cref{sec:recurrent_weights}.
 
 \subsubsection{Feed-forward dynamics}
@@ -316,7 +315,7 @@ This is the same idea as in the time-cell model by \citet{howard2014unified}, al
 As we alluded to when discussing the \citet{howard2014unified} time-cell model, there are major limitations to approximating dynamics in feed-forward networks---at least if we model synapses as low-pass filters.
 Specifically, network dynamics slow down as the network depth increases, the memory of a fixed-depth network is finite, and, generally speaking, the set of linear dynamics that can be realised is rather limited.
 
-Phrasing the first limitation more precisely, maintaining uniform dynamics across a series of chained populations becomes progressively more difficult as the length of the chain increases.
+Phrasing the first limitation more precisely, maintaining uniform dynamics across a series of chained populations becomes more difficult as the length of the chain increases.
 This is illustrated in in \Cref{fig:feed_forward_low_pass}.
 To reduce approximation errors, the desired temporal tuning for later populations must possess longer time-constants.
 This is despite it being, perhaps counter-intuitively, possible to exploit the diverse synaptic filters and temporal tuning to realise dynamics with \emph{faster} time-constants than the fastest synaptic filter in the post-population.
@@ -367,7 +366,7 @@ We thus foster a self-fulfilling prophecy: we solve for dynamics assuming that t
 	\label{fig:recurrent_temporal_tuning}
 \end{figure}
 
-Notably, this assumption effectively turns the system into a feed-forward network, thus greatly simplifying solving for recurrent weights (cf.~\Cref{fig:recurrent_temporal_tuning}).
+Notably, this assumption effectively turns the system into a feed-forward network, greatly simplifying solving for recurrent weights (cf.~\Cref{fig:recurrent_temporal_tuning}).
 In the special case of linear networks, solving for connection synaptic weights directly results in an input vector $\mat B'$ and a feedback matrix $\mat A'$.
 If, as additional requirements, the synaptic filter is a first-order low-pass filter, and the system that is being realised is an LTI system, one can show that these matrices are equal to those returned by the NEF dynamics principle.
 In other words, temporal tuning curves are a direct generalisation of the standard NEF methods.
@@ -390,7 +389,7 @@ In other words, temporal tuning curves are a direct generalisation of the standa
 	\end{align*}
 \end{restatable}
 \noindent This loss function is equal to \cref{eqn:weight_optimise_currents_temporal} in the case of a linear network with $n$ neurons that recurrently connect to themselves, and a \enquote{zeroth} pre-neuron with no temporal tuning providing input, i.e., $a_0(t) = \mathfrak{x}_k(t)$.
-We provide a proof of this in \Cref{app:lstsq_nef_equivalence}.
+We provide a proof for this in \Cref{app:lstsq_nef_equivalence}.
 %Note that the requirement for linearly independent samples is a mere technicality; different $\mathfrak{x}_k$ could in theory map onto the same sample points if the $\mathfrak{e}_i$ are periodic.
 
 \begin{figure}[p]
@@ -432,7 +431,7 @@ and the resulting matrices $\mat A$, $\mat B$ are only precise to about two deci
 Still, there are two reasons why our approach is useful.
 First, the imprecisions are negligible compared to those resulting from implementing a linear transformation in a spiking neural network.%
 \footnote{For $n \approx 100$ neurons, errors due to noise are on the order of $10^{-2}$, whereas errors due to static distortion are on the order of~$10^{-3}$ \citep[cf.][Section~2.2.2 and Figure~2.6, note the squared errors]{eliasmith2003neural}.}
-Second, and most importantly, the strength of our approach lies in being agnostic about the network architecture; we can approximate connection weights for networks with higher-order and heterogeneous synaptic filters in the feedback and input paths.
+Second, and most importantly, the strength of our approach lies in being agnostic to the network architecture; we can approximate connection weights for networks with higher-order and heterogeneous synaptic filters in the feedback and input paths.
 
 \begin{figure}[p]
 	\centering
@@ -493,14 +492,14 @@ To realise a dynamical system with an $n$th order synaptic filter, we must gener
 Accounting for heterogeneous filters similarly requires access to the derivative (cf.~\Cref{app:heterogenous_time_constants}).
 
 The different filters in the feed-forward path can be thought of being linearly combined to \emph{approximate} these differentials, akin to the \enquote{dual-time-constant networks} explored by \citet{tripp2010population}.
-Numerically solving the weight optimisation problem in \cref{eqn:weight_optimise_currents_temporal} automatically determines the weights that implicitly decode the differentials and, that at the same time, \emph{approximate} the desired dynamics.
+Numerically solving the weight optimisation problem in \cref{eqn:weight_optimise_currents_temporal} automatically determines the weights that implicitly decode the differentials and that, at the same time, \emph{approximate} the desired dynamics.
 
 \begin{figure}
 	\centering
 	\includegraphics{media/chapters/04_temporal_tuning/heterogeneous_recurrence_exploration_xs_flt.pdf}
 	\caption[Effect of the input signal distribution the system error]{Effect of the input signal distribution the system error.
 	Same setup and legend as in \Cref{fig:heterogeneous_recurrence_exploration}, but for a recurrent network with three filters and with input signals $\mathfrak{x}_k$ of varying bandwidth.
-	Inputs are generated by low-pass filtering white noise with a second-order low-pass; the time-constant $\vartheta$ of that filter corresponds to the different line colours (dark blue corresponds high-bandwidth signals, orange to low-frequency signals).
+	Inputs are generated by low-pass filtering white noise with a second-order low-pass; the time-constant $\rho$ of that filter corresponds to the different line colours (dark blue corresponds high-bandwidth signals, orange to low-frequency signals).
 	Data is the median over $1000$ trials, shaded areas are the $25$th and $75$th percentile.
 	\textbf{(A)}~For the integrator, there is a trade-off between lower errors in a small frequency range, and larger, but consistent errors.
 	\textbf{(B)}~The input distribution has a smaller effect on this network; the optimal solution is mostly independent of the input.
@@ -515,9 +514,9 @@ Moreover, the ability of the network to generalise depends on the input signals 
 While this is the norm in most machine learning scenarios, the network in \Cref{thm:temporal_lstsq} did not have this constraint (cf.~\Cref{app:temporal_tuning_proofs}).
 
 We explore the effect of the training signals on the final network in \Cref{fig:heterogeneous_recurrence_exploration_xs_flt}.
-Specifically, we generate $\mathfrak{x}_k$ with different frequency content by varying the time-constant $\vartheta$ of the second-order low-pass filter that is applied to the generated white noise.
-Unsurprisingly, only supplying low-frequency inputs (i.e., using a large $\vartheta$) results in networks that achieve low errors for low-frequency inputs.
-A more wide-band input (i.e., using a small $\vartheta$) results in a compromise-solution with smaller errors for wide-band inputs, but (at least in the case of the integrator) both slightly higher errors for low-frequency inputs.
+Specifically, we generate $\mathfrak{x}_k$ with different frequency content by varying the time-constant $\rho$ of the second-order low-pass filter that is applied to the generated white noise.
+Unsurprisingly, only supplying low-frequency inputs (i.e., using a large $\rho$) results in networks that achieve low errors for low-frequency inputs.
+A more wide-band input (i.e., using a small $\rho$) results in a compromise-solution with smaller errors for wide-band inputs, but (at least in the case of the integrator) both slightly higher errors for low-frequency inputs.
 
 \subsubsection{Relationship to system identification}
 When solving for weights in a recurrent system using \cref{eqn:weight_optimise_currents_temporal}, we do not have any formal guarantee that the resulting system is stable---that is, unless the desired dynamics are stable and can be approximated \emph{precisely}.
@@ -534,7 +533,7 @@ In fact, our optimisation problem in \cref{eqn:weight_optimise_currents_temporal
 The primary difference to our approach is that our networks do not contain perfect integrators---correspondingly, we convolve the with the synaptic filter instead of integrating.
 This is possible because the integral-equation approach is---at least if the system can be perfectly realised---invariant to convolution with a non-zero filter.
 
-A central challenge of these approaches is robustness to noise in the measurements, which---even in the case of zero-mean white noise---causes asymptotic biases in the resulting system \citep{sagara1989recursive}.
+A central challenge of the integral-equation approach is robustness to noise in the measurements, which---even in the case of zero-mean white noise---causes asymptotic biases in the resulting system \citep{sagara1989recursive}.
 That is, even as the number of samples $N$ goes to infinity, the estimated system parameters differ from the true system parameters.
 Given that we mostly work with artificially generated data, the primary source of noise is time-discretisation.
 It may be possible to incorporate more modern weight solving approaches with imposed stability guaranties, as is discussed in \citet{verhaegen2007filtering}.
@@ -583,7 +582,7 @@ Assuming homogeneous first-order synaptic filters with time-constant $\tau$, the
 	\mat A_1' &= \mat A_2' = \tau \mat A + \mat I \,, & \mat B_1' &= \mat B_2' = \tau \mat B \,.
 \end{align}
 Put differently, we use the closed-form solution from the \NEF dynamics principle in both paths.
-This makes intuitive sense due to symmetry; but see \Cref{app:granule_golgi_dynamics} for a detailed derivation.
+This makes intuitive sense due to symmetry, but see \Cref{app:granule_golgi_dynamics} for a detailed derivation.
 
 \paragraph{Unrolling the network}
 An alternative approach is to solve for all weights simultaneously.

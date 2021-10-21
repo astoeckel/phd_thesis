@@ -1,91 +1,60 @@
 % !TeX spellcheck = en_GB
 
-As we mentioned several times before in this thesis, biological neural networks are dynamical systems.
-Taken at face value, this assertion is a gross understatement---of course, just like all other physical systems, biological systems evolve through time and are thus \enquote{dynamic}.
-However, dynamics are of special interest when studying nervous systems.
-At the lowest level---and as we hope to convince the reader in this chapter---neural dynamics play a critical role in biological computation.
-Simultaneously, at the highest level, dynamics determine the overall ability of an organism to survive.
-Variations in response-time on the order of milliseconds can decide over life and death, 
-as avid viewers of nature documentaries and motor vehicle operators will surely attest.
-
-From the perspective of classical computer engineering, it may almost seem implausible that a biological system should be capable of rapid coordinated action---particularly taking into account that the elements that make up nervous systems compute asynchronously and possess strong intrinsic dynamics.
-After all, when constructing artificial computers, asynchronicity and dynamics are annoyances that engineers must work around.
-Typical microprocessors spend a sizeable portion of their energy budget on distributing clock signals \citep[e.g.,][]{zhang2008injectionlocked}, and most digital circuits are meticulously engineered to switch between clearly interpretable voltage states as quickly as possible \citep[e.g.,][Chapter~4]{weste2011cmos}.
-Similarly, on an algorithmic level, neurons in artificial neural networks are assumed compute instantly, while time progresses synchronously in discrete steps.
-
-This juxtaposition of artificial and biological systems gives rise to an old, but still common (and rather subtle) mis\-cha\-rac\-te\-ri\-sa\-tion---namely, the idea that biological information processing is slow and that, compared to digital computers, biological brains compensate for their slowness with massive parallelism (see for example \cite{vonneumann1958computer}, pp.~50f).
-Of course, this statement is true in some respect.
-For example, signal propagation in electronic circuits is between six and eight orders of magnitudes faster than axonal action potential propagation.%
-\footnote{Electrical signals travel at about two thirds of the speed of light along conductors (i.e., about \SI{200e6}{\metre\per\second}), whereas axonal action potential propagation can be as slow as \SI{1}{\metre\per\second} and reaches up to \SI{100}{\metre\per\second}.}
-Still, comparing digital computers and neural networks without fully understanding the high-level computational function of individual neurons amounts to guesswork; simply stating that neurons and synapses are \enquote{slow} misses the point.
-
-A central hypothesis of this chapter is that the processes that generate neural dynamics are a crucial for the computations performed by biological system.
-Neural dynamics are \emph{responsible} for high-level functions such as interpreting visual motion, forming working memory, and generating motor trajectories.
-In a nutshell, computations that depend on the history of a signal on short time-scales is possible \emph{because} of (and not despite) information about the past signal history being implicitly stored in the \enquote{slow} temporal dynamics.
-
-It should be emphasised that we are by no means suggesting that dynamical system theory is the \emph{primary} paradigm by which cognitive scientists and artificial intelligence researchers should model cognitive systems.
-
-
-
-\subsubsection{Goal of this chapter}
-
-The goal of this chapter to convince the reader that this interpretation of neural dynamics can indeed be used to 
-
-\subsubsection{Prior work}
-
-\begin{figure}
-	\centering
-	\includegraphics{media/chapters/04_temporal_tuning/nef_principle_three_examples_network.pdf}%
-	\kern-124mm\includegraphics{media/chapters/04_temporal_tuning/nef_principle_three_examples.pdf}
-	\caption[Approximating arbitrary dynamics using the NEF dynamics principle]{Approximating arbitrary dynamics using the NEF dynamics principle.
-	\textbf{(A)} Simplified network architecture; encoders and decoders are not shown (see \cref{fig:nef_dynamics_neurons_a} for the full network).
-	Either $u(t)$ or $\dot u(t)$ is passed into the network; $\mat{A'}$ and $\mat{B'}$ are the LTI system matrices compensating for the synaptic filter with time-constant $\tau$ (eq.~\ref{eqn:nef_transform_a_b}).
-	\textbf{(B)} Without the recurrent connection (i.e., $\mat{A'} = 0$, $\mat{B'} = 1$), the system acts as a low-pass filter.
-	\textbf{(C)} Implementing an integrator ($\mat{A} = 0$, $\mat{B} = 1$).
-	\textbf{(D)} With access to the differential $\dot u(t)$, the integrator can be used to construct a pass-through.
-	}
-\end{figure}
-
-The work in this chapter can primarily be seen as a generalisation of the NEF dynamics principle.
-Recall that the dynamics principle (\Cref{chp:nef_dynamics}) states that recurrent connections within a spiking neural network can be used to approximate \emph{any} dynamical system of the form $\dot{x}(t) = f(x(t), u(t), t)$.
-Examples include approximating an integrator $\dot{x}(t) = u(t)$, or a low-pass filter $\bar \tau \dot{x}(t) = u(t) - x(t)$.
-Notably, the time-constant of the simulated low-pass filter $\bar \tau$ can be shorter than the synaptic time constant $\tau$ of the underlying system.
-Assuming that we have access to the differential $\dot u(t)$, we can use the integrator to compensate for the neural dynamics altogether.
-
-In contrast to artificial neural networks, and as we discussed before, the individual computing elements that make up biological neural networks 
-
-The dynamics of the individual components that make up a nervous system are not merely by accident, 
-
-% Dynamics of the individual elements are not merely an accident
-% Form working memories
-% Stream-processing information in real-time
-
-As we have discussed several times before, biological neural systems are \emph{inherently} continuous dynamical systems that are based on asynchronous computing elements.
-
-Biological neural networks are continuous dynamical systems that are based on asynchronous computing elements.
-This is in contrast to artificial neural networks, which are typically engineered to work with relatively coarse timesteps on a synchronous computing substrate.
-
 So far, we have mostly ignored network-level dynamics.
-Of course, our analysis of \emph{individual neurons} in the \nlif family critically relied on harnessing the subthreshold dynamics of the passive dendrites for computation.
-However, when constructing \emph{networks}, we characterised these neurons in terms of a time-averaged response curve $\mathscr{G}[\vec g]$ (\Cref{sec:nlif_derive_h}) and did not account for the filter-properties of the dendrites (\Cref{sec:nlif_subth_properties}).
+Surely, our analysis of \emph{individual} \nlif neurons relied on harnessing the subthreshold dynamics of passive dendrites for computation.
+However, we primarily focused on the equilibrium state of this system and accounted for dynamics by fitting a static model to simulation data.
+We would certainly have reached lower errors in our experiments had the model not possessed additional dynamics.
 
-The goal of this chapter is to present techniques for harnessing the dynamical properties of spiking neural networks for computing time-dependent functions, that is, functions that do not only depend on a current system state $\vec x \in \mathbb{R}^d$, but on a \emph{signal} $\mathfrak{x}(t) : \mathbb{R}^- \longrightarrow \mathbb{R}^d$, where $t = 0$ corresponds to the current point in time, and $t < 0$ references the signal history.
+Even though neural dynamics may appear unwieldy, they play a critical role in cognition.
+More precisely, the central hypothesis of this chapter---and, if you will, a theoretical neuroscience \emph{theory} (cf.~\Cref{chp:modelling_neurobiological_systems})---is that temporal resources in biological neural networks give rise to the \emph{temporal tuning} of individual neurons.
+Underlying temporal resources include synaptic filters, intrinsic neural dynamics, transmission delays, and the temporal tuning of neighbouring neurons.
+That is, synaptic weights recombine diverse \emph{temporal tuning curves} to ultimately support high-level functions such as interpreting visual motion, forming working memory, or generating motor trajectories.
+Mathematically speaking, we can decode higher-order functions $f$ that do not only depend on the current represented value $\vec x \in \mathbb{R}^d$ alone, but on a \emph{signal} $\mathfrak{x}(t) : \mathbb{R}^- \longrightarrow \mathbb{R}^d$, where $t = 0$ corresponds to the present, and $t < 0$ references the past.
 
-While the focus of this chapter will not be on multi-channel neurons such as \nlif neurons, ...
+Notably, our temporal tuning curve approach naturally extends the NEF dynamics principle \citep[Chapter~8]{eliasmith2003neural}.
+That is, using temporal tuning curves, we can realise any dynamical system that could be realised using the dynamics principle.%
+\footnote{While it is possible to realise nonlinear dynamical systems using temporal tuning curves, we focus on linear dynamical systems for the sake of simplicity.}
+At the same time, temporal tuning curves facilitate taking the temporal properties of pre-populations and intermediate filters into account, including heterogeneous and higher-order synapses.
 
-\begin{itemize}
-	\item We mostly focus on linear dynamics
-\end{itemize}
+However, the most important contribution of our temporal tuning curve approach is a shift in perspective.
+Just as we harness non-temporal tuning curves and neural nonlinearities to approximate spatial functions in neural networks, we are now able to harness the temporal tuning of pre-populations and intermediate filters to realise the temporal tuning of post-populations.
+Curiously, this includes recurrent neuron populations.
+We furthermore separate \emph{temporal} from \emph{spatial} tuning.
+A neuron can be tuned to a $d$-dimensional spatial quantity, and, at the same time, possess some temporal tuning, typically of finite order $q$.
 
-NEF Dynamics Principle: Separation of dynamics and represented quantities.
-Can solve for dynamics by sampling, do not require a dynamical system description: this is a key feature of the NEF!
+Crucially, this allows modellers to directly specify some desired neural behaviour.
+For example, a modeller could choose to assign time-cell like tuning \citep{pastalkova2008internally,tiganj2016sequential} to one population, and visual spatiotemporal receptive fields \citep{carandini1999linearity} to another.
+In theory, these tuning properties can be provided in the form of sampled data.
+So far, this was not possible using the NEF dynamics principle---while the representation and transformation principle facilitate incorporating empirical data, the dynamics principle relied on modellers providing a mathematical model in terms of differential equations, with uncertain consequences for the impact on neural tuning.
+
+Almost more strikingly, temporal tuning is not just useful for modelling neurobiological systems.
+Introducing the right kind of dynamics into \emph{artificial} neural networks results in architectures that outperform successful approaches in machine learning by wide margins.
+Specifically, we show that a layer of Legendre Memory Units (LMUs; \cite{voelker2019lmu}) corresponds to a spatiotemporally tuned NEF population. We use our insights from modelling biological systems to propose alternative variants of this system.
+
+\subsubsection{Structure}
+We start \Cref{sec:temporal_tuning_curves} with a review of examples of \enquote{temporal tuning} in biology, and extend the NEF by introducing the concept of a \enquote{temporal tuning curve}.
+Specifically, we propose a linear least-squares optimisation problem that realises the desired temporal tuning by taking synaptic filters and the pre-population tuning into account.
+Under ideal conditions, temporal tuning curves can be used to construct recurrent neural networks that realise LTI systems while compensating for heterogeneous and higher-order synaptic filters.
+
+Given that we can tune neurons to arbitrary LTI systems, we ask in \Cref{sec:temporal_bases} what LTI system we should optimally implement to obtain a maximally diverse set of temporal tuning curves.
+This leads us to the concept of LTI systems approximating sliding-window spectra.
+We introduce a simple technique for constructing such LTI systems and re-derive the Legendre Delay Network (LDN) using this approach.
+Furthermore, we unsuspectingly discover a \enquote{modified Fourier system} as a potential alternative to the LDN.
+
+In \Cref{sec:recurrent_weights}, we demonstrate that our temporal tuning curve approach still works in less ideal spiking neural networks.
+We show that, just like the LDN, our modified Fourier system generates \enquote{time cells} when mapped onto a spiking neural network.
+Furthermore, we use spatiotemporal encoding matrices to generate multi-dimensional spatiotemporal tuning and demonstrate decoding nonlinear functions over both space and time.
+
+Finally, in \Cref{sec:applications_to_ml}, we draw parallels between LMU layers and our aforementioned NEF populations with spatiotemporal tuning.
+We show that the choice of the sliding window-spectrum is secondary to the performance of the LMU and demonstrate that convolving input signals with the modified Fourier system can offer a significant improvement in terms of asymptotic time-complexity compared to the LDN.
+We close with a discussion \Cref{sec:temporal_tuning_conclusion}.
 
 \begin{Notation}
-In this chapter, we sometimes use Fraktur letters (e.g., $\mathfrak{a}$, $\mathfrak{b}$, \textellipsis) to convey that the mathematical objects we are referring to are now \emph{functions} over time.
-That is, we write the stimulus history as $\vec{\mathfrak{x}}(t)$ instead of $\vec x(t)$.
-Note that $\vec{\mathfrak{x}}(t)$ refers to the result of evaluating the function $\vec{\mathfrak{x}}$ at a specific point in time $t$, whereas $\vec{\mathfrak{x}}$ refers to the function object as a whole.
-In other words, $\vec{\mathfrak{x}}$ is a map $\mathbb{R} \longrightarrow \mathbb{R}^d$, whereas $\vec{\mathfrak{x}}(t)$ is simply an element in $\mathbb{R}^d$.
+We sometimes use Fraktur letters (e.g., $\mathfrak{a}$, $\mathfrak{b}$, \textellipsis) to convey that the mathematical objects we are referring to are now \emph{functions} over time.
+That is, we write a temporal encoder as $\vec{\mathfrak{e}}$ instead of $\vec e$.
+Note that $\vec{\mathfrak{e}}(t)$ refers to the result of evaluating the function $\vec{\mathfrak{e}}$ at a specific point in time $t$, whereas $\vec{\mathfrak{e}}$ refers to the function object as a whole.
+In other words, $\vec{\mathfrak{e}}$ is a map $\mathbb{R} \longrightarrow \mathbb{R}^d$, whereas $\vec{\mathfrak{e}}(t)$ is simply an element in $\mathbb{R}^d$.
 This distinction is important when expressing operations on functions, such as convolution.
 We furthermore assume in most of our definitions that $t = 0$ corresponds to the current point in time.
-Since nervous systems usually do not have access to future events, the stimulus history $\vec{\mathfrak{x}}(t)$ only needs to be defined for $t \leq 0$.
+Since nervous systems typically do not have access to future events, the stimulus history $\vec{\mathfrak{x}}(t)$ only needs to be defined for $t \leq 0$.
 \end{Notation}

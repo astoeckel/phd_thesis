@@ -12,12 +12,13 @@ As we discuss in \Cref{chp:cerebellum}, we can for example build an adaptive fil
 Still, it can also be beneficial to solve for dense weight matrices that realise temporal tuning in networks of nonlinear neurons.
 First and foremost, this allows modellers to finely control the temporal properties of individual neurons.
 % and thus to model biological systems such as those described in \Cref{sec:temporal_tuning_biology}.
-Furthermore, the temporal tuning curve paradigm suggests a way to represent multi-dimensional quantities over time; it is not obvious how to accomplish this within the \NEF dynamics principle.
+Furthermore, the temporal tuning curve paradigm suggests a natural way to represent multi-dimensional quantities over time.
 Lastly, we can take heterogeneous synaptic filters into account, now at the level of individual synapses (cf.~\Cref{fig:nef_dynamics_neurons_b}).
 
 In this section, we discuss solving for synaptic weights in nonlinear networks.
 To this end, we propose a method for generating input signals $\mathfrak{x}_k$ that uniformly cover the neural activity space.
 We then confirm in several experiments that our methods can be used to successfully build networks with the intended properties.
+% TODO
 %We then show how to account for the intrinsic dynamics of LIF neurons in low-firing rate regimes by estimating a temporal current-translation function.
 %Finally, we use the techniques discussed here to construct adaptive filter that learns nonlinear dynamics.
 
@@ -28,7 +29,7 @@ On the surface, switching from linear units to neurons with nonlinear response c
 Recall that our least-squares loss was given as
 \begin{align}
 	E &= \sum_{k = 1}^N \left[
-		J_i \Big( \! \int_0^\infty \!\!\! \big\langle \mathfrak{e}_i(\tau), f(\mathfrak{x}_k(-\tau)) \big\rangle \, \mathrm{d}\tau \Big) \,\,-\,\,
+		J_i \Big( \! \int_0^\infty \!\!\! \big\langle \mathfrak{e}_i(\tau), f(\mathfrak{x}_k)(-\tau) \big\rangle \, \mathrm{d}\tau \Big) \,\,-\,\,
 		\sum_{j = 1}^m w_{ij} \! \int_0^\infty \!\!\! h_{ij}(\tau) \mathfrak{a}_j(\mathfrak{x}_k, -\tau) \,\mathrm{d}\tau
 	\right]^2 \,.
 	\tag{4.7}
@@ -65,11 +66,11 @@ We must sample $\mathfrak{a}_j(\mathfrak{x}_k)$ densely enough to capture the cu
 
 One method for realising a $q$-dimensional LTI system with state-space matrices $\mat A$, $\mat B$ in a non-linear network with $n$ neurons is to simply set each $\mathfrak{e}_i$ to a linear combination of the system impulse responses $\mathfrak{h}_j$ (cf.~\Cref{fig:vectorial_temporal_encoder}):
 \begin{align}
-	\mathfrak{e}_i(t) &= \sum\nolimits_{j = 1}^q {e}^\mathrm{t}_j \exp(\mat A t) \mat B = \sum\nolimits_{j = 1}^q {e}^\mathrm{t}_j \mathfrak{h}_j(t)  = \langle \vec{e}^\mathrm{t}, \vec{\mathfrak{h}}(t) \rangle \,,
+	\mathfrak{e}_i(t) &= \sum\nolimits_{j = 1}^q {e}^\mathrm{t}_j \exp(\mat A t) \mat B = \sum\nolimits_{j = 1}^q {e}^\mathrm{t}_j \mathfrak{h}_j(t)  = \langle \vec{e}_i^\mathrm{t}, \vec{\mathfrak{h}}(t) \rangle \,,
 	\label{eqn:temporal_encoding_vector}
 \end{align}
-where $\vec{e}^\mathrm{t} \in \mathbb{S}^q$ is a \emph{temporal encoding vector}, and $\mathbb{S}^q$ is the $q$-dimensional unit sphere.
-Since $\vec{e}^\mathrm{t}$ is normalised to unit length, $\vec{e}^\mathrm{t}$ is \emph{exactly equivalent} to the spatial encoding vector $\vec e$ when constructing an LTI system of order $q$ using the NEF dynamics principle.
+where $\vec{e}_i^\mathrm{t} \in \mathbb{S}^q$ is a \emph{temporal encoding vector}, and $\mathbb{S}^q$ is the $q$-dimensional unit sphere.
+Since $\vec{e}_i^\mathrm{t}$ is normalised to unit length, $\vec{e}_i^\mathrm{t}$ is \emph{exactly equivalent} to the spatial encoding vector $\vec e_i$ when constructing an LTI system of order $q$ using the NEF dynamics principle.
 
 The difference between the dynamics principle and temporal tuning curves is largely conceptual.
 Using the NEF dynamics principle, our neuron population represents a $q$-dimensional quantity, while, using temporal tuning, the population represents a scalar---the individual neurons possess different temporal tuning, which we can exploit when solving for weights.
@@ -79,13 +80,14 @@ Interestingly, the temporal tuning paradigm suggests a way to combine temporal a
 Remember from \Cref{def:linear_temporal_tuning} that $\mathfrak{e}_i$ is a \emph{vectorial} quantity over time.
 A valid choice for  $\mathfrak{e}_i$ is thus
 \begin{align}
-	\mathfrak{e}_i(t) &= \vec e_i \, \langle \vec{e}_i^\mathrm{t}, \vec{\mathfrak{h}}(t) \rangle = (\vec e_i \otimes \vec e_i^\mathrm{t}) \, \mathfrak{h}(t) = \mat E^\mathrm{t} \mathfrak{h}(t)\,,
+	\mathfrak{e}_i(t) &= \vec e_i \, \langle \vec{e}_i^\mathrm{t}, \vec{\mathfrak{h}}(t) \rangle = (\vec e_i \otimes \vec e_i^\mathrm{t}) \, \mathfrak{h}(t) = \mat E_i^\mathrm{t} \mathfrak{h}(t)\,,
 	\label{eqn:spatio_temporal_encoding_vector}
 \end{align}
-where \enquote{$\otimes$} is the outer product, and $\mat E^\mathrm{t} \in \mathbb{R}^{d \times q}$ is a \emph{spatiotemporal encoding matrix} with $\| \mat E^\mathrm{t} \|_\mathrm{F} = 1$.
+where \enquote{$\otimes$} is the outer product, and $\mat E^\mathrm{t} \in \mathbb{R}^{d \times q}$ is a \emph{spatiotemporal encoding matrix} with $\| \mat E_i^\mathrm{t} \|_\mathrm{F} = 1$.
 Populations with this tuning represent $d$-dimensional quantities with temporal tuning of order $q$ and can be harnessed to approximate \emph{nonlinear} functions over space and time.
+%Note that choosing $\mat E_i^\mathrm{t}$ as an outer product of $\vec e_i$ and $\vec e_i^\mathrm{t}$ results in a rank one matrix; this limits the types of spatiotemporal functions that can be decoded.
 We discuss this in more detail in \Cref{sec:spatiotemporal}.
-Curiously, the matrix $\mat E^\mathrm{t}$ is also implicitly used in the Legendre Memory Unit (LMU; \cite{voelker2019lmu}); we discuss this in \Cref{sec:lmu}.
+Curiously, the matrix $\mat E_i^\mathrm{t}$ is also implicitly used in the Legendre Memory Unit (LMU; \cite{voelker2019lmu}); we discuss this in \Cref{sec:lmu}.
 
 \subsubsection{Implicitly solving for temporal bases}
 
@@ -370,27 +372,30 @@ This error being surpassed is likely due to compensating for heterogeneous filte
 \subsection{Spatiotemporal Neuron Populations}
 \label{sec:spatiotemporal}
 
-As we mentioned in \Cref{sec:solve_dynamics_nonlinear_neurons}, neurons can be simultaneously tuned spatially and temporally.
-Specifically, we proposed in \cref{eqn:temporal_encoding_vector} to construct temporal \emph{encoders} $\mathfrak{e}_i$ by sampling separate temporal and spatial \emph{encoding vectors}; i.e., $\vec e^\mathrm{t}_i \in \mathbb{S}^q$, $\vec e_i \in \mathbb{S}^d$, respectively.
-This way, we construct a rank one spatiotemporal encoding matrix $\mat{E}^\mathrm{t} \in \mathbb{R}^{d \times q}$, where $\mat{E}^\mathrm{t} = \vec e_i \otimes \vec e^\mathrm{t}_i$ and $\mathfrak{e}_i = \mat{E}^\mathrm{t} \mathfrak{h}$ (eq.~\ref{eqn:spatio_temporal_encoding_vector}; $i$ is the neuron index, $d$ the number of spatial dimensions, and $\mathfrak{h}$ is a temporal basis of order $q$).
+As we suggested in \Cref{sec:solve_dynamics_nonlinear_neurons}, neurons can be simultaneously tuned spatially and temporally.
+Specifically, we proposed in \cref{eqn:temporal_encoding_vector} to construct temporal encoders $\mathfrak{e}_i$ by sampling separate temporal and spatial encoding vectors $\vec e^\mathrm{t}_i \in \mathbb{S}^q$, $\vec e_i \in \mathbb{S}^d$.
+This way, we obtain a rank one spatiotemporal encoding matrices $\mat{E}_i^\mathrm{t} \in \mathbb{R}^{d \times q}$, where $\mat{E}_i^\mathrm{t} = \vec e_i \otimes \vec e^\mathrm{t}_i$ and $\mathfrak{e}_i = \mat{E}_i^\mathrm{t} \mathfrak{h}$ (cf.~eq.~\ref{eqn:spatio_temporal_encoding_vector}; $i$ is the neuron index, $d$ the number of spatial dimensions, and $\mathfrak{h}$ is a temporal basis of order $q$).
 
-In the limit of $n$, $q \to \infty$, and $\mat{E}^\mathrm{t}$ being sampled uniformly, we can theoretically decode arbitrary continuous functions $f$ over space and time, that is $f : ([-\theta, 0] \longrightarrow \mathbb{X}) \longrightarrow \mathbb{R}^{d'}$, where $[-\theta, 0]$ is some temporal interval, $\mathbb{X} \subset \mathbb{R}^d$ is a compact spatial domain, and $d'$ is the number of target dimensions.%
+In theory, for an infinite number of neurons and temporal basis dimensions, and $\mat{E}_i^\mathrm{t}$ being sampled uniformly, we can decode arbitrary continuous functions $f$ over space and time.
+More precisely, $f$ is a higher-order function $f : ([-\theta, 0] \longrightarrow \mathbb{X}) \longrightarrow \mathbb{R}^{d'}$, where $[-\theta, 0]$ is some temporal interval, $\mathbb{X} \subset \mathbb{R}^d$ is a compact spatial domain, and $d'$ is the number of target dimensions.%
 \footnote{
-This depends on the temporal and spatial encoders uniformly covering the space of possible input signals and once again follows from \citet{hornik1989multilayer}.
+This depends on the spatial encoding matrices uniformly covering the space of possible input signals and once again follows from \citet{hornik1989multilayer}.
 Intuitively, we can linearly combine the neural activities to assign a value to every non-pathological input signal $\mathfrak{x} : [-\theta, 0] \longrightarrow \mathbb{X}$ (cf.~\Cref{app:thm_two_layer_universal}).}
 Below, we explore two examples of such functions: delayed multiplication and the \enquote{recently travelled distance}.
+We furthermore highlight the difference between rank one and full-rank spatiotemporal encoding matrices $\mat{E}_i^\mathrm{t}$.
 
-\subsubsection{Delayed multiplication with rank one $\mat E^\mathrm{t}$}
+\subsubsection{Delayed multiplication with rank one $\mat E_i^\mathrm{t}$}
 Consider the product of two delayed signals $\mathfrak{x}^1$, $\mathfrak{x}^2$:
 \begin{align*}
 	f_{\theta'_1, \theta'_2}(\mathfrak{x}^1, \mathfrak{x}^2) &= \mathfrak{x}^1 (- \theta'_1) \, \mathfrak{x}^2 (- \theta'_2) \,.
 \end{align*}
-This function is useful as a benchmark---any approximation $\hat f_{\theta'_1, \theta'_2}$ with an \NRMSE below $100\%$ indicates that we can decode \emph{nonlinear} functions over the delayed input.
+This function is useful as a benchmark.
+Any approximation $\hat f_{\theta'_1, \theta'_2}$ with an \NRMSE below $100\%$ indicates that we can decode \emph{nonlinear} functions over the delayed inputs.
 This is because, for zero mean $\mathfrak{x}$, the optimal \emph{linear} approximation is $\hat f_{\theta'_1, \theta'_2}(\mathfrak{x}) = 0$ with an \NRMSE of $100\%$.
 
 \paragraph{Methods}
 To decode this \enquote{delayed multiplication} function in a spatiotemporal network, we tune $n = 1000$ LIF neurons with maximum firing rates between \SI{50}{\hertz} and \SI{100}{\hertz} to $d = 2$ spatial dimensions and $q = 5$ temporal LDN dimensions using separate temporal and spatial encoders $\vec e_i^\mathrm{t}$, $\vec e_i$.%
-\footnote{Judging from cursory exploration, using the LDN system in this context resulted in slightly smaller errors over the modified Fourier system with rectangle window (at least for band-limited noise as an input).}
+\footnote{In this context, using the LDN system resulted in slightly smaller errors than the modified Fourier system.}
 After solving for weights using $N = 1000$ na\"ively sampled input signals $\mathfrak{x}_\mathrm{k}$ (at $\rho = \SI{3}{\hertz}$), we feed a training and test signal of length $T = \SI{100}{\second}$ and a band-limit of $\SI{1}{\hertz}$ into the network.
 We use the training signal to compute decoders, and the test signal to compute the presented decoding errors.
 
@@ -406,37 +411,76 @@ We use the training signal to compute decoders, and the test signal to compute t
 	{\phantomsubcaption\label{fig:spatio_temporal_b}}%
 	{\phantomsubcaption\label{fig:spatio_temporal_c}}%
 	{\phantomsubcaption\label{fig:spatio_temporal_d}}%
-	\caption[Two-dimensional quantities over time in a spatiotemporal network]{
-		Two-dimensional quantities over time in a spatiotemporal network.
+	\caption[Two-dimensional quantities over time in a rank one spatiotemporal network]{
+		Two-dimensional quantities over time in a rank one spatiotemporal network.
 		\textbf{(A)}~Overview of the network and results for some exemplary inputs $\mathfrak{x}_1(t)$ and $\mathfrak{x}_2(t)$.
 		The input signals are fed into a recurrent network where each neuron is tuned to a random linear combination of the inputs, and a linear combination of the LDN impulse responses for $q = 5$ and $\theta = \SI{1}{\second}$.
 		%After filtering the output spike trains, we can decode linear and nonlinear functions over time and space.
-		We can approximately decode delayed versions of the inputs (a linear transformation) and the product of the two input signals at arbitrary points in time from the input signal.
+		We can approximately decode delayed versions of the inputs (a linear transformation) and the product of the two input signals for $\theta_1 = \theta_2$.
 		\textbf{(B)}~For band-limited noise inputs, delayed versions of the both input signal can be decoded with a small mean delay decoding error $\bar E$. Dashed lines are the delay decoding errors for an equivalent Echo State Network (ESN; \cite{jaeger2004harnessing}).
 		\textbf{(C)}~Decoding error (NRMSE) when systematically decoding delayed multiplication for delays $\theta_1$, $\theta_2$.
 		While the resulting error is quite large, it is substantially smaller than what is achievable with linear approximations of four-quadrant multiplication (i.e., an NRMSE of $100\%$). Decoding delayed multiplication works best for $\theta_1 = \theta_2$.
 		For an ESN, all errors are above $100\%$.
 		\textbf{(D)} Normalised singular values of the recurrent weight matrix.
-		The matrix is of rank twelve, with the first eight singular values dominating.
+		The matrix is of rank twelve, with the last four singular values being relatively small.
 	}
 	\label{fig:spatio_temporal}
 \end{figure}
 
 Results are depicted in \Cref{fig:spatio_temporal}.
 It is possible to decode delayed versions of the individual input signals with similar errors as in previous experiments.
-Decoding delayed multiplication generally incurs relatively large errors, with the minimum error being about $41\%$.
-In general, the \NRMSE is below $100\%$ for all $\theta'_1$-$\theta'_2$-pairs; errors are minimal for $\theta'_1 = \theta'_2$.
+Decoding delayed multiplication generally results in relatively large errors, with a minimum error of $36\%$.
+Most notably, errors are minimal along the diagonal, i.e., $\theta'_1 = \theta'_2$.
 
 \paragraph{Discussion}
-Although the errors for decoding delayed multiplication are relatively large, the NRMSE being below $100\%$ demonstrates that we can decode nonlinear functions that depend on any pair of times.
-It is not immediately clear why decoding errors off the $\theta'_1$-$\theta'_2$-axis are larger.
-As we will see next, this is due to our spatiotemporal encoding matrix $\mat E^\mathrm{t}$ being of rank one---each neuron is temporally tuned to a linear combination of the input signals, but not tuned to linear combinations of the input signals \emph{and} the temporal basis functions.
+Decoding errors for off-diagonal $\theta'_1$, $\theta'_2$ pairs being large is due to $\mat E^\mathrm{t}$ being of rank one.
+Each neuron is temporally tuned to a linear combination of the spatial input signal dimensions.
+For example, for some $\vec e_i$, $\vec e_i^\mathrm{t}$, the neuron is most active if the time-course of the linear combination $\langle \vec e_i, \mathfrak{x}(t) \rangle$ is similar to the time-course described by the function $\langle \vec e_i^\mathrm{t}, \mathfrak{h}(t) \rangle$.
+
+However, using rank one $\mat E_i^\mathrm{t}$, it is impossible to generate neural tuning such that a neuron is tuned to different input dimensions having different temporal behaviour.
+As a result, we cannot decode functions that are nonlinear over several time-points.
+This is similar to not being able to decode nonlinear functions from neuron populations with axis-aligned spatial encoders (cf.~\Cref{sec:two_layer_intermediate}).
+We reach NRMSEs below $100\%$ for $\theta'_1 \neq \theta'_2$ when computing delayed multiplication because the product for the closest uniform delay is a decent approximation.
 
 
 \subsubsection{Delayed multiplication with full rank $\mat E^\mathrm{t}$}
 
+We repeat the above experiment with full rank spatiotemporal encoding matrices $\mat E^\mathrm{t}$.
+That is, instead of sampling spatial and temporal encoding vectors $\vec e_i$, $\vec e^\mathrm{t}_i$, we generate random $\mat E^\mathrm{t}$ with Frobenius norm $\| \mat E^\mathrm{t} \|_\mathrm{F} = 1$.
+Specifically, we uniformly sample vectors from the hypersphere $\mathbb{S}^{dq}$, and reshape these vectors into matrix form.
 
+\paragraph{Results}
 
+\begin{figure}
+	\centering
+	\includegraphics{media/chapters/04_temporal_tuning/spatio_temporal_analysis_matrices.pdf}%
+	{\phantomsubcaption\label{fig:spatio_temporal_full_a}}%
+	{\phantomsubcaption\label{fig:spatio_temporal_full_b}}%
+	{\phantomsubcaption\label{fig:spatio_temporal_full_c}}%
+	\caption[Decoding delayed multiplication in a network with full rank spatiotemporal encoders]{
+		Decoding delayed multiplication in a network with full rank spatiotemporal encoders $\mat E_i^\mathrm{t}$.
+		Same architecture as in \Cref{fig:spatio_temporal_a}.
+		\textbf{(A)} Decoding delayed versions of the two input dimensions. Note the slightly smaller mean delay decoding error compared to using a rank one spatiotemporal encoding matrix.
+		\textbf{(B)} Delayed multiplication decoding errors are approximately uniform for all combinations of $\theta_1$ and $\theta_2$.
+		\textbf{(C)} The recurrent weight matrix now possesses $d q = 10$ non-zero singular values.
+	}
+	\label{fig:spatio_temporal_full}
+\end{figure}
+
+Errors for delay decoding and computing delayed multiplication are given in \Cref{fig:spatio_temporal_full}.
+Note that the errors for decoding delayed versions of the individual input signals are slightly smaller than before (\Cref{fig:spatio_temporal_full_a}).
+The results for computing delayed computation show a drastic improvement (\Cref{fig:spatio_temporal_full_b}).
+Errors are between $30\%$ to $40\%$ for all $\theta'_1$, $\theta'_2$ pairs.
+
+\paragraph{Discussion}
+Improvements in the linear delay decoding task are due to slight reduction in our solver loss from \cref{eqn:weight_optimise_currents_temporal}; the more diverse tuning facilitates realising the desired tuning in the recurrent connection.
+The reduction in error for the delayed multiplication task is as expected.
+
+Finally, note that the recurrent weight matrices are of low rank (\Cref{fig:spatio_temporal_d,fig:spatio_temporal_full_c}).
+This suggests that it is possible to realise the same network in the NEF without temporal tuning.
+Indeed, as we show in \Cref{app:spatiotemporal_nef}, this is possible.
+However, we must realise a $qd$-dimensional representation in the population; implementing dynamical systems with spiking neurons in such high dimensional spaces can be challenging.
+Our approach offers the advantage of biasing the weight solver towards portions of the activity space relevant for a certain input signals and thus results in smaller errors in the delayed multiplication task.
 
 \subsubsection{Example: Recently travelled distance}
 
@@ -452,23 +496,44 @@ As we will see next, this is due to our spatiotemporal encoding matrix $\mat E^\
 	\label{fig:path_integration}
 \end{figure}
 
-As a slightly more practical example of a function $f$ that could be decoded from a spatiotemporal network, consider the distance an agent has travelled over the past $\theta$ seconds.
+As a slightly more practical example of a function that could be decoded from a spatiotemporal network, consider the distance an agent has travelled over the past $\theta$ seconds.
 For the sake of simplicity, let $\dot x_1(t)$, $\dot x_2(t)$ denote the velocity of the agent in a global coordinate space.
 We define the \emph{recently travelled distance} $d_{[t - \theta, t]}$ as
 \begin{align*}
 	d_{[t - \theta, t]}(\dot x_1, \dot x_2) = \int_{t - \theta}^t \sqrt{\dot x_1(\tau)^2 + \dot x_2(\tau)^2} \,\,\mathrm{d}\tau \,.
 \end{align*}
 
-We test decoding this function using the spike data recorded in the previous experiment.
+We test decoding this function using the spike data recorded in the experiment with rank one $\mat E_i^\mathrm{t}$.
 Results are depicted in \Cref{fig:path_integration}.
-With an \NRMSE of $E \approx 22\%$ over $T = 100$ seconds, errors are substantially smaller as in our more artificial delayed multiplication experiment and mostly concentrated at points with large target values.
+We obtain an \NRMSE of $E \approx 22\%$ over $T = \SI{100}{\second}$.
+Crucially, using the full rank $\mat E_i^\mathrm{t}$ we obtain $E \approx 26\%$ (data not shown).
 
 \paragraph{Discussion}
-The smaller error compared to the multiplication experiment has two main causes.
-First, note that $d_{[t - \theta, t]}$ only combines $\dot x_1$ and $\dot x_2$ nonlinearly at the same point in time $\tau$---this corresponds to $\theta'_1 = \theta'_2$ in the multiplication example.
-Second, as we saw in \Cref{sec:two_comp_lif_experiment_3}, decoding the vector norm generally incurs smaller errors than computing a product.
+This experiment indicates that it can be beneficial to restrict the encoders to a lower rank.
+We apply a linear operator (the integral) to a function that is only nonlinear over the same point in time $\tau$---this is exactly the type of function supported by our rank one spatiotemporal encoding matrices.
 
-Overall, our experiments demonstrate that it is possible to realise populations with spatiotemporal tuning in the NEF; our spiking network even outperforms the popular Echo State Network (\cite{jaeger2004harnessing}) by a wide margin.
-Still, several aspects warrant further investigation: finding temporal bases that better support combining information nonlinearly across time, analysing in how far the recurrent feedback matrix can be (analytically) described in terms of an encoder-decoder pair, and using this technique to construct a neurophysiologically motivated model of spatiotemporal tuning in the brain.
+Overall, our experiments demonstrate that it is possible to realise populations with spatiotemporal tuning in the NEF; our \emph{spiking} networks even outperform the popular Echo State Network (\cite{jaeger2004harnessing}) by a wide margin.
+A next step would be to use this technique to construct a neurophysiologically motivated model of spatiotemporal tuning in the brain.
+
+\pagebreak
+
+\subsection{Adaptive Filters}
+\label{sec:adaptive_filter}
+
+\begin{itemize}
+	\item Using the spatiotemporal network we can build an adaptive filter that learns to predict a nonlinear dynamical systems!
+	\item Example: Pendulum. Input is the torque $\tau(t)$ and the delayed observed angle $\phi(t - \theta)$. Target is actual angle $\phi(t)$
+	\item Use PES learning rule
+	\item System learns to output the non-delayed angle! $\Rightarrow$ System learns how the torque over time will affect the angle $\Rightarrow$ We are learning the nonlinear dynamics!
+	\item Will provide another example (the cerebellum model) in the next chapter.
+\end{itemize}
 
 \subsection{Accounting for Neural Dynamics}
+
+\begin{itemize}
+	\item Can modify eq. 4.7 to account for neural dynamics. Must find input current that produces the intended output current.
+	\item Simple for our $n$-LIF neurons, where we know that the passive dendritic tree acts as a series of low-pass filters. More complex all other cases. See Duggins' work.
+	\item Simple example: population of LIF neurons with low firing rates; neural dynamics play a significant role in the overall network dynamics. Implementing an integrator is not successful.
+	\item In eq. 4.7 record the output spike train $a$ and the \enquote{neutral} output spike train $a'$ from a $\Delta\Sigma$ modulator. Use least squares to solve for a causal filter that maps from $a$ onto $a'$. Use that in eq. 4.7.
+	\item Note that neural dynamics may also be useful; trivial case: if the neuron has some dynamics, then we can easily realise these dynamics.
+\end{itemize}

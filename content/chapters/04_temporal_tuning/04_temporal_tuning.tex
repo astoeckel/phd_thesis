@@ -14,10 +14,11 @@ Some of the material in this chapter has previously been published in the form o
 \end{PriorPublication}
 
 \begin{Contributions}
-This chapter has been heavily inspired by Volker and Eliasmith's work on the Legendre Delay Network (LDN) and integrating higher-order synapses into the NEF \citep{voelker2018improving,voelker2019}, as well as Chilkuri and Eliasmith's recent work on efficiently training deep neural networks that utilise the Legendre Delay Network \citep{chilkuri2021parallelizing}.
-Novel work in this chapter includes generalising the third NEF principle to take temporal tuning into account, as well as demonstrating that it is possible to build networks that fulfil desired temporal tuning by (iteratively) solving convex optimisation problems.
-Furthermore, we provide a simple derivation of the LDN LTI system from first principles.
-Lastly, we show that thinking about dynamics in terms of orthogonal temporal bases in the context of ANNs is beneficial as well, and that we can outperform contemporary methods for stream-processing such as LSTMs by a wide margin in benchmark tasks.
+This chapter has in part been inspired by Volker and Eliasmith's work on the Legendre Delay Network (LDN) and integrating higher-order synapses into the NEF \citep{voelker2018improving,voelker2019}, as well as Chilkuri and Eliasmith's effort on efficiently training deep neural networks that utilise the Legendre Delay Network \citep{chilkuri2021parallelizing}.
+Novel work in this chapter includes generalising the third NEF principle to take temporal tuning into account, as well as demonstrating that it is possible to build networks that fulfil desired temporal tuning in networks with heterogeneous synaptic filters by solving a linear least-squares optimisation problem.
+Furthermore, we formalise the notion of LTI systems approximating a sliding-window transformations and suggest the \enquote{information erasure} method for establishing a rectangle window.
+We use these ideas for an alternative derivation of the LDN LTI system from first principles and propose an alternative LTI system that generates a \enquote{modified Fourier basis}.
+We show that this modified Fourier basis often outperforms the LDN LTI and has more favourable computational properties under Runge-Kutta integration.
 \end{Contributions}
 
 \clearpage

@@ -35,6 +35,46 @@ However, the modified Fourier system still significantly outperforms the LDN.
 	\label{fig:delay_analysis_bandlimited}
 \end{figure}
 
+
+\subsection{Realising Spatiotemporal Networks Without Temporal Tuning Curves}
+\label{app:spatiotemporal_nef}
+
+\begin{figure}[b]
+	\centering
+	\includegraphics{media/chapters/04_temporal_tuning/spatio_temporal_analysis_nef.pdf}
+	\caption[Results of a delay decoding experiment in a spatiotemporal NEF network]{Results of a delay decoding experiment in a spatiotemporal NEF network. Same plots as in \Cref{fig:spatio_temporal_full}.
+	\textbf{(A, B)} Both the mean delay decoding and mean delayed multiplication errors are slightly larger compared to our temporal tuning curve implementation.
+	\textbf{(C)} The singular values of the matrix $\mat A'$ are close those of the recurrent weight matrix $\mat W_\mathrm{rec}$.
+	}
+	\label{fig:spatio_temporal_analysis_nef}
+\end{figure}
+
+We mentioned in \Cref{sec:spatiotemporal} that it is possible to implement spatiotemporal neuron populations in the NEF without explicitly relying on temporal tuning curves.
+Essentially, we merely need to realise the same LTI system $d$ times in the population---flattening the encoder matrices $\mat E^\mathrm{t}_i$ then results in the corresponding NEF encoding vectors $\vec e_i$.
+
+Let $d$ be the number of spatial dimensions, $q$ the number of temporal dimensions, and $\mat A$, $\mat B$ be the state-space matrices generating the desired temporal basis.
+Applying the NEF dynamics principle, we need to realise the following linear input and feedback transformations:
+\begin{align*}
+	\mat B' &= \tau \begin{pmatrix}
+		\mat B & \hdots & 0 \\
+		\vdots & \ddots & \vdots \\
+		0 & \hdots & \mat B
+	\end{pmatrix} \,, &
+	\mat A' &= \tau \begin{pmatrix}
+		\mat A & \hdots & 0 \\
+		\vdots & \ddots & \vdots \\
+		0 & \hdots & \mat A
+	\end{pmatrix} + \mat I \,,
+\end{align*}
+where $\tau$ is the time-constant of the first-order synaptic filter, $\mat B' \in \mathbb{R}^{dq \times d}$, and $\mat A' \in \mathbb{R}^{dq \times dq}$.
+
+We repeat our delayed multiplication experiment from \Cref{sec:spatiotemporal} using this technique (see \Cref{fig:spatio_temporal_analysis_nef}).
+We find that errors are slightly higher compared to using our temporal tuning curve approach.
+This is mostly due to using unbiased samples $\vec x_k$ when solving for connection weights in a (relatively) high-dimensional space.
+We typically use representative input signals when minimising the temporal tuning curve loss \cref{eqn:weight_optimise_currents_temporal}.
+This biases the weight solver towards actually observed portions of the activity space (cf.~\Cref{sec:solve_dynamics_nonlinear_neurons}).
+Attempting to sample $\vec x_k$ from this biased distribution amounts to the same computation as solving \cref{eqn:weight_optimise_currents_temporal} directly.
+
 \subsection{Code and Data for the Machine Learning Experiments}
 \label{app:lmu_code}
 

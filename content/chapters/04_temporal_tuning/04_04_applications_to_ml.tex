@@ -491,7 +491,7 @@ To eliminate spatial correlations in the input, a random but fixed permutation $
 The input signal is thus of the form $\vec u = (u_{\pi(1)}, \ldots, u_{\pi(784)})$.
 
 \paragraph{Additional constraints}
-The psMNIST task as described above is a little under-defined.
+The psMNIST task as described above is slightly under-defined.
 Specifically, two additional constraints should be met.
 First, the network should use less state memory than is required to just store the whole image \citep{voelker2019lmu}, and, second, support \emph{serial execution} \citep{chandar2019nonsaturating}.
 In other words, the network must produce correct classifications over time, even if multiple input signals are concatenated.
@@ -769,8 +769,9 @@ For the random FIR filters $\Sigma$ is only about $0.5q$, while we reach higher 
 \begin{figure}
 	\includegraphics{media/chapters/04_temporal_tuning/04_04/mackey_glass_system.pdf}
 	\caption[Visualisation of the Mackey-Glass system]{Visualisation of the Mackey-Glass system as used in our benchmark task.
-	Left plot shows a short segment of the state evolution, the right plot a 2D delay embedding (delay of $50$ samples).
-	\textbf{(A)}~For $\tau \geq 17$ the system behaves mildly chaotically. \textbf{(B)}~For $\tau = 30$ the system is fully chaotic.}
+	Left plot shows a short segment of the state evolution, the right plot a 2D delay embedding (delay of $10$ samples).
+%	\textbf{(A)}~For $\tau \geq 17$ the system behaves mildly chaotically. \textbf{(B)}~For $\tau = 30$ the system is fully chaotic.
+	}
 	\label{fig:mackey_glass_system}
 \end{figure}
 
@@ -1056,11 +1057,11 @@ Numerical values are given in \Cref{tbl:mackey_glass_results}.}
 	\end{tabular}
 \end{table}
 
-Results are depicted in \Cref{fig:mackey_glass} and \Cref{tbl:mackey_glass_results,tbl:mackey_glass_significance}.
+Results are given in \Cref{fig:mackey_glass} and \Cref{tbl:mackey_glass_results,tbl:mackey_glass_significance}; see \Cref{fig:lmu_trajs} for learning curves.
 Overall, all bases perform similarly, with the LDN outperforming the Fourier and modified Fourier bases.
-The modified Fourier basis is significantly worse than all other bases.
+The modified Fourier basis performs worst.
 The random initialization has by far the highest error, and the LDN, cosine, and DLOP filters result in the lowest error.
-Learning the convolution consistently closes the performance-gap between the individual bases.
+Learning the convolution closes the performance-gap between the individual bases.
 
 \paragraph{Discussion}
 The cause of the unfavourable performance of the modified Fourier basis is unclear.
@@ -1070,6 +1071,7 @@ A possible culprit is that the best-performing bases (i.e., the LDN, DLOP, and c
 Using a sub-optimal Fourier basis may thus further reduce the performance to the level observed here.
 However, a more detailed analysis is required.
 
-Overall, our results clearly indicate that the basis choice is secondary, and that using fixed orthogonal temporal convolutions can greatly reduce the number of trainable parameters without sacrificing performance.
-The particular architecture to choose (e.g., FIR or LRGF LMU), or whether to rely on an order $q$ LTI system instead of an efficient sliding-window transformation solely depends on the particular application.
-Limiting constraints are the sampling rate (determining whether a fast Euler update is possible), available memory, as well as latency requirements (i.e., whether to use batch, online, or hybrid processing).
+Overall, our results indicate that the basis choice is secondary.
+Using fixed orthogonal temporal convolutions can greatly reduce the number of trainable parameters without sacrificing performance.
+The particular architecture to choose (e.g., FIR or LRGF LMU), or whether to rely on an order $q$ LTI system instead of an efficient sliding-window transformation depends on the particular application.
+Limiting constraints are the sampling rate (determining whether a fast Euler update is possible), available memory, as well as latency requirements (i.e., whether to use batch or online processing).

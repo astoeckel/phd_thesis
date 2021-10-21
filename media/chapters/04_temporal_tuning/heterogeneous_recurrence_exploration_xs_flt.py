@@ -71,7 +71,7 @@ def plot_result(datafile, plot_legend=True):
                 [], [], linewidth=1.75, color=colors1[i])
             for i in range(len(xs_filters))
         ], [
-            "$\\vartheta = {:0.0f}\\,\\mathrm{{ms}}$".format(xs_tau * 1e3) if xs_tau < 1.0 else "$\\vartheta = {:.2g}\\,\\mathrm{{s}}$".format(xs_tau)
+            "$\\rho = {:0.0f}\\,\\mathrm{{ms}}$".format(xs_tau * 1e3) if xs_tau < 1.0 else "$\\rho = {:.2g}\\,\\mathrm{{s}}$".format(xs_tau)
             for xs_tau in xs_filters
         ],
                    loc="upper center",

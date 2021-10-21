@@ -4,19 +4,19 @@ np.random.seed(5892)
 
 fig, axs = plt.subplots(1, 4, figsize=(8.1, 1.5))
 
-ys = lmu_utils.mackey_glass(500, 17, 1.0)[100:]
+ys = lmu_utils.mackey_glass(500, 17, 1.0)[200:]
 axs[0].axhline(0, linestyle=':', color='grey', lw=0.5)
 axs[0].plot(ys, color='k', lw=1.0)
 
-ys = lmu_utils.mackey_glass(5000, 17, 1.0)[100:]
-axs[1].plot(ys[:-50], ys[50:], color='k', lw=0.3)
+ys = lmu_utils.mackey_glass(50000, 17, 0.1)[1000:]
+axs[1].plot(ys[:-100][::10], ys[100:][::10], color='k', lw=0.3)
 
-ys = lmu_utils.mackey_glass(500, 30, 1.0)[100:]
+ys = lmu_utils.mackey_glass(500, 30, 1.0)[200:]
 axs[2].axhline(0, linestyle=':', color='grey', lw=0.5)
 axs[2].plot(ys, color='k', lw=1.0)
 
-ys = lmu_utils.mackey_glass(5000, 30, 1.0)[100:]
-axs[3].plot(ys[:-50], ys[50:], color='k', lw=0.3)
+ys = lmu_utils.mackey_glass(50000, 30, 0.1)[1000:]
+axs[3].plot(ys[:-100][::10], ys[100:][::10], color='k', lw=0.3)
 
 for i, ax in enumerate(axs):
     ax.set_yticks([])

@@ -45,6 +45,7 @@ BASIS_TYPES = {
     "cosine": "sdt",
     "haar": "sdt",
     "dlop": "fir",
+    "eye": "fir",
     "random": "fir",
 }
 
@@ -79,13 +80,13 @@ for fn in [
         utils.datafile("lmu_mackey_glass_0.npz"),
         utils.datafile("lmu_mackey_glass_1.npz"),
         utils.datafile("lmu_mackey_glass_2.npz"),
-        utils.datafile("lmu_mackey_glass_3.npz"),
-        utils.datafile("lmu_mackey_glass_4.npz"),
-        utils.datafile("lmu_mackey_glass_5.npz"),
-        utils.datafile("lmu_mackey_glass_6.npz"),
-        utils.datafile("lmu_mackey_glass_7.npz"),
-        utils.datafile("lmu_mackey_glass_8.npz"),
-        utils.datafile("lmu_mackey_glass_9.npz"),
+#        utils.datafile("lmu_mackey_glass_3.npz"),
+#        utils.datafile("lmu_mackey_glass_4.npz"),
+#        utils.datafile("lmu_mackey_glass_5.npz"),
+#        utils.datafile("lmu_mackey_glass_6.npz"),
+#        utils.datafile("lmu_mackey_glass_7.npz"),
+#        utils.datafile("lmu_mackey_glass_8.npz"),
+#        utils.datafile("lmu_mackey_glass_9.npz"),
 ]:
     data = np.load(fn)
 
@@ -154,9 +155,9 @@ errs, trajs, basis_names = errs_sorted, trajs_sorted, basis_names_sorted
 # Actual plotting code
 #
 
-fig, axs = plt.subplots(7, 2, figsize=(7.85, 3.7))
+fig, axs = plt.subplots(8, 2, figsize=(7.85, 3.7))
 
-for i in range(7):
+for i in range(8):
     for k in range(2):
         errs_val = np.log10(trajs[i, k, :, :, 1].T)
         errs_trn = np.log10(trajs[i, k, :, :, 0].T)
@@ -179,19 +180,20 @@ for i in range(7):
         m = np.argmin(errs_val_50)
         axs[i, k].plot(m + 1, errs_val_50[m], 'o', color=utils.blues[0], markersize=4)
 
-        axs[i, k].set_ylim(-3, -1)
+        axs[i, k].set_ylim(-3.5, -1.5)
         axs[i, k].spines["left"].set_visible(False)
         axs[i, k].set_yticklabels([])
-        axs[i, k].set_xlim(0, 100)
-#        axs[i, k].set_yticks([-5, -4, -3, -2])
-#        axs[i, k].set_yticks([0, 0.05, 0.1, 0.15, 0.2], minor=True)
+        axs[i, k].set_xlim(0, 200)
+        axs[i, k].set_yticks([-3.5, -3, -2.5, -2, -1.5])
+        for ytick in axs[i, k].get_yticks():
+            axs[i, k].axhline(ytick, linestyle=':', lw=0.5, color=(0.8, 0.8, 0.8), zorder=-100, clip_on=False)
 
         axs[i, k].text(1.0, 1.0, f"{LABEL_MAP[basis_names[i]]}", ha="right", va="top", transform=axs[i, k].transAxes)
 
         if i == 0:
             axs[i, k].set_title(["\\textbf{Fixed FIR filters}", "\\textbf{Learned FIR filters}"][k], y=0.5)
 
-        if i < 6:
+        if i < 7:
             axs[i, k].set_xticklabels([])
         else:
             axs[i, k].set_xlabel("Training epoch")
