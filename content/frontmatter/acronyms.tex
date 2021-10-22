@@ -1,0 +1,42 @@
+\newcommand{\NewAcronym}[3]{
+	\newglossaryentry{#1-acr}{
+		%type=\acronymtype,  % Only needed if another glossary is added
+		name={#2},
+		description={#3},
+	}
+	\expandafter\newcommand\csname #2\endcsname{\gls{#1-acr}\xspace}
+	\expandafter\newcommand\csname #2pl\endcsname{\glsdisp{#1-acr}{#2s}\xspace}
+}
+
+\NewAcronym{ann}{ANN}{artificial neural network}
+\NewAcronym{alif}{ALIF}{adaptive linear-and-fire}
+
+\NewAcronym{bfgs}{BFGS}{Broyden-Fletcher-Goldfarb-Shanno algorithm}
+
+\NewAcronym{dof}{DOF}{degrees of freedom}
+
+\NewAcronym{ebn}{EBN}{Efficient, Balanced Spiking Networks}
+\NewAcronym{epsp}{EPSP}{excitatory post-synaptic potential}
+
+\NewAcronym{ipsp}{IPSP}{inhibitory post-synaptic potential}
+
+\NewAcronym{ldn}{LDN}{Legendre Delay Network}
+\NewAcronym{lif}{LIF}{leaky integrate-and-fire}
+\NewAcronym{lti}{LTI}{linear time-invariant}
+
+\NewAcronym{nef}{NEF}{Neural Engineering Framework}
+\NewAcronym{nrmse}{NRMSE}{normalised root mean square error}
+
+\NewAcronym{psp}{PSP}{post-synaptic potential}
+
+\NewAcronym{qp}{QP}{quadratic program}
+
+\NewAcronym{relu}{ReLU}{rectified linear unit}
+\NewAcronym{rms}{RMS}{root mean square}
+\NewAcronym{rmse}{RMSE}{root mean square error}
+
+\NewAcronym{sgd}{SGD}{stochastic gradient descent}
+\NewAcronym{sqp}{SQP}{sequential quadratic program}
+\NewAcronym{snn}{SNN}{spiking neural network}
+
+\NewAcronym{xor}{XOR}{exclusive or}

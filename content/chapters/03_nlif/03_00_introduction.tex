@@ -58,7 +58,7 @@ Introducing dendritic trees could potentially move more of the computation into 
 
 \subsubsection{Prior work}
 There is some prior work regarding the integration of dendritic computation into the NEF.
-For example, \Citet[Chapter~4]{tripp2009search} shows that \glspl{twocomp} with conductance-based synapses can in principle be used in NEF networks.
+For example, \Citet[Chapter~4]{tripp2009search} shows that two-compartment neurons with conductance-based synapses can in principle be used in NEF networks.
 However, Tripp does not investigate how these neurons could be systematically exploited to perform computation.
 
 \Citet{bobier2014unifying} implement a model of visual attention based on the aforementioned gain-control signals present in layer six of the visual cortex.
@@ -77,13 +77,13 @@ We find that such multi-channel neurons are not universal function approximators
 
 Next, in \Cref{sec:nef_extension}, we extend the NEF to support biologically plausible multi-channel neurons.
 To this end, we first generalise the weight-optimisation problem to act in current space (resulting in full weight matrices $\mat W$) instead of representational space (resulting in decoders $\mat D$).
-We furthermore discuss solving for non-negative weights, as is required for conductance-based channels in more realistic neuron models, and introduce \enquote{\gls{subrelax}}, a method for de-emphasising subthreshold target currents and improving superthreshold accuracy.
+We furthermore discuss solving for non-negative weights, as is required for conductance-based channels in more realistic neuron models, and introduce \enquote{subthreshold relaxation}, a method for de-emphasising subthreshold target currents and improving superthreshold accuracy.
 
 We continue in \Cref{sec:nlif} by formally defining \nlif neurons, a family of $n$-compartment LIF neurons.
 We to derive an approximate closed-form expression for the average current flowing into the somatic compartment.
 Further theoretical analysis of this expression yields rules according to which input channels interact divisively, multiplicatively, or linearly.
 
-Subsequently, in \Cref{sec:two_comp_lif}, we apply these theoretical insights to the simplest non-trivial \nlif neuron, the \gls{twocomp}.
+Subsequently, in \Cref{sec:two_comp_lif}, we apply these theoretical insights to the simplest non-trivial \nlif neuron, the two-compartment LIF neuron.
 We derive a convex optimisation problem that allows us to solve for near-optimal synaptic weights and show that we can exploit this neuron model to compute a wide range of functions at similar or lower errors than two-layer spiking neural networks.
 
 Finally, in Section~3.5, we discuss a general weight-solving method for \nlif neurons.

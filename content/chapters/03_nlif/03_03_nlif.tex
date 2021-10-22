@@ -24,7 +24,7 @@ While it is not possible to derive an exact dendritic nonlinearity $H$ for these
 	Large circles correspond to compartments, small circles and rectangles to conductance- and current-based channels. Filled symbols indicate passive channels.
 	\textbf{(A)} Standard \LIF neuron with current-based inputs.
 	\textbf{(B)} \LIF neuron with conductance-based input channels.
-	\textbf{(C)} \Gls{twocomp} with a separate dendritic compartment.
+	\textbf{(C)} Two-compartment neuron with a separate dendritic compartment.
 	\textbf{(D, E)} Three- and four-compartment \LIF neurons with apical and basal dendrites.}
 	\label{fig:nlif}
 \end{figure}
@@ -35,7 +35,7 @@ Each compartment may hold any number of passive current- and conductance-based c
 Channels are either constant (representing bias currents and leak channels), or receive external input (representing synapses).
 Examples of such neurons are depicted in \Cref{fig:nlif} using a \enquote{ball-and-stick} representation.
 
-As a point of reference, the expanded equivalent circuit diagram of the \gls{twocomp} with conductance-based synapses (\Cref{fig:nlif_c}) is depicted in \Cref{fig:two_comp_lif_circuit}.
+As a point of reference, the expanded equivalent circuit diagram of the two-compartment neuron with conductance-based synapses (\Cref{fig:nlif_c}) is depicted in \Cref{fig:two_comp_lif_circuit}.
 This particular model has originally been described by \citet{vu1993mechanism} and was subsequently discussed by \citet{koch1999biophysics} and \citet{capaday2006direct}.
 We discuss this model in more detail in the next section, and for now focus on \nlif neurons in general.
 
@@ -43,7 +43,7 @@ We discuss this model in more detail in the next section, and for now focus on \
 	\includegraphics{media/chapters/03_nlif/03_03/neuron_model_trace_composite.pdf}%
 	{\phantomsubcaption\label{fig:two_comp_lif_circuit}}
 	{\phantomsubcaption\label{fig:two_comp_lif_trace}}
-	\caption[Circuit and membrane potential trace of a two-compartment LIF neuron]{Circuit and membrane potential trace of a \gls{twocomp}.
+	\caption[Circuit and membrane potential trace of a two-compartment LIF neuron]{Circuit and membrane potential trace of a two-compartment neuron.
 	\textbf{(A)} Circuit diagram corresponding to the model in \Cref{fig:nlif_c}.
 	\textbf{(B)} Membrane potential traces for both compartments for a small constant excitatory input.
 	Notice how the explicit spike model in the somatic compartment (\emph{top}) influences the membrane potential of the dendritic compartment (\emph{bottom}).}
@@ -69,7 +69,7 @@ The dynamics of the $i$th compartment are
 \label{eqn:nlif_single_compartment}
 \end{align}
 where \Cmi is the membrane capacitance of the compartment, $M_i$ and $N_i$ are the number of conductance- and current-based channels, respectively, $g_{k}^i(t)$ is the momentary conductance of the $k$th conductance-channel with reversal potential $E_{k}^i$, and $J_{k}^i(t)$ is the current injected into the current-based channel $j$.
-Finally, \cij is the \gls{coupling_conductance} between the $i$th and the $j$th compartment.
+Finally, \cij is the coupling conductance between the $i$th and the $j$th compartment.
 The adjacency matrix of coupling conductances $\mat C$ must be symmetric, and the connectivity graph encoded by $\mat C$ must have exactly one connected component (cf.~our discussion in Section~2.2.3).
 %TODO: Correct reference
 Some conductances $g_{k}^i(t)$ and currents $J_{k}^i(t)$ are constant, such as the static leak channels and bias currents.
@@ -156,9 +156,9 @@ We have
 \end{align}
 Here, $\vCm \in \mathbb{R}^n$ is a vector of membrane capacitances, \enquote{$\circ$} denotes elementwise multiplication, $\mnA[\vng(t)] \in \mathbb{R}^{n \times n}$ is the \enquote{voltage feedback matrix}, and $\vnb[\vng(t)] \in \mathbb{R}^n$ describes the input to the system.
 We further decompose \mnA, \vnb into input-independent and input-dependent terms.
-The \gls{laplacian} $\mnL \in \mathbb{R}^{n \times n}$ and the vectors $\vnap \in \mathbb{R}^n$, $\vnbp \in \mathbb{R}^n$ describe the input-independent portions of the system, whereas the matrices $\mnAp \in \mathbb{R}^{n \times k}$ and $\mnBp \in \mathbb{R}^{n \times k}$ describe its input-dependent parts.
+The Laplacian $\mnL \in \mathbb{R}^{n \times n}$ and the vectors $\vnap \in \mathbb{R}^n$, $\vnbp \in \mathbb{R}^n$ describe the input-independent portions of the system, whereas the matrices $\mnAp \in \mathbb{R}^{n \times k}$ and $\mnBp \in \mathbb{R}^{n \times k}$ describe its input-dependent parts.
 
-More specifically, the \gls{laplacian} \mnL is the difference between the weighted degree matrix and the adjacency matrix, and, in our case, is given as $\mnL = \diag(\mC \mat I) - \mC$.%
+More specifically, the Laplacian \mnL is the difference between the weighted degree matrix and the adjacency matrix, and, in our case, is given as $\mnL = \diag(\mC \mat I) - \mC$.%
 \footnote{Indeed, the graph Laplacian is often motivated in textbooks with electrical networks similar to the one discussed here; in this context it is also referred to as the \enquote{Kirchhoff matrix} \citep[e.g.,][Chapter~2]{bollobas1998modern}.}
 The vector \vnap consists of sums of static channel conductances for each channel (such as the leak conductance) and \vnbp contains the sums of the static channel conductances multiplied by their reversal potential.
 The matrix \mnAp contains one-entries for input-variables influencing a conductance-based channel in the corresponding compartment.
@@ -422,8 +422,8 @@ Using the fully parameterised version of the equations, and renaming the paramet
 	\caption[Dendritic nonlinearity models $H$ for different $n$-LIF neurons]{Dendritic nonlinearity models $H$ for the \nlif neurons depicted in \Cref{fig:nlif}. Hatched regions correspond to subthreshold currents. Limits were chosen such that the spike onset is approximately on the diagonal of each plot.
 	Parameters shared between all models: $g_\mathrm{L} = \SI{50}{\nano\siemens}$, $C_\mathrm{m} = \SI{1}{\nano\farad}$, $E_\mathrm{L} = \SI{-65}{\milli\volt}$, $E_\mathrm{E} = \SI{20}{\milli\volt}$, $E_\mathrm{I} = \SI{-75}{\milli\volt}$, $\vSom = \SI{-57.5}{\milli\volt}$.
 	\textbf{(A, B)} Single-compartment neurons with current- and conductance-based synapses. Apart from scaling, the two models are equivalent.
-	\textbf{(C)}~\Gls{twocomp} with $c_\mathrm{12} = \SI{30}{\nano\siemens}$. The contour lines are still straight lines but no longer parallel due to shunting.
-	\textbf{(D)} Slice through the response curve of a three-compartment \LIF neuron with $c_\mathrm{12} = \SI{40}{\nano\siemens}$, $c_\mathrm{23} = \SI{100}{\nano\siemens}$. The inputs $g_E^2 = \SI{95}{\nano\siemens}$ and $g_I^1 = \SI{20}{\nano\siemens}$ are kept constant. In contrast to the \gls{twocomp}, the contour-lines are curved.
+	\textbf{(C)}~Two-compartment neuron with $c_\mathrm{12} = \SI{30}{\nano\siemens}$. The contour lines are still straight lines but no longer parallel due to shunting.
+	\textbf{(D)} Slice through the response curve of a three-compartment \LIF neuron with $c_\mathrm{12} = \SI{40}{\nano\siemens}$, $c_\mathrm{23} = \SI{100}{\nano\siemens}$. The inputs $g_E^2 = \SI{95}{\nano\siemens}$ and $g_I^1 = \SI{20}{\nano\siemens}$ are kept constant. In contrast to the two-compartment neuron, the contour-lines are curved.
 	}
 \end{figure}
 
@@ -639,7 +639,7 @@ The same holds for \nlif neurons that only possess current-based input channels.
 \Cref{thm:nlif_product_terms} similarly dictates that nonlinear interaction between the input channels of an individual dendritic compartment is limited to \enquote{shunting} \citep[cf.][Section~1.5]{koch1999biophysics}.
 That is, conductance-based input channels act \enquote{divisively} on the other input channels in that compartment; they contribute to the denominator of one of the fractions in \Cref{thm:nlif_product_terms}.
 
-Mathematically, this kind of nonlinear interaction is apparent in the dendritic nonlinearity for the \gls{twocomp} (eq.~\ref{eqn:two_comp_lif}); the excitatory and inhibitory conductances $g_\mathrm{E}$ and $g_\mathrm{I}$ act divisively on $H$.
+Mathematically, this kind of nonlinear interaction is apparent in the dendritic nonlinearity for the two-compartment neuron (eq.~\ref{eqn:two_comp_lif}); the excitatory and inhibitory conductances $g_\mathrm{E}$ and $g_\mathrm{I}$ act divisively on $H$.
 While the magnitude of this effect depends on the ratio between the input and the coupling- and leak-conductances, shunting in a single compartment cannot be used to compute \enquote{interesting} functions such as XOR (proof in \Cref{app:thm_two_comp_xor}):
 \begin{restatable}{theorem}{ThmTwoCompXor}
 \label{thm:two_comp_xor}
@@ -652,7 +652,7 @@ The two-compartment \LIF nonlinearity
 cannot be used to solve the weak XOR problem (see \Cref{def:weak_xor}).
 \end{restatable}
 
-Still, and as we demonstrate in the next section, a single layer of \gls{twocomp}s can compute a wide range of functions with a substantially smaller error than a single layer, or, in some cases, even two layers of standard \LIF neurons.
+Still, and as we demonstrate in the next section, a single layer of two-compartment neurons can compute a wide range of functions with a substantially smaller error than a single layer, or, in some cases, even two layers of standard \LIF neurons.
 
 \subsubsection{Product terms}
 Input channels targeting different dendritic compartments interact multiplicatively (cf. eq.~\ref{eqn:three_comp_lif_long}).

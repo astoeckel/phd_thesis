@@ -9,7 +9,7 @@
 	{\phantomsubcaption\label{fig:nef_multivariate_functions_a}}%
 	{\phantomsubcaption\label{fig:nef_multivariate_functions_b}}%
 	{\phantomsubcaption\label{fig:nef_multivariate_functions_c}}%
-	\caption[Using dendritic computation to compute multivariate functions in the NEF]{Using dendritic computation to compute multivariate functions in the NEF. \textbf{(A)} Standard NEF networks are additive: summation in activity space corresponds to addition in representation space.
+	\caption[Using dendritic computation to approximate multivariate functions in the NEF]{Using dendritic computation to approximate multivariate functions in the \NEF. \textbf{(A)} Standard \NEF networks are additive: summation in activity space corresponds to addition in representation space.
 	\textbf{(B)} Computing nonlinear multivariate functions $f$ generally requires all variables to be represented in an intermediate population.
 	\textbf{(C)} The dendritic computation scheme discussed in here.
 	Two pre-populations project onto a post-population with separate excitatory and inhibitory input channels.
@@ -18,7 +18,7 @@
 	\label{fig:nef_multivariate_functions}
 \end{figure}
 
-Dendritic computation as pursued here is best explained by reviewing fundamental properties of neural networks, and exploring how mul\-ti\-va\-ri\-ate functions such as $f(x_1, \ldots, x_\ell)$ can be approximated in the NEF.
+Dendritic computation as pursued here is best explained by reviewing fundamental properties of neural networks, and exploring how mul\-ti\-va\-ri\-ate functions such as $f(x_1, \ldots, x_\ell)$ can be approximated in the \NEF.
 Specifically, we compare three different network architectures (cf.~\Cref{fig:nef_multivariate_functions}).
 \emph{Additive networks} represent $x_1$, $\ldots$, $x_\ell$ in independent neuron populations.
 These networks cannot approximate most multivariate functions.
@@ -30,7 +30,7 @@ While not as powerful as multi-layer networks, dendritic computation can approxi
 \subsection{Additive Multivariate Networks}
 \label{sec:additive_net}
 
-As stated above, our goal is to compute multivariate functions $f(x_1, \ldots, x_\ell)$ within the context of the NEF.
+As stated above, our goal is to compute multivariate functions $f(x_1, \ldots, x_\ell)$ within the context of the \NEF.
 %For the sake of simplicity, we mostly discuss bivariate functions of the form $\phi(x_1, x_2)$, but the same considerations apply to more than two input variables as well.
 For the sake of simplicity, assume that two pre-populations representing variables $x_1$, $x_2$, respectively, are connected to a common post-population.
 To compute $f(x_1, x_2)$, we must find connection weights $\vec w_{1, i}$, $\vec w_{2, i}$ such that the following holds for every post-neuron $i$
@@ -45,10 +45,10 @@ To compute $f(x_1, x_2)$, we must find connection weights $\vec w_{1, i}$, $\vec
 	\label{eqn:nef_multivariate_addition}
 \end{align}
 Here, $a_i$ is the desired post-neuron activity according to the normative tuning-curve constraint (eq.~\ref{eqn:encoding}).
-As discussed in the context of the NEF transformation principle (cf.~\Cref{sec:nef_transformation}), we assume that the current-translation function $J_i$ is part of the individual neuron response curve $G_i$, and that the currents induced by the pre-populations are summed.
+As discussed in the context of the \NEF transformation principle (cf.~\Cref{sec:nef_transformation}), we assume that the current-translation function $J_i$ is part of the individual neuron response curve $G_i$, and that the currents induced by the pre-populations are summed.
 
 This optimisation problem can be easily solved for multivariate functions that can be decomposed into a sum of two univariate functions, i.e., $f(x_1, x_2) = f_1(x_1) + f_2(x_2)$ (cf.~\Cref{fig:nef_multivariate_functions_a}).
-Specifically, we can find weights $\vec w_{1, i}$, $\vec w_{2, i}$ that approximate $f$ using the encoder-decoder split of the NEF. % \citep[cf.][Section~6.1.2]{eliasmith2003neural}.
+Specifically, we can find weights $\vec w_{1, i}$, $\vec w_{2, i}$ that approximate $f$ using the encoder-decoder split of the \NEF. % \citep[cf.][Section~6.1.2]{eliasmith2003neural}.
 Computing decoders $\mat D^{f_1}$, $\mat D^{f_2}$ and applying $(\vec w_i)^T = \vec e_i \mat D$, we have
 \begin{align*}
 	G_i\bigl[
@@ -64,7 +64,7 @@ Computing decoders $\mat D^{f_1}$, $\mat D^{f_2}$ and applying $(\vec w_i)^T = \
 	\approx a_i\bigl(f_1(x_1) + f_2(x_2)\bigr) \,.
 \end{align*}
 This equation expresses that addition in activity space (i.e., summing weighted pre-activities, eq.~\ref{eqn:nef_multivariate_addition}) is equal to addition in represented space.
-In other words, standard NEF networks are \emph{additive}.
+In other words, standard \NEF networks are \emph{additive}.
 Summing functions incurs no additional decoding error.
 
 \begin{figure}
@@ -97,13 +97,13 @@ $f(x_1, \ldots, x_\ell) = \sigma\bigl( f_1(x_1) + \ldots + f_\ell(x_\ell) \bigr)
 	{\phantomsubcaption\label{fig:xor_visualisation_c}}%
 	{\phantomsubcaption\label{fig:xor_visualisation_d}}%
 	{\phantomsubcaption\label{fig:xor_visualisation_e}}%
-	\caption[Visualisation of the XOR decision problem for different classifiers]{Visualisation of the XOR decision problem for different classifiers. The goal is to find classifier parameters such that the four samples are classified as depicted.
+	\caption[Visualisation of the XOR decision problem for different classifiers]{Visualisation of the \XOR decision problem for different classifiers. The goal is to find classifier parameters such that the four samples are classified as depicted.
 	The background corresponds to the sign of the monotonic function $\sigma(\xi)$.
-	\textbf{(A)} The linear decision boundary formed by the Perceptron cannot solve the XOR problem.
+	\textbf{(A)} The linear decision boundary formed by the Perceptron cannot solve the \XOR problem.
 	\textbf{(B)} This holds for any function of the form $\sigma(f_1(x_1) + f_2(x_2))$, here $f_1(x_1) = \cos(2\pi x_1)$ and $f_2(x_2) = \sin(2\pi x_2)$.
 	\textbf{(C)} A multi-layer Perceptron (MLP) of the form $\sum_i w_i \sigma(e_i^1 x_1 + e_i^2 x_2 + \beta_i )$ can solve the problem, although the decision boundary is quite erratic.
 	\textbf{(D)} An alternative solution using the nonlinearity $\sigma'(\xi) = \sigma(\xi^2 - 1)$.
-	\textbf{(E)} Multiplication of two real-valued variables $x_1$, $x_2$ can be seen as a continuous form of the XOR problem.
+	\textbf{(E)} Multiplication of two real-valued variables $x_1$, $x_2$ can be seen as a continuous form of the \XOR problem.
 	Additive networks cannot compute this function.
 	}
 	\label{fig:xor_visualisation}
@@ -112,15 +112,15 @@ $f(x_1, \ldots, x_\ell) = \sigma\bigl( f_1(x_1) + \ldots + f_\ell(x_\ell) \bigr)
 \subsubsection{The Perceptron and XOR}
 Consider monotonic $\sigma$ and affine $f_i$ of the form $w_i x_i + \beta \ell^{-1}$.
 We obtain the \emph{perceptron}, an early single-layer neural network (cf.~\Cref{fig:perceptron_b}; \cite{rosenblatt1958perceptron}).
-\Citet[Chapter~2; originally published in 1969]{minsky1987perceptrons} point out that such networks cannot compute the boolean XOR function (\Cref{fig:xor_visualisation_a}).%
+\Citet[Chapter~2; originally published in 1969]{minsky1987perceptrons} point out that such networks cannot compute the boolean \XOR function (\Cref{fig:xor_visualisation_a}).%
 \footnote{\Citet{minsky1987perceptrons} note that the perceptron was proved by Rosenblatt to \enquote{learn to do anything it was possible to program it to do}; this ambiguous statement endowed researchers with a surplus of optimism---especially since perceptrons sometimes learned difficult problems.
-Among other factors, realising that these networks could not be \emph{programmed} to solve trivial problems such as XOR led to \enquote{the first AI winter} \citep[e.g.,][]{muthukrishnan2020brief}.}
+Among other factors, realising that these networks could not be \emph{programmed} to solve trivial problems such as \XOR led to \enquote{the first AI winter} \citep[e.g.,][]{muthukrishnan2020brief}.}
 %In the continuous domain, the same is true for multiplication over $\mathbb{X} = [-1, 1]^2$, that is $\phi(x_1, x_2) = x_1 x_2$ (\Cref{fig:xor_visualisation_a}).
-Even the general additive networks from our theorem cannot solve a \emph{weaker} version of the XOR problem, formalised below.
+Even the general additive networks from our theorem cannot solve a \emph{weaker} version of the \XOR problem, formalised below.
 
 \begin{definition}
 \label{def:weak_xor}
-A function $\phi(x_1, x_2)$ solves the \emph{weak XOR problem} if there exist $a_0, b_0, a_1, b_1$ with
+A function $\phi(x_1, x_2)$ solves the \emph{weak \XOR problem} if there exist $a_0, b_0, a_1, b_1$ with
 \begin{align*}
 	\big( \phi(a_0, b_0) < \phi(a_0, b_1) \big) \wedge
 	\big( \phi(a_1, b_1) < \phi(a_0, b_1) \big) \wedge
@@ -133,18 +133,18 @@ A function $\phi(x_1, x_2)$ solves the \emph{weak XOR problem} if there exist $a
 
 \begin{restatable}{theorem}{ThmWeakXor}
 \label{thm:weak_xor}
-Let $\sigma$ be monotonic. Then, an additive network of the form $\phi(x_1, x_2) = \sigma(f_1(x_1) + f_2(x_2))$ cannot solve the weak XOR problem.
+Let $\sigma$ be monotonic. Then, an additive network of the form $\phi(x_1, x_2) = \sigma(f_1(x_1) + f_2(x_2))$ cannot solve the weak \XOR problem.
 \end{restatable}
 This may be surprising, given that, as depicted in \Cref{fig:xor_visualisation_b}, we can generate highly nonlinear classification boundaries.
 We provide a proof in Appendix~B.3.2.
 
-To solve the XOR problem, we can either, as discussed next, use multi-layer networks (cf.~\Cref{fig:xor_visualisation_c}), or, alternatively make $\sigma$ non-monotonic.
-As depicted in \Cref{fig:xor_visualisation_d}, setting $\sigma(\xi) = \xi^2 - 1$ allows us to solve the XOR problem.
+To solve the \XOR problem, we can either, as discussed next, use multi-layer networks (cf.~\Cref{fig:xor_visualisation_c}), or, alternatively make $\sigma$ non-monotonic.
+As depicted in \Cref{fig:xor_visualisation_d}, setting $\sigma(\xi) = \xi^2 - 1$ allows us to solve the \XOR problem.
 This illustrates our goal with dendritic computation: exploit \enquote{more powerful} $\sigma$ to approximate a larger class of functions.
 
 Still, the functions that we can compute using additive networks are limited, even if we can freely choose $\sigma$.
 For example, we can compute $x_1 x_2$ for $(x_1, x_2) \in [\epsilon, 1]^2$ and $0 < \epsilon < 1$ by setting $f_1$ and $f_2$ to the logarithm and $\sigma$ to the exponential.
-However, it is impossible to find functions that compute multiplication over all four quadrants---which can be seen as a continuous version of the XOR problem (\Cref{fig:xor_visualisation_e}).
+However, it is impossible to find functions that compute multiplication over all four quadrants---which can be seen as a continuous version of the \XOR problem (\Cref{fig:xor_visualisation_e}).
 More precisely, allowing $x_1$, $x_2$ to be zero makes it impossible to compute multiplication in these networks (proof in Appendix~B.3.3).
 \begin{restatable}{theorem}{ThmMultiplication}
 \label{thm:multiplication}
@@ -170,9 +170,9 @@ There are no continuous, real-valued functions $f_1$, $f_2$, $\sigma$ such that 
 	\label{fig:mlp}
 \end{figure}
 
-As already mentioned in \Cref{sec:nef_transformation}, an individual NEF population can be interpreted as a two-layer neural network (cf.~\Cref{fig:mlp}).
+As already mentioned in \Cref{sec:nef_transformation}, an individual \NEF population can be interpreted as a two-layer neural network (cf.~\Cref{fig:mlp}).
 As long as the encoding vectors are sampled from the $\ell$-dimensional hypersphere and $x$-intercepts are uniformly distributed, such a neuron population is a universal function approximator, that is, we can compute arbitrary functions $f(x_1, \ldots, x_\ell)$ over the variables represented in the population.
-The following theorem states this more formally for neurons with a rectified linear unit (ReLU) nonlinearity, i.e., $\sigma(\xi) = \max\{0, \xi\}$.
+The following theorem states this more formally for neurons with a rectified linear unit (\ReLU) nonlinearity, i.e., $\sigma(\xi) = \max\{0, \xi\}$.
 
 \begin{restatable}{theorem}{ThmTwoLayerUniversal}
 \label{thm:two_layer_universal}
@@ -212,7 +212,7 @@ This is equivalent to the additive networks we discussed before.
 We can only decode sums of univariate functions over the individual $x_j$ from the pre-population.
 
 \subsubsection{Intermediate populations}
-As discussed by \citet[Chapter~6]{eliasmith2003neural}, multivariate functions $f(x_1, x_2)$ can in general only be computed in the NEF if all variables $x_1$, $x_2$ are represented in a common population.
+As discussed by \citet[Chapter~6]{eliasmith2003neural}, multivariate functions $f(x_1, x_2)$ can in general only be computed in the \NEF if all variables $x_1$, $x_2$ are represented in a common population.
 Correspondingly, if all variables are represented in separate univariate populations, we must add an intermediate population to our network that represents a vectorial quantity $\vec z = (x_1, x_2)$ (cf.~\Cref{fig:nef_multivariate_functions_b}).
 We can construct such a representation from two univariate populations by computing the functions $f_1(x_1) = (x_1, 0)$ and $f_2(x_2) = (0, x_2)$ in the connections to the intermediate population.
 According to Theorem~\ref{thm:two_layer_universal} we can then decode any multivariate function from the intermediate population.
@@ -397,7 +397,7 @@ This is the case if only the first few basis functions can be decoded well from 
 	{\phantomsubcaption\label{fig:dendritic_computation_fourier_example_c}}%
 	\caption[Computing functions with different spatial frequencies using different network types]{
 	Computing functions with different spatial frequencies using different network types.
-	Each line is the median NRMSE when approximating with respect to the RMS of the target function over $N = 1000$ randomly generated functions with spatial filter coefficient $\rho^{-1}$ using $d$ Legendre basis functions (cf.~\Cref{fig:2d_functions_overview}).
+	Each line is the median \NRMSE when approximating with respect to the \RMS of the target function over $N = 1000$ randomly generated functions with spatial filter coefficient $\rho^{-1}$ using $d$ Legendre basis functions (cf.~\Cref{fig:2d_functions_overview}).
 	Shaded areas correspond to the 25/75-percentile.
 	\textbf{(A, B)}
 	Median error for different filter coefficients $\rho^{-1}$ for fixed basis function counts~$d$. Dashed lines correspond from the median from the neighbouring diagram. Vertical dotted line is at $\rho^{-1} = 2$.
@@ -416,7 +416,7 @@ These functions are reconstructed using the function approximators defined above
 As expected, the network type has a large influence on the reconstruction error.
 While the additive network $f_\mathrm{add}$ only fares well for almost linear functions, $f_\mathrm{mlp}$ reaches reasonable approximation errors even for complex target functions.
 The dendritic network $f_\mathrm{den}$ sits somewhere in between;
-$f_\mathrm{den}$ can be used to decode the target function for $\rho^{-1} = 1$ at a reasonable $6\%$ NRMSE, while failing to reconstruct the target function for $\rho^{-1} = 3.16$ at a $44\%$ error.
+$f_\mathrm{den}$ can be used to decode the target function for $\rho^{-1} = 1$ at a reasonable $6\%$ \NRMSE, while failing to reconstruct the target function for $\rho^{-1} = 3.16$ at a $44\%$ error.
 
 \Cref{fig:dendritic_computation_fourier_example} depicts the results of a more systematic experiment.
 For a fixed basis function count (\Cref{fig:dendritic_computation_fourier_example_a}), the error achieved with an additive network $f_\mathrm{add}$ increases almost with $\rho$ on a log-log plot, while both $f_\mathrm{den}$ and $f_\mathrm{mpl}$ possess a sublinear plateau.
@@ -444,15 +444,15 @@ Interestingly, the point at which $f_\mathrm{den}$ and $f_\mathrm{mlp}$ diverge 
 An intrinsic assumption of the above experiment (particularly in $f_\mathrm{mlp}$, eq.~\ref{eqn:f_mlp}) is that the number of decodable basis functions $d$ is given as $d = \oh^\ell$, where $\oh$ is the order of the underlying basis, and $\ell$ is the number of dimensions represented by the pre-population.
 However, in practice, this is almost never the case---increasing the dimensionality of a neuron population only has a small impact on the absolute number of decodable basis functions.
 
-This is depicted in \Cref{fig:decode_basis_functions}, where we vary the number of neurons in the pre-population and count the number of $\ell$-dimensional Legendre basis functions that can be decoded with an NRMSE below some threshold.
+This is depicted in \Cref{fig:decode_basis_functions}, where we vary the number of neurons in the pre-population and count the number of $\ell$-dimensional Legendre basis functions that can be decoded with an \NRMSE below some threshold.
 Given a $3.2\%$ error threshold and $1000$ neurons, we are able to decode $d = 5$ orthogonal basis functions from the one-dimensional population, $d = 6$ from the two- and $d = 10$ functions three-dimensional population.
 While this is a substantial increase in the number of decodable functions, it is nowhere near the exponential increase that we would expect from increasing the order of the underlying basis.
 
 This suggests that, in some scenarios, dendritic computation schemes could outperform multi-layer networks.
 Let $d$ and $d'$ be the number of basis functions that can be decoded from a one- and $\ell$-dimensional population, respectively.
-Dendritic computation has more DOF if $k \ell d > d'$, and could thus approximate a larger class of functions below some error threshold.
+Dendritic computation has more \DOF if $k \ell d > d'$, and could thus approximate a larger class of functions below some error threshold.
 
-This analysis should be taken with a grain of salt, since we do not take redundant DOF into account and rely on a questionable binary notion of a basis function being \enquote{decodable}.
+This analysis should be taken with a grain of salt, since we do not take redundant \DOF into account and rely on a questionable binary notion of a basis function being \enquote{decodable}.
 Still, as we will see in \Cref{sec:two_comp_lif,sec:nlif_opt}, dendritic computation can indeed outperform multi-layer networks in practice.
 
 \subsubsection{Conclusion}

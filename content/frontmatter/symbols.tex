@@ -1,147 +1,100 @@
 % !TeX spellcheck = en_GB
 
-\newcommand*{\Reals}{\gls{Reals}\xspace}
-\newglossaryentry{Reals}{
-	name=\ensuremath{\mathbb{R}},
-	type=symbols,
-	sort=Reals,
-	description={The real number-line, i.e., all values of a scalar magnitude},
-}
+\newcommand*{\Reals}{\ensuremath{\mathbb{R}}\xspace}
+\newcommand*{\Ball}{\ensuremath{\mathbb{B}}\xspace}
+\newcommand*{\Normal}{\ensuremath{\mathcal{N}}\xspace}
+\newcommand*{\Dec}{\ensuremath{\mat{D}}\xspace}
+\newcommand*{\Npop}{\ensuremath{n}\xspace}
+\newcommand*{\Nsmpls}{\ensuremath{N}\xspace}
+\newcommand*{\Ndim}{\ensuremath{d}\xspace}
+\newcommand*{\Xrepr}{\ensuremath{\mathbb{X}}\xspace}
+\newcommand*{\vRest}{\ensuremath{v_\mathrm{rest}}\xspace}
+\newcommand*{\vReset}{\ensuremath{v_\mathrm{reset}}\xspace}
+\newcommand*{\vTh}{\ensuremath{v_\mathrm{th}}\xspace}
+\newcommand*{\CMem}{\ensuremath{C_\mathrm{m}}\xspace}
+\newcommand*{\EL}{\ensuremath{E_\mathrm{L}}\xspace}
+\newcommand*{\gL}{\ensuremath{g_\mathrm{L}}\xspace}
+\newcommand*{\gE}{\ensuremath{g_\mathrm{E}}\xspace}
+\newcommand*{\gI}{\ensuremath{g_\mathrm{I}}\xspace}
 
-\newcommand*{\Ball}{\gls{Ball}\xspace}
-\newglossaryentry{Ball}{
-	name=\ensuremath{\mathbb{B}},
-	type=symbols,
-	sort=Ball,
-	description={A hyperball, the set of all $d$ dimensional vectors within radius $r$ of the coordinate origin, in other words
-	$r \mathbb{B}^d = \{ \vec x \in \mathbb{R}^d \mid \, \|x\|_2 \leq r \}$,
-	where the notation $r \mathbb{B}^d$ denotes the radius $r$ and dimensionality $d$ of the hyperball
-	},
-}
+\newcommand*{\nlif}{$n$-LIF\xspace}
+\newcommand{\mC}{\ensuremath{\mat{C}}\xspace}
+\newcommand{\cij}{\ensuremath{c_{ij}}\xspace}
 
+\newcommand{\mnLR}{\ensuremath{\mat{L}}\xspace}
+\newcommand{\mnL}{\mnLR\xspace}
 
-\newcommand*{\Normal}{\gls{Normal}\xspace}
-\newglossaryentry{Normal}{
-	name=\ensuremath{\mathcal{N}},
-	type=symbols,
-	sort=Normal,
-	description={The normal distribution. The notation $\nu \sim \mathcal{N}(\mu, \sigma)$ indicates that $\nu$ is a normal-distributed random variable with mean $\mu$ and standard deviation $\sigma$},
-}
+\newcommand{\mnAR}{\ensuremath{\mat{A}}\xspace}
+\newcommand{\vnbR}{\ensuremath{\vec{b}}\xspace}
+\newcommand{\vngR}{\ensuremath{\vec{g}}\xspace}
+\newcommand{\vnapR}{\ensuremath{\vec{a}'}\xspace}
+\newcommand{\vnbpR}{\ensuremath{\vec{b}'}\xspace}
+\newcommand{\mnApR}{\ensuremath{\mat{A}'}\xspace}
+\newcommand{\mnBpR}{\ensuremath{\mat{B}'}\xspace}
 
-\newcommand*{\Dec}{\gls{Dec}\xspace}
-\newglossaryentry{Dec}{
-	name=\ensuremath{\mat{D}},
-	type=symbols,
-	sort=Dec,
-	description={A decoding matrix of shape $\mathbb{R}^{d \times \Npop}$. Decoding matrices are used within the Neural Engineering Framework to either reconstruct the value represented by a population of neurons (the identity decoder) or to decode a specific function. In the latter case, we sometimes write $\mat{D}^f$ to denote the function that is being decoded.},
-}
+\newcommand{\mnA}{\mnAR\xspace}
+\newcommand{\vnb}{\vnbR\xspace}
+\newcommand{\vng}{\vngR\xspace}
+\newcommand{\mnAp}{\mnApR\xspace}
+\newcommand{\mnBp}{\mnBpR\xspace}
+\newcommand{\vnap}{\vnapR\xspace}
+\newcommand{\vnbp}{\vnbpR\xspace}
 
-\newcommand*{\Npop}{\gls{Npop}\xspace}
-\newglossaryentry{Npop}{
-	name=\ensuremath{n},
-	type=symbols,
-	sort=npop,
-	description={Number of neurons in a neuron population.
-	This determines the dimensionality of the associated activity vector $\vec a$},
-}
+\newcommand{\mrAR}{\ensuremath{\mat{\tilde A}}\xspace}
+\newcommand{\vrbR}{\ensuremath{\vec{\tilde b}}\xspace}
+\newcommand{\vrapR}{\ensuremath{\vec{\tilde a}'}\xspace}
+\newcommand{\vrbpR}{\ensuremath{\vec{\tilde b}'}\xspace}
+\newcommand{\mrApR}{\ensuremath{\mat{\tilde A}'}\xspace}
+\newcommand{\mrBpR}{\ensuremath{\mat{\tilde B}'}\xspace}
+\newcommand{\mrLR}{\ensuremath{\mat{\tilde L}}\xspace}
+\newcommand{\vrcR}{\ensuremath{\vec{\tilde c}}\xspace}
+\newcommand{\vrciR}{\ensuremath{{\tilde c}_i}\xspace}
 
-\newcommand*{\Nsmpls}{\gls{Nsmpls}\xspace}
-\newglossaryentry{Nsmpls}{
-	name=\ensuremath{N},
-	type=symbols,
-	sort=Nsmpls,
-	description={This symbol is typically used to indicate the number of samples in an optimization problem},
-}
+\newcommand{\mrA}{\mrAR\xspace}
+\newcommand{\vrb}{\vrbR\xspace}
+\newcommand{\mrAp}{\mrApR\xspace}
+\newcommand{\mrBp}{\mrBpR\xspace}
+\newcommand{\vrap}{\vrapR\xspace}
+\newcommand{\vrbp}{\vrbpR\xspace}
+\newcommand{\mrL}{\mrLR\xspace}
+\newcommand{\vrc}{\vrcR\xspace}
+\newcommand{\vrci}{\vrciR\xspace}
 
-\newcommand*{\Ndim}{\gls{Ndim}\xspace}
-\newglossaryentry{Ndim}{
-	name=\ensuremath{d},
-	type=symbols,
-	sort=Ndim,
-	description={Number of dimensions represented by a neuron population},
-}
+\newcommand{\vneqR}{\ensuremath{\vec{v}^\mathrm{eq}}\xspace}
+\newcommand{\vneqiR}{\ensuremath{v_i^\mathrm{eq}}\xspace}
+\newcommand{\vreqR}{\ensuremath{\vec{\tilde v}^\mathrm{eq}}\xspace}
+\newcommand{\vreqiR}{\ensuremath{{\tilde v}_i^\mathrm{eq}}\xspace}
+\newcommand{\vreqkR}{\ensuremath{\vec{\tilde v}_k^\mathrm{eq}}\xspace}
+\newcommand{\vneq}{\vneqR\xspace}
+\newcommand{\vneqi}{\vneqiR\xspace}
+\newcommand{\vreq}{\vreqR\xspace}
+\newcommand{\vreqi}{\vreqiR\xspace}
 
-\newcommand*{\Xrepr}{\gls{Xrepr}\xspace}
-\newglossaryentry{Xrepr}{
-	name=\ensuremath{\mathbb{X}},
-	type=symbols,
-	sort=Xrepre,
-	description={Set of possible values represented by a neuron population. We assume that this is a compact set with finite volume, i.e., $\vol(\mathbb{X})$},
-}
+\newcommand{\twocomplif}{{two-compartment LIF}\xspace}
+\newcommand{\Hden}{{\ensuremath{H}}\xspace}
+\newcommand{\Hcond}{{\ensuremath{H_\mathrm{cond}}}\xspace}
+\newcommand{\Hcur}{{\ensuremath{H_\mathrm{cur}}}\xspace}
 
+\newcommand{\qprog}{{quadratic program}\xspace}
+\newcommand{\qprogpl}{{quadratic programs}\xspace}
 
-\newcommand*{\vRest}{\gls{vRest}\xspace}
-\newglossaryentry{vRest}{
-	name=\ensuremath{v_\mathrm{rest}},
-	type=symbols,
-	sort=vrest,
-	description={Resting potential of a neuron.
-	This is the membrane potential that can be measured in a neuron when no input is applied.
-	In vertebrates the resting potential is typically close to \SI{-65}{\milli\volt}.
-	The resting potential is generally equal to the \enquote{leak potential} \EL, though different in semantics}
-	% TODO check potentials
-}
+\newcommand{\slw}{{\ensuremath{\rho}}\xspace}
+\newcommand{\slc}{{\ensuremath{\rho^{-1}}}\xspace}
 
-\newcommand*{\vReset}{\gls{vReset}\xspace}
-\newglossaryentry{vReset}{
-	name=\ensuremath{v_\mathrm{reset}},
-	type=symbols,
-	sort=vreset,
-	description={Reset potential. TODO}
-	% TODO check potentials
-}
+\newcommand{\tauRef}{{\ensuremath{\tau_\mathrm{ref}}}\xspace}
 
+\newcommand{\vMem}{{\ensuremath{v}}\xspace}
+\newcommand{\vMemi}{{\ensuremath{v_i}}\xspace}
+\newcommand{\vMemj}{{\ensuremath{v_j}}\xspace}
+\newcommand{\vvMem}{{\ensuremath{\vec{v}}}\xspace}
 
-\newcommand*{\vTh}{\gls{vTh}\xspace}
-\newglossaryentry{vTh}{
-	name=\ensuremath{v_\mathrm{th}},
-	type=symbols,
-	sort=vth,
-	description={Threshold potential. TODO}
-	% TODO check potentials
-}
+\newcommand{\tauMem}{{\ensuremath{\tau_\mathrm{m}}}\xspace}
 
+\newcommand{\Cm}{{\ensuremath{C_\mathrm{m}}}\xspace}
+\newcommand{\Cmi}{{\ensuremath{C_{\mathrm{m}, i}}}\xspace}
+\newcommand{\CmiInv}{{\ensuremath{C_{\mathrm{m}, i}^{-1}}}\xspace}
+\newcommand{\vCm}{{\ensuremath{{\vec C}_\mathrm{m}}}\xspace}
 
-\newcommand*{\CMem}{\gls{CMem}\xspace}
-\newglossaryentry{CMem}{
-	name=\ensuremath{C_\mathrm{m}},
-	type=symbols,
-	sort=Cm,
-	description={Membrane capacitance. TODO}
-}
-
-\newcommand*{\EL}{\gls{EL}\xspace}
-\newglossaryentry{EL}{
-	name=\ensuremath{E_\mathrm{L}},
-	type=symbols,
-	sort=EL,
-	description={Leak potential. In contrast to the resting potential \vRest, which is an empirical measurement, the leak potential $E_\mathrm{L}$ is the reversal potential of a so-called \enquote{leak-channel}.
-	The leak-channel merely a modelling convenience that summarises the state of multiple ion channels of the neuron at rest}
-	% TODO check potentials
-}
-
-\newcommand*{\gL}{\gls{gL}\xspace}
-\newglossaryentry{gL}{
-	name=\ensuremath{g_\mathrm{L}},
-	type=symbols,
-	sort=gL,
-	description={Leak conductance. TODO}
-}
-
-
-\newcommand*{\gE}{\gls{gE}\xspace}
-\newglossaryentry{gE}{
-	name=\ensuremath{g_\mathrm{E}},
-	type=symbols,
-	sort=gE,
-	description={Excitatory conductance. TODO}
-}
-
-\newcommand*{\gI}{\gls{gI}\xspace}
-\newglossaryentry{gI}{
-	name=\ensuremath{g_\mathrm{I}},
-	type=symbols,
-	sort=gI,
-	description={Inhibitory conductance. TODO}
-}
+\newcommand{\vSom}{{\ensuremath{{\bar v}}}\xspace}
+\newcommand{\vvSom}{{\ensuremath{{\vec {\bar v}}}}\xspace}
 

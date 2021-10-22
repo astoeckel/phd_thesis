@@ -46,9 +46,9 @@ These traverse the nanometer-scale gap between the pre- and post-synapse, the \e
 This---directly or indirectly---causes ion channels in the post-neuron to open.
 In turn, the permeability of the post-neuron for that particular ion species changes.
 
-The resulting synaptically mediated membrane potential fluctuations are called \emph{post-synaptic potentials} (PSPs).
-Depending on the type of ion channels opened or closed, the PSP can either drive the neuron towards more positive voltages (if sodium channels are opened), or negative voltages (e.g., if potassium or chloride channels are opend).
-Positive PSPs are referred to as \emph{excitatory} (EPSP), negative changes as \emph{inhibitory} (IPSP).
+¸The resulting synaptically mediated membrane potential fluctuations are called \emph{post-synaptic potentials} (\PSPpl).
+Depending on the type of ion channels opened or closed, the \PSP can either drive the neuron towards more positive voltages (if sodium channels are opened), or negative voltages (e.g., if potassium or chloride channels are opend).
+Positive \PSPpl are referred to as \emph{excitatory} (\EPSP), negative changes as \emph{inhibitory} (\IPSP).
 %Correspondingly, we distinguish excitatory and inhibitory post-synaptic potentials (EPSPs) and (IPSPs).
 
 Whether a pre-neuron acts excitatorily or inhibitorily on a post-neuron depends on the kind of neurotransmitter released by the pre-neuron, as well as the specific receptors and ion channels in post-neuron.
@@ -56,9 +56,9 @@ Whether a pre-neuron acts excitatorily or inhibitorily on a post-neuron depends 
 For example, the Gamma-Aminobutyric acid (GABA) neurotransmitter is primarily inhibitory (via GABA\textsubscript{A} or GABA\textsubscript{B} receptors), whereas Glutamic acid (Glutamate) is mostly excitatory (via AMPA or NMDA receptors; \cite{kandel2012principles}, Chapter~10).
 
 Importantly, the mixture of neurotransmitters is the same across all axonal branches of a neuron.
-This is known as \emph{\gls{dales_principle}} \citep{strata1999dale,eccles1986chemical}.
+This is known as \emph{Dale's principle} \citep{strata1999dale,eccles1986chemical}.
 Put simply, individual neurons typically either act excitatorily or inhibitorily on their post-neurons.%
-\footnote{This characterisation of \gls{dales_principle} is useful, but technically incorrect. For example, a pre-synapse releasing glutamate typically excites post-neurons, but inhibits special neurons with inhibitory glutamate receptors \citep{cleland1996inhibitory}.
+\footnote{This characterisation of Dale's principle is useful, but technically incorrect. For example, a pre-synapse releasing glutamate typically excites post-neurons, but inhibits special neurons with inhibitory glutamate receptors \citep{cleland1996inhibitory}.
 Additionally, synapses could release both excitatory and inhibitory neurotransmitters.
 }
 We hence refer to neurons---and not just individual synapses---as being excitatory or inhibitory.
@@ -131,9 +131,9 @@ Mathematically, and as depicted the lower portion of \Cref{fig:synapse_filter_ex
 \end{align}
 
 \subsubsection{Synaptic dynamics as filters}
-The above synaptic dynamics (eqs.~\ref{eqn:low_pass_second_order}, \ref{eqn:low_pass_first_order}) are linear time-invariant (LTI) systems.
+The above synaptic dynamics (eqs.~\ref{eqn:low_pass_second_order}, \ref{eqn:low_pass_first_order}) are linear time-invariant (\LTI) systems.
 %of the form $\dot{\vec g}(t) = \mat A{\vec g(t)} + \mat B u(t)$, where $\mat A \in \mathbb{R}^{n \times n}$ is a state-transition matrix, $\mat B \in \mathbb{R}^{n \times 1}$ is the input matrix, and $u(t)$ is the input in the form of weighted pre-synaptic spike events; the output of the system (i.e., the conductance) is simply the first state-dimension $g_1$.
-LTI systems are fully characterised by their \emph{impulse response} $h(t)$ and can be replaced by a convolution (\enquote{$\ast$}) between $h(t)$ and the weighted input spike-train $u(t)$:
+\LTI systems are fully characterised by their \emph{impulse response} $h(t)$ and can be replaced by a convolution (\enquote{$\ast$}) between $h(t)$ and the weighted input spike-train $u(t)$:
 \begin{align}
 	g(t)
 		&= (h \ast u)(t)
@@ -163,20 +163,20 @@ This incurs a high computational cost, especially when considering detailed comp
 
 Fortunately, important electrophysiological properties of neurons can be captured by less detailed, computationally inexpensive, models \citep[cf.][Chapter~14]{koch1999biophysics}.
 For example, the Izhikevich \citep{izhikevich2004which} and Adaptive Exponential \citep{brette2005adaptive} point neuron models require only two state variables, but are capable of reproducing spike patterns observed in nature.
-Here, we focus on the even simpler \enquote{leaky integrate-and-fire} (LIF) model.
+Here, we focus on the even simpler \enquote{leaky integrate-and-fire} (\LIF) model.
 
 \subsubsection{The leaky integrate-and-fire model}
 
 \begin{figure}[t]
 	\includegraphics[scale=0.3333]{media/chapters/02_modelling/02_02/lif_circuit.pdf}%
 	\kern-0.25cm\includegraphics{media/chapters/02_modelling/02_02/lif_traces.pdf}
-	\caption[Equivalent circuit diagram and membrane potential trace of a LIF neuron]{Equivalent circuit diagram and membrane potential trace of a LIF neuron. \textbf{(A)} The LIF model consists of a capacitative membrane with a \enquote{leak} channel. A reset mechanism clamps \vMem to the reset potential \vReset. \textbf{(B)} Membrane potential trace (\emph{top}) for rectangle pulse current inputs (\emph{middle}).  Vertical dashed lines are spike events. The bottom graph depicts the remaining refractory period.}
+	\caption[Equivalent circuit diagram and membrane potential trace of a LIF neuron]{Equivalent circuit diagram and membrane potential trace of a \LIF neuron. \textbf{(A)} The \LIF model consists of a capacitative membrane with a \enquote{leak} channel. A reset mechanism clamps \vMem to the reset potential \vReset. \textbf{(B)} Membrane potential trace (\emph{top}) for rectangle pulse current inputs (\emph{middle}).  Vertical dashed lines are spike events. The bottom graph depicts the remaining refractory period.}
 	\label{fig:lif}
 \end{figure}
 
 %\footnote{Extensions to the LIF model include the quadratic and exponential integrate-and-fire models (QIF and EIF, respectively). Hence, LIF is sometimes read as \enquote{linear integrate-and-fire}. Furthermore, there is the IF model, that does not include a leak channel, sometimes also called nLIF (non-leaking).}
-A variant of the LIF model---lacking refractoriness---dates back to \citet{lapicque1907recherches}.
-Just like the Hodgkin-Huxley model (\Cref{sec:neural_dynamics}), the LIF neuron is based on a capacitive membrane with a leak channel.
+A variant of the \LIF model---lacking refractoriness---dates back to \citet{lapicque1907recherches}.
+Just like the Hodgkin-Huxley model (\Cref{sec:neural_dynamics}), the \LIF neuron is based on a capacitive membrane with a leak channel.
 The input current is integrated by the capacitor, which, at the same time, is discharged through the leak channel:
 \begin{align}
 	\CMem \dot{\vMem}(t) =
@@ -193,7 +193,7 @@ This is depicted in \Cref{fig:lif}.
 \begin{figure}
 	\centering
 	\includegraphics{media/chapters/02_modelling/02_02/neuron_voltage_traces.pdf}
-	\caption[Voltage traces for the LIF and Hodgkin-Huxley neuron model]{Voltage traces (\emph{top}) for the LIF and a Hodgkin-Huxley-type neuron dynamics described by \citet{traub1991neuronal} given a current ramp input~(\emph{bottom}). Dashed vertical lines correspond to spike events. Dotted line is the resting potential at $\EL=\SI{-65}{\milli\volt}$. Both neurons have a membrane capacitance of $C_\mathrm{m} = \SI{200}{\pico\farad}$ and a leak conductance of $g_\mathrm{L} = \SI{10}{\nano\siemens}$. \textbf{(A)} The LIF neuron model does not account for spike production; the voltage is simply reset to $v_\mathrm{reset} = \SI{-85}{\milli\volt}$ for $\tauRef = \SI{2}{\milli\second}$ once the membrane potential passes the threshold at $v_\mathrm{th} = -\SI{55}{\milli\volt}$. \textbf{(B)} Same experiment for a Hodgkin-Huxley neuron. Notably, the super-threshold dynamics of the Hodgkin-Huxley model action potentials and the first spike appears significantly earlier compared to the LIF neuron.}
+	\caption[Voltage traces for the LIF and Hodgkin-Huxley neuron model]{Voltage traces (\emph{top}) for the \LIF and a Hodgkin-Huxley-type neuron dynamics described by \citet{traub1991neuronal} given a current ramp input~(\emph{bottom}). Dashed vertical lines correspond to spike events. Dotted line is the resting potential at $\EL=\SI{-65}{\milli\volt}$. Both neurons have a membrane capacitance of $C_\mathrm{m} = \SI{200}{\pico\farad}$ and a leak conductance of $g_\mathrm{L} = \SI{10}{\nano\siemens}$. \textbf{(A)} The \LIF neuron model does not account for spike production; the voltage is simply reset to $v_\mathrm{reset} = \SI{-85}{\milli\volt}$ for $\tauRef = \SI{2}{\milli\second}$ once the membrane potential passes the threshold at $v_\mathrm{th} = -\SI{55}{\milli\volt}$. \textbf{(B)} Same experiment for a Hodgkin-Huxley neuron. Notably, the super-threshold dynamics of the Hodgkin-Huxley model action potentials and the first spike appears significantly earlier compared to the \LIF neuron.}
 	\label{fig:neuron_voltage_traces}
 \end{figure}
 
@@ -202,7 +202,7 @@ This is depicted in \Cref{fig:lif}.
 	\includegraphics{media/chapters/02_modelling/02_02/neuron_response_curves.pdf}%
 	{\phantomsubcaption\label{fig:neuron_response_curves_lif}}%
 	{\phantomsubcaption\label{fig:neuron_response_curves_hh}}%
-	\caption[Response curves for the LIF and Hodgkin-Huxley-type neuron model]{Response curves (also called IF-curves) $G[J]$ for the LIF and Hodgkin-Huxley-type neuron model from \Cref{fig:neuron_voltage_traces}. Data extracted from the inter-spike-intervals of a current ramp experiment (sweep from \SIrange{0}{2}{\nano\ampere} over ten seconds at a \SI{10}{\micro\second} resolution). Although the LIF and Hodgkin-Huxley models have drastically different dynamics, their response curves are qualitatively similar.}
+	\caption[Response curves for the LIF and Hodgkin-Huxley-type neuron model]{Response curves (also called IF-curves) $G[J]$ for the \LIF and Hodgkin-Huxley-type neuron model from \Cref{fig:neuron_voltage_traces}. Data extracted from the inter-spike-intervals of a current ramp experiment (sweep from \SIrange{0}{2}{\nano\ampere} over ten seconds at a \SI{10}{\micro\second} resolution). Although the \LIF and Hodgkin-Huxley models have drastically different dynamics, their response curves are qualitatively similar.}
 	\label{fig:neuron_response_curves}
 \end{figure}
 
@@ -217,12 +217,12 @@ This is depicted in \Cref{fig:lif}.
 	{\phantomsubcaption\label{fig:izhikevich_whichmod_figure1f}}%
 	{\phantomsubcaption\label{fig:izhikevich_whichmod_figure1g}}%
 	{\phantomsubcaption\label{fig:izhikevich_whichmod_figure1h}}%
-	\caption[Diversity of neural dynamics for constant or ramp input currents]{Diversity of neural dynamics for constant or ramp input currents. Each plot depicts membrane-potential traces $v(t)$ (\emph{top}) of the Izhikevich neuron model (with different parameters) for an input current $J(t)$ (\emph{bottom}). LIF neurons are only capable of behaviours \emph{A} and \emph{G}. Partially reproduced (dynamics for input pulses were skipped) with minor modifications from \citet{izhikevich2004which}. Electronic version of the figure and reproduction permissions freely available at \url{http://www.izhikevich.org}.}
+	\caption[Diversity of neural dynamics for constant or ramp input currents]{Diversity of neural dynamics for constant or ramp input currents. Each plot depicts membrane-potential traces $v(t)$ (\emph{top}) of the Izhikevich neuron model (with different parameters) for an input current $J(t)$ (\emph{bottom}). \LIF neurons are only capable of behaviours \emph{A} and \emph{G}. Partially reproduced (dynamics for input pulses were skipped) with minor modifications from \citet{izhikevich2004which}. Electronic version of the figure and reproduction permissions freely available at \url{http://www.izhikevich.org}.}
 	\label{fig:izhikevich_whichmod_figure1}
 \end{figure}
 
-\Cref{fig:neuron_voltage_traces} depicts a comparison between the Hodgkin-Huxley-type and LIF dynamics.
-The reset and threshold potential of the LIF neuron model have been tuned to match the sub-threshold membrane potentials observed in the Hodgkin-Huxley neuron.
+\Cref{fig:neuron_voltage_traces} depicts a comparison between the Hodgkin-Huxley-type and \LIF dynamics.
+The reset and threshold potential of the \LIF neuron model have been tuned to match the sub-threshold membrane potentials observed in the Hodgkin-Huxley neuron.
 In both cases---apart from the obviously missing super-threshold dynamics---the inter-spike-interval decreases the larger $J$, leading to a higher spike rate.
 This suggests a characterisation of neurons in terms of their \emph{response curve} $G[J]$ (\Cref{fig:neuron_response_curves})
 \begin{align}
@@ -244,7 +244,7 @@ For most neuron models, it is impossible to derive a closed-form expression for 
 Instead, we have to rely on the method suggested by \cref{eqn:response_curve}.
 That is, we simulate the neural dynamics for a sufficiently long time-period and count the number of spikes $n_\mathrm{spikes}$.
 
-The LIF neuron is a notable exception to this, as its subthreshold dynamics form a simple first-order linear dynamical system.
+The \LIF neuron is a notable exception to this, as its subthreshold dynamics form a simple first-order linear dynamical system.
 Using basic techniques for solving differential equations, the membrane potential \vMem at time $t$ for a constant input current $J$ is given as
 \begin{align}
 	v(t) &= \left(1 - e^{-\frac{t}{\tauMem}} \right) \left( \EL + \frac{J}{\gL} \right) + e^{-\frac{t}{\tauMem}} v(0) \,, &&\Rightarrow & \lim_{t \to \infty} v(t) &= \EL + \frac{J}{\gL} \,.
@@ -267,11 +267,11 @@ Keeping in mind that the neuron is held at the reset potential for $\tauRef$ sec
 	\label{eqn:lif_response_curve}
 \end{align}
 As depicted in \Cref{fig:neuron_response_curves_lif}, the predicted rate perfectly matches the empirical measurement.
-Notably, the LIF response curve is qualitatively similar to that of the Hodgkin-Huxley neuron (\Cref{fig:neuron_response_curves_hh})---surprisingly so, as the dynamical systems differ wildly between the two models.
-This makes LIF neurons a reasonable choice for simulating large-scale neurobiological systems at small computational costs (\cite{meunier2002playing}).
+Notably, the \LIF response curve is qualitatively similar to that of the Hodgkin-Huxley neuron (\Cref{fig:neuron_response_curves_hh})---surprisingly so, as the dynamical systems differ wildly between the two models.
+This makes \LIF neurons a reasonable choice for simulating large-scale neurobiological systems at small computational costs (\cite{meunier2002playing}).
 
 \subsubsection{Simplified LIF neuron}
-A qualitatively equivalent form of the LIF neuron is given by normalising the voltages such that $\EL = 0$ and $\vTh = 1$, and furthermore setting $J_\mathrm{th} = 1$:
+A qualitatively equivalent form of the \LIF neuron is given by normalising the voltages such that $\EL = 0$ and $\vTh = 1$, and furthermore setting $J_\mathrm{th} = 1$:
 \begin{align}
 	\dot v(t) &= -\frac{1}{\tauMem} v(t) + J(t) \,, &
 	G[J] &= \begin{cases}
@@ -319,7 +319,7 @@ We compare conductance- and current-based synapse models in more detail in the n
 % But is this what biology does?
 % Rate vs temporal coding debate -> Aaron
 
-We are now well-equipped to construct and simulate spiking neural networks (SNNs).
+We are now well-equipped to construct and simulate spiking neural networks (\SNNpl).
 In theory, we just take $n$ spiking neurons and connect them up according to synaptic weights $w_{ij}$. As mentioned before, these weights determine the connection strength between a pre-neuron $j$ and post-neuron $i$. Inputs are additive over multiple pre-neurons (eqs.~\ref{eqn:low_pass_first_order}, \ref{eqn:low_pass_first_order_current}).%
 \footnote{This notion of synaptic weights $w_{ij}$ assumes that each neuron possesses a single synaptic input channel.
 Hence, there is only a single synaptic weight matrix.
@@ -329,19 +329,19 @@ Mathematically, the \emph{weight matrix} $\mat W \in \mathbb{R}^{n \times n}$ is
 \footnote{For convenience and computational efficiency, neurons are typically grouped into \enquote{layers}, \enquote{populations}, or \enquote{ensembles} (all terms are used synonymously).
 Not all layers have connections among each other. Hence, $\mat W$ typically is a block-matrix that can be split into multiple sub-matrices.}
 Networks with acyclic connectivity are called \emph{feed-forward} (\Cref{fig:neural_networks_a}); networks with cyclic connectivity are \emph{recurrent} (\Cref{fig:neural_networks_b}).
-Feed-forward SNNs have finite memory.
+Feed-forward \SNNpl have finite memory.
 Assuming plausible synaptic filters, their impulse response decays exponentially.
 In contrast, and as we discuss later, recurrent networks can posses more interesting dynamics.
 
-To actually simulate an SNN, we feed an external input (e.g., a set of currents or spike-trains) into the network and numerically integrate the coupled differential equations.
+To actually simulate an \SNN, we feed an external input (e.g., a set of currents or spike-trains) into the network and numerically integrate the coupled differential equations.
 There are numerous general-purpose simulator software packages that do this efficiently, e.g., NEST \citep{gewaltig2007nest}, Brian \citep{stimberg2019brian}, GeNN \citep{yavuz2016genn}, or Nengo \citep{bekolay2014nengo}.
 
 The most important question---and one that we pursue for the remainder of this thesis---is how to ultimately select $\mat W$.
-For the artificial neural networks (ANNs) used in machine learning (\Cref{fig:neural_networks_c}), the astoundingly successful answer is to use \glsdisp{sgd}{stochastic gradient descent} on a loss function $E$, i.e., $\dot{\mat W} = -\eta \nabla_{\mat W} E(\vec a_k, \vec {\hat a_k})$, where $\eta$ is a learning rate, $\vec a_k$ is the desired output activity for an input sample $\vec x_k$, and $\vec{\hat a_k}$ is the actual output \citep{lecun2015deep}.
+For the artificial neural networks ({\ANN}s) used in machine learning (\Cref{fig:neural_networks_c}), the astoundingly successful answer is to use stochastic gradient descent on a loss function $E$, i.e., $\dot{\mat W} = -\eta \nabla_{\mat W} E(\vec a_k, \vec {\hat a_k})$, where $\eta$ is a learning rate, $\vec a_k$ is the desired output activity for an input sample $\vec x_k$, and $\vec{\hat a_k}$ is the actual output \citep{lecun2015deep}.
 For example, one common choice for the loss function is $E(\vec a_k, \vec {\hat a_k}) = \|\vec a_k - \vec{\hat a}_k\|^2$.
 
-Similar gradient-descent global optimisation methods can be applied in the context of SNNs as well.
-\Citet{hunsberger2018spiking} characterises the LIF response curve $G[J]$ in a network context and then trains an ANN that uses $G[J]$ as a nonlinearity.
+Similar gradient-descent global optimisation methods can be applied in the context of \SNNpl as well.
+\Citet{hunsberger2018spiking} characterises the \LIF response curve $G[J]$ in a network context and then trains an \ANN that uses $G[J]$ as a nonlinearity.
 The resulting $\mat W$ can then be used in a spiking context.
 \Citet{goltz2020fast} optimise synaptic weights such that desired spike-timings are generated by a black-box spiking neural network simulator.
 
@@ -457,7 +457,7 @@ The opposite would be \enquote{single-neuron coding}, where the activity of indi
 	The current $J$ fed into each neuron is subject to Gaussian noise with standard deviation $\sigma = \SI{1}{\nano\ampere}$.
 	Solid line corresponds to the median activity for the given represented value; shaded area corresponds to a contour line of the underlying probability density.
 	\emph{Right:} Trying to decode the represented value $x$ from the activity results in significant uncertainties; negative values cannot be disambiguated. Dotted line is the optimum; solid line the median of a maximum-likelihood estimate, shaded area a contour line of the underlying probability density.
-	Error $E$ is the decoding RMSE.
+	Error $E$ is the decoding \RMSE.
 	\textbf{(B, C, D)} The larger the number of neurons, the smaller the uncertainties.}
 	\label{fig:population_code}
 \end{figure}

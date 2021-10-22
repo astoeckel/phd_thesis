@@ -1,6 +1,5 @@
 % !TeX spellcheck = en_GB
 \documentclass[letterpaper,twoside,12pt]{memoir}
-\usepackage{morewrites}
 
 \input{content/preamble/style}
 \input{content/preamble/packages}
@@ -12,33 +11,6 @@
 %% DRAFT 
 %\usepackage{showframe}
 \usepackage[normalem]{ulem}
-\usepackage{lipsum}
-\usepackage[textsize=small]{todonotes}
-
-\newglossarystyle{symbols}{%
-  \setglossarystyle{long}%
-  \renewenvironment{theglossary}%
-     {\renewcommand{\arraystretch}{1.25}%
-      \begin{longtable}[l]{@{}p{\dimexpr 1cm-\tabcolsep}p{\dimexpr \textwidth-1.25cm}}}
-     {\end{longtable}}%
- }
-\newglossarystyle{acronyms}{%
-  \setglossarystyle{long}%
-  \renewenvironment{theglossary}%
-     {\renewcommand{\arraystretch}{1.25}%
-      \begin{longtable}[l]{@{}p{\dimexpr 2cm-\tabcolsep}p{\dimexpr \textwidth-2.25cm}}}
-     {\end{longtable}}%
-}
-
-\newglossarystyle{mainglossary}{% base it on the "list" style
-    \setglossarystyle{list}%
-    \renewcommand*{\glossentry}[2]{%
-        \item[\glsentryitem{##1}%
-        \glstarget{##1}{\glossentryname{##1}}]
-        \ifglshaslong{##1}{{(\glsentrylong{##1})}\space}{}%
-        \glossentrydesc{##1}\glspostdescription ##2%
-    }%
-}
 
 \title{Harnessing Neural Dynamics\\as a Computational Resource}
 \author{Andreas Stöckel}
@@ -47,7 +19,7 @@
 
 % Starts creation of a glossary.
 \makeglossaries
-\input{content/frontmatter/glossary}
+\input{content/frontmatter/acronyms}
 \input{content/frontmatter/symbols}
 
 \begin{document}
@@ -58,7 +30,6 @@
 	\input{content/frontmatter/contributions}
 	\input{content/frontmatter/abstract}
 	\input{content/frontmatter/acknowledgements}
-	\input{content/frontmatter/dedication}
 
 	\cleardoublepage
 	\tableofcontents
@@ -67,40 +38,40 @@
 	\clearpage
 	\listoftables
 
-%	\clearpage
-%	\printglossary[type=\acronymtype,title={List of Abbreviations}]
+	\clearpage
+	\printglossary[title={List of Abbreviations}]
 
 	\mainmatter
 
-%	\setcounter{chapter}{0}
-%	\include{content/chapters/01_introduction/01_introduction}
-%
-%	\setcounter{chapter}{1}
-%	\include{content/chapters/02_modelling/02_modelling}
-%
-%	\setcounter{chapter}{2}
-%	\include{content/chapters/03_nlif/03_nlif}
-%
-%	\setcounter{chapter}{3}
-%	\include{content/chapters/04_temporal_tuning/04_temporal_tuning}
-%
+	\setcounter{chapter}{0}
+	\include{content/chapters/01_introduction/01_introduction}
+
+	\setcounter{chapter}{1}
+	\include{content/chapters/02_modelling/02_modelling}
+
+	\setcounter{chapter}{2}
+	\include{content/chapters/03_nlif/03_nlif}
+
+	\setcounter{chapter}{3}
+	\include{content/chapters/04_temporal_tuning/04_temporal_tuning}
+
 	\setcounter{chapter}{4}
 	\include{content/chapters/05_cerebellum/05_cerebellum}
-%
-%	\setcounter{chapter}{5}
-%	\include{content/chapters/06_conclusion/06_conclusion}
-%
-%	\printbibliography
-%
-%	\appendix
-%
-%	\setcounter{chapter}{0}
-%	\include{content/chapters/ZB_details/ZB_details}
-%
-%	\setcounter{chapter}{1}
-%	\include{content/chapters/ZC_data/ZC_data}
-%
-%	\setcounter{chapter}{2}
-%	\include{content/chapters/ZD_software/ZD_software}
+
+	\setcounter{chapter}{5}
+	\include{content/chapters/06_conclusion/06_conclusion}
+
+	\printbibliography
+
+	\appendix
+
+	\setcounter{chapter}{0}
+	\include{content/chapters/ZB_details/ZB_details}
+
+	\setcounter{chapter}{1}
+	\include{content/chapters/ZC_data/ZC_data}
+
+	\setcounter{chapter}{2}
+	\include{content/chapters/ZD_software/ZD_software}
 
 \end{document}

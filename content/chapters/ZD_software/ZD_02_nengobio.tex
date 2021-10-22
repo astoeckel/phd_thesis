@@ -93,7 +93,7 @@ In the above code, we simply ignore the second dimension that originates from th
 	\label{fig:nengo_bio_spatial_connectivity}
 \end{figure}
 
-As we discussed in \Cref{chp:cerbellum}, neurobiological microcircuits are often characterised in terms of their convergence and divergence numbers.
+As we mentioned in \Cref{chp:cerebellum}, neurobiological microcircuits are often characterised in terms of their convergence and divergence numbers.
 NengoBio can account for these constraints.
 
 \subsubsection{Specifying convergence and/or divergence}
@@ -147,7 +147,7 @@ bio.Connection((ens_x1, ens_x2), ens_tar,
                function=lambda x: 0.5 * (x[0] + 1.0) * (x[1] + 1.0) - 1.0,
                solver=bio.solvers.QPSolver(relax=True))
 \end{pythoncode}
-When using the two-compartment LIF neuron, NengoBio automatically calibrates the two-compartment neuron parameters using the method presented in \Cref{sec:two_comp_lif_fit_model}.
+When using the two-compartment \LIF neuron, NengoBio automatically calibrates the two-compartment neuron parameters using the method presented in \Cref{sec:two_comp_lif_fit_model}.
 In particular, NengoBio performs a series of neuron simulations to determine the excitatory and inhibitory conductance range that produces the specified maximum firing rates.
 
 The \texttt{QPSolver} class uses the non-sequential quadratic program discussed in \Cref{sec:two_comp_synaptic_weights} to compute synaptic weights.

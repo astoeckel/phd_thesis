@@ -43,7 +43,7 @@ We combine this sweep with the \enquote{pre-filter experiment} described below; 
 The final parameters used in \Cref{sec:two_comp_lif_experiment_3} are listed in \Cref{tbl:regularization_paremteters}.
 
 The purpose of the pre-filter experiment is the following.
-As mentioned in the main text, the dendritic compartment in the \gls{twocomp} model can be interpreted as an additional first order low-pass filter with time constant $C_\mathrm{m} g_\mathrm{L}^{-1}$ (cf.~\Cref{tbl:two_comp_neuron_parameters}).
+As mentioned in the main text, the dendritic compartment in the two-compartment model can be interpreted as an additional first order low-pass filter with time constant $C_\mathrm{m} g_\mathrm{L}^{-1}$ (cf.~\Cref{tbl:two_comp_neuron_parameters}).
 This low-pass filter reduces the amplitude of high-frequency transients in the input signal and may thus contribute to the reduction of the final approximation error $E_\mathrm{net}$.
 
 To explore the effects of low-pass filters in the network, we perform an additional experiment in which we introduced a first-order low-pass filter (the \enquote{pre-filter}) located at the input of the target population (for single-layer networks) or the input of the intermediate population (in the case of the two-layer network).
@@ -58,8 +58,8 @@ As one would expect, when using the two-compartment LIF noise model, adding a pr
 
 Function approximation errors are given in (cf.~\Cref{tbl:function_approximations_pre_filter}).
 Again, we provide the mean and standard deviation of the model and network errors for $N = 100$ samples; see above for a complete description of the table.
-The pre-filter reduces the error by only about $1$-$2\%$ across all network setups, which is far less than the observed reduction in error when using the \gls{twocomp} model compared to the standard LIF neuron model.
-We conclude that, while additional low-pass filters in the network can help to reduce the overall error, the reduction in error is too small to be an explanation for the smaller errors produced by the \gls{twocomp} model.
+The pre-filter reduces the error by only about $1$-$2\%$ across all network setups, which is far less than the observed reduction in error when using the two-compartment model compared to the standard LIF neuron model.
+We conclude that, while additional low-pass filters in the network can help to reduce the overall error, the reduction in error is too small to be an explanation for the smaller errors produced by the two-compartment model.
 
 \begin{figure}[p]
 	\includegraphics{media/chapters/ZC_data/two_comp_benchmark_functions_regularisation_filter_sweep_nosubth.pdf}
@@ -513,216 +513,422 @@ Bottom half contains the minimum network errors $E_\mathrm{net}$ over $100$ tria
 &	 \multicolumn{1}{c}{$n = 3$}
 &	 \multicolumn{1}{c}{$n = 4$}
 \\
-%--------------------------------------------
+%--------------------------------------------
+
 \midrule
 \multicolumn{7}{c}{\textbf{Static function approximation errors}}\\
 %\midrule
-\multicolumn{7}{c}{\textit{Standard parameters} ($\lambda = 10^{-3}$; $\xi_0 \in [-0.95, 0.95]$; with Dale's principle, $p_\mathrm{inh} = 30\%$)} \\
-\midrule
-$x_1 + x_2$
-& $[-1, 1]^2$
-& \cellcolor{White!100!SteelBlue}{$\mathbf{2.1 \pm 0.6 \%}$}
-& \cellcolor{White!80!SteelBlue}{$2.2 \pm 0.4 \%$}
-& \cellcolor{White!20!SteelBlue}{$2.7 \pm 0.6 \%$}
-& \cellcolor{White!80!SteelBlue}{$2.2 \pm 0.6 \%$}
-& \cellcolor{White!80!SteelBlue}{$2.2 \pm 0.6 \%$}
-\\
-$x_1 / (1 + x_2)$
-& $[0, 1]^2$
-& \cellcolor{White!20!SteelBlue}{$8.9 \pm 0.8 \%$}
-& \cellcolor{White!60!SteelBlue}{$3.3 \pm 0.4 \%$}
-& \cellcolor{White!40!SteelBlue}{$3.8 \pm 1.0 \%$}
-& \cellcolor{White!100!SteelBlue}{$\mathbf{3.1 \pm 1.0 \%}$}
-& \cellcolor{White!80!SteelBlue}{$3.2 \pm 1.0 \%$}
-\\
-$\sqrt{x_1 \times x_2}$
-& $[0, 1]^2$
-& \cellcolor{White!20!SteelBlue}{$12.4 \pm 1.1 \%$}
-& \cellcolor{White!40!SteelBlue}{$7.5 \pm 0.5 \%$}
-& \cellcolor{White!60!SteelBlue}{$6.1 \pm 0.8 \%$}
-& \cellcolor{White!100!SteelBlue}{$\mathbf{5.1 \pm 0.8 \%}$}
-& \cellcolor{White!100!SteelBlue}{$\mathbf{5.1 \pm 0.8 \%}$}
-\\
-$x_1 \times x_2$
-& $[0, 1]^2$
-& \cellcolor{White!20!SteelBlue}{$14.6 \pm 0.9 \%$}
-& \cellcolor{White!100!SteelBlue}{$\mathbf{2.3 \pm 0.3 \%}$}
-& \cellcolor{White!40!SteelBlue}{$2.8 \pm 0.5 \%$}
-& \cellcolor{White!80!SteelBlue}{$2.4 \pm 0.4 \%$}
-& \cellcolor{White!80!SteelBlue}{$2.4 \pm 0.4 \%$}
-\\
-$x_1 \times x_2$
-& $[-1, 1]^2$
-& \cellcolor{White!20!SteelBlue}{$107.1 \pm 1.8 \%$}
-& \cellcolor{White!100!SteelBlue}{$\mathbf{5.7 \pm 0.5 \%}$}
-& \cellcolor{White!40!SteelBlue}{$77.2 \pm 3.6 \%$}
-& \cellcolor{White!60!SteelBlue}{$39.0 \pm 4.6 \%$}
-& \cellcolor{White!80!SteelBlue}{$38.2 \pm 5.0 \%$}
-\\
-$(x_1 \times x_2) ^ 2$
-& $[-1, 1]^2$
-& \cellcolor{White!40!SteelBlue}{$15.3 \pm 1.6 \%$}
-& \cellcolor{White!80!SteelBlue}{$8.3 \pm 1.0 \%$}
-& \cellcolor{White!20!SteelBlue}{$16.4 \pm 1.8 \%$}
-& \cellcolor{White!60!SteelBlue}{$8.7 \pm 1.9 \%$}
-& \cellcolor{White!100!SteelBlue}{$\mathbf{8.2 \pm 1.8 \%}$}
-\\
-$\|(x_1, x_2)\|$
-& $[-1, 1]^2$
-& \cellcolor{White!20!SteelBlue}{$9.0 \pm 0.6 \%$}
-& \cellcolor{White!60!SteelBlue}{$5.7 \pm 0.8 \%$}
-& \cellcolor{White!40!SteelBlue}{$6.6 \pm 0.5 \%$}
-& \cellcolor{White!100!SteelBlue}{$\mathbf{4.0 \pm 0.6 \%}$}
-& \cellcolor{White!80!SteelBlue}{$4.2 \pm 0.6 \%$}
-\\
-$\mathrm{atan}(x_1, x_2)$
-& $[-1, 1]^2$
-& \cellcolor{White!20!SteelBlue}{$35.2 \pm 2.4 \%$}
-& \cellcolor{White!40!SteelBlue}{$29.2 \pm 3.3 \%$}
-& \cellcolor{White!60!SteelBlue}{$15.3 \pm 4.3 \%$}
-& \cellcolor{White!100!SteelBlue}{$\mathbf{13.1 \pm 4.9 \%}$}
-& \cellcolor{White!80!SteelBlue}{$13.3 \pm 4.4 \%$}
-\\
-$\max(x_1, x_2)$
-& $[-1, 1]^2$
-& \cellcolor{White!20!SteelBlue}{$22.3 \pm 1.1 \%$}
-& \cellcolor{White!100!SteelBlue}{$\mathbf{3.4 \pm 0.3 \%}$}
-& \cellcolor{White!40!SteelBlue}{$8.0 \pm 0.5 \%$}
-& \cellcolor{White!80!SteelBlue}{$5.4 \pm 0.5 \%$}
-& \cellcolor{White!60!SteelBlue}{$5.7 \pm 0.6 \%$}
-\\
-\midrule
-\multicolumn{7}{c}{\textit{Adapted parameters} ($\lambda = 10^{-6}$; $\xi_0 \in [-0.95, 0]$; no Dale's principle)} \\
-\midrule
-$x_1 + x_2$
-& $[-1, 1]^2$
-& \cellcolor{White!100!SteelBlue}{$\mathbf{3.4 \pm 0.4 \%}$}
-& \cellcolor{White!40!SteelBlue}{$3.5 \pm 0.3 \%$}
-& \cellcolor{White!20!SteelBlue}{$3.9 \pm 0.4 \%$}
-& \cellcolor{White!100!SteelBlue}{$\mathbf{3.4 \pm 0.4 \%}$}
-& \cellcolor{White!100!SteelBlue}{$\mathbf{3.4 \pm 0.4 \%}$}
-\\
-$x_1 \times x_2$
-& $[0, 1]^2$
-& \cellcolor{White!20!SteelBlue}{$20.4 \pm 0.9 \%$}
-& \cellcolor{White!100!SteelBlue}{$\mathbf{4.7 \pm 0.7 \%}$}
-& \cellcolor{White!40!SteelBlue}{$5.4 \pm 0.6 \%$}
-& \cellcolor{White!80!SteelBlue}{$5.0 \pm 0.7 \%$}
-& \cellcolor{White!80!SteelBlue}{$5.0 \pm 0.7 \%$}
-\\
-$x_1 \times x_2$
-& $[-1, 1]^2$
-& \cellcolor{White!20!SteelBlue}{$109.7 \pm 2.6 \%$}
-& \cellcolor{White!100!SteelBlue}{$\mathbf{6.5 \pm 0.3 \%}$}
-& \cellcolor{White!40!SteelBlue}{$71.6 \pm 4.9 \%$}
-& \cellcolor{White!60!SteelBlue}{$26.1 \pm 5.0 \%$}
-& \cellcolor{White!80!SteelBlue}{$24.1 \pm 4.0 \%$}
-\\
+\multicolumn{7}{c}{\textit{Standard parameters} ($\lambda = 10^{-3}$; $\xi_0 \in [-0.95, 0.95]$; with Dale's principle, $p_\mathrm{inh} = 30\%$)} \\
+
+\midrule
+
+$x_1 + x_2$
+
+& $[-1, 1]^2$
+
+& \cellcolor{White!100!SteelBlue}{$\mathbf{2.1 \pm 0.6 \%}$}
+
+& \cellcolor{White!80!SteelBlue}{$2.2 \pm 0.4 \%$}
+
+& \cellcolor{White!20!SteelBlue}{$2.7 \pm 0.6 \%$}
+
+& \cellcolor{White!80!SteelBlue}{$2.2 \pm 0.6 \%$}
+
+& \cellcolor{White!80!SteelBlue}{$2.2 \pm 0.6 \%$}
+
+\\
+
+$x_1 / (1 + x_2)$
+
+& $[0, 1]^2$
+
+& \cellcolor{White!20!SteelBlue}{$8.9 \pm 0.8 \%$}
+
+& \cellcolor{White!60!SteelBlue}{$3.3 \pm 0.4 \%$}
+
+& \cellcolor{White!40!SteelBlue}{$3.8 \pm 1.0 \%$}
+
+& \cellcolor{White!100!SteelBlue}{$\mathbf{3.1 \pm 1.0 \%}$}
+
+& \cellcolor{White!80!SteelBlue}{$3.2 \pm 1.0 \%$}
+
+\\
+
+$\sqrt{x_1 \times x_2}$
+
+& $[0, 1]^2$
+
+& \cellcolor{White!20!SteelBlue}{$12.4 \pm 1.1 \%$}
+
+& \cellcolor{White!40!SteelBlue}{$7.5 \pm 0.5 \%$}
+
+& \cellcolor{White!60!SteelBlue}{$6.1 \pm 0.8 \%$}
+
+& \cellcolor{White!100!SteelBlue}{$\mathbf{5.1 \pm 0.8 \%}$}
+
+& \cellcolor{White!100!SteelBlue}{$\mathbf{5.1 \pm 0.8 \%}$}
+
+\\
+
+$x_1 \times x_2$
+
+& $[0, 1]^2$
+
+& \cellcolor{White!20!SteelBlue}{$14.6 \pm 0.9 \%$}
+
+& \cellcolor{White!100!SteelBlue}{$\mathbf{2.3 \pm 0.3 \%}$}
+
+& \cellcolor{White!40!SteelBlue}{$2.8 \pm 0.5 \%$}
+
+& \cellcolor{White!80!SteelBlue}{$2.4 \pm 0.4 \%$}
+
+& \cellcolor{White!80!SteelBlue}{$2.4 \pm 0.4 \%$}
+
+\\
+
+$x_1 \times x_2$
+
+& $[-1, 1]^2$
+
+& \cellcolor{White!20!SteelBlue}{$107.1 \pm 1.8 \%$}
+
+& \cellcolor{White!100!SteelBlue}{$\mathbf{5.7 \pm 0.5 \%}$}
+
+& \cellcolor{White!40!SteelBlue}{$77.2 \pm 3.6 \%$}
+
+& \cellcolor{White!60!SteelBlue}{$39.0 \pm 4.6 \%$}
+
+& \cellcolor{White!80!SteelBlue}{$38.2 \pm 5.0 \%$}
+
+\\
+
+$(x_1 \times x_2) ^ 2$
+
+& $[-1, 1]^2$
+
+& \cellcolor{White!40!SteelBlue}{$15.3 \pm 1.6 \%$}
+
+& \cellcolor{White!80!SteelBlue}{$8.3 \pm 1.0 \%$}
+
+& \cellcolor{White!20!SteelBlue}{$16.4 \pm 1.8 \%$}
+
+& \cellcolor{White!60!SteelBlue}{$8.7 \pm 1.9 \%$}
+
+& \cellcolor{White!100!SteelBlue}{$\mathbf{8.2 \pm 1.8 \%}$}
+
+\\
+
+$\|(x_1, x_2)\|$
+
+& $[-1, 1]^2$
+
+& \cellcolor{White!20!SteelBlue}{$9.0 \pm 0.6 \%$}
+
+& \cellcolor{White!60!SteelBlue}{$5.7 \pm 0.8 \%$}
+
+& \cellcolor{White!40!SteelBlue}{$6.6 \pm 0.5 \%$}
+
+& \cellcolor{White!100!SteelBlue}{$\mathbf{4.0 \pm 0.6 \%}$}
+
+& \cellcolor{White!80!SteelBlue}{$4.2 \pm 0.6 \%$}
+
+\\
+
+$\mathrm{atan}(x_1, x_2)$
+
+& $[-1, 1]^2$
+
+& \cellcolor{White!20!SteelBlue}{$35.2 \pm 2.4 \%$}
+
+& \cellcolor{White!40!SteelBlue}{$29.2 \pm 3.3 \%$}
+
+& \cellcolor{White!60!SteelBlue}{$15.3 \pm 4.3 \%$}
+
+& \cellcolor{White!100!SteelBlue}{$\mathbf{13.1 \pm 4.9 \%}$}
+
+& \cellcolor{White!80!SteelBlue}{$13.3 \pm 4.4 \%$}
+
+\\
+
+$\max(x_1, x_2)$
+
+& $[-1, 1]^2$
+
+& \cellcolor{White!20!SteelBlue}{$22.3 \pm 1.1 \%$}
+
+& \cellcolor{White!100!SteelBlue}{$\mathbf{3.4 \pm 0.3 \%}$}
+
+& \cellcolor{White!40!SteelBlue}{$8.0 \pm 0.5 \%$}
+
+& \cellcolor{White!80!SteelBlue}{$5.4 \pm 0.5 \%$}
+
+& \cellcolor{White!60!SteelBlue}{$5.7 \pm 0.6 \%$}
+
+\\
+
+\midrule
+
+\multicolumn{7}{c}{\textit{Adapted parameters} ($\lambda = 10^{-6}$; $\xi_0 \in [-0.95, 0]$; no Dale's principle)} \\
+
+\midrule
+
+$x_1 + x_2$
+
+& $[-1, 1]^2$
+
+& \cellcolor{White!100!SteelBlue}{$\mathbf{3.4 \pm 0.4 \%}$}
+
+& \cellcolor{White!40!SteelBlue}{$3.5 \pm 0.3 \%$}
+
+& \cellcolor{White!20!SteelBlue}{$3.9 \pm 0.4 \%$}
+
+& \cellcolor{White!100!SteelBlue}{$\mathbf{3.4 \pm 0.4 \%}$}
+
+& \cellcolor{White!100!SteelBlue}{$\mathbf{3.4 \pm 0.4 \%}$}
+
+\\
+
+$x_1 \times x_2$
+
+& $[0, 1]^2$
+
+& \cellcolor{White!20!SteelBlue}{$20.4 \pm 0.9 \%$}
+
+& \cellcolor{White!100!SteelBlue}{$\mathbf{4.7 \pm 0.7 \%}$}
+
+& \cellcolor{White!40!SteelBlue}{$5.4 \pm 0.6 \%$}
+
+& \cellcolor{White!80!SteelBlue}{$5.0 \pm 0.7 \%$}
+
+& \cellcolor{White!80!SteelBlue}{$5.0 \pm 0.7 \%$}
+
+\\
+
+$x_1 \times x_2$
+
+& $[-1, 1]^2$
+
+& \cellcolor{White!20!SteelBlue}{$109.7 \pm 2.6 \%$}
+
+& \cellcolor{White!100!SteelBlue}{$\mathbf{6.5 \pm 0.3 \%}$}
+
+& \cellcolor{White!40!SteelBlue}{$71.6 \pm 4.9 \%$}
+
+& \cellcolor{White!60!SteelBlue}{$26.1 \pm 5.0 \%$}
+
+& \cellcolor{White!80!SteelBlue}{$24.1 \pm 4.0 \%$}
+
+\\
+
 \midrule
 \multicolumn{7}{c}{\textbf{Minimum network errors}}\\
 %\midrule
-\multicolumn{7}{c}{\textit{Standard parameters} ($\lambda = 10^{-3}$; $\xi_0 \in [-0.95, 0.95]$; with Dale's principle, $p_\mathrm{inh} = 30\%$)} \\
-\midrule
-$x_1 + x_2$
-& $[-1, 1]^2$
-& \cellcolor{White!80!SteelBlue}{$3.8 \%$}
-& \cellcolor{White!20!SteelBlue}{$8.4 \%$}
-& \cellcolor{White!100!SteelBlue}{$\mathbf{3.3 \%}$}
-& \cellcolor{White!60!SteelBlue}{$4.4 \%$}
-& \cellcolor{White!40!SteelBlue}{$5.9 \%$}
-\\
-$x_1 / (1 + x_2)$
-& $[0, 1]^2$
-& \cellcolor{White!40!SteelBlue}{$8.0 \%$}
-& \cellcolor{White!20!SteelBlue}{$8.4 \%$}
-& \cellcolor{White!100!SteelBlue}{$\mathbf{3.9 \%}$}
-& \cellcolor{White!80!SteelBlue}{$5.6 \%$}
-& \cellcolor{White!60!SteelBlue}{$6.3 \%$}
-\\
-$\sqrt{x_1 \times x_2}$
-& $[0, 1]^2$
-& \cellcolor{White!20!SteelBlue}{$12.6 \%$}
-& \cellcolor{White!40!SteelBlue}{$10.2 \%$}
-& \cellcolor{White!100!SteelBlue}{$\mathbf{4.5 \%}$}
-& \cellcolor{White!80!SteelBlue}{$5.3 \%$}
-& \cellcolor{White!60!SteelBlue}{$6.7 \%$}
-\\
-$x_1 \times x_2$
-& $[0, 1]^2$
-& \cellcolor{White!20!SteelBlue}{$15.1 \%$}
-& \cellcolor{White!40!SteelBlue}{$7.5 \%$}
-& \cellcolor{White!100!SteelBlue}{$\mathbf{3.7 \%}$}
-& \cellcolor{White!80!SteelBlue}{$3.9 \%$}
-& \cellcolor{White!60!SteelBlue}{$5.9 \%$}
-\\
-$x_1 \times x_2$
-& $[-1, 1]^2$
-& \cellcolor{White!20!SteelBlue}{$100.0 \%$}
-& \cellcolor{White!100!SteelBlue}{$\mathbf{11.5 \%}$}
-& \cellcolor{White!40!SteelBlue}{$75.1 \%$}
-& \cellcolor{White!60!SteelBlue}{$31.3 \%$}
-& \cellcolor{White!80!SteelBlue}{$29.2 \%$}
-\\
-$(x_1 \times x_2) ^ 2$
-& $[-1, 1]^2$
-& \cellcolor{White!60!SteelBlue}{$15.8 \%$}
-& \cellcolor{White!40!SteelBlue}{$16.8 \%$}
-& \cellcolor{White!20!SteelBlue}{$17.0 \%$}
-& \cellcolor{White!100!SteelBlue}{$\mathbf{10.2 \%}$}
-& \cellcolor{White!80!SteelBlue}{$10.4 \%$}
-\\
-$\|(x_1, x_2)\|$
-& $[-1, 1]^2$
-& \cellcolor{White!40!SteelBlue}{$10.2 \%$}
-& \cellcolor{White!20!SteelBlue}{$12.6 \%$}
-& \cellcolor{White!100!SteelBlue}{$\mathbf{5.9 \%}$}
-& \cellcolor{White!80!SteelBlue}{$6.2 \%$}
-& \cellcolor{White!60!SteelBlue}{$8.6 \%$}
-\\
-$\mathrm{atan}(x_1, x_2)$
-& $[-1, 1]^2$
-& \cellcolor{White!20!SteelBlue}{$37.0 \%$}
-& \cellcolor{White!40!SteelBlue}{$33.7 \%$}
-& \cellcolor{White!100!SteelBlue}{$\mathbf{15.0 \%}$}
-& \cellcolor{White!80!SteelBlue}{$17.0 \%$}
-& \cellcolor{White!60!SteelBlue}{$18.0 \%$}
-\\
-$\max(x_1, x_2)$
-& $[-1, 1]^2$
-& \cellcolor{White!20!SteelBlue}{$21.8 \%$}
-& \cellcolor{White!40!SteelBlue}{$8.1 \%$}
-& \cellcolor{White!80!SteelBlue}{$6.7 \%$}
-& \cellcolor{White!100!SteelBlue}{$\mathbf{6.4 \%}$}
-& \cellcolor{White!60!SteelBlue}{$7.3 \%$}
-\\
-\midrule
-\multicolumn{7}{c}{\textit{Adapted parameters} ($\lambda = 10^{-6}$; $\xi_0 \in [-0.95, 0]$; no Dale's principle)} \\
-\midrule
-$x_1 + x_2$
-& $[-1, 1]^2$
-& \cellcolor{White!100!SteelBlue}{$\mathbf{4.0 \%}$}
-& \cellcolor{White!60!SteelBlue}{$7.1 \%$}
-& \cellcolor{White!100!SteelBlue}{$\mathbf{4.0 \%}$}
-& \cellcolor{White!40!SteelBlue}{$20.3 \%$}
-& \cellcolor{White!20!SteelBlue}{$22.8 \%$}
-\\
-$x_1 \times x_2$
-& $[0, 1]^2$
-& \cellcolor{White!20!SteelBlue}{$21.3 \%$}
-& \cellcolor{White!80!SteelBlue}{$9.0 \%$}
-& \cellcolor{White!100!SteelBlue}{$\mathbf{4.6 \%}$}
-& \cellcolor{White!60!SteelBlue}{$9.3 \%$}
-& \cellcolor{White!40!SteelBlue}{$9.8 \%$}
-\\
-$x_1 \times x_2$
-& $[-1, 1]^2$
-& \cellcolor{White!20!SteelBlue}{$99.1 \%$}
-& \cellcolor{White!100!SteelBlue}{$\mathbf{10.3 \%}$}
-& \cellcolor{White!40!SteelBlue}{$65.0 \%$}
-& \cellcolor{White!80!SteelBlue}{$14.7 \%$}
-& \cellcolor{White!60!SteelBlue}{$14.9 \%$}
-\\
-\bottomrule
-\end{tabular}
-%--------------------------------------------
+\multicolumn{7}{c}{\textit{Standard parameters} ($\lambda = 10^{-3}$; $\xi_0 \in [-0.95, 0.95]$; with Dale's principle, $p_\mathrm{inh} = 30\%$)} \\
+
+\midrule
+
+$x_1 + x_2$
+
+& $[-1, 1]^2$
+
+& \cellcolor{White!80!SteelBlue}{$3.8 \%$}
+
+& \cellcolor{White!20!SteelBlue}{$8.4 \%$}
+
+& \cellcolor{White!100!SteelBlue}{$\mathbf{3.3 \%}$}
+
+& \cellcolor{White!60!SteelBlue}{$4.4 \%$}
+
+& \cellcolor{White!40!SteelBlue}{$5.9 \%$}
+
+\\
+
+$x_1 / (1 + x_2)$
+
+& $[0, 1]^2$
+
+& \cellcolor{White!40!SteelBlue}{$8.0 \%$}
+
+& \cellcolor{White!20!SteelBlue}{$8.4 \%$}
+
+& \cellcolor{White!100!SteelBlue}{$\mathbf{3.9 \%}$}
+
+& \cellcolor{White!80!SteelBlue}{$5.6 \%$}
+
+& \cellcolor{White!60!SteelBlue}{$6.3 \%$}
+
+\\
+
+$\sqrt{x_1 \times x_2}$
+
+& $[0, 1]^2$
+
+& \cellcolor{White!20!SteelBlue}{$12.6 \%$}
+
+& \cellcolor{White!40!SteelBlue}{$10.2 \%$}
+
+& \cellcolor{White!100!SteelBlue}{$\mathbf{4.5 \%}$}
+
+& \cellcolor{White!80!SteelBlue}{$5.3 \%$}
+
+& \cellcolor{White!60!SteelBlue}{$6.7 \%$}
+
+\\
+
+$x_1 \times x_2$
+
+& $[0, 1]^2$
+
+& \cellcolor{White!20!SteelBlue}{$15.1 \%$}
+
+& \cellcolor{White!40!SteelBlue}{$7.5 \%$}
+
+& \cellcolor{White!100!SteelBlue}{$\mathbf{3.7 \%}$}
+
+& \cellcolor{White!80!SteelBlue}{$3.9 \%$}
+
+& \cellcolor{White!60!SteelBlue}{$5.9 \%$}
+
+\\
+
+$x_1 \times x_2$
+
+& $[-1, 1]^2$
+
+& \cellcolor{White!20!SteelBlue}{$100.0 \%$}
+
+& \cellcolor{White!100!SteelBlue}{$\mathbf{11.5 \%}$}
+
+& \cellcolor{White!40!SteelBlue}{$75.1 \%$}
+
+& \cellcolor{White!60!SteelBlue}{$31.3 \%$}
+
+& \cellcolor{White!80!SteelBlue}{$29.2 \%$}
+
+\\
+
+$(x_1 \times x_2) ^ 2$
+
+& $[-1, 1]^2$
+
+& \cellcolor{White!60!SteelBlue}{$15.8 \%$}
+
+& \cellcolor{White!40!SteelBlue}{$16.8 \%$}
+
+& \cellcolor{White!20!SteelBlue}{$17.0 \%$}
+
+& \cellcolor{White!100!SteelBlue}{$\mathbf{10.2 \%}$}
+
+& \cellcolor{White!80!SteelBlue}{$10.4 \%$}
+
+\\
+
+$\|(x_1, x_2)\|$
+
+& $[-1, 1]^2$
+
+& \cellcolor{White!40!SteelBlue}{$10.2 \%$}
+
+& \cellcolor{White!20!SteelBlue}{$12.6 \%$}
+
+& \cellcolor{White!100!SteelBlue}{$\mathbf{5.9 \%}$}
+
+& \cellcolor{White!80!SteelBlue}{$6.2 \%$}
+
+& \cellcolor{White!60!SteelBlue}{$8.6 \%$}
+
+\\
+
+$\mathrm{atan}(x_1, x_2)$
+
+& $[-1, 1]^2$
+
+& \cellcolor{White!20!SteelBlue}{$37.0 \%$}
+
+& \cellcolor{White!40!SteelBlue}{$33.7 \%$}
+
+& \cellcolor{White!100!SteelBlue}{$\mathbf{15.0 \%}$}
+
+& \cellcolor{White!80!SteelBlue}{$17.0 \%$}
+
+& \cellcolor{White!60!SteelBlue}{$18.0 \%$}
+
+\\
+
+$\max(x_1, x_2)$
+
+& $[-1, 1]^2$
+
+& \cellcolor{White!20!SteelBlue}{$21.8 \%$}
+
+& \cellcolor{White!40!SteelBlue}{$8.1 \%$}
+
+& \cellcolor{White!80!SteelBlue}{$6.7 \%$}
+
+& \cellcolor{White!100!SteelBlue}{$\mathbf{6.4 \%}$}
+
+& \cellcolor{White!60!SteelBlue}{$7.3 \%$}
+
+\\
+
+\midrule
+
+\multicolumn{7}{c}{\textit{Adapted parameters} ($\lambda = 10^{-6}$; $\xi_0 \in [-0.95, 0]$; no Dale's principle)} \\
+
+\midrule
+
+$x_1 + x_2$
+
+& $[-1, 1]^2$
+
+& \cellcolor{White!100!SteelBlue}{$\mathbf{4.0 \%}$}
+
+& \cellcolor{White!60!SteelBlue}{$7.1 \%$}
+
+& \cellcolor{White!100!SteelBlue}{$\mathbf{4.0 \%}$}
+
+& \cellcolor{White!40!SteelBlue}{$20.3 \%$}
+
+& \cellcolor{White!20!SteelBlue}{$22.8 \%$}
+
+\\
+
+$x_1 \times x_2$
+
+& $[0, 1]^2$
+
+& \cellcolor{White!20!SteelBlue}{$21.3 \%$}
+
+& \cellcolor{White!80!SteelBlue}{$9.0 \%$}
+
+& \cellcolor{White!100!SteelBlue}{$\mathbf{4.6 \%}$}
+
+& \cellcolor{White!60!SteelBlue}{$9.3 \%$}
+
+& \cellcolor{White!40!SteelBlue}{$9.8 \%$}
+
+\\
+
+$x_1 \times x_2$
+
+& $[-1, 1]^2$
+
+& \cellcolor{White!20!SteelBlue}{$99.1 \%$}
+
+& \cellcolor{White!100!SteelBlue}{$\mathbf{10.3 \%}$}
+
+& \cellcolor{White!40!SteelBlue}{$65.0 \%$}
+
+& \cellcolor{White!80!SteelBlue}{$14.7 \%$}
+
+& \cellcolor{White!60!SteelBlue}{$14.9 \%$}
+
+\\
+
+\bottomrule
+
+\end{tabular}
+
+%--------------------------------------------
+
 \end{table}

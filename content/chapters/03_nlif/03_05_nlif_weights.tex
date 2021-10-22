@@ -3,7 +3,7 @@
 \section{Weight-Optimisation for Arbitrary Dendritic Trees}
 \label{sec:nlif_opt}
 
-As demonstrated in the previous section, we are now able to integrate two-compartment LIF neurons---the simplest non-trivial \nlif neuron---into NEF networks.
+As demonstrated in the previous section, we are now able to integrate two-compartment \LIF neurons---the simplest non-trivial \nlif neuron---into NEF networks.
 Although this model only features \emph{divisive}, but not \emph{multiplicative} interaction between input channels (cf.~\Cref{sec:nlif_theory}), we observed a substantial computational advantage over standard LIF neurons.
 
 The goal of this section is to discuss techniques for integrating arbitrary \nlif neurons into spiking neural networks.
@@ -11,8 +11,8 @@ This is more difficult than working with two-compartment LIF neurons, especially
 Remember that, in the context of the two-compartment LIF neuron, we were able to optimise a convex loss function, while finding that, in our application, the global minimum of the convex loss was close to the optimum of the non-convex target loss function (cf.~\Cref{sec:two_comp_lif_fit_model}).
 
 Similar \enquote{one-shot} optimisation schemes are unsuccessful for $n$-LIF neurons with more than two compartments.
-Of course, we can still approximate the parameter and weight optimisation problems as convex \glsdisp{qp}{quadratic programs} (QPs).
-However, the optimum of these \glsdisp{qp}{QPs} will not be a good solution for the original problem.
+Of course, we can still approximate the parameter and weight optimisation problems as convex quadratic programs (\QPpl).
+However, the optimum of these \QPpl will not be a good solution for the original problem.
 Instead, we must iteratively refine our solution to reach a local optimum in the target loss function.
 Iterative algorithms based on quadratic programs for solving non-convex optimisation problems are also referred to as \enquote{sequential quadratic programs} (SQPs; \cite[e.g.,][Chapter~18]{nocedal2006numerical}).
 
@@ -69,10 +69,10 @@ Specifically, we would like to minimise the following loss over \vrap, \mrAp, \v
 	\label{eqn:nlif_param_opt}	
 \end{align}
 Minimising this equation is challenging because of the highly nonlinear matrix inverse~$\mrA[\vng]^{-1}$.
-Below, we discuss two approaches for minimising this loss function: gradient-based methods including stochastic gradient descent and quasi-Newton methods, as well as a soft trust-region based non-negative sequential quadratic program (SQP).
+Below, we discuss two approaches for minimising this loss function: gradient-based methods including stochastic gradient descent and quasi-Newton methods, as well as a soft trust-region based non-negative sequential quadratic program (\SQP).
 
 \subsubsection{Gradient-based optimisation}
-The most straight-forward way to approach an optimisation problems is via \glsdisp{sgd}{stochastic gradient descent} (\SGD; e.g., \cite{bishop2006pattern}~Section~3.1.3; \cite{goodfellow2016deep}, Section~5.9).
+The most straight-forward way to approach an optimisation problems is via stochastic gradient descent (\SGD; e.g., \cite{bishop2006pattern}~Section~3.1.3; \cite{goodfellow2016deep}, Section~5.9).
 To perform stochastic gradient descent, we must compute the partial derivative of \cref{eqn:nlif_param_opt} with respect to the parameters that we are optimising.
 The same gradients can also be used in quasi-Newton methods such as BFGS \citep[Chapter~2]{nocedal2006numerical} and the more memory-efficient L-BFGS \citep[Section~9.1]{nocedal2006numerical}.
 
@@ -140,7 +140,6 @@ This is because the equality constraint $\mrA[\vec g_\ell; \vec \theta] \vec v_\
 %$E_1$ could be minimised by \enquote{hallucinating} a set of voltages that result in a zero current error, although these voltages are not the global minimum of $E_2$.
 We could for example enforce strict equality using Lagrange multipliers \citep[e.g.,][Section~5.1]{boyd2004convex}; however, the linearisation step below would once more ruin this constraint.
 
-%TODO gls: hyperparameter
 %\footnote{
 %In practice, the choice of $\alpha_1$ and $\alpha_2$ is rather uncritical, and we just use $\alpha_1 = \alpha_2 = 1$.
 %However, it can be beneficial to set $\alpha_2$ to larger values; $\alpha_2 = 10^3$ leads to minimally (on the order of $10^{-4}$) smaller errors.
@@ -243,7 +242,7 @@ To summarise, our final loss function $E'$ with two additional regularisation te
 Note that regularisation factor $\lambda_1$, as well as the first term of $E_3$ are scaled by $N$.
 This is because all other expressions are sums with $N$ elements; without the scaling factor, the impact of these terms would go to zero as the number of samples $N$ increases.
 
-With some patience, this problem, including nonnegativity constraints for \vrap and \mrAp, can be converted into a \glsdisp{qp}{quadratic program} with sparse $\mat P$ and $\mat G$ (cf.~\Cref{dec:qp}).%
+With some patience, this problem, including nonnegativity constraints for \vrap and \mrAp, can be converted into a quadratic program with sparse $\mat P$ and $\mat G$ (cf.~\Cref{dec:qp}).%
 \footnote{
 Formally stating the quadratic program is rather tedious.
 The parameter matrices and vectors $\mrAp[\vec g_\ell; \vec \theta]$, $\vrap[\vec g_\ell; \vec \theta]$, $\mrBp[\vec g_\ell; \vec \theta]$, $\vrbp[\vec g_\ell; \vec \theta]$ must be split into constant sub-expressions and linear terms dependant on $\vec \theta$.
@@ -338,15 +337,15 @@ In particular, we use the L-BFGS-B reference implementation with default paramet
 
 Loss curve statistics are depicted in \Cref{fig:nlif_parameter_optimisation_comparison}.%
 \footnote{
-We count one iteration of our soft trust-region algorithm and L-BFGS-B as a single epoch, although, internally, both algorithms iteratively solve a convex optimisation problem in each iteration.
+We count one iteration of our soft trust-region algorithm and L-\BFGS-B as a single epoch, although, internally, both algorithms iteratively solve a convex optimisation problem in each iteration.
 The wall-clock time taken for each epoch is roughly the same for each algorithm.
-At $N = 100$ about \SI{10}{\milli\second} for our trust-region algorithm, \SI{30}{\milli\second} for L-BFGS-B, and \SI{20}{\milli\second} for Adam.
+At $N = 100$ about \SI{10}{\milli\second} for our trust-region algorithm, \SI{30}{\milli\second} for L-\BFGS-B, and \SI{20}{\milli\second} for Adam.
 All times scale about linearly with the number of samples $N$.
 However, these numbers are not very meaningful, since all three implementations are optimised to different degrees.
 %our soft trust-region algorithm is implemented in C++ using the highly optimised OSQP library, L-BFGS-B is implemented in Fortran with Python code computing the gradients and losses, and our Adam implementation is purely written in Python.
 }
 When using the theoretical parameter estimate as an initialisation (cf.~\Cref{fig:nlif_parameter_optimisation_comparison_a}), all optimisers converge to similar errors.
-For the three- and four-compartment neuron models, our method reaches this seemingly optimal solution in two iterations, L-BFGS-B in about $30$, and Adam after about $100$ iterations.
+For the three- and four-compartment neuron models, our method reaches this seemingly optimal solution in two iterations, L-\BFGS-B in about $30$, and Adam after about $100$ iterations.
 The optimal loss for the two-compartment neuron model is considerably lower, and convergence to this point is consistently slower among all tested methods.
 
 When using randomly initialised parameters (cf.~\Cref{fig:nlif_parameter_optimisation_comparison_b}), our method requires about five iterations to reach the same minimum as in the previous experiment.
@@ -386,7 +385,7 @@ After calibration, we compute the true spike rates along several axis-aligned sl
 \paragraph{Results}
 The estimated and ground-truth spike rates are depicted in \Cref{fig:nlif_parameters_contours}.
 Across different neuron types, the prediction matches the ground-truth data quite well---at least in the super-threshold regimes (the super-threshold error is denoted as $\hat E$ in the figure).
-However, our model consistently fails to predict the spike-onset correctly, resulting in relatively larger overall \glsdisp{rmse}{RMSEs} $E$.
+However, our model consistently fails to predict the spike-onset correctly, resulting in relatively larger overall \RMSEpl $E$.
 Still, calibration reduces errors by a factor of about two to four (cf.~\Cref{fig:nlif_parameters_contours_no_calibration}).
 
 \paragraph{Discussion}
@@ -631,16 +630,16 @@ Note that we use a larger regularisation factor $\lambda$ for the linear functio
 \footnote{The primary reason for doing this was to make sure that the training errors fit onto the diagram in \Cref{fig:nlif_weight_optimisation_comparison}.}
 
 \paragraph{Results}
-For the linear function (\Cref{fig:nlif_weight_optimisation_comparison_a}), our SQP converges within five epochs. BFGS converges within $15$ epochs, but to a larger \NRMSE.
-In the case of the three- and four-compartment neuron, SGD converges to similar errors as our SQP within $50$ epochs, but is more unstable.
+For the linear function (\Cref{fig:nlif_weight_optimisation_comparison_a}), our \SQP converges within five epochs. \BFGS converges within $15$ epochs, but to a larger \NRMSE.
+In the case of the three- and four-compartment neuron, \SGD converges to similar errors as our \SQP within $50$ epochs, but is more unstable.
 
 Four-quadrant multiplication (\Cref{fig:nlif_weight_optimisation_comparison_b}) can only be approximated well in the three- and four-compartment neurons.
-Both our SQP and L-BFGS-B converge to similar losses within $25$ and $100$ epochs, respectively.%
-\footnote{In a previous version of this experiment (not depicted) with fewer training samples ($100$ instead of $256$), L-BFGS-B slightly outperformed both SGD and our SQP.
+Both our \SQP and L-\BFGS-B converge to similar losses within $25$ and $100$ epochs, respectively.%
+\footnote{In a previous version of this experiment (not depicted) with fewer training samples ($100$ instead of $256$), L-\BFGS-B slightly outperformed both \SGD and our \SQP.
 It is unclear why the increase in training samples leads to a worse performance; intuitively, more samples should lead to a better estimate of the Hessian and not require a larger approximation rank $m$.
-In contrast, both our SQP and SGD benefited more training samples being available.
+In contrast, both our \SQP and \SGD benefited more training samples being available.
 }
-SGD with Adam outperforms the other optimisers in that it achieves about $30\%$ smaller errors after $1000$ epochs, yet, again, is slightly unstable.
+\SGD with Adam outperforms the other optimisers in that it achieves about $30\%$ smaller errors after $1000$ epochs, yet, again, is slightly unstable.
 
 \paragraph{Discussion}
 All presented optimisation methods are viable options for computing synaptic weights.
@@ -672,10 +671,10 @@ In the next subsection, we compute network errors in a dynamic spiking neural ne
 We analyse the one- to four-compartment models with conductance-based synapses as fitted in \Cref{sec:nlif_opt_parameters_experiment} (cf.~\Cref{tbl:nlif_params}).
 In each individual trial, we use the same setup as in the four-quadrant multiplication example.
 However, instead of multiplication, we approximate random two-dimensional current functions $J_\rho(x_1, x_2)$ with bandwidth $\slc$ (cf.~\Cref{sec:dendritic_computation_theory_numerical}).
-As in the two-compartment experiment, $J_\rho$ is scaled to an RMS of \SI{0.5}{\nano\ampere}.
+As in the two-compartment experiment, $J_\rho$ is scaled to an \RMS of \SI{0.5}{\nano\ampere}.
 
 We sample $256$ training samples from a $100 \times 100$ grid; the test error is computed over all \num{10000} points with normal-distributed noise (standard deviation of $10^{-2} a_\mathrm{max}$) added to the pre-activities to test generalisation.
-We assume $J_\mathrm{th} = \SI{0}{\nano\ampere}$ for subthreshold relaxation, and use $30$ epochs of our soft trust-region based SQP for weight optimisation.
+We assume $J_\mathrm{th} = \SI{0}{\nano\ampere}$ for subthreshold relaxation, and use $30$ epochs of our soft trust-region based \SQP for weight optimisation.
 In contrast to \Cref{sec:two_comp_lif_experiment_2}, we use the same regularisation factor of $\lambda = 10^{-3}$ for all setups.
 
 \begin{figure}

@@ -36,10 +36,6 @@
     style=srinivasa,
 }
 
-
-\usepackage[toc,acronyms,symbols,nopostdot]{glossaries} % Glossary.
-\usepackage{glossaries-extra}
-
 \usepackage[labelfont={small,bf,sf},textfont={small,sf}]{caption}
 \DeclareCaptionStyle{ruled}{labelfont={small,bf,sf},textfont={small,sf}}
 \usepackage{subcaption}
@@ -90,7 +86,6 @@
 
 \definecolor{linkBlue}{HTML}{003399}
 \definecolor{linkGreen}{HTML}{2E8B57} % SeaGreen
-\definecolor{linkPink}{HTML}{FF1493} % SeaGreen
 
 \usepackage{hyperref} % with basic options
 \hypersetup{
@@ -98,11 +93,16 @@
     plainpages=false,
     unicode=true,
     colorlinks=false,
-%    colorlinks=true,
-%    allcolors=linkPink,
-%    citecolor=linkGreen
+    colorlinks=true,
+    allcolors=linkBlue,
+    citecolor=linkGreen
 }
 \usepackage{cleveref}
+
+%\usepackage[toc,acronyms,symbols,nopostdot]{glossaries} % Glossary.
+%\usepackage{glossaries-extra}
+\usepackage{glossaries}
+
 \renewcommand\thesubfigure{\Alph{subfigure}}
 
 \declaretheorem[numberwithin=chapter]{theorem}

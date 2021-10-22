@@ -7,9 +7,9 @@ In this chapter, we discussed dendritic computation from the perspective of func
 Specifically, we assumed that neurons with dendritic structures can be modelled as multivariate nonlinearities $\sigma(\xi_1, \ldots, \xi_k)$, where each $\xi_i$ constitutes a separate input channel.
 While such multivariate functions cannot be used as universal approximators, we argued that they can sometimes outperform resource-constrained two-layer networks.
 
-To test whether this hypothesis holds in functional spiking neural networks, we extended the \glsdisp{nef}{Neural Engineering Framework (\NEF)} to account for additional constraints required to build networks with biologically plausible multi-channel neurons.
-Specifically, we presented techniques for solving for synaptic weights in current-space while complying with \gls{dales_principle}.
-We further introduced \enquote{\gls{subrelax}}, an extension to the weight optimisation problem that exploits the rectifier nature of biological neurons to improve the superthreshold current-approximation accuracy.
+To test whether this hypothesis holds in functional spiking neural networks, we extended the Neural Engineering Framework (\NEF) to account for additional constraints required to build networks with biologically plausible multi-channel neurons.
+Specifically, we presented techniques for solving for synaptic weights in current-space while complying with Dale's principle.
+We further introduced \enquote{subthreshold relaxation}, an extension to the weight optimisation problem that exploits the rectifier nature of biological neurons to improve the superthreshold current-approximation accuracy.
 Finally, we discussed a general framework for incorporating multi-channel neurons into the \NEF using a dendritic nonlinearity \Hden.
 
 We continued by describing the \nlif family of multi-compartment neurons, a model of spiking neurons with passive dendrites.
@@ -22,7 +22,7 @@ Notably, we can solve for synaptic weights in \twocomplif neurons by minimizing 
 Spiking neural networks with two-compartment neurons outperform two-layer networks for a variety of benchmark functions, as long as these functions do not implicitly generate a form of the \XOR problem.
 
 Solving for surrogate model parameters and synaptic weights in arbitrary \nlif neurons is a hard non-convex optimisation problem.
-We demonstrated that it is possible to exploit the structure of the surrogate dendritic nonlinearity by constructing a \glsdisp{sqp}{sequential quadratic program (SQP)} that reaches relatively small losses after a few iterations and that often outperforms gradient-based methods such as L-BFGS-B and Adam.
+We demonstrated that it is possible to exploit the structure of the surrogate dendritic nonlinearity by constructing a sequential quadratic program (\SQP) that reaches relatively small losses after a few iterations and that often outperforms gradient-based methods such as L-\BFGS-B and Adam.
 
 The methods presented here can approximate \XOR-like functions such as four-quadrant multiplication using \nlif neurons with three or more compartments.
 Furthermore, these neurons can be integrated into spiking neural networks.

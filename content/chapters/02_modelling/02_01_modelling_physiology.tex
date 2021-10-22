@@ -39,7 +39,7 @@ Readers interested in a more thorough introduction to neuroscience are encourage
 \begin{figure}
 	\centering
 	\includegraphics{media/chapters/02_modelling/02_01/neuron_signals_overview.pdf}
-	\caption[Overview of neural function]{Overview of neural function. Inset diagrams illustrate the membrane potential over time at the indicated locations (data from a compartmental Hodgkin-Huxley-type model neuron). Arrows indicate the predominant flow of information. \emph{Input:} Neurons receive signals from pre-synaptic neurons through synapses. For chemical synapses, action potentials (\enquote{spikes}) arriving at the synapse (\emph{a}) cause a release of neurotransmitter that induces a post-synaptic potential (PSP) in the post-synaptic neuron (\emph{b}). \emph{Integration:} PSPs from multiple pre-synaptic neurons interact in the dendrites. Under certain conditions the neuron produces its own action potential (\emph{c}). \emph{Conduction:} The action potential travels along the axon (\emph{d}-\emph{e}). \emph{Output:} The neuron induces a PSP in a post-synaptic neuron (\emph{f}).
+	\caption[Overview of neural function]{Overview of neural function. Inset diagrams illustrate the membrane potential over time at the indicated locations (data from a compartmental Hodgkin-Huxley-type model neuron). Arrows indicate the predominant flow of information. \emph{Input:} Neurons receive signals from pre-synaptic neurons through synapses. For chemical synapses, action potentials (\enquote{spikes}) arriving at the synapse (\emph{a}) cause a release of neurotransmitter that induces a post-synaptic potential (\PSP) in the post-synaptic neuron (\emph{b}). \emph{Integration:} {\PSP}s from multiple pre-synaptic neurons interact in the dendrites. Under certain conditions the neuron produces its own action potential (\emph{c}). \emph{Conduction:} The action potential travels along the axon (\emph{d}-\emph{e}). \emph{Output:} The neuron induces a \PSP in a post-synaptic neuron (\emph{f}).
 	}
 	\label{fig:neuron_signal_overview}
 \end{figure}
@@ -374,7 +374,7 @@ In our examples, we use dynamics adapted from a model of pyramidal cells in the 
 	{\phantomsubcaption\label{fig:action_potentials_subthreshold}}
 	{\phantomsubcaption\label{fig:action_potentials_superthreshold}}
 	{\phantomsubcaption\label{fig:action_potentials_refractory}}
-	\caption[Hodgkin-Huxley-type model neuron simulations demonstrating action potential generation]{Hodgkin-Huxley-type model neuron simulations demonstrating action potential generation (using the dynamics described by \cite{traub1991neuronal}).
+	\caption[Hodgkin-Huxley-type model neuron simulations of action potential generation]{Hodgkin-Huxley-type model neuron simulations of action potential generation (using the dynamics described by \cite{traub1991neuronal}).
 	% This figure was in part inspired by \citet[Figure~2.15, p.~45]{izhikevich2007dynamical}
 	\textbf{(A)} Injecting a current $J$ into the neuron (orange; \emph{bottom}) charges the cell membrane. As long as the membrane potential $v$ (\emph{top}) approximately stays below a threshold, the neuron does not generate action potentials; the membrane acts linearly. \textbf{(B)} Above a certain threshold, the neuron suddenly generates an action potential. \textbf{(C)} Directly after an action potential, during the \emph{refractory period}, even large input currents cannot evoke action potentials.}
 \end{figure}
@@ -397,7 +397,7 @@ We just need to make two conceptual changes to account for the linear subthresho
 To model the linear subthreshold dynamics, we simply add a capacitor with capacitance $C_\mathrm{m}$ to the circuit model.
 This \emph{membrane capacitance} is physically motivated by the cell membrane separating two electrically charged bodies.
 Any such system inherently possesses capacitive properties.%
-\footnote{To be clear, the membrane capacitance is not specific to the Hodgkin-Huxley model. In fact, this assumption preceded the Hodgkin-Huxley model by several decades (e.g., \cite{lapicque1907recherches}). We discuss the corresponding LIF neuron model first proposed by Lapicque later in this chapter.}
+\footnote{To be clear, the membrane capacitance is not specific to the Hodgkin-Huxley model. In fact, this assumption preceded the Hodgkin-Huxley model by several decades (e.g., \cite{lapicque1907recherches}). We discuss the corresponding \LIF neuron model first proposed by Lapicque later in this chapter.}
 Given an input current $J(t)$, the sub-threshold dynamics can be described in terms of the following differential equation
 \begin{align}
 	\begin{aligned}
