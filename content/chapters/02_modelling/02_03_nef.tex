@@ -223,7 +223,7 @@ For example, for each tuning curve in \Cref{fig:nef_representation}, we randomly
 Complementary to encoding is \emph{decoding}.
 That is, given the activities $\vec a$, we would like to reconstruct the represented $\vec x$.
 This could---for example---be accomplished using Bayesian inference, as we demonstrated in \Cref{fig:population_code}.
-If the number of neurons \Npop in a population is large enough we can, to a very similar effect, just use a linear decoding matrix \Dec (\Cref{fig:nef_representation}).
+If the number of neurons \Npop in a population is large enough we can, to a very similar effect, just use a linear decoding matrix \Dec (\Cref{fig:nef_representation}; \cite{salinas1994vector}).
 
 The idea is to simply multiply the activities $\vec a$ with a matrix $\Dec \in \mathbb{R}^{d \times \Npop}$ such that the decoded $\vec{\hat x} = \Dec \vec a(\vec x)$ is approximately equal to the encoded $\vec x$, for any $\vec x \in \Xrepr$.
 Under the assumption that the activities $\vec a$ are subject to independent and identically distributed (i.i.d.) zero-mean Gaussian noise with standard-deviation $\sigma$, the decoding matrix \Dec can be obtained by minimizing a least-squares loss-function $E$:
