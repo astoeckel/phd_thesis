@@ -48,6 +48,7 @@ BASIS_TYPES = {
     "haar": "sdt",
     "dlop": "fir",
     "random": "fir",
+    "eye": "fir",
 }
 
 MARKER_STYLES = {

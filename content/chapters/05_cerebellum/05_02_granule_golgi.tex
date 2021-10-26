@@ -1,12 +1,14 @@
 % !TeX spellcheck = en_GB
 
 \section{Modelling the Granule-Golgi Circuit}
+\label{sec:cerebellum_golgi_granule}
 
 As we discussed in the introduction, we would like to analyse in how far adding biological detail to a system influences its high-level function.
 To this end, we focus on one specific part of the cerebellar microcircuit, namely the Granule-Golgi circuit, and test to what degree this circuit is capable of generating a temporal representation at five different levels of biological detail.
 Below, we first describe these individual circuits, followed by a series of experiments in which we explore the performance of the individual networks.
 
 \subsection{Levels of Biological Detail}
+\label{sec:cerebellum_levels}
 
 \begin{figure}
 	\centering
@@ -39,8 +41,8 @@ We solve for optimal input and recurrent connection weights that result in these
 
 \subsubsection{Model C: Inter-neurons}
 As a next step, we separate the single layer of neurons into two populations corresponding to the Golgi and granule cells, reflecting the actual biology of the cerebellum.
-This introduces two synaptic filters which need to be taken into account when solving for the connection weights that best approximate the Legendre system; we discussed this in Section~4.??.
-Furthermore, to at least approximate the fact that there are far fewer Golgi cells than granule cells, we use 20 Golgi cells and 200 granule cells.
+This introduces two synaptic filters which need to be taken into account when solving for the connection weights that best approximate the Legendre system; we discussed this in \Cref{sec:lti_complex_networks}.
+Furthermore, to at least approximate the fact that there are far fewer Golgi cells than granule cells, we use $20$ Golgi cells and $200$ granule cells.
 
 \subsubsection{Model D: Inhibition and Excitation}
 In the next step, we account for Dale's principle using the techniques described in \Cref{sec:nef_nonneg}.

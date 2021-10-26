@@ -174,8 +174,9 @@ for i in range(7):
         axs[i, k].spines["left"].set_visible(False)
         axs[i, k].set_yticklabels([])
         axs[i, k].set_xlim(0, 100)
-        axs[i, k].set_yticks([0, 0.1, 0.2])
-        axs[i, k].set_yticks([0, 0.05, 0.1, 0.15, 0.2], minor=True)
+        axs[i, k].set_yticks([0, 0.05, 0.1, 0.15, 0.2])
+        for ytick in axs[i, k].get_yticks():
+            axs[i, k].axhline(ytick, linestyle=':', lw=0.5, color=(0.8, 0.8, 0.8), zorder=-100, clip_on=False)
 
         axs[i, k].text(1.0, 1.0, f"{LABEL_MAP[basis_names[i]]}", ha="right", va="top", transform=axs[i, k].transAxes)
 

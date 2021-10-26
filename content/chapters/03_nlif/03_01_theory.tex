@@ -332,8 +332,7 @@ Still, this scheme can be implemented efficiently by separating the Gaussian fil
 \subsubsection{Network models}
 To compare the above networks types, we could construct neural networks and compare approximation errors for our randomly generated two-dimensional functions $f(x_1, x_2)$.
 However, as a simplification, we can replace the pre-populations by the first $\oh$ Legendre polynomials $P_i(x)$.%
-\footnote{We discuss of Legendre polynomials in Section~4.2. Note that we use a discretised version of the Legendre basis, \enquote{Discrete Legendre Orthogonal Polynomials} \citep[DLOPs;][]{neuman1974discrete,stockel2021discrete}.}
-%TODO Reference to the Legendre polynomials
+\footnote{We discuss Legendre polynomials in \Cref{sec:function_bases}. Note that we use a discretised version of the Legendre basis, \enquote{Discrete Legendre Orthogonal Polynomials} \citep[DLOPs;][]{neuman1974discrete,stockel2021discrete}.}
 This is possible because the principal components of neural populations resemble Legendre polynomials \citep[Chapter~7]{eliasmith2003neural}.
 Furthermore, using a function basis of order $\oh$ connects back to our previous theoretical discussion of dendritic computation in terms of degrees of freedom.
 The number of basis functions that can be decoded well from a pre-population depends on the number of neurons in that population.

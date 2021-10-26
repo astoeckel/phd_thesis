@@ -1,3 +1,130 @@
-\chapter{Conclusion}
+% !TeX spellcheck = en_GB
 
-TODO
+\chapter{Conclusion}
+\label{chp:conclusion}
+
+\begin{OpeningQuote}
+We are all agreed that your theory is crazy. The question that divides us is whether it is crazy enough to have a chance of being correct.
+\OpeningQuoteSource{Nils Bohr}{(1958)}
+\end{OpeningQuote}
+
+Given the sheer complexity put on stage by millions of years of evolution, reading the neuroscience literature is more often than not a lesson in humility.
+As a modeller, it seems as if the challenge in describing biological systems lies in deciding what \emph{not} to model; that is, to judge when it is important to choose a detailed description, and when to resort to an abstraction.
+
+The mathematical models presented in this thesis lean towards favouring simplicity over sophistication.
+This is intentional, but, as we discuss below, also leaves room for future improvement.
+For example, we opened this thesis by drawing the reader's attention to the importance of dynamics in nervous systems.
+Yet, we barely touched upon some topics typically associated with neural dynamics, such as the oscillatory behaviour classically observed in \EEG signals \citep[Chapter~8]{lopesdasilva2009electroencephalography,gerstner2002spiking}, or complex neuron models with elaborate dynamics and active dendritic trees (\Cref{sec:neural_dynamics,sec:simplified_neuron_models}; \cite{izhikevich2007dynamical}; \cite{london2005dendritic}).
+
+However, as we discussed in \Cref{sec:nef_limitations}, it is important to first consider \emph{why} some biological detail should be integrated into a neurobiological system model.
+For example, it is well conceivable that neural oscillations are the outcome of network level-effects and can be modelled using the \NEF as is.
+Similarly, in the context of more complex neuron models, it is important to ask in how far the dynamics produced by those models \emph{in vitro} or \emph{in silico} are relevant for the dynamics observed in a functioning network (\emph{in situ}).
+
+\begin{figure}
+	\centering
+	\includegraphics{media/chapters/06_conclusion/oscillator_phasic_bursts.pdf}
+	\caption[NEF networks with oscillator dynamics produce tonically bursting neurons]{NEF networks with oscillator dynamics produce tonically bursting neurons.
+	\textbf{(A, B)} Spike raster of a recurrently connected NEF population with $100$ neurons implementing a $\SI{3.5}{\hertz}$ oscillator.
+	Neurons are sorted by the angle of their two-dimensional temporal tuning vector $\vec e^\mathrm{t}$.
+	\textbf{(C)} Note how the voltage traces of individual neurons resemble tonically bursting (cf.~\Cref{fig:izhikevich_whichmod_figure1c}) neurons.
+	Inspired by \citet{voelker2019}, Figure~3.2, p.~48.
+	}
+	\label{fig:oscillator_phasic_bursts}
+\end{figure}
+
+To illustrate how difficult it can be to decide whether some phenomenon is best modelled on a neural or a network level, consider bursts, that is, multiple action potentials produced by a neuron in quick succession.
+While burst production is generally ascribed to individual neurons (\Cref{fig:izhikevich_whichmod_figure1c,fig:izhikevich_whichmod_figure1d}; \cite{kandel2012principles}, Chapter~2), we can readily observe bursting neurons in \NEF networks with laterally connected \LIF neurons, assuming that these neurons are tuned to oscillator dynamics (cf.~\Cref{fig:oscillator_phasic_bursts}).
+
+Futhermore, even in cases where bursts have a functional relevance beyond acting as a more robust code---for example the \enquote{complex spikes} linked to synaptic plasticity in Purkinje cells in the cerebellum (\cite{kandel2012principles}, Chapter~42; \cite{richards2019dendritic})---it is uncertain in how far this detail is important for describing the overall behaviour produced by a brain network.
+Ultimately, the answer to this question depends on the purpose of the model.
+A model focusing on Purkinje cell plasticity should of course consider climbing firbe complex spikes, whereas an abstract learning rule may be sufficient in a more phenomenological model of eyeblink conditioning, such as the one discussed in \Cref{chp:cerebellum}.
+
+This is not to discourage the reader from integrating more complex neuron models into \NEF networks.
+To the contrary, we believe that our temporal tuning paradigm lays the groundwork for accomplishing this, although more research is required to move beyond the simple examples discussed in \Cref{sec:temporal_tuning_neural_dynamics}.
+
+\subsubsection{Proposed modelling projects}
+All this being said, the usefulness of the \NEF as a modelling technique---including the extensions presented in this thesis---arguably depends on the number of low- and high-level phenomena that can be successfully described.
+To fathom the limitations of our techniques, we suggest the following modelling projects that could benefit from our work, and that could be used to discover potential issues.
+Constructing each of these models is a small research project (similar to \Cref{chp:cerebellum}) on its own, and, while tempting, was out of scope for this thesis.
+\begin{enumerate}[1.]
+	\item \emph{A model of auditory processing.} A classic example for the relevance of axonal transmission delays in sensory processing are the delay lines involved in extracting interaural time difference in the superior olivary nuclei \citep[Chapter~31]{kandel2012principles}.
+	By employing our temporal tuning paradigm, we can model neurons that are tuned to delayed versions of the signals originating from the cochlear nerves.
+	These delays can be realised by appropriately choosing filters $h_{ij}$ in \cref{eqn:weight_optimise_currents_temporal}.
+
+	Since the neurophysiological properties of neurons involved in this task are well known, including the types of neurotransmitters, this model also benefits from our extensions presented in \Cref{sec:nef_extension} regarding Dale's principle.
+	It would be interesting to see in how far---given a spiking cochlea model \citep[e.g.,][]{zilany2006modeling}---the generated temporal representations form a good basis for further spatiotemporal processing in auditory cortex.
+	Previous modelling work in this area includes \citet{bekolay2016biologically}.
+
+	\item \emph{A model of a patch of early visual cortex.}
+	Our concept of linear temporal encoders $\mathfrak{e}_i(t)$ is based on a model of spatiotemporal tuning in layer one of visual cortex \citep{carandini1999linearity}.
+	It would be interesting to model a small patch of visual cortex using this approach, for example using space-time Gabor functions (\Cref{fig:space_time_receptive_field}).
+
+	A particular challenge for constructing such a model is the high dimensionality of the spatiotemporal representation; this mandates a large neuron population and dense weight matrices.
+	Correspondingly, such a system could benefit from acceleration on neuromorphic hardware.
+	An interesting extension would be to use our two-compartment \LIF neurons (\Cref{sec:two_comp_lif}) to include an attention mechanism similar to \citet{bobier2014unifying}.
+
+	\item \emph{A model of mechanosensory processing.}
+	\Citet{pirschel2016multiplexed} observe that mechanoreceptors in the leech (and similarly in other organisms including primates), encode both the stimulus intensity and location of a touch by multiplexing an instantaneous rate code (encoding the intensity; \Cref{fig:instantaneous_spike_rate}) and a time-to-first-spike code (encoding the location; cf.~\Cref{thorpe2001spikebased}).
+	It would be interesting to see whether our linear temporal encoders are sufficient to produce such a code, and whether our weight optimisation method is sufficient to separate the two encoded quantities.
+	Again, since the leech nervous system is comparably well understood, a model of these phenomena will also benefit from our extensions concerning Dale's principle.
+\end{enumerate}
+
+\subsubsection{Simulator software and neuromorphic hardware}
+
+As mentioned in \Cref{sec:temporal_tuning_conclusion}, a major remaining task is a better integration of our work into our library \emph{NengoBio} (cf.~\Cref{app:nengo_bio}).
+So far, \emph{NengoBio} only supports two-compartment \LIF neurons (instead of general \nlif neurons; \Cref{sec:nlif}), and does not implement temporal tuning; the experiments regarding temporal tuning performed in this thesis were solely implemented using prototype software.
+
+While, as mentioned in \Cref{sec:temporal_tuning_conclusion}, deciding on a user-friendly \API for temporal tuning is one challenge, another difficulty lies in the run-time costs associated with simulating networks using our extensions.
+This includes subthresholed relaxation (\Cref{sec:nef_subthreshold}), user-defined diverse temporal tuning (cf.,~\Cref{fig:linearly_independent_tuning}), and, in particular, heterogeneous synaptic filters (\Cref{sec:solve_dynamics_nonlinear_neurons}).
+Remember that typical \NEF networks can be simulated efficiently due to the factorisation of the weight matrix into encoder-decoder pairs (\Cref{sec:nef_transformation}; \cite{bekolay2014nengo}) and the ability to collapse the synaptic filter matrix $h_{ij}$ into a single filter (cf.~\Cref{fig:nef_dynamics_neurons}).
+This is no longer possible when using the aforementioned extensions.
+
+In the light of exploring our techniques further, it would therefore be interesting to map such networks onto neuromorphic neural network accelerators that are not limited to factorisable weight matrices, and that offer more flexibility regarding diverse synaptic time constants.
+Examples of such platforms include Loihi \citep{davies2018loihi}, BrainScaleS \citep{schemmel2010waferscale}, and SpiNNaker \citep{painkras2013spinnaker}; Nengo backends already exist for Loihi and SpiNNaker \citep{blouw2019benchmarking,mundy2015efficient}.
+BrainScaleS in particular could be an interesting target because of its energy-efficient analogue computation, per-neuron filter time constants, ability to simulate multi-compartment \LIF neurons with conductance-based synapses (\Cref{sec:nlif}), and an integrated plasticity processor that could be used to solve for weights on-chip \citep{friedmann2017demonstrating}.
+
+\subsubsection{Sliding-window transformations and machine learning}
+
+In \Cref{sec:temporal_bases}, we presented an \enquote{information erasure} technique for constructing \LTI systems that generate windowed function bases as their impulse responses.
+We discovered that one of the systems generated in this manner, the \enquote{modified Fourier system}, outperforms the Legendre Delay Network (\LDN; \cite{voelker2018improving}) system in a number of benchmark experiments.
+Furthermore, we found in \Cref{sec:applications_to_ml} that the modified Fourier system can be updated with relatively small errors when performing an efficient $\mathcal{O}(q)$ Runge-Kutta state update.
+
+Future work should further investigate this system.
+So far, it remains unclear why the modified Fourier system can possibly outperform the \LDN system.
+In theory, the Padé approximants underlying the \LDN are an \emph{optimal} approximation of a Laplace-domain delay%
+\footnote{Note that, in general, there are few guarantees that the Padé approximants actually arrive at an optimal approximation of a system \citep{press2007numerical}, Section~5.12. However, the Padé approximants are optimal for exponential functions \citep{borwein1983pade}.
+This includes the Laplace-domain delay $e^{-\theta t}$.}
+(\cite{voelker2019}, Section~6.1.1) and should thus form an optimal sliding-window basis.
+One culprit may be the sensitivity of the generated bases to our input signals $u(t)$, but our experiments in this regard are inconclusive (\Cref{sec:ldn_mfn_basis_bandlimit}).
+
+In general, it remains unclear why systematic (i.e., of increasing frequency content) orthogonal sliding transformations are so effective in a deep-learning context, for example, as part of the Legendre Memory Unit (\LMU; \cite{voelker2019lmu}).
+In our Mackey-Glass experiment (\Cref{sec:lmu_experiments}; \Cref{tbl:mackey_glass_results}), all tested transformations were mathematically equivalent%
+\footnote{At least when in the version of the experiment with enforced rectangle window (cf.~\Cref{fig:mackey_glass_ne} and \Cref{tbl:mackey_glass_results_ne}).}
+in that the basis transformations did not loose any information---the learned linear read-out weights could in principle realise any temporal transformation.
+Still, we find that even after many epochs of training, all systematic transformations substantially outperform the identity and random transformations.
+
+\subsubsection{Summary of our contributions}
+
+To conclude, we presented several extensions to the \NEF with the intent to better harness the dynamics inherent in spiking neural networks, and to provide tools for taking a larger number of potential neurophysiological constraints into account when modelling functional spiking neural networks.
+Such constraints include Dale's principle (\Cref{sec:nef_nonneg}), multi-channel neurons with conductance-based synapses (\Cref{sec:nlif}), temporal tuning (\Cref{sec:temporal_tuning_nef}), and spatially constrained networks (\Cref{sec:cerebellum_levels}).
+These techniques are all based on a linear least squares current-space loss function (\Cref{sec:nef_decode_current}) that can be enhanced by a subthreshold relaxation term (\Cref{sec:nef_subthreshold}) resulting in a convex quadratic programm.
+
+Analysing the dynamics underlying a simple multi-compartment neuron model, we found that networks comprised of two-compartment neurons can compute a wide range of benchmark functions at substantially smallers error than equivalent multi-layer networks (\Cref{sec:two_comp_lif}).
+In particular, benchmark functions include nonnegative multiplication, also referred to as \emph{gain modulation} in neurobiology \citep{salinas2000gain}.
+While neurons with three and more compartments can approximate four-quadrant multiplication, the additional computational power may not outweigh the more complex weight optimisation procedure (\Cref{sec:nlif_opt}).
+
+Temporal tuning can be seen as a generalisation of the \NEF dynamics principle that facilitates realising empirically observed spatiotemporal receptive fields, and can account for heterogeneous and higher-order synaptic filters without explicitly requiring access to higher-order differentials (\Cref{sec:lti_complex_networks}).
+As before, we only rely on a linear least-squares loss (\Cref{sec:temporal_tuning_nef}).
+Asking what optimal temporal tuning may look like, we suggested an autoregressive method for solving for \LTI systems generating temporal bases with a subsequent \emph{information erasure} step to enforce a rectangle window (\Cref{sec:lti_autoregression}).
+Using this technique, we provided a novel derivation of the \LDN system (\Cref{sec:ldn_derivation}), and discovered an alternative \emph{modified Fourier system} that outperforms the \LDN in a variety of benchmark tasks.
+
+Using any of our \LTI systems approximating a sliding-window transformation in a spiking neuron populations generates temporal activity patters that resemble time-cells (\Cref{sec:solve_dynamics_nonlinear_neurons}) and that, overall, spans a powerful basis for computing multivariate spatiotemporal functions (\Cref{sec:spatiotemporal}).
+This includes online-learning of weights in an adaptive filter context (\Cref{sec:adaptive_filter}).
+We found that spatiotemporal \NEF populations with full-rank temporal encoding matrices are equivalent to the Legendre Memory Unit (\LMU; \cite{voelker2019lmu}).
+Numerical data suggests that replacing the \LDN with our modified Fourier system could result in an asymptotically more efficient system (\Cref{sec:ldn_computational_efficiency}) that performs similarly to the original \LMU (\Cref{sec:lmu_experiments}).
+
+Finally, we employed the techniques presented in this thesis to construct a model of eyeblink conditioning in the cerebellum.
+We demonstrated that it is possible to realise the \LDN system in the recurrent Granule-Golgi circuit (\Cref{sec:cerebellum_golgi_granule}), and that the resulting temporal representations support learning to decode delays in an eyeblink conditioning task (\Cref{sec:cerebellum_eyeblink}).
+
+Potential future work includes strengthening some of the theoretical foundations of our work, developing user-friendly simulation software that supports our extensions to the \NEF, as well as implementing our work on neuromorphic hardware and analysing the modified Fourier system in more detail.
+

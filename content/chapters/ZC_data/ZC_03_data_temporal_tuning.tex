@@ -168,106 +168,102 @@ Numerical values are given in \Cref{tbl:mackey_glass_results_ne}.}
 \end{figure}
 
 \begin{table}[p]
-	\caption[Prediction errors for the Mackey-Glass dataset with perfect rectangle windows]{Prediction errors for the Mackey-Glass dataset with perfect rectangle windows. See \Cref{tbl:psmnist_results} for a description of the table.}
+	\newcommand{\sigA}{\ensuremath{\cdot}}
+	\newcommand{\sigB}{\ensuremath{\bullet\bullet}}
+	\newcommand{\sigC}{\ensuremath{\bullet\!\bullet\!\bullet}}
+	\caption[Prediction errors and statistical analysis for the Mackey-Glass dataset]{Prediction errors and statistical analysis for the Mackey-Glass dataset with perfect rectangle window. Data over $101$ trials after $100$ epochs of training. See \Cref{tbl:psmnist_results,tbl:psmnist_significance} for a more detailed description.
+	The given significance levels are based on a two-sided Kolmogorov-Smirnov test; $\sigA \correspondsTo p < 0.05$, $\sigB \correspondsTo p < 0.01$, $\sigC \correspondsTo p < 0.001$.
+	}
 	\label{tbl:mackey_glass_results_ne}
 	\centering\small\sffamily
-	\setlength{\tabcolsep}{8.75pt}
+	\setlength{\tabcolsep}{9.68pt}
 	\begin{tabular}{r  r r r r  r r r r}
 	\toprule
 	& \multicolumn{4}{c}{{\color{skyblue1}$\blacksquare$} \textbf{Fixed convolution}}
 	& \multicolumn{4}{c}{{\color{aluminium2}$\blacksquare$} \textbf{Learned convolution}} \\
 	\cmidrule(r){2-5}\cmidrule(l){6-9}
-	\emph{Basis} &
-	\emph{Mean} &
-	\emph{Median} &
-	\emph{Q1} &
-	\emph{Q3} &
-	\emph{Mean} &
-	\emph{Median} &
-	\emph{Q1} &
-	\emph{Q3} \\
-	\midrule
 	\symLTI~LDN &
-	 \cellcolor{CornflowerBlue!25}{4.80\%} &
-	 \cellcolor{CornflowerBlue!25}{4.60\%} &
-	 \cellcolor{CornflowerBlue!25}{4.03\%} &
-	 \cellcolor{CornflowerBlue!50}{5.35\%} &
-	 \cellcolor{CornflowerBlue!25}{4.69\%} &
-	 \cellcolor{CornflowerBlue!75}{4.41\%} &
-	 \cellcolor{CornflowerBlue!25}{3.84\%} &
-	5.45\% \\
+	 \cellcolor{CornflowerBlue!75}{4.02\%} &
+	 \cellcolor{CornflowerBlue!25}{3.88\%} &
+	 \cellcolor{CornflowerBlue!25}{3.35\%} &
+	 \cellcolor{CornflowerBlue!25}{4.58\%} &
+	 \cellcolor{CornflowerBlue!75}{3.80\%} &
+	 \cellcolor{CornflowerBlue!50}{3.64\%} &
+	 \cellcolor{CornflowerBlue!75}{3.09\%} &
+	 \cellcolor{CornflowerBlue!25}{4.37\%} \\
 	\symLTI~Mod.~Fourier &
-	5.54\% &
-	5.35\% &
-	4.61\% &
-	6.34\% &
-	4.83\% &
-	4.70\% &
-	 \cellcolor{CornflowerBlue!50}{3.82\%} &
-	5.50\% \\
+	4.56\% &
+	4.46\% &
+	3.67\% &
+	5.17\% &
+	3.89\% &
+	3.70\% &
+	 \cellcolor{CornflowerBlue!50}{3.15\%} &
+	4.39\% \\
 	\symSDT~Fourier &
-	4.96\% &
+	4.22\% &
+	4.11\% &
+	3.50\% &
 	4.78\% &
-	4.13\% &
-	5.59\% &
-	4.78\% &
-	4.61\% &
-	4.05\% &
-	 \cellcolor{CornflowerBlue!25}{5.44\%} \\
+	3.93\% &
+	3.83\% &
+	3.32\% &
+	4.52\% \\
 	\symSDT~Cosine &
-	 \cellcolor{CornflowerBlue!75}{4.68\%} &
-	 \cellcolor{CornflowerBlue!50}{4.53\%} &
-	 \cellcolor{CornflowerBlue!75}{3.84\%} &
-	 \cellcolor{CornflowerBlue!75}{5.19\%} &
-	 \cellcolor{CornflowerBlue!75}{4.68\%} &
-	 \cellcolor{CornflowerBlue!25}{4.48\%} &
-	3.91\% &
-	 \cellcolor{CornflowerBlue!50}{5.28\%} \\
+	 \cellcolor{CornflowerBlue!75}{4.02\%} &
+	 \cellcolor{CornflowerBlue!75}{3.73\%} &
+	 \cellcolor{CornflowerBlue!75}{3.22\%} &
+	 \cellcolor{CornflowerBlue!75}{4.41\%} &
+	 \cellcolor{CornflowerBlue!75}{3.80\%} &
+	 \cellcolor{CornflowerBlue!75}{3.59\%} &
+	3.22\% &
+	 \cellcolor{CornflowerBlue!50}{4.33\%} \\
 	\symSDT~Haar &
-	4.95\% &
-	4.84\% &
-	4.05\% &
-	5.56\% &
-	4.78\% &
-	4.63\% &
-	 \cellcolor{CornflowerBlue!25}{3.84\%} &
-	5.45\% \\
+	4.12\% &
+	 \cellcolor{CornflowerBlue!50}{3.85\%} &
+	3.41\% &
+	4.65\% &
+	3.95\% &
+	3.82\% &
+	3.22\% &
+	4.58\% \\
 	\symFIR~DLOP &
-	 \cellcolor{CornflowerBlue!50}{4.79\%} &
-	 \cellcolor{CornflowerBlue!75}{4.52\%} &
-	 \cellcolor{CornflowerBlue!50}{3.88\%} &
-	 \cellcolor{CornflowerBlue!25}{5.50\%} &
-	 \cellcolor{CornflowerBlue!75}{4.68\%} &
-	 \cellcolor{CornflowerBlue!50}{4.42\%} &
-	 \cellcolor{CornflowerBlue!75}{3.78\%} &
-	 \cellcolor{CornflowerBlue!75}{5.23\%} \\
+	 \cellcolor{CornflowerBlue!25}{4.04\%} &
+	3.90\% &
+	 \cellcolor{CornflowerBlue!50}{3.30\%} &
+	 \cellcolor{CornflowerBlue!50}{4.46\%} &
+	 \cellcolor{CornflowerBlue!25}{3.86\%} &
+	 \cellcolor{CornflowerBlue!25}{3.65\%} &
+	 \cellcolor{CornflowerBlue!25}{3.16\%} &
+	 \cellcolor{CornflowerBlue!75}{4.32\%} \\
 	\symFIR~Random &
-	6.46\% &
-	6.15\% &
-	5.08\% &
-	7.34\% &
+	5.38\% &
 	5.12\% &
-	4.89\% &
-	4.19\% &
-	5.62\% \\
+	4.38\% &
+	6.15\% &
+	4.04\% &
+	3.87\% &
+	3.30\% &
+	4.51\% \\
+	\symFIR~Identity &
+	5.10\% &
+	4.82\% &
+	4.31\% &
+	5.89\% &
+	4.04\% &
+	3.87\% &
+	3.31\% &
+	4.67\% \\
 	\bottomrule
-	\end{tabular}
-\end{table}
-
-\begin{table}[p]
-	\newcommand{\sigA}{\ensuremath{\cdot}}
-	\newcommand{\sigB}{\ensuremath{\bullet\bullet}}
-	\newcommand{\sigC}{\ensuremath{\bullet\!\bullet\!\bullet}}
-	\caption[Statistical significance of the Mackey-Glass test errors with perfect rectangle windows]{Statistical significance of the Mackey-Glass test errors with perfect rectangle windows. The given significance levels are based on a two-sided Kolmogorov-Smirnov test.}
-	\label{tbl:mackey_glass_ne_significance}
+	\end{tabular}\\[10pt]
 	\centering\small\sffamily
-	\setlength{\tabcolsep}{6.2pt}
-	\begin{tabular}{r r  c c c c c c c  c c c c c c c}
+	\setlength{\tabcolsep}{4.75pt}
+	\begin{tabular}{r r  c c c c c c c c  c c c c c c c c}
 	\toprule
-	& & \multicolumn{7}{c}{{\color{skyblue1}$\blacksquare$} \textbf{Fixed convolution}}
-	& \multicolumn{7}{c}{{\color{aluminium2}$\blacksquare$} \textbf{Learned convolution}} \\
-	\cmidrule(r){3-9}\cmidrule(l){10-16}
-	\emph{Basis} & & (1) & (2) & (3) & (4) & (5) & (6) & (7)  & (1) & (2) & (3) & (4) & (5) & (6) & (7) \\
+	& & \multicolumn{8}{c}{{\color{skyblue1}$\blacksquare$} \textbf{Fixed convolution}}
+	& \multicolumn{8}{c}{{\color{aluminium2}$\blacksquare$} \textbf{Learned convolution}} \\
+	\cmidrule(r){3-10}\cmidrule(l){11-18}
+	\emph{Basis} & & (1) & (2) & (3) & (4) & (5) & (6) & (7) & (8)  & (1) & (2) & (3) & (4) & (5) & (6) & (7) & (8) \\
 	\midrule
 	\symLTI~LDN & (1) &
 	 &
@@ -277,6 +273,8 @@ Numerical values are given in \Cref{tbl:mackey_glass_results_ne}.}
 	 &
 	 &
 	\sigC &
+	\sigC &
+	 &
 	 &
 	 &
 	 &
@@ -287,11 +285,13 @@ Numerical values are given in \Cref{tbl:mackey_glass_results_ne}.}
 	\symLTI~Mod.~Fourier & (2) &
 	\sigB &
 	 &
-	\sigA &
+	 &
 	\sigC &
+	 &
 	\sigB &
 	\sigC &
 	\sigB &
+	 &
 	 &
 	 &
 	 &
@@ -301,12 +301,14 @@ Numerical values are given in \Cref{tbl:mackey_glass_results_ne}.}
 	 \\
 	\symSDT~Fourier & (3) &
 	 &
-	\sigA &
+	 &
 	 &
 	 &
 	 &
 	 &
 	\sigC &
+	\sigC &
+	 &
 	 &
 	 &
 	 &
@@ -322,6 +324,8 @@ Numerical values are given in \Cref{tbl:mackey_glass_results_ne}.}
 	 &
 	 &
 	\sigC &
+	\sigC &
+	 &
 	 &
 	 &
 	 &
@@ -331,12 +335,14 @@ Numerical values are given in \Cref{tbl:mackey_glass_results_ne}.}
 	 \\
 	\symSDT~Haar & (5) &
 	 &
-	\sigB &
+	 &
 	 &
 	 &
 	 &
 	 &
 	\sigC &
+	\sigC &
+	 &
 	 &
 	 &
 	 &
@@ -346,12 +352,14 @@ Numerical values are given in \Cref{tbl:mackey_glass_results_ne}.}
 	 \\
 	\symFIR~DLOP & (6) &
 	 &
-	\sigC &
+	\sigB &
 	 &
 	 &
 	 &
 	 &
 	\sigC &
+	\sigC &
+	 &
 	 &
 	 &
 	 &
@@ -361,11 +369,30 @@ Numerical values are given in \Cref{tbl:mackey_glass_results_ne}.}
 	 \\
 	\symFIR~Random & (7) &
 	\sigC &
+	\sigC &
+	\sigC &
+	\sigC &
+	\sigC &
+	\sigC &
+	 &
+	 &
+	 &
+	 &
+	 &
+	 &
+	 &
+	 &
+	 &
+	 \\
+	\symFIR~Identity & (8) &
+	\sigC &
 	\sigB &
 	\sigC &
 	\sigC &
 	\sigC &
 	\sigC &
+	 &
+	 &
 	 &
 	 &
 	 &

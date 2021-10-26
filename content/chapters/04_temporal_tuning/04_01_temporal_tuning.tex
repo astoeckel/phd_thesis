@@ -156,6 +156,7 @@ The space-time receptive fields of individual neurons (sometimes referred to as 
 An example of an artificial space-time recepitve field that qualitatively resembles empirical data \citep[cf.][]{deangelis1993spatiotemporal} is depicted in \Cref{fig:space_time_receptive_field}.
 
 \subsection{Temporal Tuning Curves and the Neural Engineering Framework}
+\label{sec:temporal_tuning_nef}
 
 The above summary of biological temporal response patterns provided some motivation as for why modelling temporal tuning can be desirable.
 We now define this concept more rigorously and, in the next subsection, compare it to the original NEF dynamics principle.
@@ -203,7 +204,7 @@ Essentially, we would have to normalise with respect to some window function.}
 Note that normalisation is not possible for temporal encoders with an infinite energy, such as oscillators and integrator dynamics without decay.
 
 \subsubsection{Synaptic filters as temporal encoders}
-One can easily show that our notion of temporal tuning is compatible with the standard NEF population dynamics.
+We can easily confirm that our notion of temporal tuning is compatible with the standard NEF population dynamics.
 Remember from \Cref{sec:nef_dynamics} that we typically assume a linear synaptic filter $h$.
 Correspondingly, given some time-invariant normalised encoding vector $\vec e_i$, and assuming that the synapses are modelled as a first-order low-pass filter, a population naturally posses the following temporal encoder
 \begin{align}
@@ -226,48 +227,80 @@ However, unless there are other temporal resources in the network---such as dive
 
 %The point of temporal tuning curves, and, to some degree, the NEF dynamics principle, is that we can exploit the existing synaptic filters $h$, as well as neural dynamics as a \enquote{temporal resource} that can be exploited to form more complex dynamics.
 
-\subsubsection{General optimisation problem}
-Of course, this raises the question of how to actually realise some desired temporal tuning.
-At least in theory, we could minimise the following least-squares loss function in current-space over the connection weights $w_{ij}$.
+\subsubsection{General weight optimisation problem}
+Naturally, this raises the question of how to ensure that a pre-population possesses diverse temporal tuning.
+While we could try to manually diversify synaptic filters, remember that one of the fundamental ideas of the \NEF is to specify tuning as a normative constraint, and to solve for connection weights that realise this tuning.
 
-Let $a_j(\mathfrak{x}, t)$ be the activity of the $j$th pre-neuron at time $t \leq 0$, $J_i$ the current-translation function, $h_{ij}$ the synaptic filter for the connection onto the $i$th post-neuron, and let $\mathfrak{x}_k : \mathbb{R}^- \longrightarrow \mathbb{X}$ be one of $N$ random input signals with $\lim_{t \to -\infty} \mathfrak{x}_k(t) = 0$ and finite norm $\|\mathfrak{x}_k\|$.%
-\footnote{The finite function norm is required to guarantee that $E$ is finite. For mathematical soundness, we could further restrict $\mathfrak{x}_k$ to some sane function space, e.g., the set of multivariate analytic functions.
-%However, as with most mathematical nitpickery, this does not really matter in practice.
-}
-% TODO Check symbols i, j, d, d', m, n for consistency
+To this end, we propose a temporal variant of the current-space least-squares loss from \Cref{sec:nef_extension}.
+If so desired, we can combine this loss function with subthreshold relaxation (\Cref{sec:nef_subthreshold}), nonnegativity constraints (\Cref{sec:nef_nonneg}), and dendritic nonlinearities (\Cref{sec:nef_nonlinear}).
+
+As a first step, consider the loss function for connecting two neuron populations representing $d$-dimensional quantities without any transformation $f$.
+Both neuron populations will represent the same quantity, but with potentially different temporal tuning.
+
+Let $a_j(\mathfrak{x})$ be the temporal tuning curve of the $j$th pre-neuron, $J_i$ the current-translation function, and $h_{ij}$ the synaptic filter between the $j$th pre- and $i$th post neuron; this may include axonal and synaptic transmission delays.
+Furthermore, let $N$ be the number of input signals (i.e., samples), and $m$ the number of pre-population neurons.
 We have
 \begin{align}
-%	E &= \sum_{k = 1}^N \mathcal{E} \left[
-%		J_i \Big( \! \int_0^\infty \!\!\! \big\langle \mathfrak{e}_i(\tau), f(\mathfrak{x}_k(-\tau)) \big\rangle \, \mathit{d\tau} \Big) ,\,\,
-%		\sum_{j = 1}^m w_{ij} \! \int_0^\infty \!\!\! h_{ij}(\tau) a_j(\mathfrak{x}_k, -\tau) \,\mathit{d\tau}
-%	\right]^2 \,.
-%	\label{eqn:weight_optimise_currents_temporal}
 	E &= \sum_{k = 1}^N \left[
-		J_i \Big( \! \int_0^\infty \!\!\! \big\langle \mathfrak{e}_i(\tau), f(\mathfrak{x}_k)(-\tau) \big\rangle \, \mathit{d\tau} \Big) \,\,-\,\,
-		\sum_{j = 1}^m w_{ij} \! \int_0^\infty \!\!\! h_{ij}(\tau) a_j(\mathfrak{x}_k, -\tau) \,\mathrm{d}\tau
+		J_i \left( \! \int_0^\infty \!\!\! \big\langle \mathfrak{e}_i(\tau), \mathfrak{x}_k(-\tau) \big\rangle \, \mathit{d\tau} \right) \,\,-\,\,
+		\sum_{j = 1}^m w_{ij} \! \int_0^\infty \!\!\! h_{ij}(\tau) a_j(\mathfrak{x}_k \ast \delta_\tau) \,\mathrm{d}\tau
+	\right]^2 \,,
+	\label{eqn:weight_optimise_currents_temporal_no_trafo}
+\end{align}
+where $\delta_{\theta}(t) = \delta(t - \theta)$ is a shifted Dirac delta.
+Correspondingly $(\mathfrak{x}_k \ast \delta_{\theta})(t) = \mathfrak{x}_k(t - \theta)$, and $a_j(\mathfrak{x}_k \ast \delta_\tau)$ is merely the activity of the $j$th pre-neuron at time $-\tau$.
+
+The left-hand side of \cref{eqn:weight_optimise_currents_temporal_no_trafo} is the current required to obtain our desired temporal tuning from \cref{eqn:temporal_tuning_curve}; the right-hand side uses the pre-population temporal tuning and the synaptic filters as a \emph{spatiotemporal function basis} to decode the desired currents.
+While we know that randomly choosing spatial encoders $\vec e_j$ results in diverse \emph{spatial} pre-population tuning (\Cref{sec:dendritic_computation_theory}), we discuss in \Cref{sec:temporal_bases} how this basis can be made as temporally diverse as possible.
+Note that our optimisation problem is in principle similar to adaptive filters \citep[e.g.,][]{fujita1982adaptive}, but without the online adaptation.
+We construct truly \emph{adaptive} filters in \Cref{sec:adaptive_filter} and \Cref{chp:cerebellum}.
+
+Lastly, note that our loss function is \emph{not} an integral over time---as is for example common in optimal control theory \citep[e.g.,][Chapter~14]{brogan1991modern}.
+Instead, we take advantage of the fact that our temporal tuning curves are defined as the average activity of the neuron in the \emph{present}, i.e., at time $t = 0$.
+Correspondingly, we only minimise the error at a single point in time, namely $t = 0$, but for a large set of input samples $\mathfrak{x}_k$.
+We can thus tabulate \cref{eqn:weight_optimise_currents_temporal_no_trafo} as
+\begin{align*}
+	\vec w_i = \arg\min_{\vec w_i} E = \| \mat A_i \vec w_i - \vec J_i \|_2^2 \quad\quad \Rightarrow \quad\quad \vec w_i = \mat A_i^+ \vec J_i \,, \quad\quad \text{where} \quad \mat A_i \in \mathbb{R}^{N \times m}, \quad \vec J_i \in \mathbb{R}^n \,,
+\end{align*}
+where $\mat A_i^+$ is the Moore-Penrose pseudo-inverse.
+Put differently, and assuming that $\mathfrak{x}_k$ is finite and that all quantities have been appropriately sampled, minimising \cref{eqn:weight_optimise_currents_temporal_no_trafo} is the same kind of convex optimisation problem previously encountered in \Cref{sec:nef_extensions}.
+
+The primary challenge in solving this optimisation problem lies in selecting suitable input signals $\mathfrak{x}_k$ \citep[cf.][Section~10.2.5]{verhaegen2007filtering}---we discuss this in more detail in \Cref{sec:solve_dynamics_nonlinear_neurons}.
+Choosing $\mathfrak{x}_k$ is particularly important if the desired tuning cannot be realised precisely; the frequency content of the training signals then determines the regime over which the approximation works well.
+In our examples we use low-pass filtered white noise as $\mathfrak{x}_k$.
+
+Finally, consider the case where we additionally solve for a spatiotemporal transformation, that is, a function $f$ that maps from a $d$-dimensional signal $\mathfrak{x}$ onto a $d'$-dimensional quantity, i.e., $f : (\mathbb{R}^- \longrightarrow \mathbb{R}^d) \longrightarrow \mathbb{R}^{d'}$ (cf.~\Cref{tbl:spatiotemporal}; see \Cref{sec:spatiotemporal} for examples).
+We have:
+\begin{align}
+	E &= \sum_{k = 1}^N \left[
+		J_i \left( \! \int_0^\infty \!\!\! \big\langle \mathfrak{e}_i(\tau), f(\mathfrak{x}_k \ast \delta_\tau) \big\rangle \, \mathit{d\tau} \right) \,\,-\,\,
+		\sum_{j = 1}^m w_{ij} \! \int_0^\infty \!\!\! h_{ij}(\tau) a_j(\mathfrak{x}_k \ast \delta_\tau) \,\mathrm{d}\tau
 	\right]^2 \,.
 	\label{eqn:weight_optimise_currents_temporal}
 \end{align}
-As previously discussed in \Cref{sec:nef_extension}, we can combine this loss function with subthreshold relaxation, nonnegativity constraints, and dendritic nonlinearities.
+As we explain in far more detail below, this equation unifies the \NEF representation, transformation, and dynamics principle.
+To summarise:
+\begin{enumerate}[1.]
+	\item \emph{Representation.} To find identity decoders $\mat D_{\theta'}$, use \cref{eqn:weight_optimise_currents_temporal_no_trafo}.
+	Set $J_i(\xi) = \xi$ and $\mathfrak{e}_i = (\mat I)_i \delta(-\theta')$.
+	Choosing $\theta' < 0$ queries information present in the neuron population about the past.
+	\item \emph{Transformation.} Directly use \cref{eqn:weight_optimise_currents_temporal}; we can compute function decoders $\mat D^f$ as above.
+	\item \emph{Dynamics.} To realise linear dynamics, choose $\mathfrak{e}_i(t) = \langle \vec e^\mathrm{t}_i, \exp(\mat A t) \mat B \rangle$ where $\vec e^\mathrm{t}_i \in \mathbb{R}^{q}$.\footnote{As mentioned in the introduction, realising nonlinear dynamics is technically possible, but notationally inelegant. We would have to rely on the general definition of temporal tuning (\Cref{def:temporal_tuning_curve}) and solve for $G_i^{-1}[a_i(\mathfrak x_k)]$.
+	Also, note that realising nonlinear dynamics is less important than it may seem; we can decode arbitrary nonlinear spatiotemporal $f$ from neurons with linear tuning due to the nonlinear response curve $G_i$.
+	}
+\end{enumerate}
 
-It is obviously infeasible to minimise $E$ directly.
-In practice, each $\mathfrak{x}_k$ must be of finite length and sampled.
-However, once all quantities have been appropriately sampled, minimising \cref{eqn:weight_optimise_currents_temporal} is ultimately the same optimisation problem as the one discussed in \Cref{sec:nef_subthreshold}.
-%Without subthreshold relaxation (i.e., $\mathcal{E}(j_1, j_2) = j_1 - j_2$), this loss function is in linear least-squares form.
-
-Indeed, the primary challenge when solving this optimisation problem lies in selecting suitable input signals $\mathfrak{x}_k$ \citep[cf.][Section~10.2.5]{verhaegen2007filtering}.
-This is particularly important if the desired dynamics cannot be realised precisely; the frequency content of the training signals then determines the input regime over which the approximation works well.
-We discuss this in more detail in the context of recurrent networks; in our examples we generally use low-pass filtered white noise as $\mathfrak{x}_k$.
+\pagebreak
 
 \subsection{Implementing Linear Time-Invariant Systems}
 \label{sec:temporal_tuning_lti}
 
-For the sake of simplicity, we focus on linear networks and dynamical systems.
-In particular, we discuss realising linear time-invariant (LTI) systems in \emph{linear networks}.
-That is, we have linear response curves and current-translation (i.e., $G_i[J] = J$ and $J_i(\xi) = \xi$); each \enquote{neuron} corresponds to a separate represented dimension.
+For the sake of simplicity, we first focus on linear networks and dynamical systems.
+In particular, we discuss realising linear time-invariant (LTI) systems in networks with linear response curves and current-translation (i.e., $G_i[J] = J$ and $J_i(\xi) = \xi$).
+Essentially, each \enquote{neuron} corresponds to a separate represented dimension.
 
 This restriction is less severe as it may seem.
-LTI systems are quite useful, and we can use the NEF representation and transformation principles (\Cref{sec:nef_representation,sec:nef_transformation}) to emulate linear networks within nonlinear neurons.
+LTI systems are quite useful, and we can use the NEF representation and transformation principles (\Cref{sec:nef_representation,sec:nef_transformation}) to emulate linear networks with nonlinear neurons.
 Still, we discuss examples with more complex nonlinear networks and dynamics in \Cref{sec:recurrent_weights}.
 
 \subsubsection{Feed-forward dynamics}
@@ -284,7 +317,7 @@ Still, we discuss examples with more complex nonlinear networks and dynamics in 
 	The desired dynamics are a high-pass filter (eq.~\ref{eqn:high_pass}, $\tau_1 = \SI{20}{\milli\second}$, $\tau_2 = \SI{40}{\milli\second}$, $\alpha = 1$).
 	\emph{Top:} System response to a band-limited white noise signal $u(t)$.
 	\emph{Bottom:} Impulse response.
-	Dotted line in \emph{(E)} is the desired response, solid line is the response when solving for $\mat{W}$ using least squares.
+	Dotted line in \emph{(E)} is the desired response, solid line is the response when solving for $\mat{W}$ using least-squares.
 	}
 	\label{fig:feed_forward_dynamics}
 \end{figure}
@@ -419,7 +452,9 @@ Examples of LTI systems realised by solving the least-squares loss are depicted 
 Note that there are some minor discrepancies between the numerical and the ideal solution (error is on the order of $10^{-3}$).
 These errors are mostly due to time-discretisation at $\Delta t = \SI{1}{\milli\second}$, and would be less noticeable for exponentially decaying impulse responses $\mathfrak{e}_i$.
 
-\subsection{Realising LTI Systems in Networks With More Complex Recurrences}
+\newpage
+
+\subsection{Realising LTI Systems in Networks With Complex Recurrences}
 \label{sec:lti_complex_networks}
 
 Admittedly, the results presented in the previous subsection are slightly underwhelming.

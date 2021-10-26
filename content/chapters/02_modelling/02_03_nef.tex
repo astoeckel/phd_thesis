@@ -71,40 +71,37 @@ Second, \NEF models can be used to predict the behaviour of a system in experime
 This prediction then forms a hypothesis that can be compared to future empirical data.
 Furthermore, the \NEF also enables the systematic variation of observed biological parameters (e.g., time constants or connectivity), which is often not easily possible in real biological systems.
 Assessing the system performance in such artificial situations may yield hypotheses as for why evolution favoured certain parameter combinations.
-We give an example of this in Chapter~5.
-%TODO: Chapter 5 reference
+We give an example of this in \Cref{chp:cerebellum}.
 
 \subsection{Applications to Neuromorphic Computing}
 \label{sec:neuromorphic}
 
-The scientific applications discussed above were the primary motivation for the development of the \NEF \citep[Chapter~1]{eliasmith2003neural}.
-However, coincidentally, the same methods are useful as a programming model for neuromorphic computers \citep{boahen2017neuromorph}.
+The scientific applications discussed above were the primary motivation for the development of the \NEF.
+However, coincidentally, the same methods are useful as a programming model for neuromorphic computers \citep{boahen2017neuromorph,voelker2021programming}.
 
 \subsubsection{Neuromorphic computers}
-This term refers to computer systems that---to some degree---mimic information processing in the brain.
+Coined by \citet{mead1990neuromorphic}, this term refers to computer systems that---to some degree---mimic information processing in the brain.
 This typically implies numerous simple computational units, \emph{neurons}, connected via a flexible interconnect \citep{furber2016largescale}.
 Beyond these basic characteristics there is no consensus as for what exactly constitutes a \enquote{neuromorphic computer}.
 However, most neuromorphic hardware systems execute computations asynchronously and possess provisions for sparse event-based signalling.
 Akin to biology, individual computational units independently generate binary events.
-In contrast to artificial neural networks, computation is inherently temporal; communication only occurs sporadically and does not carry continuous values.
-Hence, the underlying communication infrastructure is solely responsible for signalling spike events, minimising the amount of data that needs to be transferred.
+In contrast to artificial neural networks, computation is inherently temporal; communication occurs sporadically and does not carry continuous values.
+Hence, the underlying communication infrastructure is solely carries temporally sparse spike events, minimising the amount of transferred data.
 
 Current neuromorphic computers can be roughly split into two categories, depending on the specific realisation of the computing elements.
-Computation either takes place in analogue model circuits, similar to the \LIF circuit discussed above, or digital processors with varying degrees of programmability.
-% TODO: Add reference to the LIF circuit
+Computation either takes place in analogue model circuits, similar to the \LIF circuit (\Cref{fig:lif}), or digital processors with varying degrees of programmability.
 Examples of systems in the former \enquote{mixed-signal} category include Braindrop \citep{neckar2019braindrop} and BrainScaleS \citep{schemmel2010waferscale}.
-Systems that fall into the latter \enquote{purely digital} category are SpiNNaker \citep{furber2013overview} and Loihi \citep{davies2018loihi}. See \citet{furber2016largescale} for a more comprehensive, albeit slightly outdated list.
+Systems that fall into the latter \enquote{purely digital} category are SpiNNaker \citep{furber2013overview} and Loihi \citep{davies2018loihi}. See \citet{furber2016largescale} for a more comprehensive list.
 
 \subsubsection{Applications of neuromorphic computing}
-The primary motivation behind neuromorphic hardware is to construct computing hardware that approaches the energy efficiency of biological brains \citep{boahen2017neuromorph}.
+The primary motivation behind neuromorphic hardware is to construct computing hardware that approaches the energy efficiency of biological brains \citep{mead1990neuromorphic,boahen2017neuromorph}.
 Compared to conventional computer architectures, these energy savings are mostly due to the asynchronous nature of the computational units, as well as the reduction in communication bandwidth due to event-based signalling \citep{painkras2013spinnaker}.
 Furthermore, mixed-signal neuromorphic computers with analogue model circuits benefit from each computational unit operating close to the theoretically required minimum energy \citep{boahen2017neuromorph}.
 However, compared to purely digital systems, such analogue designs are much more challenging from an engineering perspective.
 
 Being able to reliably simulate large spiking neural networks with a low energy footprint would be a major scientific breakthrough.
 For example, this would enable large-scale brain simulations that are infeasible with conventional supercomputers \citep{calimera2013human}.
-From an engineering perspective, being able to map artificial neural networks onto neuromorphic computers could greatly reduce energy costs of machine learning in the data centre and enable new mobile applications of artificial intelligence \citep{hunsberger2016training,blouw2018benchmarking,goltz2020fast,blouw2020eventdriven}.
-% TODO: Cite NMI paper instead of goltz2020fast once it has been published
+From an engineering perspective, being able to map artificial neural networks onto neuromorphic computers could greatly reduce energy costs of machine learning in the data centre and enable new mobile applications of artificial intelligence \citep{hunsberger2016training,blouw2018benchmarking,goltz2021fast,blouw2020eventdriven}.
 Due to the inherent temporal aspect of the computation, spiking neural networks and neuromorphic hardware are particularly well suited for applications requiring real-time stream processing, such as robotic control or autonomous drones \citep{komer2015biologically,yan2021comparing}.
 
 \subsubsection{The \NEF as a programming model for neuromorphic computers}
@@ -613,7 +610,7 @@ As demonstrated by \citet[Chapter~7]{tripp2009search}, the internal dynamics of 
 The second assumption, namely that synaptic filters are homogeneous, is likely violated if a neuron possesses multiple receptor types.
 As we saw in \Cref{sec:synaptic_transmission}, the synaptic time-constant can vary significantly between (and even within) individual receptor types.
 We also saw that synaptic transmission is better modelled by higher-order filters.
-\Citet{voelker2018improving} discuss methods to generalise the dynamics principle to arbitrary synaptic filters; however, these methods require explicit higher-dimensional state space representations.
+\Citet{voelker2018improving} discuss methods to generalise the dynamics principle to arbitrary synaptic filters; however, these methods require access to the input signal differentials.
 
 In Chapter~4, we suggest the concept of \enquote{temporal tuning curves} to---at least partially---account for these issues.
 Temporal tuning curves are a direct extension of standard \NEF tuning curves, and are inspired by the concept of temporal receptive fields.

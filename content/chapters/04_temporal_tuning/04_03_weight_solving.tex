@@ -29,10 +29,10 @@ On the surface, switching from linear units to neurons with nonlinear response c
 Recall that our least-squares loss was given as
 \begin{align}
 	E &= \sum_{k = 1}^N \left[
-		J_i \Big( \! \int_0^\infty \!\!\! \big\langle \mathfrak{e}_i(\tau), f(\mathfrak{x}_k)(-\tau) \big\rangle \, \mathrm{d}\tau \Big) \,\,-\,\,
-		\sum_{j = 1}^m w_{ij} \! \int_0^\infty \!\!\! h_{ij}(\tau) \mathfrak{a}_j(\mathfrak{x}_k, -\tau) \,\mathrm{d}\tau
+		J_i \left( \! \int_0^\infty \!\!\! \big\langle \mathfrak{e}_i(\tau), f(\mathfrak{x}_k \ast \delta_\tau) \big\rangle \, \mathit{d\tau} \right) \,\,-\,\,
+		\sum_{j = 1}^m w_{ij} \! \int_0^\infty \!\!\! h_{ij}(\tau) a_j(\mathfrak{x}_k \ast \delta_\tau) \,\mathrm{d}\tau
 	\right]^2 \,.
-	\tag{4.7}
+	\tag{\ref{eqn:weight_optimise_currents_temporal}}
 \end{align}
 In linear networks, the current-translation function $J_i$ and the pre-population tuning curve $\mathfrak{a}_j$ are linear.
 While we continue to assume that $J_i$ is linear,%
@@ -209,7 +209,7 @@ The weight solver can then exploit neurons only being active within a specific r
 \label{sec:spiking_temporal_bases}
 
 Given the techniques for sampling input signals $\mathfrak{x}_k$ and temporal encoders above, we now investigate in how far we are able to realise temporal bases in spiking neural networks.
-Similar to \citet{voelker2018improving}, we qualitatively compare the resulting neural activities to those of biological \enquote{time-cells} (cf.~\Cref{sec:temporal_tuning_biology}).
+Similar to \citet{voelker2018improving}, we qualitatively compare the resulting neural activities to those of biological \enquote{time cells} (cf.~\Cref{sec:temporal_tuning_biology}).
 %Finally, we explore heterogeneous synaptic filters and spatiotemporal networks.
 
 \subsubsection{Modified Fourier networks}
@@ -529,6 +529,7 @@ A next step would be to use this technique to construct a neurophysiologically m
 \end{itemize}
 
 \subsection{Accounting for Neural Dynamics}
+\label{sec:temporal_tuning_neural_dynamics}
 
 \begin{itemize}
 	\item Can modify eq. 4.7 to account for neural dynamics. Must find input current that produces the intended output current.

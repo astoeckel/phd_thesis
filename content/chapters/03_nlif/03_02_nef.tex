@@ -108,7 +108,7 @@ This becomes apparent when considering the principal components of the pre-popul
 As for example discussed in \citet[Chapter~7]{eliasmith2003neural}, the principal component analysis (PCA) can be seen as \enquote{uncovering} the best orthogonal basis that linearly generates the tuning-curves.
 %(see \cite[Chapter~12]{bishop2006pattern} for general information on the PCA).
 In turn, the first principal components characterise the functions that can be decoded well from a population.
-As illustrated in \Cref{fig:bias_decoding_impact_c}, the principal components $f_i$ of the \enquote{standard} NEF tuning curves resemble the Legendre polynomials (cf.~Section~4.? for a definition).
+As illustrated in \Cref{fig:bias_decoding_impact_c}, the principal components $f_i$ of the \enquote{standard} NEF tuning curves resemble the Legendre polynomials (cf.~\Cref{sec:function_bases} for a definition).
 While the second principal component $f_2$ is linear, just like the corresponding Legendre polynomial, $f_1$ differs significantly from the constant first Legendre polynomial.
 Decoding constants is hence \enquote{more difficult} than decoding the identity function.
 
@@ -165,10 +165,6 @@ Least-squares assigns arbitrary algebraic signs to the individual weights, typic
 Such weights are not compatible with conductance-based synapses or, more generally, multi-compartment neurons.
 Here, modellers connect pre-neurons to specific post-neuron channels.
 The corresponding connection weights describe nonnegative quantities, such as the number of vesicles released from the pre-synapse, or the channel density in the post-synapse \citep{roth2009modeling}.
-% TODO: Double-check citation
-
-%While the concept of negative resistances and conductances exists, these are the result of active nonlinear processes not directly related to synaptic transmission \citep[e.g.,][]{bezanilla1972negative}.
-%% TODO: Double-check source
 
 \subsubsection{Solving for weights using non-negative least squares}
 Solving for individual synaptic weights in current space suggests a simple procedure to account for nonnegativity.
