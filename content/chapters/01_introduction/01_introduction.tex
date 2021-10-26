@@ -3,7 +3,7 @@
 \label{chp:introduction}
 
 \begin{OpeningQuote}
-[...] Network models [must] reflect the fundamental and
+Network models [must] reflect the fundamental and
 essential temporal nature of actual nervous systems. External processes and
 events are extended in time and for a nervous system successfully to recognize
 and respond may require temporally extended representation; movements required for behavior involve sets of bodily motions sequenced in time; short-term memory is a trick for allowing present access to the recent past, and
@@ -17,7 +17,7 @@ Of course, taken at face value, this is quite an understatement---just like all 
 However, dynamics are of paramount interest when studying the brain (\cite{churchland1992computational}, Section 3.9).
 At the lowest level, dynamics shape computation within individual neurons and dendritic structures.
 Simultaneously, at the highest level, dynamics determine the ability of an organism to survive.
-Variations in response-time on the order of milliseconds decide over life and death, as avid viewers of nature documentaries and motor vehicle operators will surely attest.
+Variations in response-time on the order of milliseconds can make the difference between life and death, as avid viewers of nature documentaries and operators of motor vehicles will surely attest.
 
 From the perspective of computer engineering it seems almost implausible that biological systems should be capable of rapid coordinated action---especially considering that the elements that make up nervous systems compute asynchronously and possess strong intrinsic dynamics.
 After all, when constructing artificial computers, asynchronicity and dynamics are mere annoyances of physical reality that engineers seek to eliminate.
@@ -89,7 +89,7 @@ This way, we hope to provide a useful tool for researchers wishing to model high
 
 Similarly important, and returning to our comparison between brains and computers, our approach is not only useful for cognitive modellers, but also for scientists working on brain-inspired computers (so called \emph{neuromorphic hardware}), and to the field of machine learning.
 Systematically thinking about ways in which the computational substrate connects to function informs both the architecture of neuromorphic computers, and suggests a \enquote{neural compiler} for realising desired algorithms on these devices \citep{boahen2017neuromorph,voelker2021programming}.
-Furthermore, our approach lends itself to thinking about the \enquote{best possible} representation that should be established in a neural network, and can thus pave the way in which artificial neural networks that are faster to train, more data-efficient, and higher performing \citep{voelker2019lmu,chilkuri2021parallelizing}.
+Furthermore, our approach lends itself to thinking about the \enquote{best possible} representation that should be established in a neural network, and can thus pave the way for artificial neural networks that are faster to train, more data-efficient, and higher performing \citep{voelker2019lmu,chilkuri2021parallelizing}.
 
 \subsubsection{Structure and overview of this thesis}
 
@@ -103,9 +103,9 @@ Specifically, we focus on a mathematically tractable extension to the \LIF neuro
 The purpose of this is twofold.
 First, our extensions to the \NEF allow modellers to better constrain their models to neurophysiological data (we explore this in more detail in \Cref{chp:cerebellum}).
 Second, we demonstrate---both in theory, and in simulation---that it is possible to systematically exploit the dynamics intrinsic to the passive dendritic tree of the \nlif neuron to perform multivariate, non-temporal computation in a spiking neural network context.
-That is, \NEF networks with \nlif neurons can be made to automatically employ a simple form of \emph{dendritic computation} \citep{mel1994information,london2005dendritic} and to thus approximate a larger range of functions well compared to similar networks with standard \LIF neurons, and to even outperform two-layer networks.
+That is, \NEF networks with \nlif neurons can be made to automatically employ a simple form of \emph{dendritic computation} \citep{mel1994information,london2005dendritic} and to thus approximate a larger range of functions well compared to similar networks with standard \LIF neurons, sometimes outperforming two-layer networks.
 In particular, we can model gain modulation, an important phenomenon in the central nervous system \citep{salinas2000gain,chance2002gain}.
-Our results may inform the design of future and enable a better utilisation of existing neuromorphic computers.
+Our results may inform the design of future neuromorphic hardware and enable a better utilisation of existing neuromorphic computers.
 
 Next, in \Cref{chp:temporal_tuning}, we introduce the notion of \emph{temporal tuning curves} to the \NEF.
 Based on a model of spatiotemporal receptive fields in visual cortex \citep{carandini1999linearity}, temporal tuning curves provide a systematic way to compute functions \emph{through time} (\Cref{tbl:spatiotemporal}).
@@ -121,7 +121,7 @@ Interestingly, our spatiotemporal \NEF populations are equivalent to a layer of 
 We find evidence that one of our \LTI systems may possess more favourable computational properties compared to the standard \LTI system used in the \LMU, while offering a higher performance in some experiments.
 
 As a final experiment in \Cref{chp:cerebellum}, we combine the approaches outlined in the previous chapters to construct an adaptive filter model of the cerebellum \citep{fujita1982adaptive}.
-We apply our methods for constraining \NEF networks to more biological constraints (including Dale's principle; cf.~\Cref{chp:nlif}) to the recurrent Granule-Golgi circuit.
+We apply our methods for building \NEF networks with more biological constraints (including Dale's principle; cf.~\Cref{chp:nlif}) in the context of the recurrent Granule-Golgi circuit.
 This circuit can in principle implement an \LTI system generating a temporal basis as discussed in \Cref{chp:temporal_tuning}.
 Building upon the Granule-Golgi circuit we constrcut a network that can learn to decode arbitrary delays, reproducing basic features of eyeblink conditioning \citep[e.g.,][]{heiney2014cerebellardependent}.
 

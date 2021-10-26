@@ -27,7 +27,7 @@ For example, as is illustrated in \Cref{fig:temporal_responses_examples}, their 
 Theoretical work suggests that diverse temporal responses form a representation of the past stimulus history \citep{grossberg1989neural,howard2014unified,voelker2018improving} and could, for example, support delay learning in the cerebellum (\cite{fujita1982adaptive,medina2000computer}; see also \Cref{chp:cerebellum}).
 While spatiotemporal neural responses have originally been extensively studied in visual cortex \citep[e.g.,][]{deangelis1993spatiotemporal,carandini1999linearity}, more recent evidence indicates that various brain areas---including hippocampus, striatum, and cerebellum---possess neurons with pronounced temporal responses \citep[e.g.,][]{lusk2016cerebellar}.
 
-In many cases, it is uncertain how these temporal response patterns come to be; that is, whether the temporal responses are a result of intrinsic neural properties, network-level effects, or a combination of both. 
+In many cases, it is uncertain how these temporal response patterns come to be; that is, whether the temporal responses are a result of intrinsic neural properties, network-level effects, or a combination of both.
 In this section, we build upon a linear filter model of temporal tuning \citep{watson1983look,adelson1985spatiotemporal} that is agnostic to these questions and that can be easily integrated into the \NEF as a generalisation of the dynamics principle.
 We first review some types of temporal response patterns observed in biology, describe our extension to the \NEF, and then discuss examples of how this theory can be used in practice.
 
@@ -248,10 +248,10 @@ We have
 	\label{eqn:weight_optimise_currents_temporal_no_trafo}
 \end{align}
 where $\delta_{\theta}(t) = \delta(t - \theta)$ is a shifted Dirac delta.
-Correspondingly $(\mathfrak{x}_k \ast \delta_{\theta})(t) = \mathfrak{x}_k(t - \theta)$, and $a_j(\mathfrak{x}_k \ast \delta_\tau)$ is merely the activity of the $j$th pre-neuron at time $-\tau$.
+Correspondingly $(\mathfrak{x}_k \ast \delta_{\theta})(t) = \mathfrak{x}_k(t - \theta)$, and so $a_j(\mathfrak{x}_k \ast \delta_\tau)$ is the activity of the $j$th pre-neuron at time $-\tau$.
 
-The left-hand side of \cref{eqn:weight_optimise_currents_temporal_no_trafo} is the current required to obtain our desired temporal tuning from \cref{eqn:temporal_tuning_curve}; the right-hand side uses the pre-population temporal tuning and the synaptic filters as a \emph{spatiotemporal function basis} to decode the desired currents.
-While we know that randomly choosing spatial encoders $\vec e_j$ results in diverse \emph{spatial} pre-population tuning (\Cref{sec:dendritic_computation_theory}), we discuss in \Cref{sec:temporal_bases} how this basis can be made as temporally diverse as possible.
+The term before the minus sign in \cref{eqn:weight_optimise_currents_temporal_no_trafo} is the current required to obtain our desired temporal tuning from \cref{eqn:temporal_tuning_curve}; the term after the minus sign uses the pre-population temporal tuning and the synaptic filters as a \emph{spatiotemporal function basis} to decode the desired currents.
+While we know that randomly choosing spatial encoders $\vec e_j$ results in diverse \emph{spatial} pre-population tuning (\Cref{sec:dendritic_computation_theory}), we discuss in \Cref{sec:temporal_bases} how this basis can be made as \emph{temporally} diverse as possible.
 Note that our optimisation problem is in principle similar to adaptive filters \citep[e.g.,][]{fujita1982adaptive}, but without the online adaptation.
 We construct truly \emph{adaptive} filters in \Cref{sec:adaptive_filter} and \Cref{chp:cerebellum}.
 
@@ -260,10 +260,10 @@ Instead, we take advantage of the fact that our temporal tuning curves are defin
 Correspondingly, we only minimise the error at a single point in time, namely $t = 0$, but for a large set of input samples $\mathfrak{x}_k$.
 We can thus tabulate \cref{eqn:weight_optimise_currents_temporal_no_trafo} as
 \begin{align*}
-	\vec w_i = \arg\min_{\vec w_i} E = \| \mat A_i \vec w_i - \vec J_i \|_2^2 \quad\quad \Rightarrow \quad\quad \vec w_i = \mat A_i^+ \vec J_i \,, \quad\quad \text{where} \quad \mat A_i \in \mathbb{R}^{N \times m}, \quad \vec J_i \in \mathbb{R}^n \,,
+	\vec w_i = \arg\min_{\vec w_i} \| \mat A_i \vec w_i - \vec J_i \|_2^2 \quad\quad \Rightarrow \quad\quad \vec w_i = \mat A_i^+ \vec J_i \,, \quad\quad \text{where} \quad \mat A_i \in \mathbb{R}^{N \times m}, \quad \vec J_i \in \mathbb{R}^n \,,
 \end{align*}
-where $\mat A_i^+$ is the Moore-Penrose pseudo-inverse.
-Put differently, and assuming that $\mathfrak{x}_k$ is finite and that all quantities have been appropriately sampled, minimising \cref{eqn:weight_optimise_currents_temporal_no_trafo} is the same kind of convex optimisation problem previously encountered in \Cref{sec:nef_extensions}.
+and where $\mat A_i^+$ is the Moore-Penrose pseudo-inverse.
+Put differently, and assuming that $\mathfrak{x}_k$ is finite and that all quantities have been appropriately sampled, minimising \cref{eqn:weight_optimise_currents_temporal_no_trafo} is the same kind of convex optimisation problem previously encountered in \Cref{sec:nef_extension}.
 
 The primary challenge in solving this optimisation problem lies in selecting suitable input signals $\mathfrak{x}_k$ \citep[cf.][Section~10.2.5]{verhaegen2007filtering}---we discuss this in more detail in \Cref{sec:solve_dynamics_nonlinear_neurons}.
 Choosing $\mathfrak{x}_k$ is particularly important if the desired tuning cannot be realised precisely; the frequency content of the training signals then determines the regime over which the approximation works well.
@@ -278,7 +278,7 @@ We have:
 	\right]^2 \,.
 	\label{eqn:weight_optimise_currents_temporal}
 \end{align}
-As we explain in far more detail below, this equation unifies the \NEF representation, transformation, and dynamics principle.
+As we explain in far more detail below, this equation unifies the \NEF representation, transformation, and dynamics principles.
 To summarise:
 \begin{enumerate}[1.]
 	\item \emph{Representation.} To find identity decoders $\mat D_{\theta'}$, use \cref{eqn:weight_optimise_currents_temporal_no_trafo}.
