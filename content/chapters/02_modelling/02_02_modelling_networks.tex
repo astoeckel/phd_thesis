@@ -46,7 +46,7 @@ These traverse the nanometer-scale gap between the pre- and post-synapse, the \e
 This---directly or indirectly---causes ion channels in the post-neuron to open.
 In turn, the permeability of the post-neuron for that particular ion species changes.
 
-¸The resulting synaptically mediated membrane potential fluctuations are called \emph{post-synaptic potentials} (\PSPpl).
+The resulting synaptically mediated membrane potential fluctuations are called \emph{post-synaptic potentials} (\PSPpl).
 Depending on the type of ion channels opened or closed, the \PSP can either drive the neuron towards more positive voltages (if sodium channels are opened), or negative voltages (e.g., if potassium or chloride channels are opend).
 Positive \PSPpl are referred to as \emph{excitatory} (\EPSP), negative changes as \emph{inhibitory} (\IPSP).
 %Correspondingly, we distinguish excitatory and inhibitory post-synaptic potentials (EPSPs) and (IPSPs).
@@ -146,7 +146,7 @@ Convolutions such as \cref{eqn:synapse_impulse} can alternatively be expressed a
 \begin{align}
 	g(t) &= \mathcal{F}^{-1} \bigl(\mathcal{F}(h) \mathcal{F}(u) \bigr)(t) \,,
 \end{align}
-where $\mathcal{F}$ is the forward Fourier transformation, and $\mathcal{F}^{-1}$ its inverse.
+where $\mathcal{F}$ is the forward Fourier transform, and $\mathcal{F}^{-1}$ its inverse.
 From this signal-processing perspective, the synaptic dynamics attenuate frequencies in the input spike-train; they act as a \emph{filter}.
 The synaptic dynamics discussed so far attenuate low frequencies far less than higher frequencies; they are thus referred to as \emph{low-pass filters}.
 
@@ -221,12 +221,12 @@ This is depicted in \Cref{fig:lif}.
 	\label{fig:izhikevich_whichmod_figure1}
 \end{figure}
 
-\Cref{fig:neuron_voltage_traces} depicts a comparison between the Hodgkin-Huxley-type and \LIF dynamics.
+\Cref{fig:neuron_voltage_traces} depicts a comparison between Hodgkin-Huxley-type and \LIF dynamics.
 The reset and threshold potential of the \LIF neuron model have been tuned to match the sub-threshold membrane potentials observed in the Hodgkin-Huxley neuron.
 In both cases---apart from the obviously missing super-threshold dynamics---the inter-spike-interval decreases the larger $J$, leading to a higher spike rate.
 This suggests a characterisation of neurons in terms of their \emph{response curve} $G[J]$ (\Cref{fig:neuron_response_curves})
 \begin{align}
-	G[J] &= \lim_{T \to \infty} \frac{n_\mathrm{spikes}(J, T)}{T} \,, & \text{where } n_\mathrm{spikes}(J, T) &= \text{\#spikes for input $J$ over a period $T$} \,.
+	G[J] &= \lim_{T \to \infty} \frac{n_\mathrm{spikes}(J, T)}{T} \,, & \text{where } n_\mathrm{spikes}(J, T) &= \text{\#spikes for input $J$ over a period $T$.}
 	\label{eqn:response_curve}
 \end{align}
 Of course, this only makes sense if we assume that the neuron has a non-zero steady-state activity for a constant superthreshold input current.
@@ -330,7 +330,7 @@ To actually simulate an \SNN, we feed an external input (e.g., a set of currents
 There are numerous general-purpose simulator software packages that do this efficiently, e.g., NEST \citep{gewaltig2007nest}, Brian \citep{stimberg2019brian}, GeNN \citep{yavuz2016genn}, or Nengo \citep{bekolay2014nengo}.
 
 The most important question---and one that we pursue for the remainder of this thesis---is how to ultimately select $\mat W$.
-For the artificial neural networks (\ANNpl) used in machine learning (\Cref{fig:neural_networks_c}), the astoundingly successful answer is to use stochastic gradient descent on a loss function $E$, i.e., $\dot{\mat W} = -\eta \nabla_{\mat W} E(\vec a_k, \vec {\hat a_k})$, where $\eta$ is a learning rate, $\vec a_k$ is the desired output activity for an input sample $\vec x_k$, and $\vec{\hat a_k}$ is the actual output \citep{lecun2015deep}.
+For the artificial neural networks (\ANNpl) used in machine learning (\Cref{fig:neural_networks_c}), the astoundingly successful answer is to use stochastic gradient descent (\SGD) on a loss function $E$, i.e., $\dot{\mat W} = -\eta \nabla_{\mat W} E(\vec a_k, \vec {\hat a_k})$, where $\eta$ is a learning rate, $\vec a_k$ is the desired output activity for an input sample $\vec x_k$, and $\vec{\hat a_k}$ is the actual output \citep{lecun2015deep}.
 For example, one common choice for the loss function is $E(\vec a_k, \vec {\hat a_k}) = \|\vec a_k - \vec{\hat a}_k\|^2$.
 
 Similar gradient-descent global optimisation methods can be applied in the context of \SNNpl as well.
@@ -348,7 +348,7 @@ The resulting $\mat W$ can then be used in a spiking context.
 Notably, such global optimisation methods can be useful when modelling neurobiological systems.
 For example, there are striking similarities between the neural tuning observed in visual cortex and the learned tuning of neurons in hierarchical image classification networks \citep{yamins2016using}.
 However, this is, to some degree, accidental, and not explicitly imposed.
-As we discussed at the beginning of this chapter, it is desirable build models that reliably adhere to certain constraints---such as the aforementioned tuning properties.
+As we discussed at the beginning of this chapter, it can be desirable build models that reliably adhere to certain constraints---such as the aforementioned tuning properties.
 
 \subsection{Neural Tuning and Population Codes}
 \label{sec:neural_tuning}
@@ -408,7 +408,7 @@ Borrowing some notation from the next section, the activity of the neuron $a(x)$
 		= G \bigl[ \alpha \langle e, x \rangle + \beta \bigr] \,.
 	\label{eqn:tuning_curve_from_receptive_field}
 \end{align}
-Here, $\langle e, x \rangle$ is the inner product between the receptive field and the stimulus (see \Cref{app:functional_analysis} for an introduction to functional analysis and the corresponding definitions).
+Here, $\langle e, x \rangle$ is the inner product between the receptive field and the stimulus.
 Furthermore, $G$ is a rate approximation of the neuron model (see previous subsection), and, $\alpha > 0$ and $\beta$ translate the inner product into a neural input current.
 
 Importantly, if the stimulus and receptive field are normalised, then $\langle e, x \rangle$ is the cosine similarity between the two functions.

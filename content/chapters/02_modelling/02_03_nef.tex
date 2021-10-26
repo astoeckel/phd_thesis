@@ -6,7 +6,7 @@
 \begin{figure}[p]
 	\includegraphics{media/chapters/02_modelling/02_03/nef_overview.pdf}
 	\caption[Overview of the Neural Engineering Framework]{Overview of the Neural Engineering Framework (\NEF).
-	\textbf{(A,~B)} Researchers provide a mathematical model, as well as a set of constraints.
+	\textbf{(A,~B)} Researchers provide a mathematical model or sampled data (sampled data shown here are random and only for illustration purposes), as well as a set of constraints.
 	In this example, constraints are the overall connectivity, tuning properties and filter properties of post-synaptic currents. $\angle \vec x$ denotes the angle of $\vec x = (x_1, x_2)$, i.e., $\angle \vec x = \mathrm{arctan2}(x_2, x_1)$. \textbf{(C)} The \NEF can be used to systematically construct a spiking neural network from the given data. This network optimally implements the mathematical model under the given constraints.
 	\textbf{(D)} Simulating the network gives insights into how well the mathematical description can be implemented on a neural substrate.
 	Spike raster plots with neural activity depict output spikes (short vertical lines) for each neuron (corresponding to rows) over time.}
@@ -97,7 +97,7 @@ Systems that fall into the latter \enquote{purely digital} category are SpiNNake
 The primary motivation behind neuromorphic hardware is to construct computing hardware that approaches the energy efficiency of biological brains \citep{mead1990neuromorphic,boahen2017neuromorph}.
 Compared to conventional computer architectures, these energy savings are mostly due to the asynchronous nature of the computational units, as well as the reduction in communication bandwidth due to event-based signalling \citep{painkras2013spinnaker}.
 Furthermore, mixed-signal neuromorphic computers with analogue model circuits benefit from each computational unit operating close to the theoretically required minimum energy \citep{boahen2017neuromorph}.
-However, compared to purely digital systems, such analogue designs are much more challenging from an engineering perspective.
+However, compared to purely digital systems, such analogue designs are much more challenging to build from an engineering perspective.
 
 Being able to reliably simulate large spiking neural networks with a low energy footprint would be a major scientific breakthrough.
 For example, this would enable large-scale brain simulations that are infeasible with conventional supercomputers \citep{calimera2013human}.

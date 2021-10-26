@@ -27,7 +27,7 @@ Similarly, in the context of more complex neuron models, it is important to ask 
 	\textbf{(A, B)} Spike raster of a recurrently connected \NEF population with $100$ neurons implementing a $\SI{3.5}{\hertz}$ oscillator.
 	Neurons are sorted by the angle of their two-dimensional temporal tuning vector $\vec e^\mathrm{t}$.
 	\textbf{(C)} Note how the voltage traces of individual neurons resemble tonic bursting (cf.~\Cref{fig:izhikevich_whichmod_figure1c}).
-	Inspired by \citet{voelker2019}, Figure~3.2, p.~48.
+	Inspired by \citet[Figure~3.2, p.~48]{voelker2019}.
 	}
 	\label{fig:oscillator_phasic_bursts}
 \end{figure}
@@ -111,7 +111,7 @@ Such constraints include Dale's principle (\Cref{sec:nef_nonneg}), multi-channel
 Our techniques are based on a linear least squares current-space loss function (\Cref{sec:nef_decode_current}) that can be enhanced by a subthreshold relaxation term (\Cref{sec:nef_subthreshold}), resulting in a convex quadratic program.
 
 Analysing the dynamics underlying a simple multi-compartment neuron model, we found that networks comprised of two-compartment neurons can compute a wide range of benchmark functions at substantially smallers error than equivalent multi-layer networks (\Cref{sec:two_comp_lif}).
-In particular, benchmark functions include nonnegative multiplication, also referred to as \emph{gain modulation} in neurobiology \citep{salinas2000gain}.
+In particular, one such benchmark function is nonnegative multiplication, also referred to as \emph{gain modulation} in neuroscience \citep{salinas2000gain}.
 While neurons with three and more compartments can approximate four-quadrant multiplication, the additional computational power may not outweigh the more complex weight optimisation procedure (\Cref{sec:nlif_opt}).
 
 Temporal tuning can be seen as a generalisation of the \NEF dynamics principle that facilitates realising empirically observed spatiotemporal receptive fields, and can account for heterogeneous and higher-order synaptic filters without explicitly requiring access to higher-order differentials (\Cref{sec:lti_complex_networks}).
@@ -119,7 +119,7 @@ As before, we only rely on a linear least-squares loss (\Cref{sec:temporal_tunin
 Asking what optimal temporal tuning may look like, we suggested an autoregressive method for solving for \LTI systems generating temporal bases with a subsequent \emph{information erasure} step to enforce a rectangle window (\Cref{sec:lti_autoregression}).
 Using this technique, we provided a novel derivation of the \LDN system (\Cref{sec:ldn_derivation}), and discovered an alternative \emph{modified Fourier system} that outperforms the \LDN in a variety of benchmark tasks.
 
-Using any of our \LTI systems for approximating a sliding-window transformation in a spiking neuron population generates temporal activity patterns that resemble time-cells (\Cref{sec:solve_dynamics_nonlinear_neurons}).
+Realising any of our \LTI systems for approximating a sliding-window transformation in a spiking neuron population generates temporal activity patterns that resemble time-cells (\Cref{sec:solve_dynamics_nonlinear_neurons}).
 These same systems, overall, provide a powerful basis for computing multivariate spatiotemporal functions (\Cref{sec:spatiotemporal}).
 This includes online-learning of weights in an adaptive filter context (\Cref{sec:adaptive_filter}).
 We found that spatiotemporal \NEF populations with full-rank temporal encoding matrices are equivalent to the Legendre Memory Unit (\LMU; \cite{voelker2019lmu}).

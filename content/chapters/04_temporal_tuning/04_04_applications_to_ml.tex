@@ -317,7 +317,7 @@ In this case, we no longer need to rely on $\vec m_t$ to approximate a delayed v
 Of course, this requires $\mathcal{O}(N)$ memory and may be infeasible for some applications.
 
 Crucially, for some discrete bases, keeping $\vec u_t$ in memory allows us to construct a \emph{perfect} sliding-window transformation with $\mathcal{O}(qN)$ operations per window period $\theta$, where $N$ is fully independent of $q$.
-Below, we discuss the discrete Haar wavelets and the sliding discrete Fourier transformation.
+Below, we discuss the discrete Haar wavelets and the sliding discrete Fourier transform.
 We compare these bases to other sliding transformations in the next section.
 %This is better than using the \citet{gardner1995efficient} general-purpose \emph{online} FIR convolution, which requires $\mathcal{O}(q N \log(N))$ time and $\mathcal{O}(N\log(N))$ memory.
 
@@ -342,7 +342,7 @@ To see this, assume that we store both our current state $\vec m_t$ and the last
 Sliding one of the discrete basis functions $W_i$ over $\vec u_t$, there are at most three samples in the input history that cross a transition point (arrows in the figure) and thus influence the value of $\vec m_t$.
 Instead of re-convolving with $W_i$ and $\vec u_t$ in every time-step, we update $\vec m_t$ by accounting for the transitioning samples.
 
-\subsubsection{Sliding Discrete Fourier Transformation (SDFT)}
+\subsubsection{Sliding Discrete Fourier Transform (SDFT)}
 
 Similar $\mathcal{O}(q)$ update algorithms can be obtained for the discrete Fourier and cosine basis (cf.~\Cref{sec:function_bases}), namely the sliding discrete Fourier (SDFT; \cite{springer1991sliding,jacobsen2003sliding}) and cosine transformation (SDCT; \cite{kober2004fast}).
 Particularly, the SDFT is given as (using real instead of complex coefficients):
@@ -439,7 +439,7 @@ Note the similarity to a harmonic oscillator LTI system with an additional delay
 %\begin{figure}
 %	\centering
 %	\includegraphics{media/chapters/04_temporal_tuning/04_04/optimal_sliding_window_trafo.pdf}
-%	\caption[A sliding Fourier transformation with optimal memory and time requirements]{A sliding Fourier transformation with optimal memory and time requirements. This system performs a sliding basis transformation while not requiring more than $\mathcal{O}(q)$ space and $\mathcal{O}(qN)$ time per sliding window period $\theta$, where $N$ can be on the order of $q$.
+%	\caption[A sliding Fourier transform with optimal memory and time requirements]{A sliding Fourier transform with optimal memory and time requirements. This system performs a sliding basis transformation while not requiring more than $\mathcal{O}(q)$ space and $\mathcal{O}(qN)$ time per sliding window period $\theta$, where $N$ can be on the order of $q$.
 %	\textbf{(A)} The input signal is downsampled to (more than) $q$ samples per $\theta$ and convolved with the windowed Fourier basis. If so desired, the $q$ signals can be upsampled to match the original rate.
 %	This may be important if there are subsequent nonlinear transformations, as in the LMU.
 %	\textbf{(B)} In the simplest case, a downsampler is a low-pass filter passing on a fraction of the input samples.
@@ -449,7 +449,7 @@ Note the similarity to a harmonic oscillator LTI system with an additional delay
 %\end{figure}
 %
 %Correspondingly, as is depicted in \Cref{fig:optimal_sliding_window_trafo}, we can envision a system with $\mathcal{O}(q)$ memory complexity and a $\mathcal{O}(qN)$ time complexity for processing a single time-window of length $\theta$ \emph{online}, where $N \geq q$ may be linear in $q$.
-%Depending on the quality of the downsampler, the system implements the windowed Fourier transformation with little distortion.
+%Depending on the quality of the downsampler, the system implements the windowed Fourier transforma with little distortion.
 %The main downside of such a system---aside from the more complex implementation and larger constant factors---is that resampling introduces a small delay.
 
 

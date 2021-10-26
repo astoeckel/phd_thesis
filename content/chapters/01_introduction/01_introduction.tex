@@ -22,7 +22,7 @@ Variations in response-time on the order of milliseconds can make the difference
 From the perspective of computer engineering it seems almost implausible that biological systems should be capable of rapid coordinated action---especially considering that the elements that make up nervous systems compute asynchronously and possess strong intrinsic dynamics.
 After all, when constructing artificial computers, asynchronicity and dynamics are mere annoyances of physical reality that engineers seek to eliminate.
 Typical microprocessors spend a sizeable portion of their energy budget on distributing clock signals \citep[e.g.,][]{zhang2008injectionlocked}, and digital circuits are meticulously designed to switch between clearly interpretable voltage states as quickly as possible \citep[e.g.,][Chapter~4]{weste2011cmos}.
-Similarly, on an algorithmic level, computer scientists assume that neurons in artificial neural networks compute instantaneously, while time progresses in discrete, synchronous steps \citep[e.g.,][Chapter~10]{goodfellow2016deep}
+Similarly, on an algorithmic level, computer scientists assume that neurons in artificial neural networks compute instantaneously, while time progresses in discrete, synchronous steps \citep[e.g.,][Chapter~10]{goodfellow2016deep}.
 
 This juxtaposition of artificial and biological systems gives rise to an old, but still common (and rather subtle) mis\-cha\-rac\-te\-ri\-sa\-tion---namely, the idea that biological information processing is slow and that, compared to digital computers, biological brains compensate for their slowness with massive parallelism (e.g., \cite{vonneumann1958computer}, pp.~50f).
 There is, for sure, a kernel of truth to this statement.
@@ -38,7 +38,7 @@ Put differently, and rephrasing the above \Citeauthor{churchland1992computationa
 	\kern-158mm\includegraphics{media/chapters/01_introduction/ff_vs_rec_response_time.pdf}
 	\caption[Neural networks can be faster than their fastest time-constant]{Neural networks can be faster than their fastest feed-forward time-constant. See \Cref{sec:nef,sec:temporal_tuning_lti} for more information.
 	\textbf{(A)} Feed-forward computation with \SI{100}{\milli\second} first-order low-pass filters (\emph{synaptic filters}) in its forward path. Sending a pulse signal $u(t)$ into this network, we receive a low-pass filtered output $x(t)$ that \emph{slowly} converges to $u(t)$.
-	\textbf{(B)} By adding recurrent connections and solving for weight matrices $\mat W$, $\mat W_\mathrm{rec}$, we can (in the limit of $n \to \infty$) realise any dynamical system, including low-pass filters with time-constant $t' < \tau$ (coloured lines;  cf.~\cite[Chapter~8]{eliasmith2003neural}).
+	\textbf{(B)} By adding recurrent connections and solving for weight matrices $\mat W$, $\mat W_\mathrm{rec}$, we can (in the limit of $n \to \infty$) realise any dynamical system, including low-pass filters with time-constants $\tau' < \tau$ (coloured lines;  cf.~\cite[Chapter~8]{eliasmith2003neural}).
 	}
 	\label{fig:ff_vs_rec_response_time}
 \end{figure}
