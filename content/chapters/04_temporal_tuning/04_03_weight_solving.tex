@@ -3,7 +3,7 @@
 \section{Accounting for Neural Nonlinearities}
 \label{sec:recurrent_weights}
 
-Minimising the linear quadratic loss in \cref{eqn:weight_optimise_currents_temporal} results in weights that---in some \emph{linear} networks (cf.~\Cref{sec:temporal_tuning_lti})---optimally realise LTI systems while at the same time compensating for synaptic filters.
+Minimising the linear quadratic loss in \cref{eqn:weight_optimise_currents_temporal} results in weights that---in some \emph{linear} networks (cf.~\Cref{sec:temporal_tuning_lti})---optimally realise \LTI systems while at the same time compensating for synaptic filters.
 As we mentioned before, this focus on linear networks is not a major obstacle.
 Linear activations can be emulated in networks of nonlinear neurons using \NEF identity decoders (cf.~\Cref{sec:nef_representation}).
 Being able to do this is not just of theoretical interest. To the contrary, implementing linear dynamics on top of nonlinear networks is useful in practice.
@@ -44,7 +44,7 @@ Additionally, each population now consists of hundreds of neurons, compared to t
 
 This poses two new challenges.
 First, it is unclear how to assign temporal tuning curves to each neuron.
-Before, we had a one-to-one mapping between linear units and the impulse responses of the LTI system we wanted to realise; we now need to assign $q$ impulse responses to $n$ neurons, where typically $n \gg q$.
+Before, we had a one-to-one mapping between linear units and the impulse responses of the \LTI system we wanted to realise; we now need to assign $q$ impulse responses to $n$ neurons, where typically $n \gg q$.
 %For the orthonormal basis functions discussed above, $n$ must generally be much larger than $q$.
 %We analysed this in \Cref{sec:dendritic_computation_theory_numerical}, where we saw that a relatively large number of neurons is required to span a separate orthogonal dimension.
 Second, the selection of input signals $\mathfrak{x}_k$ is more difficult.
@@ -59,21 +59,21 @@ We must sample $\mathfrak{a}_j(\mathfrak{x}_k)$ densely enough to capture the cu
 \begin{figure}
 	\includegraphics{media/chapters/04_temporal_tuning/vectorial_temporal_encoder.pdf}
 	\caption[Linearly combining impulse responses to obtain temporal encoders]{Linearly combining impulse responses to obtain temporal encoders. \textbf{(A)} Starting with a set impulse responses $\mathfrak{h}_i(t)$, we can generate temporal tuning for each neuron by linearly combining these basis functions using an encoding vector $\vec{e}^\mathrm{t}$.
-	\textbf{(B)} When choosing normalised $\vec{e}^\mathrm{t}$ (e.g., $\| \vec{e}^\mathrm{t} \| = 1$), this vector is directly equivalent to the spatial encoder $\vec e$ when realising an LTI system as multiple spatial dimensions in the \NEF; each \enquote{direction} corresponds to a different temporal encoding.
+	\textbf{(B)} When choosing normalised $\vec{e}^\mathrm{t}$ (e.g., $\| \vec{e}^\mathrm{t} \| = 1$), this vector is directly equivalent to the spatial encoder $\vec e$ when realising an \LTI system as multiple spatial dimensions in the \NEF; each \enquote{direction} corresponds to a different temporal encoding.
 	}
 	\label{fig:vectorial_temporal_encoder}
 \end{figure}
 
-One method for realising a $q$-dimensional LTI system with state-space matrices $\mat A$, $\mat B$ in a non-linear network with $n$ neurons is to simply set each $\mathfrak{e}_i$ to a linear combination of the system impulse responses $\mathfrak{h}_j$ (cf.~\Cref{fig:vectorial_temporal_encoder}):
+One method for realising a $q$-dimensional \LTI system with state-space matrices $\mat A$, $\mat B$ in a non-linear network with $n$ neurons is to simply set each $\mathfrak{e}_i$ to a linear combination of the system impulse responses $\mathfrak{h}_j$ (cf.~\Cref{fig:vectorial_temporal_encoder}):
 \begin{align}
 	\mathfrak{e}_i(t) &= \sum\nolimits_{j = 1}^q {e}^\mathrm{t}_j \exp(\mat A t) \mat B = \sum\nolimits_{j = 1}^q {e}^\mathrm{t}_j \mathfrak{h}_j(t)  = \langle \vec{e}_i^\mathrm{t}, \vec{\mathfrak{h}}(t) \rangle \,,
 	\label{eqn:temporal_encoding_vector}
 \end{align}
 where $\vec{e}_i^\mathrm{t} \in \mathbb{S}^q$ is a \emph{temporal encoding vector}, and $\mathbb{S}^q$ is the $q$-dimensional unit sphere.
-Since $\vec{e}_i^\mathrm{t}$ is normalised to unit length, $\vec{e}_i^\mathrm{t}$ is \emph{exactly equivalent} to the spatial encoding vector $\vec e_i$ when constructing an LTI system of order $q$ using the NEF dynamics principle.
+Since $\vec{e}_i^\mathrm{t}$ is normalised to unit length, $\vec{e}_i^\mathrm{t}$ is \emph{exactly equivalent} to the spatial encoding vector $\vec e_i$ when constructing an \LTI system of order $q$ using the \NEF dynamics principle.
 
 The difference between the dynamics principle and temporal tuning curves is largely conceptual.
-Using the NEF dynamics principle, our neuron population represents a $q$-dimensional quantity, while, using temporal tuning, the population represents a scalar---the individual neurons possess different temporal tuning, which we can exploit when solving for weights.
+Using the \NEF dynamics principle, our neuron population represents a $q$-dimensional quantity, while, using temporal tuning, the population represents a scalar---the individual neurons possess different temporal tuning, which we can exploit when solving for weights.
 
 \subsubsection{Spatiotemporal tuning}
 Interestingly, the temporal tuning paradigm suggests a way to combine temporal and spatial encoding (i.e., $\vec{e}_i^\mathrm{t} \in \mathbb{S}^q$ and $\vec{e}_i \in \mathbb{S}^d$).
@@ -87,7 +87,7 @@ where \enquote{$\otimes$} is the outer product, and $\mat E^\mathrm{t} \in \math
 Populations with this tuning represent $d$-dimensional quantities with temporal tuning of order $q$ and can be harnessed to approximate \emph{nonlinear} functions over space and time.
 %Note that choosing $\mat E_i^\mathrm{t}$ as an outer product of $\vec e_i$ and $\vec e_i^\mathrm{t}$ results in a rank one matrix; this limits the types of spatiotemporal functions that can be decoded.
 We discuss this in more detail in \Cref{sec:spatiotemporal}.
-Curiously, the matrix $\mat E_i^\mathrm{t}$ is also implicitly used in the Legendre Memory Unit (LMU; \cite{voelker2019lmu}); we discuss this in \Cref{sec:lmu}.
+Curiously, the matrix $\mat E_i^\mathrm{t}$ is also implicitly used in the Legendre Memory Unit (\LMU; \cite{voelker2019lmu}); we discuss this in \Cref{sec:lmu}.
 
 \subsubsection{Implicitly solving for temporal bases}
 
@@ -107,10 +107,10 @@ Curiously, the matrix $\mat E_i^\mathrm{t}$ is also implicitly used in the Legen
 \end{figure}
 
 One of our goals is to implement networks that generate $q$ windowed temporal basis functions $\mathfrak{b}_1$, $\ldots$, $\mathfrak{b}_q$.
-To this end, we can proceed as discussed in \Cref{sec:temporal_bases}: that is, we solve for an LTI system that approximately generates this basis, and use temporal encoding vectors $\vec{e}^t_i$ to map the impulse response of this system onto neurons.
+To this end, we can proceed as discussed in \Cref{sec:temporal_bases}: that is, we solve for an \LTI system that approximately generates this basis, and use temporal encoding vectors $\vec{e}^t_i$ to map the impulse response of this system onto neurons.
 
 An alternative method is to directly set the temporal encoders to a linear combination of our desired windowed basis functions, in other words $\mathfrak{e}_i(t) = \langle \vec{e}^\mathrm{t}_i, \mathfrak{b}(t) \rangle  w(t)$.
-This way, we implicitly solve for the dynamics of an LTI system that generates this system.%
+This way, we implicitly solve for the dynamics of an \LTI system that generates this system.%
 \footnote{In practice, this works particularly well for gradually decaying dynamics, for example exponential or Bartlett windows $w(t)$. Rectangle windows are better realised using our information erasure technique.}
 Either way, the neurons in the population are tuned to a linear combination of $q$ state dimensions.
 
@@ -137,7 +137,7 @@ We can generate such \enquote{coloured} noise $\mathfrak{x}_k$ with bandwidth $\
 \end{align}
 Here, $f_\ell$ is a basis function in the Fourier series (eq.~\ref{eqn:fourier_series}), and $F_\ell$ is the corresponding frequency.
 
-Now, assuming that we realise an LTI system of order $q$ in a network with temporal encoding vectors $\vec e_i^t$ (eq.~\ref{eqn:spatio_temporal_encoding_vector}), and that $J_i(\xi)$ is part of the response curve $G_i(\xi)$ (where $\xi$ is the \enquote{activation}), we can write the temporal tuning curve $a_i(\vec{\mathfrak{x}}_k)$ (cf.~\Cref{def:linear_temporal_tuning}) for scalar $\mathfrak{x}_k$ as
+Now, assuming that we realise an \LTI system of order $q$ in a network with temporal encoding vectors $\vec e_i^t$ (eq.~\ref{eqn:spatio_temporal_encoding_vector}), and that $J_i(\xi)$ is part of the response curve $G_i(\xi)$ (where $\xi$ is the \enquote{activation}), we can write the temporal tuning curve $a_i(\vec{\mathfrak{x}}_k)$ (cf.~\Cref{def:linear_temporal_tuning}) for scalar $\mathfrak{x}_k$ as
 \begin{align*}
 	a_i(\vec{\mathfrak{x}}_k)
 		&= G_i\left[ \sum_{j = 0}^q e_j^\mathrm{t} \int_{0}^T \!\!\! \vec{\mathfrak{x}}_k(-\tau) \vec{\mathfrak{h}}_j(\tau) \,\mathrm{d}\tau \right]
@@ -146,7 +146,7 @@ Now, assuming that we realise an LTI system of order $q$ in a network with tempo
 	\mathfrak{h}_j(t) &= \sum_{\ell = 0}^\infty H_{j\ell} f_i\bigl(tT^{-1}\bigr) \,.
 \end{align*}
 Here, we exploit that the product of the generalised Fourier coefficients of two signals (with one being time reversed) corresponds to evaluating their convolution at $t = 0$.
-Making the equivalence of linear temporal tuning to the NEF dynamics principle more obvious, we can write this as $a_i(\vec{\mathfrak{x}}_k) = G_i[ \langle \vec e^\mathrm{t}, \vec{x}^\mathrm{t}(\mathfrak{x}_k) \rangle ]$, where $\vec{x}^\mathrm{t}(\mathfrak{x}_k) = \vec x_k^t$ is the result of convolving $\mathfrak{x}_k$ with all $\mathfrak{h}_j$.
+Making the equivalence of linear temporal tuning to the \NEF dynamics principle more obvious, we can write this as $a_i(\vec{\mathfrak{x}}_k) = G_i[ \langle \vec e^\mathrm{t}, \vec{x}^\mathrm{t}(\mathfrak{x}_k) \rangle ]$, where $\vec{x}^\mathrm{t}(\mathfrak{x}_k) = \vec x_k^t$ is the result of convolving $\mathfrak{x}_k$ with all $\mathfrak{h}_j$.
 
 \begin{figure}
 	\centering
@@ -154,7 +154,7 @@ Making the equivalence of linear temporal tuning to the NEF dynamics principle m
 	{\phantomsubcaption\label{fig:signal_sampling_a}}%
 	{\phantomsubcaption\label{fig:signal_sampling_b}}%
 	\caption[Illustration of uniform activation sampling]{Illustration of uniform activation sampling.
-	\textbf{(A)} Sampling low-pass filtered noise input signals $\mathfrak{x}_k$ (example power spectrum and time-domain signal in the left half) and computing the projection onto the LTI system impulse responses $\vec{x}^\mathrm{t}$ (black crosses; same underlying impulse responses as in \Cref{fig:vectorial_temporal_encoder}) reveals a bias toward small values; same for the neural activation $\xi_k = \langle \vec{x}^\mathrm{t}_k, \vec{e}^\mathrm{t} \rangle$ (cf.~violin plot on the right; $N \approx 2000$).
+	\textbf{(A)} Sampling low-pass filtered noise input signals $\mathfrak{x}_k$ (example power spectrum and time-domain signal in the left half) and computing the projection onto the \LTI system impulse responses $\vec{x}^\mathrm{t}$ (black crosses; same underlying impulse responses as in \Cref{fig:vectorial_temporal_encoder}) reveals a bias toward small values; same for the neural activation $\xi_k = \langle \vec{x}^\mathrm{t}_k, \vec{e}^\mathrm{t} \rangle$ (cf.~violin plot on the right; $N \approx 2000$).
 	Circled white cross corresponds to the exemplary signal to the left.
 	\textbf{(B)}~Uniform activation sampling modifies the power spectrum to obtain the desired projection $\vec{x}^\mathrm{t}_k$.
 	As a result, the neural activation $\xi_k$ is spread more uniformly within $[-1, 1]$.
@@ -167,16 +167,16 @@ Making the equivalence of linear temporal tuning to the NEF dynamics principle m
 	\includegraphics{media/chapters/04_temporal_tuning/integrator_sampling_example.pdf}%
 	\caption[Impact of uniform activation sampling on realising an integrator]{
 	Impact of uniform activation sampling on realising an integrator.
-	Recurrent network of $n = 100$ spiking LIF neurons with a first-order synaptic filter $\tau = \SI{100}{\milli\second}$.
+	Recurrent network of $n = 100$ spiking \LIF neurons with a first-order synaptic filter $\tau = \SI{100}{\milli\second}$.
 	\emph{Left:} Learned feedback signal.
 	\emph{Right:} System response to a rectangle input.
-	\textbf{(A)} Passing randomly generated signals $\mathfrak{x}_k$ (here with a small RMS to exaggerate the effect) results in a non-linear feedback function.
+	\textbf{(A)} Passing randomly generated signals $\mathfrak{x}_k$ (here with a small \RMS to exaggerate the effect) results in a non-linear feedback function.
 	\textbf{(B)} Using uniform activation sampling results in the expected linear functions (dotted lines).
 	}
 	\label{fig:signal_sampling_weights}
 \end{figure}
 
-Notably, for most LTI systems, projecting the coloured noise signals from \cref{eqn:low_pass_white_noise} onto the impulse responses does not result in uniformly distributed $\vec x^\mathrm{t}_k$ (cf.~\Cref{fig:signal_sampling_a}).
+Notably, for most \LTI systems, projecting the coloured noise signals from \cref{eqn:low_pass_white_noise} onto the impulse responses does not result in uniformly distributed $\vec x^\mathrm{t}_k$ (cf.~\Cref{fig:signal_sampling_a}).
 In contrast, when solving for non-temporal decoders within the \NEF, we typically uniformly sample $\vec x$ from a unit-ball $\mathbb{B}^d$ (cf.~\cref{sec:nef_representation}).
 This ensures that $\xi = \langle \vec e, \vec x \rangle$, is approximately uniform; correspondingly, the curvature of the response curve $G_i[\xi]$ is well captured in the training samples.
 
@@ -213,11 +213,11 @@ Similar to \citet{voelker2018improving}, we qualitatively compare the resulting 
 %Finally, we explore heterogeneous synaptic filters and spatiotemporal networks.
 
 \subsubsection{Modified Fourier networks}
-In the previous section, we saw that the modified Fourier system---both with Bartlett and rectangle window---can outperform the LDN system.
-While the LDN has been constructed with spiking neural networks in mind \citep{voelker2018improving}, we have so far not tested the modified Fourier system in a neural network context.
+In the previous section, we saw that the modified Fourier system---both with Bartlett and rectangle window---can outperform the \LDN system.
+While the \LDN has been constructed with spiking neural networks in mind \citep{voelker2018improving}, we have so far not tested the modified Fourier system in a neural network context.
 
-Correspondingly, we first ensure that the two Fourier systems can be mapped onto a spiking neural network with the architecture depicted in \cref{fig:nef_dynamics_neurons_a} using the NEF dynamics principle.
-Specifically, we assume first-order synaptic filters with $\tau = \SI{100}{\milli\second}$, and $n = 1000$ LIF neurons with maximum rates between \SIrange{50}{100}{\per\second}.
+Correspondingly, we first ensure that the two Fourier systems can be mapped onto a spiking neural network with the architecture depicted in \cref{fig:nef_dynamics_neurons_a} using the \NEF dynamics principle.
+Specifically, we assume first-order synaptic filters with $\tau = \SI{100}{\milli\second}$, and $n = 1000$ \LIF neurons with maximum rates between \SIrange{50}{100}{\per\second}.
 We obtain delay decoders $\vec d_{\theta'}$ by feeding a training signal $\mathfrak{x}(t)$ into the network, and solving for weights that project the spiking activity onto $\mathfrak{x}(t - \theta')$.
 We then compute the mean delay decoding error for a test signal.%
 \footnote{
@@ -227,15 +227,15 @@ The spike trains are low-pass filtered ($\tau = \SI{25}{\milli\second}$) to appr
 	\centering
 	\includegraphics{media/chapters/04_temporal_tuning/recurrent_synaptic_weights_examples.pdf}
 	\caption[Realising temporal bases and decoding delays in a spiking neural network]{
-	Realising temporal bases and decoding delays in a spiking neural network using the \enquote{standard NEF} dynamics principle for weight computaiton.
+	Realising temporal bases and decoding delays in a spiking neural network using the \enquote{standard \NEF} dynamics principle for weight computation.
 	Same colour scheme as in \Cref{fig:delay_analysis_example}.
-	Mean delay decoding errors are the mean NRMSE for $20$ different $\theta'$. See text for a detailed description.
+	Mean delay decoding errors are the mean \NRMSE for $20$ different $\theta'$. See text for a detailed description.
 	}
 	\label{fig:recurrent_synaptic_weights_examples}
 \end{figure}
 
 Results for a bandlimited noise input signal ($\rho = \SI{3}{\hertz}$; eq.~\ref{eqn:low_pass_white_noise}) and $q = 7$ state dimensions are depicted in \Cref{fig:recurrent_synaptic_weights_examples}.
-In this particular example, all three networks achieve similar mean delay decoding errors (NRMSEs between $20\%$ and $26\%$), and the modified Fourier system outperforms the LDN system by a few percent, consistent with previous findings~(cf.~\Cref{fig:delay_analysis_boxplots}).
+In this particular example, all three networks achieve similar mean delay decoding errors (\NRMSEpl between $20\%$ and $26\%$), and the modified Fourier system outperforms the \LDN system by a few percent, consistent with previous findings~(cf.~\Cref{fig:delay_analysis_boxplots}).
 %Clearly, all three systems can be realised similarly well as spiking neural networks.
 
 \subsubsection{Systematic evaluation}
@@ -245,22 +245,22 @@ In this particular example, all three networks achieve similar mean delay decodi
 	\includegraphics{media/chapters/04_temporal_tuning/recurrent_synaptic_weights_delay.pdf}
 	\caption[Systematic comparison of different temporal bases and synaptic weight optimisation methods]{
 	Systematic comparison of different temporal bases and synaptic weight optimisation methods.
-	\textbf{(A-C)} Varying the number of neurons $n$ in the network. Lines are the median over $N = 100$ trials (at $10$ test signals per trial), error bars indicate the 25th and 75th percentile. Arrow points at the configuration used in the previous experiment and in \emph{(D)}. The two sampling methods typically outperform the standard NEF method for the chosen distribution of input signals.
-	\textbf{(D)} Comparison of the different function bases (coloured symbols) for different $q$ using the standard NEF.
+	\textbf{(A-C)} Varying the number of neurons $n$ in the network. Lines are the median over $N = 100$ trials (at $10$ test signals per trial), error bars indicate the 25th and 75th percentile. Arrow points at the configuration used in the previous experiment and in \emph{(D)}. The two sampling methods typically outperform the standard \NEF method for the chosen distribution of input signals.
+	\textbf{(D)} Comparison of the different function bases (coloured symbols) for different $q$ using the standard \NEF.
 	Boxes indicate the quartiles, notches the $99\%$ confidence interval, whiskers the minimum and maximum.
-	The Fourier bases outperform the LDN; for small $q$ the modified Fourier basis with Bartlett window can be better.
+	The Fourier bases outperform the \LDN; for small $q$ the modified Fourier basis with Bartlett window can be better.
 	}
 	\label{fig:recurrent_synaptic_weights_delay}
 \end{figure}
 
 Results of a more systematic experiment are depicted in \Cref{fig:recurrent_synaptic_weights_delay}.
-Specifically, we vary the number of neurons in the network $n$, the number of state dimensions $q$, and compare the NEF dynamics principle to our temporal tuning curve optimisation scheme (eq.~\ref{eqn:weight_optimise_currents_temporal}) with and without uniform activation sampling (see above).
-We use the default weight solver implemented in Nengo for the standard NEF (i.e., $N = \max\{500, \min\{2500, 500 q\}\}$ training samples), and $N = 1000$ samples for the temporal-tuning curve based methods.
+Specifically, we vary the number of neurons in the network $n$, the number of state dimensions $q$, and compare the \NEF dynamics principle to our temporal tuning curve optimisation scheme (eq.~\ref{eqn:weight_optimise_currents_temporal}) with and without uniform activation sampling (see above).
+We use the default weight solver implemented in Nengo for the standard \NEF (i.e., $N = \max\{500, \min\{2500, 500 q\}\}$ training samples), and $N = 1000$ samples for the temporal-tuning curve based methods.
 All other parameters and methods are as discussed above.
 
 \paragraph{Results}
-Notably, our temporal tuning-curves based weight optimisation methods outperform the standard NEF method for a wide range of neural population sizes $n$.
-For all tested combinations of $q$ and $n$ the modified Fourier network with rectangle window significantly ($p < 0.1\%$) outperforms the LDN.
+Notably, our temporal tuning-curves based weight optimisation methods outperform the standard \NEF method for a wide range of neural population sizes $n$.
+For all tested combinations of $q$ and $n$ the modified Fourier network with rectangle window significantly ($p < 0.1\%$) outperforms the \LDN.
 Interestingly, using uniform activity sampling typically results in a slightly higher error than using na\"ive sampling.
 
 \begin{figure}
@@ -272,7 +272,7 @@ Interestingly, using uniform activity sampling typically results in a slightly h
 	\caption[Analysing the feedback weight matrices obtained using different optimisation methods]{Analysing the feedback weight matrices obtained using different optimisation methods.
 	All data is for the modified Fourier basis with rectangle window for $q = 7$ at $n = 100$ neurons.
 	\textbf{(A)}~Sweep over the test signal bandwidth $\rho$ (training is at $\rho = \SI{3}{\hertz}$; cf.~arrow); lines are the median over $N = 100$ networks and ten test signals each, shaded areas indicate quartiles.
-	The temporal tuning-curve methods outperform the standard NEF for all $\rho$, however, the discrepancies are higher for small $\rho$.
+	The temporal tuning-curve methods outperform the standard \NEF for all $\rho$, however, the discrepancies are higher for small $\rho$.
 	\textbf{(B)}~Normalised singular values of an exemplary feedback matrix $\mat W$. All methods generate a matrix of effective rank $q = 7$ (i.e., $\sigma_i < 10^{-10}$ for $i > 7$).
 	\textbf{(C)} Effect of the feedback matrix $\mat W$ on the first three state dimensions $j$ when varying $m_1(t)$.
 	The functions obtained using the temporal tuning methods are smoother.
@@ -283,12 +283,12 @@ Interestingly, using uniform activity sampling typically results in a slightly h
 \paragraph{Discussion}
 It is unclear why our temporal tuning based approach performs better.
 %Overall, we think that it is fair to say that our method works at least as well as the NEF dynamics principle for realising LTI systems in recurrent networks with homogeneous filters.
-Analysing the differences more thoroughly, the weights obtained using the the temporal tuning curve methods are, as predicted, slightly overfit to the training signal bandwidth (cf.~\Cref{fig:recurrent_synaptic_weights_freq_sweep_a}).
-Both the standard NEF solver and uniform activation sampling likely generalise better to other input distributions, hence the higher errors compared to na\"ive sampling.
+Analysing the differences more thoroughly, the weights obtained using the temporal tuning curve methods are, as predicted, slightly overfit to the training signal bandwidth (cf.~\Cref{fig:recurrent_synaptic_weights_freq_sweep_a}).
+Both the standard \NEF solver and uniform activation sampling likely generalise better to other input distributions, hence the higher errors compared to na\"ive sampling.
 However, we were not able to observe this in practice for synthetic input signals.
 
 Apart from this, all methods results in a rank $q$ feedback weight matrix (cf.~\Cref{fig:recurrent_synaptic_weights_freq_sweep_b}) with similar regularisation errors.\footnote{Regularisation factors were matched for the $L_2$ regularisation error $\|\mat{W}\|_\mathrm{F}^2$ to be approximately equal (about $4 \times 10^{-4}$ for the standard NEF and $5 \times 10^{-4}$ for the tuning-curve approach in the above example).}
-One culprit regarding the worse performance of the NEF dynamics principle is the quality of the decoded linear functions, which are slightly smoother for the weight matrices obtained using our approaches (cf.~\Cref{fig:recurrent_synaptic_weights_freq_sweep_c}).
+One culprit regarding the worse performance of the \NEF dynamics principle is the quality of the decoded linear functions, which are slightly smoother for the weight matrices obtained using our approaches (cf.~\Cref{fig:recurrent_synaptic_weights_freq_sweep_c}).
 This may be due different sampling (i.e., using Halton sequences for uniform activation sampling); however, the results in \Cref{fig:recurrent_synaptic_weights_freq_sweep_c} specifically are for $N = 100$ samples, whereas Nengo uses $N = 2500$, achieving a higher sampling density.
 
 \subsubsection{Time cells}
@@ -319,17 +319,17 @@ This may be due different sampling (i.e., using Halton sequences for uniform act
 \end{figure}
 
 \Citet{voelker2018improving} find that the activities of neurons in the Legendre delay network resembles that of empirical time cells.
-In particular, the LDN qualitatively matches recordings from prefrontal cortex (cf.~\cite{tiganj2016sequential} and \Cref{fig:time_cells_howard_tiganj_example}).
+In particular, the \LDN qualitatively matches recordings from prefrontal cortex (cf.~\cite{tiganj2016sequential} and \Cref{fig:time_cells_howard_tiganj_example}).
 
 As we discussed in \Cref{sec:temporal_tuning_biology}, time cells are neurons that reach their peak activity a fixed delay $\theta_i$ after an event at time $t_0$.
 Empirical data suggests \citep[e.g.][]{macdonald2011hippocampal,tiganj2016sequential} that the specificity of this temporal representation decays over time; it becomes progressively harder to determine how much time has passed since $t_0$.
 
 \Cref{fig:recurrent_synaptic_weights_time_cells} depicts our results for repeating the analysis performed by \Citet{voelker2018improving} for the two modified Fourier and Legendre bases.
-Methods and network setup are the same as before in this section; we use $n = 120$ neurons and the standard NEF solver.
+Methods and network setup are the same as before in this section; we use $n = 120$ neurons and the standard \NEF solver.
 Minor differences can be observed in the spread of the activity similarity over time.
 We observe a larger spread (i.e., lower temporal specificity) for both the modified Fourier basis with Bartlett window and the Legendre basis, while the Fourier system with rectangle window maintains a higher specificity.
 Still, overall, the three systems produce time cells with similar distributions of specific delays $\theta_i$.
-However, as merely coupled oscillators, the Fourier systems may be a slightly more biologically plausible alternative to the LDN.
+However, as merely coupled oscillators, the Fourier systems may be a slightly more biologically plausible alternative to the \LDN.
 
 \subsubsection{Heterogeneous synaptic filters}
 
@@ -394,7 +394,7 @@ Any approximation $\hat f_{\theta'_1, \theta'_2}$ with an \NRMSE below $100\%$ i
 This is because, for zero mean $\mathfrak{x}$, the optimal \emph{linear} approximation is $\hat f_{\theta'_1, \theta'_2}(\mathfrak{x}) = 0$ with an \NRMSE of $100\%$.
 
 \paragraph{Methods}
-To decode this \enquote{delayed multiplication} function in a spatiotemporal network, we tune $n = 1000$ LIF neurons with maximum firing rates between \SI{50}{\hertz} and \SI{100}{\hertz} to $d = 2$ spatial dimensions and $q = 5$ temporal LDN dimensions using separate temporal and spatial encoders $\vec e_i^\mathrm{t}$, $\vec e_i$.%
+To decode this \enquote{delayed multiplication} function in a spatiotemporal network, we tune $n = 1000$ \LIF neurons with maximum firing rates between \SI{50}{\hertz} and \SI{100}{\hertz} to $d = 2$ spatial dimensions and $q = 5$ temporal \LDN dimensions using separate temporal and spatial encoders $\vec e_i^\mathrm{t}$, $\vec e_i$.%
 \footnote{In this context, using the LDN system resulted in slightly smaller errors than the modified Fourier system.}
 After solving for weights using $N = 1000$ na\"ively sampled input signals $\mathfrak{x}_\mathrm{k}$ (at $\rho = \SI{3}{\hertz}$), we feed a training and test signal of length $T = \SI{100}{\second}$ and a band-limit of $\SI{1}{\hertz}$ into the network.
 We use the training signal to compute decoders, and the test signal to compute the presented decoding errors.
@@ -414,13 +414,13 @@ We use the training signal to compute decoders, and the test signal to compute t
 	\caption[Two-dimensional quantities over time in a rank one spatiotemporal network]{
 		Two-dimensional quantities over time in a rank one spatiotemporal network.
 		\textbf{(A)}~Overview of the network and results for some exemplary inputs $\mathfrak{x}_1(t)$ and $\mathfrak{x}_2(t)$.
-		The input signals are fed into a recurrent network where each neuron is tuned to a random linear combination of the inputs, and a linear combination of the LDN impulse responses for $q = 5$ and $\theta = \SI{1}{\second}$.
+		The input signals are fed into a recurrent network where each neuron is tuned to a random linear combination of the inputs, and a linear combination of the \LDN impulse responses for $q = 5$ and $\theta = \SI{1}{\second}$.
 		%After filtering the output spike trains, we can decode linear and nonlinear functions over time and space.
 		We can approximately decode delayed versions of the inputs (a linear transformation) and the product of the two input signals for $\theta_1 = \theta_2$.
-		\textbf{(B)}~For band-limited noise inputs, delayed versions of the both input signal can be decoded with a small mean delay decoding error $\bar E$. Dashed lines are the delay decoding errors for an equivalent Echo State Network (ESN; \cite{jaeger2004harnessing}).
-		\textbf{(C)}~Decoding error (NRMSE) when systematically decoding delayed multiplication for delays $\theta_1$, $\theta_2$.
-		While the resulting error is quite large, it is substantially smaller than what is achievable with linear approximations of four-quadrant multiplication (i.e., an NRMSE of $100\%$). Decoding delayed multiplication works best for $\theta_1 = \theta_2$.
-		For an ESN, all errors are above $100\%$.
+		\textbf{(B)}~For band-limited noise inputs, delayed versions of the both input signal can be decoded with a small mean delay decoding error $\bar E$. Dashed lines are the delay decoding errors for an equivalent Echo State Network (\ESN; \cite{jaeger2004harnessing}).
+		\textbf{(C)}~Decoding error (\NRMSE) when systematically decoding delayed multiplication for delays $\theta_1$, $\theta_2$.
+		While the resulting error is quite large, it is substantially smaller than what is achievable with linear approximations of four-quadrant multiplication (i.e., an \NRMSE of $100\%$). Decoding delayed multiplication works best for $\theta_1 = \theta_2$.
+		For an \ESN, all errors are above $100\%$.
 		\textbf{(D)} Normalised singular values of the recurrent weight matrix.
 		The matrix is of rank twelve, with the last four singular values being relatively small.
 	}
@@ -440,7 +440,7 @@ For example, for some $\vec e_i$, $\vec e_i^\mathrm{t}$, the neuron is most acti
 However, using rank one $\mat E_i^\mathrm{t}$, it is impossible to generate neural tuning such that a neuron is tuned to different input dimensions having different temporal behaviour.
 As a result, we cannot decode functions that are nonlinear over several time-points.
 This is similar to not being able to decode nonlinear functions from neuron populations with axis-aligned spatial encoders (cf.~\Cref{sec:two_layer_intermediate}).
-We reach NRMSEs below $100\%$ for $\theta'_1 \neq \theta'_2$ when computing delayed multiplication because the product for the closest uniform delay is a decent approximation.
+We reach \NRMSEpl below $100\%$ for $\theta'_1 \neq \theta'_2$ when computing delayed multiplication because the product for the closest uniform delay is a decent approximation.
 
 
 \subsubsection{Delayed multiplication with full rank $\mat E^\mathrm{t}$}
@@ -477,7 +477,7 @@ Improvements in the linear delay decoding task are due to slight reduction in ou
 The reduction in error for the delayed multiplication task is as expected.
 
 Finally, note that the recurrent weight matrices are of low rank (\Cref{fig:spatio_temporal_d,fig:spatio_temporal_full_c}).
-This suggests that it is possible to realise the same network in the NEF without temporal tuning.
+This suggests that it is possible to realise the same network in the \NEF without temporal tuning.
 Indeed, as we show in \Cref{app:spatiotemporal_nef}, this is possible.
 However, we must realise a $qd$-dimensional representation in the population; implementing dynamical systems with spiking neurons in such high dimensional spaces can be challenging.
 Our approach offers the advantage of biasing the weight solver towards portions of the activity space relevant for a certain input signals and thus results in smaller errors in the delayed multiplication task.
@@ -491,7 +491,7 @@ Our approach offers the advantage of biasing the weight solver towards portions 
 	Highlighted section (black line and coloured circles) corresponds to the time range displayed in \emph{(B)}.
 	\textbf{(B)} Input velocities $\dot x_1(t)$ and $\dot x_2(t)$ and the decoded windowed distance $d_{[t - \theta, t]}$.
 	Dotted line is the ground-truth. The \NRMSE $E$ is computed after subtracting the mean (without subtracting the mean $E = 8.1\%$).
-	Again, NRMSEs are far above $100\%$ when using an ESN (grey dashed line).
+	Again, \NRMSEpl are far above $100\%$ when using an \ESN (grey dashed line).
 	}
 	\label{fig:path_integration}
 \end{figure}
@@ -512,7 +512,7 @@ Crucially, using the full rank $\mat E_i^\mathrm{t}$ we obtain $E \approx 26\%$ 
 This experiment indicates that it can be beneficial to restrict the encoders to a lower rank.
 We apply a linear operator (the integral) to a function that is only nonlinear over the same point in time $\tau$---this is exactly the type of function supported by our rank one spatiotemporal encoding matrices.
 
-Overall, our experiments demonstrate that it is possible to realise populations with spatiotemporal tuning in the NEF; our \emph{spiking} networks even outperform the popular Echo State Network (\cite{jaeger2004harnessing}) by a wide margin.
+Overall, our experiments demonstrate that it is possible to realise populations with spatiotemporal tuning in the \NEF; our \emph{spiking} networks even outperform the popular Echo State Network (\cite{jaeger2004harnessing}) by a wide margin.
 A next step would be to use this technique to construct a neurophysiologically motivated model of spatiotemporal tuning in the brain.
 
 \pagebreak
@@ -534,7 +534,7 @@ A next step would be to use this technique to construct a neurophysiologically m
 \begin{itemize}
 	\item Can modify eq. 4.7 to account for neural dynamics. Must find input current that produces the intended output current.
 	\item Simple for our $n$-LIF neurons, where we know that the passive dendritic tree acts as a series of low-pass filters. More complex all other cases. See Duggins' work.
-	\item Simple example: population of LIF neurons with low firing rates; neural dynamics play a significant role in the overall network dynamics. Implementing an integrator is not successful.
+	\item Simple example: population of \LIF neurons with low firing rates; neural dynamics play a significant role in the overall network dynamics. Implementing an integrator is not successful.
 	\item In eq. 4.7 record the output spike train $a$ and the \enquote{neutral} output spike train $a'$ from a $\Delta\Sigma$ modulator. Use least squares to solve for a causal filter that maps from $a$ onto $a'$. Use that in eq. 4.7.
 	\item Note that neural dynamics may also be useful; trivial case: if the neuron has some dynamics, then we can easily realise these dynamics.
 \end{itemize}

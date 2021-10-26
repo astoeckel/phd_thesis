@@ -28,14 +28,14 @@ However, with $f_1$ and $f_2$ being constant over the indicated intervals, the s
 \subsection{Proof of Theorem~\ref{thm:weak_xor}}
 \label{app:thm_weak_xor}
 
-\Citet[Chapter~2]{minsky1987perceptrons} note that the Perceptron cannot compute XOR.
-This notion can be extended to the more general \enquote{additive networks} discussed in \Cref{sec:dendritic_computation_theory}, as well as a weaker notion of the XOR problem (\Cref{def:weak_xor}).
+\Citet[Chapter~2]{minsky1987perceptrons} note that the Perceptron cannot compute \XOR.
+This notion can be extended to the more general \enquote{additive networks} discussed in \Cref{sec:dendritic_computation_theory}, as well as a weaker notion of the \XOR problem (\Cref{def:weak_xor}).
 In particular, we claimed the following:
 
 \ThmWeakXor*
 
 \begin{proof}
-Suppose $\phi(x_1, x_2)$ could solve the weak XOR problem. Substitute $a_0' = f_1(a_0)$, $a_1' = f_1(a_1)$, $b_0' = f_2(b_0)$, $b_1' = f_2(b_1)$, where $a_0$, $a_1$, $b_0$, $b_1$ are from \Cref{def:weak_xor}.
+Suppose $\phi(x_1, x_2)$ could solve the weak \XOR problem. Substitute $a_0' = f_1(a_0)$, $a_1' = f_1(a_1)$, $b_0' = f_2(b_0)$, $b_1' = f_2(b_1)$, where $a_0$, $a_1$, $b_0$, $b_1$ are from \Cref{def:weak_xor}.
 Further expanding this definition by substituting in our additive network $\phi(x_1, x_2)$ we obtain
 	\begin{align*}
 	&\hphantom{\wedge} \;    \left( \sigma(a_0' + b_0') < \sigma(a_0' + b_1') \right)
@@ -49,7 +49,7 @@ Further expanding this definition by substituting in our additive network $\phi(
 \subsection{Proof of \Cref{thm:multiplication}}
 \label{app:thm_multiplication}
 
-Additive networks are capable of solving the weak XOR problem if we allow a non-monotonic neural nonlinearity $\sigma$.
+Additive networks are capable of solving the weak \XOR problem if we allow a non-monotonic neural nonlinearity $\sigma$.
 However, as we already saw in \Cref{thm:xor_general}, being able to freely choose $\sigma$ does not mean that we can universally approximate any function.
 An example we gave in \Cref{thm:multiplication} is that of multiplication.
 While this is merely a special case of the kind of function used to prove \Cref{thm:xor_general}, we provide an alternative proof below.
@@ -103,7 +103,7 @@ However, since the values passed to $\sigma$ overlap in both cases, this is a co
 	The depicted weighting encloses the region marked by the cross. Blue corresponds to positive, red to negative decoded values. The highlighted intercepts correspond to the neurons with the largest weights.}
 \end{figure}
 
-\Cref{thm:two_layer_universal} claims that a single NEF ensemble, i.e., a multi-layer network with a single hidden layer, is a universal function approximator.
+\Cref{thm:two_layer_universal} claims that a single \NEF ensemble, i.e., a multi-layer network with a single hidden layer, is a universal function approximator.
 More precisely, we stated the following:
 
 \ThmTwoLayerUniversal*
@@ -357,12 +357,12 @@ This concludes our proof.
 \subsection{Proof of \Cref{thm:two_comp_xor}}
 \label{app:thm_two_comp_xor}
 
-We noted in \Cref{sec:nlif_examples} that the two-compartment LIF nonlinearity cannot be used to solve the weak XOR problem.
+We noted in \Cref{sec:nlif_examples} that the two-compartment \LIF nonlinearity cannot be used to solve the weak \XOR problem.
 More precisely, we stated the following:
 
 \ThmTwoCompXor*
 
-The proof for this is analogous to the proof that additive networks cannot solve the XOR problem (cf.~\Cref{app:thm_weak_xor}).
+The proof for this is analogous to the proof that additive networks cannot solve the \XOR problem (cf.~\Cref{app:thm_weak_xor}).
 Particularly, we rely on the denominator being strictly positive.
 
 \begin{proof}
@@ -371,7 +371,7 @@ For $b_0 \neq 0$, $H$ as given in the above theorem can be reparametrized to $H'
 	H(g_\mathrm{E}, g_\mathrm{I}) &= H'\left( \dfrac{b_1  g_\mathrm{E}}{| b_0 |}, \dfrac{b_2 g_\mathrm{I}}{| b_0 |} \right) = H'(x, y) = \frac{\pm 1 + x - y}{c_0 + c_1 x + c_2 y} \,,
 \end{align*}
 where $c_0 > 0 \text{ and } c_1, c_2, x, y \geq 0$.
-Assume that $\phi(x, y) = H'(x, y)$ can solve the weak XOR problem. Since the denominator in the above nonlinearity is strictly positive, we can safely cross-multiply with the denominator across the inequalities and apply the above definition
+Assume that $\phi(x, y) = H'(x, y)$ can solve the weak \XOR problem. Since the denominator in the above nonlinearity is strictly positive, we can safely cross-multiply with the denominator across the inequalities and apply the above definition
 \begin{align*}
 		&\hphantom{\wedge}\;\,  \bigl( 0 < \hphantom{-}  x_0 y_0 c_1 + x_0 y_0 c_2 - x_0 y_1 c_1 - x_0 y_1 c_2 + y_0 c_0 \pm y_0 c_2 - y_1 c_0 \mp y_1 c_2 \bigr) \\
 		&\wedge  \bigl( 0 <           -   x_1 y_0 c_1 - x_1 y_0 c_2 + x_1 y_1 c_1 + x_1 y_1 c_2 - y_0 c_0 \mp y_0 c_2 + y_1 c_0 \pm y_1 c_2 \bigr) \\

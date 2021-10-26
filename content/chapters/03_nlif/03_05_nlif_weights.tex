@@ -3,22 +3,22 @@
 \section{Weight-Optimisation for Arbitrary Dendritic Trees}
 \label{sec:nlif_opt}
 
-As demonstrated in the previous section, we are now able to integrate two-compartment \LIF neurons---the simplest non-trivial \nlif neuron---into NEF networks.
-Although this model only features \emph{divisive}, but not \emph{multiplicative} interaction between input channels (cf.~\Cref{sec:nlif_theory}), we observed a substantial computational advantage over standard LIF neurons.
+As demonstrated in the previous section, we are now able to integrate two-compartment \LIF neurons---the simplest non-trivial \nlif neuron---into \NEF networks.
+Although this model only features \emph{divisive}, but not \emph{multiplicative} interaction between input channels (cf.~\Cref{sec:nlif_theory}), we observed a substantial computational advantage over standard \LIF neurons.
 
 The goal of this section is to discuss techniques for integrating arbitrary \nlif neurons into spiking neural networks.
-This is more difficult than working with two-compartment LIF neurons, especially when it comes to finding model parameters and synaptic weights.
-Remember that, in the context of the two-compartment LIF neuron, we were able to optimise a convex loss function, while finding that, in our application, the global minimum of the convex loss was close to the optimum of the non-convex target loss function (cf.~\Cref{sec:two_comp_lif_fit_model}).
+This is more difficult than working with two-compartment \LIF neurons, especially when it comes to finding model parameters and synaptic weights.
+Remember that, in the context of the two-compartment \LIF neuron, we were able to optimise a convex loss function, while finding that, in our application, the global minimum of the convex loss was close to the optimum of the non-convex target loss function (cf.~\Cref{sec:two_comp_lif_fit_model}).
 
-Similar \enquote{one-shot} optimisation schemes are unsuccessful for $n$-LIF neurons with more than two compartments.
+Similar \enquote{one-shot} optimisation schemes are unsuccessful for \nlif neurons with more than two compartments.
 Of course, we can still approximate the parameter and weight optimisation problems as convex quadratic programs (\QPpl).
 However, the optimum of these \QPpl will not be a good solution for the original problem.
 Instead, we must iteratively refine our solution to reach a local optimum in the target loss function.
-Iterative algorithms based on quadratic programs for solving non-convex optimisation problems are also referred to as \enquote{sequential quadratic programs} (SQPs; \cite[e.g.,][Chapter~18]{nocedal2006numerical}).
+Iterative algorithms based on quadratic programs for solving non-convex optimisation problems are also referred to as \enquote{sequential quadratic programs} (\SQPpl; \cite[e.g.,][Chapter~18]{nocedal2006numerical}).
 
 Unfortunately, there are few guarantees with respect to the quality of the solution obtained with such iterative methods.
 %Generally speaking, this is because non-convex optimisation is, special cases aside, much harder than convex optimisation.
-Special cases such as the rational functions encountered in the two-compartment LIF neuron aside, finding the global optimum of non-convex functions is generally \enquote{hopeless} in that this problem is NP-hard \citep[e.g.,]{sun2016when}.
+Special cases such as the rational functions encountered in the two-compartment \LIF neuron aside, finding the global optimum of non-convex functions is generally \enquote{hopeless} in that this problem is NP-hard \citep[e.g.,]{sun2016when}.
 % TODO: Better reference
 %\citep[e.g.,][]{rockafellar1993lagrange}. 
 %\footnote{\citet{rockafellar1993lagrange} famously writes \enquote{In fact the great watershed in optimization isn't between linearity and nonlinearity, but convexity and
@@ -28,13 +28,13 @@ Special cases such as the rational functions encountered in the two-compartment 
 %}
 %Correspondingly, there is no guarantee that a general-purpose weight or parameter solver will converge to the globally optimal solution.
 
-Still, and as we demonstrate below, we are able to exploit the structure of the surrogate nonlinearity model \Hden to construct an SQP that outperforms quasi-Newton methods such as L-BFGS in terms of speed of convergence, while being highly competitive in the final test error.
+Still, and as we demonstrate below, we are able to exploit the structure of the surrogate nonlinearity model \Hden to construct an \SQP that outperforms quasi-Newton methods such as L-BFGS in terms of speed of convergence, while being highly competitive in the final test error.
 We continue by using our optimisation techniques to repeat the experiments pertaining the theoretical power of \nlif neurons and the actual performance in spiking neural networks.
 
 \subsection{Solving for $n$-LIF Surrogate Model Parameters}
 \label{sec:nlif_opt_parameters}
 
-Similarly to what we discussed in the context of integrating two-compartment neurons into the NEF, our first step toward using arbitrary \nlif neurons is to calibrate our surrogate nonlinearity model $\Hden$ to ground-truth somatic current measurements $J_\ell$ given input $\vec g_\ell \in \mathbb{R}^k$.
+Similarly to what we discussed in the context of integrating two-compartment neurons into the \NEF, our first step toward using arbitrary \nlif neurons is to calibrate our surrogate nonlinearity model $\Hden$ to ground-truth somatic current measurements $J_\ell$ given input $\vec g_\ell \in \mathbb{R}^k$.
 
 Recall from \Cref{sec:nlif_derive_h}---specifically \cref{eqn:nlif_eq,eqn:h_model}---that the surrogate dendritic nonlinearity model $\Hden(\vng)$ for an arbitrary \nlif neuron is described in terms of the reduced system matrices $\mrA[\vng]$, $\vrb[\vng]$, which in turn can be decomposed into matrices \mrL, \vrap, \mrAp, \vrbp, \mrBp, \vrc.
 \begin{align*}
@@ -248,7 +248,7 @@ Formally stating the quadratic program is rather tedious.
 The parameter matrices and vectors $\mrAp[\vec g_\ell; \vec \theta]$, $\vrap[\vec g_\ell; \vec \theta]$, $\mrBp[\vec g_\ell; \vec \theta]$, $\vrbp[\vec g_\ell; \vec \theta]$ must be split into constant sub-expressions and linear terms dependant on $\vec \theta$.
 Readers interested in these technicalities are kindly directed at the source code for \emph{libnlif}, specifically \texttt{nlif\_solver.cpp}.
 }
-Alternatively, this problem can be solved using an NNLS solver, where \vrbp and \mrBp are allowed to be negative.
+Alternatively, this problem can be solved using an \NNLS solver, where \vrbp and \mrBp are allowed to be negative.
 
 As mentioned several times above, to find a local optimum of our original loss function, \cref{eqn:nlif_parameter_sqp} must be treated as a sequential quadratic program.
 That is, the solution $\vec \theta$ from one iteration becomes the expansion point $\vec \theta_0$ for the next iteration.
@@ -292,9 +292,9 @@ The final algorithm is listed in \Cref{alg:nlif_tr_parameters}.
 We now perform a series of experiments to ensure that our soft trust-region approach is indeed working as intended; in particular, we analyse how our own optimisation scheme compares to general-purpose optimisers, and in how far we are able to model multi-compartment neurons well using our techniques.
 
 We consider \nlif neurons with two, three, and four compartments; all as depicted in \Cref{fig:nlif_c,fig:nlif_d,fig:nlif_e}.
-Since, as per our discussion in \Cref{sec:nlif_theory}, $n$-LIF neurons with the same number of compartments and input configuration in a single branch possess the same mathematical structure, our results should readily generalise to other neural configurations as well.
+Since, as per our discussion in \Cref{sec:nlif_theory}, \nlif neurons with the same number of compartments and input configuration in a single branch possess the same mathematical structure, our results should readily generalise to other neural configurations as well.
 To ensure that more distal compartments can influence the soma, we use larger coupling-conductances in neurons with more than two compartments.
-Specifically, we use $c_{12} = \SI{50}{\nano\siemens}$ in the two-compartment LIF neuron, and $c_{12} = \SI{100}{\nano\siemens}$, $c_{23} = \SI{200}{\nano\siemens}$ and $c_{34} = \SI{500}{\nano\siemens}$ in the three- and four-compartment neurons.
+Specifically, we use $c_{12} = \SI{50}{\nano\siemens}$ in the two-compartment \LIF neuron, and $c_{12} = \SI{100}{\nano\siemens}$, $c_{23} = \SI{200}{\nano\siemens}$ and $c_{34} = \SI{500}{\nano\siemens}$ in the three- and four-compartment neurons.
 All other parameters are as specified in \Cref{tbl:two_comp_model_parameters}.
 
 \subsubsection{Optimiser comparison}
@@ -304,14 +304,14 @@ We determine the ground-truth somatic currents $J_\ell$ by simulating the neuron
 To test whether the algorithms converge to a solution even when starting from sub-optimal points in the parameter space, we compare two different initial parameter sets.
 First, the theoretical parameter estimate (e.g., \Cref{tbl:nlif_matrices_reduced}), and second, uniformly sampled parameters $\vec \theta_0$.
 
-We use the hyperparameters listed in \Cref{alg:nlif_tr_parameters} for our QP.
+We use the hyperparameters listed in \Cref{alg:nlif_tr_parameters} for our \QP.
 In our experience, most of these hyperparameters are relatively uncritical.
 The most important parameter is the soft trust-region weight $\alpha_3 = 10^{-5}$; for this parameter values between $10^{-4}$ and $10^{-6}$ seem to work well.
 As a stochastic gradient descent method, we use the \enquote{Adam} optimizer.
 Adam dynamically adapts the learning rate $\eta$ of each parameter based on the first and second gradient moments (i.e., mean and variance; \cite{kingma2015adam}).
 We use a batch size of $N_\mathrm{batch} = 10$ and $\alpha = 0.05$ as a base learning-rate.
 This last parameter was hand-tuned for fastest possible convergence without instabilities.
-Finally, as a quasi-Newton method, we choose L-BFGS-B, a popular low-memory approximation of BFGS with support for bounded variables \citep{byrd1995limited}.
+Finally, as a quasi-Newton method, we choose L-BFGS-B, a popular low-memory approximation of \BFGS with support for bounded variables \citep{byrd1995limited}.
 In particular, we use the L-BFGS-B reference implementation with default parameters, i.e., the rank of the Hessian approximation is $m = 10$.
 
 \paragraph{Results}
@@ -330,7 +330,7 @@ In particular, we use the L-BFGS-B reference implementation with default paramet
 	Note that the data for L-BFGS-B ends after convergence to the local optimum.
 	\textbf{(B)} Same for random initial parameters $\vec \theta_0$.
 	In both \emph{(A)} and \emph{(B)}, the soft trust-region algorithm on converges to a good solution after a few iterations.
-	SGD and L-BFGS-B reach similar errors, but require more iterations and are less robust to noisy initialisation.
+	\SGD and L-BFGS-B reach similar errors, but require more iterations and are less robust to noisy initialisation.
 	}
 	\label{fig:nlif_parameter_optimisation_comparison}
 \end{figure}
@@ -355,7 +355,7 @@ Adam fails to converge to a good solution in the case of the two- and three-comp
 \paragraph{Discussion}
 Our hand-tailored optimisation method outperforms general-purpose methods.
 This is likely because we solve a less non-linear optimisation problem in a higher-dimensional space.
-Compared to quasi-Newton methods, our QP possesses an explicit sparse Hessian $\mat P$ (cf.~\Cref{def:qp}), whereas L-BFGS-B has to estimate the Hessian over several iterations.
+Compared to quasi-Newton methods, our \QP possesses an explicit sparse Hessian $\mat P$ (cf.~\Cref{def:qp}), whereas L-BFGS-B has to estimate the Hessian over several iterations.
 
 The previously mentioned issues with our method---incorrectly splitting the loss function into two parts, haphazardly multiplying with $\mrA[\vec g_\ell; \vec \theta]$ inside the $L_2$ norm, and potentially bad convergence behaviour due to using a soft trust-region---seem to have no effect on the quality of the solution.
 In fact, the two gradient-based optimisation methods tend to converge to the same solution (in terms of the final \NRMSE) despite them not relying on these simplifications.
@@ -365,7 +365,7 @@ In fact, the two gradient-based optimisation methods tend to converge to the sam
 \begin{figure}[t]
 	\includegraphics{media/chapters/03_nlif/03_05/nlif_parameters_contours.pdf}
 	\caption[Calibrated $n$-LIF dendritic nonlinearity model for constant input]{
-		Calibrated $n$-LIF dendritic nonlinearity model for constant input.
+		Calibrated \nlif dendritic nonlinearity model for constant input.
 		Coloured contour plots depict ground-truth average spike rates $\mathscr{G}(\vec g)$.
 		Dashed white lines are the model prediction $G[\Hden(\vec g)]$. Dotted lines indicate the cross-section location.
 		$E$ denotes the spike-rate \RMSE over the entire grid, $\hat E$ the error for super-threshold ground-truth samples (i.e., those with a rate above \SI{12.5}{\per\second}).
@@ -473,7 +473,7 @@ To enforce nonnegativity of $\mat W$, and thus non-singularity of $\mrA[\mat W \
 In the case of quasi-Newton methods, a bounded algorithm such as L-BFGS-B must be used.
 
 \subsubsection{Soft trust-region optimisation}
-We follow the same overall procedure as in \Cref{sec:nlif_opt_parameters} to derive a soft trust-region based SQP.
+We follow the same overall procedure as in \Cref{sec:nlif_opt_parameters} to derive a soft trust-region based \SQP.
 Let $\vec \theta$ denote the non-zero weights in $\mat W$.
 Introducing $N$ auxiliary variables $\vec v_\ell \in \mathbb{R}^n$ we obtain the following two-part optimisation problem:
 \begin{align*}
@@ -507,10 +507,10 @@ Combining this with a soft trust-region term $E_3$, as well as regularisation fa
 	E_3 &= N \|\vec \theta - \vec \theta_0 \|_2^2 + \sum_{\ell = 1}^N \| \vec v_\ell - \vec v_{\ell, 0} \| \,.
 	\label{eqn:nlif_weight_sqp}
 \end{align}
-This loss function, including a nonnegativity constraint on $\vec \theta$ and subthreshold relaxation can be expressed as a QP using the techniques discussed in \Cref{sec:nef_subthreshold}.%
+This loss function, including a nonnegativity constraint on $\vec \theta$ and subthreshold relaxation can be expressed as a \QP using the techniques discussed in \Cref{sec:nef_subthreshold}.%
 \footnote{While mathematically trivial, rearranging \Cref{eqn:nlif_weight_sqp} into a quadratic program including subthreshold relaxation results in a quite unwieldy expression.
 Please refer to the source code of \emph{libnlif}, in particular \texttt{nlif\_solver\_weights.cpp}, for a software-implementation of the quadratic program.}
-We obtain a sequential QP by minimising $E$ and using the resulting $\vec \theta$ as $\vec \theta_0$ in a subsequent iteration (cf.~\Cref{alg:nlif_tr_weights}).
+We obtain a sequential \QP by minimising $E$ and using the resulting $\vec \theta$ as $\vec \theta_0$ in a subsequent iteration (cf.~\Cref{alg:nlif_tr_weights}).
 
 \begin{algorithm}[t]
 	\begin{minipage}{0.98\textwidth}
@@ -547,7 +547,7 @@ We obtain a sequential QP by minimising $E$ and using the resulting $\vec \theta
 \end{algorithm}
 
 
-Unlike the parameter optimisation problem (\Cref{sec:nlif_opt_parameters}), and just like neural networks in general \citep[cf.~][]{sutskever2013importance,he2015delving}, this SQP is quite sensitive to the initial $\vec \theta$.
+Unlike the parameter optimisation problem (\Cref{sec:nlif_opt_parameters}), and just like neural networks in general \citep[cf.~][]{sutskever2013importance,he2015delving}, this \SQP is quite sensitive to the initial $\vec \theta$.
 In our experience, uniformly sampling $\vec \theta_0$ from $[\SI{0}{\micro\siemens}, \SI{1}{\micro\siemens} m^{-1} a_\mathrm{max}^{-1}]$, where $m$ is the number of pre-neurons and $a_\mathrm{max}$ the maximum pre-population firing rate, works well in practice.
 
 Alternatively, we suggest the fully deterministic initialisation scheme given in \Cref{alg:nlif_tr_weights}.
@@ -562,7 +562,7 @@ This is because active input is required to cancel the non-somatic leak-currents
 
 \Cref{fig:nlif_decode_multiplication_example} illustrates that the above method can indeed be used to solve for synaptic weights that approximate interesting somatic current functions.
 Specifically, three- and four-compartment neurons can approximate four-quadrant multiplication well, that is $x_1 x_2$ with $(x_1, x_2) \in [-1, 1]^2$.
-As a corollary, and in contrast to one- and two-compartment neurons with conductance-based synapses, these neurons can thus be used to solve the weak XOR problem (cf.~\Cref{sec:dendritic_computation_theory} and \Cref{app:thm_two_comp_xor}).%
+As a corollary, and in contrast to one- and two-compartment neurons with conductance-based synapses, these neurons can thus be used to solve the weak \XOR problem (cf.~\Cref{sec:dendritic_computation_theory} and \Cref{app:thm_two_comp_xor}).%
 \footnote{We technically compute $J(x_1, x_2) = \frac{1}2 (x_1 x_2 + 1) \in [0, 1]$, that is a shifted and scaled version of four-quadrant multiplication---the conductance-based neuron types analysed here cannot compute 
 In practice, this affine transformation corresponds to approximating a current-translation function within an \NEF ensemble (cf.~\Cref{sec:nef_decode_current}).
 }
@@ -574,7 +574,7 @@ In practice, this affine transformation corresponds to approximating a current-t
 	{\phantomsubcaption\label{fig:nlif_decode_multiplication_example_b}}%
 	{\phantomsubcaption\label{fig:nlif_decode_multiplication_example_c}}
 	\caption[Approximating four-quadrant multiplication in different $n$-LIF neurons]{
-	Approximating four-quadrant multiplication in different $n$-LIF neurons.
+	Approximating four-quadrant multiplication in different \nlif neurons.
 	\textbf{(A)} Tuning curves of two one-dimensional pre-populations with $100$ neurons each.
 	\textbf{(B)} Predicted somatic currents (coloured contours) after solving for synaptic weights approximating $J(x_1, x_2) = \frac{1}2 (x_1 x_2 + 1)$ over $[-1, 1]^2$ (i.e., a scaled and shifted version of four-quadrant multiplication; dashed).
 	Columns correspond to \nlif neurons with one to four compartments.
@@ -606,13 +606,13 @@ Hence, while it is possible to compute multiplication, we expect noise to negati
 	{\phantomsubcaption\label{fig:nlif_weight_optimisation_comparison_b}}%
 	\caption[Comparing different optimisers performing synaptic weight optimisation]{Comparing different optimisers performing synaptic weight optimisation.
 	Solid lines are the median test error over $100$ trials, shaded areas the $25$ and $75$ percentiles.
-	The SQP algorithm is executed for $50$ epochs, L-BFGS-B for at most $500$ epochs or until convergence.
+	The \SQP algorithm is executed for $50$ epochs, L-BFGS-B for at most $500$ epochs or until convergence.
 	The last value is continued as a dotted line.
-	\textbf{(A)} Solving for a simple linear function. Note that we use a larger $\lambda = 10^{-1}$ to reduce overfitting. Our SQP algorithm converges to a good solution in about five iterations and typically outperforms L-BFGS-B and SGD. SGD is prone to oscillations.
+	\textbf{(A)} Solving for a simple linear function. Note that we use a larger $\lambda = 10^{-1}$ to reduce overfitting. Our \SQP algorithm converges to a good solution in about five iterations and typically outperforms L-BFGS-B and \SGD. \SGD is prone to oscillations.
 	\textbf{(B)} Computing multiplication as illustrated in \Cref{fig:nlif_decode_multiplication_example}.
 	The two-compartment neuron cannot approximate four-quadrant multiplication well.
-	Our SQP algorithm converges to a good solution after about $25$ epochs and outperforms L-BFGS-B.
-	SGD ultimately reaches solutions with slightly smaller errors, but possesses a larger variance.
+	Our \SQP algorithm converges to a good solution after about $25$ epochs and outperforms L-BFGS-B.
+	\SGD ultimately reaches solutions with slightly smaller errors, but possesses a larger variance.
 	}
 	\label{fig:nlif_weight_optimisation_comparison}
 \end{figure}
@@ -625,7 +625,7 @@ We try to find synaptic weights $\mat W$ that, taking the nonlinearity model int
 Specifically, we compare approximating a linear current function and the four-quadrant multiplication described above.
 Optimisation is based on \num{256} training samples, test errors on \num{10000} samples.
 For our algorithm, we use the parameters given in \Cref{alg:nlif_tr_weights}; for L-BFGS-B we use the default parameters ($m = 10$).
-For SGD with Adam we use the largest possible learning rate without major instabilities of $\alpha = 10^{-5}$, and a batch size of $N_\mathrm{batch} = 10$.
+For \SGD with Adam we use the largest possible learning rate without major instabilities of $\alpha = 10^{-5}$, and a batch size of $N_\mathrm{batch} = 10$.
 Note that we use a larger regularisation factor $\lambda$ for the linear function; this increases the training error by several orders of magnitude, but, surprisingly, has little to no effect on the test error.%
 \footnote{The primary reason for doing this was to make sure that the training errors fit onto the diagram in \Cref{fig:nlif_weight_optimisation_comparison}.}
 
@@ -643,16 +643,16 @@ In contrast, both our \SQP and \SGD benefited more training samples being availa
 
 \paragraph{Discussion}
 All presented optimisation methods are viable options for computing synaptic weights.
-SGD with Adam is by far the simplest method and often reaches the smallest errors.
-However, due to instabilities, SGD is only a viable option if some kind of early stopping with tracking of a validation error is implemented \citep[e.g.,][Section~7.1]{goodfellow2016deep}.
+\SGD with Adam is by far the simplest method and often reaches the smallest errors.
+However, due to instabilities, \SGD is only a viable option if some kind of early stopping with tracking of a validation error is implemented \citep[e.g.,][Section~7.1]{goodfellow2016deep}.
 
 Given the vastly different implementations of the individual optimisers, it is hard to judge their performance in terms of wall-clock time.
 We cautiously claim that there is no appreciable difference between the approaches.
-At two seconds per epoch on a single processor, our SQP is three times slower than L-BFGS-B and SGD, but requires dramatically fewer epochs.
-However, SGD could be sped up significantly by optimising the gradient computation (eq.~\ref{eqn:nlif_weight_opt_gradient}) and parallelising across samples, e.g., using TensorFlow \citep{abadi2016tensorflow}.
+At two seconds per epoch on a single processor, our \SQP is three times slower than L-BFGS-B and \SGD, but requires dramatically fewer epochs.
+However, \SGD could be sped up significantly by optimising the gradient computation (eq.~\ref{eqn:nlif_weight_opt_gradient}) and parallelising across samples, e.g., using TensorFlow \citep{abadi2016tensorflow}.
 
-One issue with our SQP method is that the worst-case run-time per epoch is in $\mathcal{O}(N^3)$.
-This is because each internal QP solver iteration solves a linear system in the auxiliary variables $\vec v_1, \ldots, \vec v_N$.
+One issue with our \SQP method is that the worst-case run-time per epoch is in $\mathcal{O}(N^3)$.
+This is because each internal \QP solver iteration solves a linear system in the auxiliary variables $\vec v_1, \ldots, \vec v_N$.
 In practice, we only observe a slight superlinear time-complexity, likely because the matrices defining the linear system ($\mat P$ and $\mat G$; cf.~\Cref{def:qp}) are extremely sparse.
 
 \subsection{Computational Properties of the $n$-LIF Dendritic Nonlinearity Model}
@@ -682,7 +682,7 @@ In contrast to \Cref{sec:two_comp_lif_experiment_2}, we use the same regularisat
 	\includegraphics{media/chapters/03_nlif/03_05/nlif_frequency_sweep.pdf}
 	\caption[Multi-compartment current decoding error for random target functions]{Multi-compartment current decoding error for random target functions. Same experiment as in \Cref{fig:two_comp_lif_frequency_sweep}.
 	\emph{Bottom:}
-	Static model error $E_\mathrm{model}$ for random current functions of \enquote{complexity} \slc and different $n$-LIF dendritic nonlinearity models.
+	Static model error $E_\mathrm{model}$ for random current functions of \enquote{complexity} \slc and different \nlif dendritic nonlinearity models.
 	The depicted \NRMSE is based on the superthreshold error $\mathcal{E}$ (cf.~eq.~\ref{eqn:decode_current_subthreshold}).
 	Lines are the median over \num{500} trials; shaded areas correspond to the 25th and 75th percentiles.
 	Dotted lines are theoretical predictions from \Cref{fig:dendritic_computation_fourier_example_b}.
@@ -700,8 +700,8 @@ Furthermore, the difference between the two- and three-compartment neuron is rel
 Still, the three- and four-compartment neurons perform more similarly, if not slightly better than the multiplicative baseline established in \Cref{sec:dendritic_computation_theory_numerical}.
 The two-compartment neuron is slightly worse than the multiplicative baseline, and features a much higher variance than the three- and four-compartment neurons.%
 \footnote{Note that the results for the one- and two-compartment neurons differ from those in \Cref{fig:two_comp_lif_frequency_sweep}.
-The errors for the one-compartment are larger than those for LIF neuron in the previous experiment, while the errors for the two-compartment neuron are smaller.
-These discrepancies stem from using new regularisation factors, and, to some degree, from different neuron parameters and the SQP weight solver.
+The errors for the one-compartment are larger than those for \LIF neuron in the previous experiment, while the errors for the two-compartment neuron are smaller.
+These discrepancies stem from using new regularisation factors, and, to some degree, from different neuron parameters and the \SQP weight solver.
 However, the results are qualitatively the same and, most importantly, results \emph{within} each experiment are consistent.}
 
 \subsubsection{Discussion}
@@ -718,7 +718,7 @@ It might be possible to find more balanced configurations of the three- and four
 }
 
 Another caveat with this experiment is that the weight solver is not guaranteed to converge to an optimal solution.
-In fact, we saw in the previous subsection that SGD sometimes converges to smaller errors than our SQP.
+In fact, we saw in the previous subsection that \SGD sometimes converges to smaller errors than our \SQP.
 Correspondingly, three- and four-compartment neurons may be more powerful than suggested here; a more through investigation is required in the future.
 
 \subsection{$n$-LIF Neurons in a Spiking Network Context}
@@ -736,7 +736,7 @@ Indeed, as we discuss below, we find that three- and four-compartment neurons ar
 
 \subsubsection{Experiment with standard parameters}
 Our experimental setup is largely identical to that discussed in \Cref{sec:two_comp_lif_experiment_3}.
-Apart from the standard LIF neurons with current-based synapses and a two-layer LIF reference network, we analyse the dendritic computation setup (\Cref{fig:nef_multivariate_functions_c}) with the two-, three-, and four-compartment neurons analysed in \Cref{sec:nlif_opt_parameters_experiment} (cf.~\Cref{tbl:nlif_params}).
+Apart from the standard \LIF neurons with current-based synapses and a two-layer \LIF reference network, we analyse the dendritic computation setup (\Cref{fig:nef_multivariate_functions_c}) with the two-, three-, and four-compartment neurons analysed in \Cref{sec:nlif_opt_parameters_experiment} (cf.~\Cref{tbl:nlif_params}).
 We account for Dale's principle by marking $30\%$ of the pre-neurons as inhibitory.
 
 Where applicable, we approximate our benchmark functions $f$ over the domain $[-1, 1]^2$.
@@ -748,13 +748,13 @@ We apply the same transformation in this experiment when indicating that we use 
 Data are collected over a ten-second simulation during which the inputs $x_1(t)$, $x_2(t)$ follow a fourth order Hilbert curve.
 We report $E_\mathrm{net}$, the \NRMSE between the decoded network output over time and a reference signal passed through the same synaptic filters.
 
-To solve for synaptic weights, we use our trust-region SQP solver; this includes all neuron types and network configurations.
-Since the time-to-convergence of our weight solver depends on the neuron type, we execute our algorithm for one epoch for LIF neurons, ten epochs for two-compartment LIF neurons, and thirty epochs for three- and four-compartment neurons.
+To solve for synaptic weights, we use our trust-region \SQP solver; this includes all neuron types and network configurations.
+Since the time-to-convergence of our weight solver depends on the neuron type, we execute our algorithm for one epoch for \LIF neurons, ten epochs for two-compartment \LIF neurons, and thirty epochs for three- and four-compartment neurons.
 Hyperparameters are as in \Cref{alg:nlif_tr_weights}; specifically, the regularisation factor is $\lambda = 10^{-3}$.
 
 \begin{table}
 \centering\vspace{0.5cm}
-\caption[Function approximation errors for spiking networks using various $n$-LIF neurons]{Function approximation errors $E_\mathrm{net}$ for spiking networks using various $n$-LIF neurons.
+\caption[Function approximation errors for spiking networks using various $n$-LIF neurons]{Function approximation errors $E_\mathrm{net}$ for spiking networks using various \nlif neurons.
 Results are the mean and standard deviation over $100$ trials.
 The best result for a target function is set in bold; darker background colours indicate a worse ranking of the result.
 Functions with the domain $[0, 1]^2$ are exactly as in \Cref{sec:two_comp_lif_experiment_3}.
@@ -892,7 +892,7 @@ $x_1 \times x_2$
 \end{table}
 
 \paragraph{Results}
-As listed in the upper portion of \Cref{tbl:function_approximations_nlif} under \enquote{standard parameters}, the two-compartment and LIF neuron results are qualitatively similar to those from the previous experiment.
+As listed in the upper portion of \Cref{tbl:function_approximations_nlif} under \enquote{standard parameters}, the two-compartment and \LIF neuron results are qualitatively similar to those from the previous experiment.
 Discrepancies stem from different regularisation factors and neuron parameters.
 
 Notably, dendritic computation with multi-compartment neurons outperforms the two-layer network in most experiments.
@@ -900,9 +900,9 @@ However, among our \nlif neurons, baseline errors tend to increase with the numb
 That is, errors for the three-compartment neuron are slightly higher than those for the two-compartment neuron, and so on.
 
 A notable exception to this is four-quadrant multiplication.
-Here, the three- and four-compartment neuron clearly outperform the LIF and two-compartment LIF neurons.
-The standard LIF neuron reaches an \NRMSE of $100\%$---the network outputs a constant zero, which indeed is the best linear approximation of multiplication over all four quadrants.
-Similarly, since the two-compartment LIF neuron cannot compute XOR, the error is at $78\%$.
+Here, the three- and four-compartment neuron clearly outperform the \LIF and two-compartment \LIF neurons.
+The standard \LIF neuron reaches an \NRMSE of $100\%$---the network outputs a constant zero, which indeed is the best linear approximation of multiplication over all four quadrants.
+Similarly, since the two-compartment \LIF neuron cannot compute \XOR, the error is at $78\%$.
 In contrast, the three- and four-compartment neurons reach errors of about $36\%$.
 Still, the two-layer network clearly outperforms all other setups with a $13\%$ error.
 
@@ -957,7 +957,7 @@ As suggested by preliminary experiments, we furthermore reduce $\lambda$ to $10^
 \begin{figure}
 	\centering
 	\includegraphics{media/chapters/03_nlif/03_05/nlif_three_comp_multiplication_spike_data.pdf}
-	\caption[Computing four-quadrant multiplication in a spiking neural network using two-compartment LIF neurons]{Computing four-quadrant multiplication in a spiking neural network using three-compartment LIF neurons.
+	\caption[Computing four-quadrant multiplication in a spiking neural network using two-compartment LIF neurons]{Computing four-quadrant multiplication in a spiking neural network using three-compartment \LIF neurons.
 	\textbf{(A)}~\emph{Top two plots:} Inputs $x_1(t)$ and $x_2(t)$ represented by the pre-populations. \emph{Bottom:} Mathematical target $x_1(t) x_2(t)$, filtered target function, as well as the decoded target population output.
 	This particular trial reaches a dynamic network error of $E_\mathrm{net} = 16\%$.
 	\textbf{(B)}~Spike rasters depicting the activity of each population (only half of the neurons are depicted). All pre-neurons act both excitatorily and inhibitorily.}

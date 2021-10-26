@@ -24,20 +24,20 @@ Below, we first describe these individual circuits, followed by a series of expe
 
 We discuss five models of increasing complexity (cf.~\Cref{fig:cerebellum_network_types}).
 The first model is merely an abstract implementation of the delay network, the final model respects spatial connectivity constraints, tuning curves, and, to a degree, neurotransmitter time-constants.
-In all cases, the input $u$ is received from an \NEF ensemble with $100$ spiking \LIF neurons representing the PCN.
+In all cases, the input $u$ is received from an \NEF ensemble with $100$ spiking \LIF neurons representing the \PCN.
 
 \subsubsection{Model A: \enquote{Direct} Implementation} 
 For this model, we directly solve the differential equations describing the Legendre system (cf.~eq.~\ref{eqn:delay_network_lti}) by integration.
 % TODO: Add correct reference to the delay network
 That is, we have a single layer of \enquote{neurons} that are pure integrators.
 Correspondingly, this model focuses on the high-level theory of what the system is computing.
-We model the PCN and the granule cells as neural populations, but these are not responsible for generating the dynamics.
+We model the \PCN and the granule cells as neuron populations, but these are not responsible for generating the dynamics.
 
 \subsubsection{Model B: Single Population}
 In our second stage, we replace the integrators with an ensemble of $200$ \LIF neurons.
 As we discussed in \Cref{sec:nef_representation}, these neurons form a distributed representation of the Legendre system state $\vec{m}$ using a population code (cf.~eq.~\ref{eqn:encoding}).
 Maximum firing rates $a_\mathrm{max}$ are between \SIrange{50}{100}{\hertz}.
-We solve for optimal input and recurrent connection weights that result in these desired tuning curves while implementing the equivalent calculation as in \emph{Model A} using the NEF dynamics principle (\Cref{sec:nef_dynamics}).
+We solve for optimal input and recurrent connection weights that result in these desired tuning curves while implementing the equivalent calculation as in \emph{Model A} using the \NEF dynamics principle (\Cref{sec:nef_dynamics}).
 
 \subsubsection{Model C: Inter-neurons}
 As a next step, we separate the single layer of neurons into two populations corresponding to the Golgi and granule cells, reflecting the actual biology of the cerebellum.
@@ -50,11 +50,11 @@ We mark the graunle cells as purely excitatory, and the Golgi cells as purely in
 Note that we assume---in contrast to the evidence presented in \Cref{fig:granule_jbias_distribution}---that the granule cells possess intrinsic biases and uniform $x$-intercepts; we discuss this in more detail below.
 
 \subsubsection{Model E: Sparse connectivity and activities}
-Finally, we constrain the neural connectivity and adjust the PCN tuning.
+Finally, we constrain the neural connectivity and adjust the \PCN tuning.
 The previous models used all-to-all connections, whereas we now only allow a subset of the connection weights to be non-zero.
 This applies to both the input to the Granule-Golgi system and to the recurrent connections.
 
-In particular, as is indicated in \Cref{fig:cerebellum_network_types_e}, we account for the granule cell convergence numbers by randomly selecting five PCN and five Golgi cells as pre-neurons---this number is slightly larger than the number reported above, since, as we discuss in more detail in \Cref{sec:cerebellum_vary_parameters}, the number of pre-neurons places a strict upper limit on the connectivity. Given this extremely sparse connectivity, we increase the number of neurons in the simulation to \num{10000} granule and \num{100} Golgi cells, which is closer to the ratio observed in nature.
+In particular, as is indicated in \Cref{fig:cerebellum_network_types_e}, we account for the granule cell convergence numbers by randomly selecting five \PCN and five Golgi cells as pre-neurons---this number is slightly larger than the number reported above, since, as we discuss in more detail in \Cref{sec:cerebellum_vary_parameters}, the number of pre-neurons places a strict upper limit on the connectivity. Given this extremely sparse connectivity, we increase the number of neurons in the simulation to \num{10000} granule and \num{100} Golgi cells, which is closer to the ratio observed in nature.
 
 \begin{figure}
     \centering
@@ -68,12 +68,12 @@ In particular, as is indicated in \Cref{fig:cerebellum_network_types_e}, we acco
 \begin{figure}
 	\centering
     \includegraphics{media/chapters/05_cerebellum/pcn_tuning.pdf}
-    \caption[Granule cell EPSC distributions and PCN tuning curves]{Granule cell EPSC distributions and PCN tuning curves.
-    \textbf{(A)} Empirical granule cell EPSC rates (cf.~\cite{chadderton2004integration}, Figure 3C; rescaled from counts per bin to rates).
+    \caption[Granule cell EPSC distributions and PCN tuning curves]{Granule cell \EPSC distributions and \PCN tuning curves.
+    \textbf{(A)} Empirical granule cell \EPSC rates (cf.~\cite{chadderton2004integration}, Figure 3C; rescaled from counts per bin to rates).
     Data are the mean over 16 trials.
     Black bar and shaded background correspond to stimulation of the animal's whiskers.
     Upper dashed line corresponds to the average spike rate with input (including the first bin after the input), lower dashed line to the average spike rate without input.
-    \textbf{(B, C)} In our model, PCN input via the mossy fibres is the only excitatory input to the granule cells. Setting the maximum firing rates to be uniformly distributed in $[25, 75]$ and the $x$-intercepts to be uniformly sampled from $(-0.15, 0.95)$ qualitatively results in a similar EPSC distribution. Data are the mean over \num{10000} cells.
+    \textbf{(B, C)} In our model, \PCN input via the mossy fibres is the only excitatory input to the granule cells. Setting the maximum firing rates to be uniformly distributed in $[25, 75]$ and the $x$-intercepts to be uniformly sampled from $(-0.15, 0.95)$ qualitatively results in a similar \EPSC distribution. Data are the mean over \num{10000} cells.
     }
     \label{fig:pcn_tuning}
 \end{figure}
@@ -83,9 +83,9 @@ This represents to a location on a small patch of the folded two-dimensional sur
 As is depicted in \Cref{fig:spatial_constraints}, the probability $p_{ij}$ of a post-neuron $i$ to receive a connection from a pre-neuron $j$ is proportional to $\exp \left(- \| \vec x_i - \vec x_j \|^2 / \sigma^{2} \right)$.%
 \footnote{See \Cref{sec:nengo_bio_sparsity} for an overview of how these sparsity constraints can be specified in NengoBio.}
 
-The input representation in the PCN was made more temporally sparse by adjusting the $x$-intercepts (\Cref{sec:nef_representation}).
-Data reported by \citet{chadderton2004integration} indicate that granule cell excitatory event rates---which are driven by PCN activity---drop from an average of \SI{40}{\per\second} with a stimulus being present to only \SI{8.5}{\per\second} when there is no stimulus.
-We adjusted the PCN tuning curves to match these statistics in the final network (cf.~\Cref{fig:pcn_tuning}).
+The input representation in the \PCN was made more temporally sparse by adjusting the $x$-intercepts (\Cref{sec:nef_representation}).
+Data reported by \citet{chadderton2004integration} indicate that granule cell excitatory event rates---which are driven by \PCN activity---drop from an average of \SI{40}{\per\second} with a stimulus being present to only \SI{8.5}{\per\second} when there is no stimulus.
+We adjusted the \PCN tuning curves to match these statistics in the final network (cf.~\Cref{fig:pcn_tuning}).
 
 
 \subsection{Impact Of Biological Detail On Temporal Representations}
@@ -110,7 +110,7 @@ We then analyse in how far we are able to decode delays from these representatio
     	Temporal response of the Granule-Golgi networks for a rectangle input (black line).
     	All responses are centred and normalised.
     	\emph{Left:} Example identity decoding of the granule activities.
-    	\emph{Centre and right:} Example singular value decomposition (SVD) of the granule cell activities and the median normalised singular values over \num{100} trials. Error-bars indicate the 25th and 75th percentile.
+    	\emph{Centre and right:} Example singular value decomposition (\SVD) of the granule cell activities and the median normalised singular values over \num{100} trials. Error-bars indicate the 25th and 75th percentile.
     	\textbf{(A-E)} Data for the individual models discussed in this section.
     	\textbf{(F)} Network with a stable random feedback matrix~$\mat A$.
     	\textbf{(G)}~Disabling intrinsic biases substantially reduces the performance of the network.
@@ -134,7 +134,7 @@ This implies that if the granule cells indeed form a temporal representation in 
 \begin{figure}
 	\centering
 	\includegraphics{media/chapters/05_cerebellum/2d_sweeps.pdf}
-	\caption[Delayed signal reconstruction errors in the Cerebellum model.]{Delayed signal reconstruction error for different types of input signals, delays, and network types. All error values are expressed as RMSE divided by the mean RMS of the input signal over 100 trials. Columns correspond to the network types in \Cref{fig:cerebellum_network_types}. \emph{Top row:} Reconstruction error for rectangle pulse signals of varying width. \emph{Bottom row:} Reconstruction error for a band-limited white noise input signal with varying band-limit.}
+	\caption[Delayed signal reconstruction errors in the Cerebellum model.]{Delayed signal reconstruction error for different types of input signals, delays, and network types. All error values are expressed as \RMSE divided by the mean \RMS of the input signal over 100 trials. Columns correspond to the network types in \Cref{fig:cerebellum_network_types}. \emph{Top row:} Reconstruction error for rectangle pulse signals of varying width. \emph{Bottom row:} Reconstruction error for a band-limited white noise input signal with varying band-limit.}
 	\label{fig:cerebellum_2d_sweeps}
 \end{figure}
 
@@ -175,7 +175,7 @@ While we could use the techniques from the previous chapter to compute the conne
 	{\phantomsubcaption\label{fig:cerebellum_param_sweeps_b}}%
 	{\phantomsubcaption\label{fig:cerebellum_param_sweeps_c}}%
 	{\phantomsubcaption\label{fig:cerebellum_param_sweeps_d}}%
-	\caption[Cerebellum model parameter exploration.]{Parameter exploration. \textbf{(A-C)} Effects of varying parameters on the delay reconstruction error (arrows indicate default parameters). The box plots show the median, lower and upper quartile of all the data depicted a single plot in \Cref{fig:cerebellum_2d_sweeps} ($n = 441$ data points). \textbf{(D)} Histograms showing the frequency of measured PCN to granule convergences compared to the desired convergences.}
+	\caption[Cerebellum model parameter exploration.]{Parameter exploration. \textbf{(A-C)} Effects of varying parameters on the delay reconstruction error (arrows indicate default parameters). The box plots show the median, lower and upper quartile of all the data depicted a single plot in \Cref{fig:cerebellum_2d_sweeps} ($n = 441$ data points). \textbf{(D)} Histograms showing the frequency of measured \PCN to granule convergences compared to the desired convergences.}
 	\label{fig:cerebellum_param_sweeps}
 \end{figure}
 
@@ -186,11 +186,11 @@ Interestingly, the performance of the system is best for a filter time-constant 
 As discussed above, a striking feature of the cerebellar microcircuitry is the low granule cell convergence. One possible hypothesis is that these numbers are a trade-off between minimising connectivity and the overall performance of the resulting system.
 In our model, we can test this hypothesis by systematically varying the number of pre-neurons the solver has access to. Results are shown in \Cref{fig:cerebellum_param_sweeps_b,fig:cerebellum_param_sweeps_c}.
 
-For the PCN to Granule convergence (\Cref{fig:cerebellum_param_sweeps_d}), the performance of the system does improve with larger limits, yet plateaus at still relatively small convergence numbers.
+For the \PCN to Granule convergence (\Cref{fig:cerebellum_param_sweeps_d}), the performance of the system does improve with larger limits, yet plateaus at still relatively small convergence numbers.
 Importantly, as mentioned above, the desired convergence solely controls the number of \emph{potential} pre-neurons.
 Since the weight solver may still set a weight to zero, these convergence numbers are upper limits.
-Measuring the actual convergence in the PCN to granule connections (\Cref{fig:cerebellum_param_sweeps_d}), we see a peak at one to three PCN cells connecting to each granule cell, and this peak is only weakly affected by the desired convergence.
-Importantly, in nature, PCN cells connect to on average four granule cells (see \cite{palkovits1972quantitative}, for the complete statistics), whereas we only measure an average convergence of two in our model (for a desired convergence of five).
+Measuring the actual convergence in the \PCN to granule connections (\Cref{fig:cerebellum_param_sweeps_d}), we see a peak at one to three \PCN cells connecting to each granule cell, and this peak is only weakly affected by the desired convergence.
+Importantly, in nature, \PCN cells connect to on average four granule cells (see \cite{palkovits1972quantitative}, for the complete statistics), whereas we only measure an average convergence of two in our model (for a desired convergence of five).
 We can match the observed average in our model by increasing the desired convergence to $13$.
 This slightly increases the performance of the system and coincides with the optimal desired convergence (cf.~\Cref{fig:cerebellum_param_sweeps_b}).
 Nevertheless, since the gain in performance is relatively small, we decided not to alter the desired convergence in our model setup.

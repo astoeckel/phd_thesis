@@ -3,11 +3,11 @@
 \section{More Biologically Plausible Nengo Models: NengoBio}
 \label{app:nengo_bio}
 
-NengoBio is an add-on to the Nengo neural network simulator package \citep{bekolay2014nengo} that implements the extensions to the NEF discussed in \Cref{sec:nef_extension}.
+NengoBio is an add-on to the Nengo neural network simulator package \citep{bekolay2014nengo} that implements the extensions to the \NEF discussed in \Cref{sec:nef_extension}.
 At its core, NengoBio adds support for multi-channel neurons and for optimising weights in current-space.
 We accomplish this by hooking into Nengo's build system and dynamically rewriting the operator graph (see \cite{gosmann2017automatic} for a description of the operator graph).
 
-NengoBio can account for Dale's principle, provide special syntactic sugar for interneuron populations, enforce sparsity constraints, and support dendritic computation with two-compartment LIF neurons.
+NengoBio can account for Dale's principle, provide special syntactic sugar for interneuron populations, enforce sparsity constraints, and support dendritic computation with two-compartment \LIF neurons.
 We discuss these features in more detail in the following subsections.
 
 \subsection{Accounting for Dale's Principle}
@@ -30,11 +30,11 @@ with nengo.Network() as model:
 	# (default) forces decoding bias currents; bio.JBias implies intrinsic biases.
     bio.Connection(ens1, ens2, bias_mode=bio.Decode)
 \end{pythoncode}
-This is implemented using the NNLS method discussed in \Cref{sec:nef_nonneg}.
+This is implemented using the \NNLS method discussed in \Cref{sec:nef_nonneg}.
 Values between zero and one for \texttt{p\_exc} sets the probability with which a neuron is marked as excitatory.
 Not setting \texttt{p\_exc} disables Dale's principle for outgoing connections.
 
-NengoBio hooks into the Nengo GUI visualiser%
+NengoBio hooks into the Nengo \GUI visualiser%
 \footnote{See \url{https://github.com/nengo/nengo_gui} for more details.}
 to highlight purely excitatory or inhibitory connections; with some minor modifications (i.e., repeating the imports and \enquote{with} block), the code-snippets in this section can be copied into the visualiser for exploration.
 
@@ -124,8 +124,8 @@ The probability matrix and final connectivity of this network are depicted in \C
 
 \subsection{Dendritic Computation}
 Dendritic computation in NengoBio relies on the tuple-syntax for specifying a virtual pre-population with stacked represented values (\Cref{sec:nengo_bio_inhibitory}).
-As we discussed in detail in \Cref{chp:nlif}, we can only compute additive functions in the pre-populations with standard current-based LIF neurons.
-In NengoBio, simply setting the neuron type of an ensemble to the two-compartment LIF neuron enables the computation of nonlinear multivariate functions:
+As we discussed in detail in \Cref{chp:nlif}, we can only compute additive functions in the pre-populations with standard current-based \LIF neurons.
+In NengoBio, simply setting the neuron type of an ensemble to the two-compartment \LIF neuron enables the computation of nonlinear multivariate functions:
 \begin{pythoncode}
 # Input nodes and pre-populations with 30% inhibitory neurons
 inp_x1, inp_x2 = nengo.Node(size_in=1), nengo.Node(size_in=1)
@@ -134,7 +134,7 @@ ens_x2 = bio.Ensemble(n_neurons=100, dimensions=1, p_inh=0.3)
 nengo.Connection(inp_x1, ens_x1)
 nengo.Connection(inp_x2, ens_x2)
 
-# Create a population of two-compartment LIF neurons, use lower maximum rates
+# Create a population of two-compartment \LIF neurons, use lower maximum rates
 # because of the current limit imposed by the conductance-based synapses
 ens_tar = bio.Ensemble(n_neurons=100, dimensions=1,
                        neuron_type=bio.neurons.TwoCompLIF(),
@@ -154,6 +154,6 @@ The \texttt{QPSolver} class uses the non-sequential quadratic program discussed 
 An implementation of this non-sequential weight solver is provided by \emph{libnlif} in addition to the sequential soft trust-region based algorithms.
 
 As of writing, NengoBio does \emph{not} support \nlif-neurons with more than two compartments.
-Given our implementation of the parameter and weight solver implementations in \emph{libnlif}, this is not a technical challenge per se, but instead hinges on finding a good API that allows users to specify possible synaptic sites.
+Given our implementation of the parameter and weight solver implementations in \emph{libnlif}, this is not a technical challenge per se, but instead hinges on finding a good \API that allows users to specify possible synaptic sites.
 For example, some pre-populations may only connect to basal compartments, whereas others only target apical compartments.
 It is unclear how users would specify this at an abstract level.

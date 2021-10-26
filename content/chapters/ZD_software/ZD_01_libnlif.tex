@@ -4,12 +4,12 @@
 \label{app:libnlif}
 
 \emph{libnlif} is a hybrid Python and C++ library that facilitates working with \nlif neurons, specifically implementing the techniques discussed in \Cref{sec:nlif} onward.
-This includes providing a simple API for describing and simulating \nlif neurons, as well as an implementation of the various synaptic weight and parameter optimisers from \Cref{sec:two_comp_lif,sec:nlif_opt}.
+This includes providing a simple \API for describing and simulating \nlif neurons, as well as an implementation of the various synaptic weight and parameter optimisers from \Cref{sec:two_comp_lif,sec:nlif_opt}.
 
 \subsection{Describing $n$-LIF Neurons}
 
-The user-facing API for describing neuron models is heavily inspired by Nengo.
-For example, a standard LIF neuron with current-based input (cf.~\Cref{fig:nlif_a}) can be constructed as follows:
+The user-facing \API for describing neuron models is heavily inspired by Nengo.
+For example, a standard \LIF neuron with current-based input (cf.~\Cref{fig:nlif_a}) can be constructed as follows:
 \begin{pythoncode}
 import nlif
 
@@ -20,7 +20,7 @@ with nlif.Neuron() as lif: # Create a new neuron description
 
 lif_assm = two_comp_lif.assemble() # Assemble an immutable representation
 \end{pythoncode}
-Similarly, the following code describes the two-compartment LIF neuron (cf.~\Cref{fig:nlif_c}):
+Similarly, the following code describes the two-compartment \LIF neuron (cf.~\Cref{fig:nlif_c}):
 \begin{pythoncode}
 with nlif.Neuron() as two_comp_lif:
 	with nlif.Soma(v_th=-50e-3, tau_ref=2e-3, tau_spike=1e-3, C_m=1e-9) as soma:
@@ -45,7 +45,7 @@ Calling the \enquote{\texttt{to\_svg}} method on the assembled neuron object (or
 	\centering
 	\includegraphics{media/chapters/ZD_software/libnlif_simulation_example.pdf}
 	\label{fig:libnlif_simulation_example}
-	\caption[Output of the \emph{libnlif} two-compartment LIF simulation code example]{Output of the \emph{libnlif} two-compartment LIF simulation code example. Output spikes are available as individual spike times at sub-sample resolution or as a discretised sum of Dirac deltas.}
+	\caption[Output of the \emph{libnlif} two-compartment LIF simulation code example]{Output of the \emph{libnlif} two-compartment \LIF simulation code example. Output spikes are available as individual spike times at sub-sample resolution or as a discretised sum of Dirac deltas.}
 \end{figure}
 
 The assembled $n$-LIF object holds the system matrices \mnAp, \mnBp, \vnap, \vnbp, \mnL (\Cref{sec:nlif_description}).
@@ -82,7 +82,7 @@ The dynamical system is integrated under a zero-order hold assumption by solving
 \begin{figure}
 	\centering
 	\includegraphics{media/chapters/ZD_software/libnlif_rate_empirical_example.pdf}
-	\caption[Output of the \emph{libnlif} \enquote{rate\_empirical} function for different noise parameters]{Output of the \emph{libnlif} two-compartment LIF \texttt{rate\_empirical} rate example. The specified $\lambda$ corresponds to the rate of the Poisson spike source; the low-pass filter time constant $\tau$ is set to $\SI{5}{\milli\second}$.}
+	\caption[Output of the \emph{libnlif} \enquote{rate\_empirical} function for different noise parameters]{Output of the \emph{libnlif} two-compartment \LIF \texttt{rate\_empirical} rate example. The specified $\lambda$ corresponds to the rate of the Poisson spike source; the low-pass filter time constant $\tau$ is set to $\SI{5}{\milli\second}$.}
 	\label{fig:libnlif_rate_empirical_example}
 \end{figure}
 
@@ -106,7 +106,7 @@ The output of the above code-snippet (with a $100 \times 100$ grid) is visualise
 	{\phantomsubcaption\label{fig:libnlif_parameter_estimation_a}}%
 	{\phantomsubcaption\label{fig:libnlif_parameter_estimation_b}}%
 	{\phantomsubcaption\label{fig:libnlif_parameter_estimation_c}}%
-	\caption[Two-compartment LIF parameter optimisation using \emph{libnlif}]{Two-compartment LIF parameter optimisation using \emph{libnlif}.
+	\caption[Two-compartment LIF parameter optimisation using \emph{libnlif}]{Two-compartment \LIF parameter optimisation using \emph{libnlif}.
 	Filled contours are the empirical error measurements, dashed white lines the predicted somatic currents.}
 	\label{fig:libnlif_parameter_estimation}
 \end{figure}
@@ -142,7 +142,7 @@ Just like the \nlif simulator, the trust-region optimiser relies on a dynamicall
 
 \begin{figure}
 	\includegraphics{media/chapters/ZD_software/libnlif_weight_solver.pdf}
-	\caption[Nonnegative multiplication in two-compartment LIF neurons using \emph{libnlif}]{Nonnegative multiplication in two-compartment LIF neurons using \emph{libnlif}. Coloured contours and dotted lines show the decoded currents; dashed lines are the target.}
+	\caption[Nonnegative multiplication in two-compartment LIF neurons using \emph{libnlif}]{Nonnegative multiplication in two-compartment \LIF neurons using \emph{libnlif}. Coloured contours and dotted lines show the decoded currents; dashed lines are the target.}
 \end{figure}
 
 The synaptic weight solvers discussed in \Cref{sec:nlif_opt_weights} are provided in the \texttt{nlif.weight\_optimisation} package.
@@ -155,7 +155,7 @@ Xs = np.array((xss.flatten(), yss.flatten())).T
 
 # Obtain the target current function and pre-activities
 Js = 0.5 * (1.0 + Xs[:, 0]) * (1.0 + Xs[:, 1]) * 1e-9
-As = [...] # (N_smpls x m_pre); use the NEF tuning curve equations here
+As = [...] # (N_smpls x m_pre); use the \NEF tuning curve equations here
 
 # Perform the actual training
 idcs = np.random.randint(0, Xs.shape[0], 256)  # Training samples

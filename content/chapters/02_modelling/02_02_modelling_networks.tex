@@ -330,7 +330,7 @@ To actually simulate an \SNN, we feed an external input (e.g., a set of currents
 There are numerous general-purpose simulator software packages that do this efficiently, e.g., NEST \citep{gewaltig2007nest}, Brian \citep{stimberg2019brian}, GeNN \citep{yavuz2016genn}, or Nengo \citep{bekolay2014nengo}.
 
 The most important question---and one that we pursue for the remainder of this thesis---is how to ultimately select $\mat W$.
-For the artificial neural networks ({\ANN}s) used in machine learning (\Cref{fig:neural_networks_c}), the astoundingly successful answer is to use stochastic gradient descent on a loss function $E$, i.e., $\dot{\mat W} = -\eta \nabla_{\mat W} E(\vec a_k, \vec {\hat a_k})$, where $\eta$ is a learning rate, $\vec a_k$ is the desired output activity for an input sample $\vec x_k$, and $\vec{\hat a_k}$ is the actual output \citep{lecun2015deep}.
+For the artificial neural networks (\ANNpl) used in machine learning (\Cref{fig:neural_networks_c}), the astoundingly successful answer is to use stochastic gradient descent on a loss function $E$, i.e., $\dot{\mat W} = -\eta \nabla_{\mat W} E(\vec a_k, \vec {\hat a_k})$, where $\eta$ is a learning rate, $\vec a_k$ is the desired output activity for an input sample $\vec x_k$, and $\vec{\hat a_k}$ is the actual output \citep{lecun2015deep}.
 For example, one common choice for the loss function is $E(\vec a_k, \vec {\hat a_k}) = \|\vec a_k - \vec{\hat a}_k\|^2$.
 
 Similar gradient-descent global optimisation methods can be applied in the context of \SNNpl as well.

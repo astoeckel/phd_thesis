@@ -4,9 +4,9 @@
 \label{sec:temporal_tuning_conclusion}
 
 We proposed a linear model of spatiotemporal tuning as a generalisation of the \NEF dynamics principle (cf.~\Cref{sec:nef_dynamics}; \cite{eliasmith2003neural}, Chapter~8).
-In particular, we incorporated a model of temporal tuning in visual cortex \citep[cf.][]{carandini1999linearity} into the NEF tuning curve equation.
+In particular, we incorporated a model of temporal tuning in visual cortex \citep[cf.][]{carandini1999linearity} into the \NEF tuning curve equation.
 This way, we can construct biologically plausible spiking neural networks that approximate spatiotemporal functions.
-We furthermore pointed out that there is a direct connection between the Legendre Memory Unit (LMU; \cite{voelker2019lmu}), a promising component for stream-to-stream processing in artificial neural networks, and our spatiotemporal NEF populations.
+We furthermore pointed out that there is a direct connection between the Legendre Memory Unit (\LMU; \cite{voelker2019lmu}), a promising component for stream-to-stream processing in artificial neural networks, and our spatiotemporal \NEF populations.
 
 Conceptually, our most important argument is that it is possible to systematically harnesses diverse temporal tuning as a resource for temporal computation.
 That is, the pronounced dynamical properties of biological neural networks are an important part of the computation that is being performed.
@@ -26,17 +26,17 @@ Modellers can specify the temporal tuning of a neuron population independently o
 We use our least-squares optimisation problem to realise this desired tuning.
 An example for this are the bell-shaped temporal encoders depicted in \Cref{fig:linearly_independent_tuning}.
 
-This way, our work eliminates a long-standing shortcoming of the NEF dynamics principle.
+This way, our work eliminates a long-standing shortcoming of the \NEF dynamics principle.
 While it is possible to directly take empirical neurophysiological data into account when selecting spatial tuning properties (i.e., using the representation principle) and solving for spatial connection weights (i.e., using the transformation principle), the dynamics principle has so far relied on modellers providing closed-from differential equations.
 Providing such closed-form equations is further complicated when attempting to realise dynamics in networks with heterogeneous or higher-order synapses \citep{voelker2018improving}.
 Our approach suggests a way to better take empirical data into account and to automate the process of solving for weights, even in networks with complex recurrences (cf.~\Cref{sec:lti_complex_networks,sec:solve_dynamics_nonlinear_neurons}).
 
-Finally, we presented a method for constructing low-order LTI systems generating temporal bases using an \enquote{information erasure} technique.
-This approach can be used to derive the LTI system underlying the Legendre Delay Network (LDN; \cite{voelker2018improving}), but can similarly applied to other bases as well.
-We suggested a \enquote{modified Fourier basis}, that outperforms the LDN system in several benchmark tasks, and when mapped onto our spiking neural networks can be used to realise time-cells in biological network models.
+Finally, we presented a method for constructing low-order \LTI systems generating temporal bases using an \enquote{information erasure} technique.
+This approach can be used to derive the \LTI system underlying the Legendre Delay Network (\LDN; \cite{voelker2018improving}), but can similarly applied to other bases as well.
+We suggested a \enquote{modified Fourier basis}, that outperforms the \LDN system in several benchmark tasks, and when mapped onto our spiking neural networks can be used to realise time-cells in biological network models.
 
 Furthermore, the modified Fourier basis could be particularly attractive for stream processing in artificial neural networks, where, due to an efficient Runge-Kutta state update, we effectively require $\mathcal{O}(q)$ space and $\mathcal{O}(q^{2.33})$ time for processing a window of length $\theta$.
-This is a substantial improvement over the LDN used in the LMU which we found to require $\mathcal{O}(q^3)$ time.
+This is a substantial improvement over the \LDN used in the \LMU which we found to require $\mathcal{O}(q^3)$ time.
 
 \subsubsection{Future work}
 
@@ -45,7 +45,7 @@ While we argued that our recurrent networks will realise the desired dynamics \e
 We observe in practice that our networks are typically well-behaved (i.e., not asymptotically unstable); however, it would be interesting to augment our weight solver with techniques from system identification that guarantee stability \citep[cf.][]{verhaegen2007filtering}.
 
 Another aspect that we have only considered in the context of our adaptive filter experiment, is using the temporal tuning curve paradigm to realise nonlinear tuning.
-This is easily possible using the NEF dynamics principle \citep[Chapter~8]{eliasmith2003neural} and also not a hard limitation of our temporal tuning curve approach.
+This is easily possible using the \NEF dynamics principle \citep[Chapter~8]{eliasmith2003neural} and also not a hard limitation of our temporal tuning curve approach.
 In fact, our general definition of a temporal tuning curve is oblivious to the specific type of dynamics (cf.~\Cref{def:temporal_tuning_curve}).
 Rather, the problem is one of finding a good mathematical formalisation; linear temporal encoders $\mathfrak{e}_i$ offer an intuitive parametrisation of temporal tuning curves that we would have to give.
 
@@ -54,5 +54,5 @@ While linearly approximating neural dynamics was successful for the simple neuro
 It could similarly be interesting to model transmission delays using temporal tuning, and demonstrate that our methods can capture low-level phenomena such as auditory coincidence detection in the brain stem \citep[Chapter~31]{kandel2012principles}.
 
 In order to disseminate our methods to researchers modelling neurobiological systems, it would be interesting to integrate our approaches into a software tool such as the Nengo spiking neural network simulator \citep{bekolay2014nengo}.
-An interesting engineering challenge would be to define a convenient API from temporal tuning that ties well into the existing system.
+An interesting engineering challenge would be to define a convenient \API from temporal tuning that ties well into the existing system.
 In this respect, it would also be beneficial to find ways to efficiently construct the least-squares problem defined in \cref{eqn:weight_optimise_currents_temporal} by relying on spectral decompositions.

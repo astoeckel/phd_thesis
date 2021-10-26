@@ -8,7 +8,7 @@ Dendritic development is guided by several extrinsic signals, including the acti
 This suggests that dendries are fine-tuned to fulfil a certain computational function.
 
 Indeed, both theoretical and empirical studies show that the location of synaptic sites within the dendrites has a significant impact on neural computation \citep{mel1994information,koch2002singlecell,polsky2004computational}.
-Still, there is no widely accepted high-level theory of dendritic computation \citep{london2005dendritic}, that would, for example, be on a similar level of abstraction as the admirably successful LIF neuron.
+Still, there is no widely accepted high-level theory of dendritic computation \citep{london2005dendritic}, that would, for example, be on a similar level of abstraction as the admirably successful \LIF neuron.
 
 Finding such an overarching theory of dendritic computation is difficult due to the sheer complexity of the nonlinear dynamical systems formed by active dendritic structures \citep{beniaguev2021single}.
 This may sometimes lead to seemingly contradictory observations.
@@ -35,21 +35,21 @@ Similar mechanisms have been proposed as a learning mechanism in cortical pyrami
 
 \subsubsection{Goal of this chapter}
 Compared to the complex mechanisms discussed in many of the studies listed above, the goal of this chapter is decidedly modest.
-In fact, we would like to incorporate the \emph{simplest possible} model of dendritic computation into the NEF.
+In fact, we would like to incorporate the \emph{simplest possible} model of dendritic computation into the \NEF.
 By \enquote{simple} we mean that our model should be as mathematically tractable as possible, while still being exploitable as a computational resource.
 Correspondingly, our work establishes a baseline for the computational power of mechanisms found in most biological neurons and allows modellers to meaningfully connect this low-level biological detail to high-level function.
 
 Specifically, we do \emph{not} include active effects such as dendritic spikes in our model.
-Instead, we investigate in how far passive nonlinear interaction between dendritic compartments can provide a substantial computational advantage over standard LIF neurons.
+Instead, we investigate in how far passive nonlinear interaction between dendritic compartments can provide a substantial computational advantage over standard \LIF neurons.
 As a result, we obtain a more conservative estimate of the computational power of dendritic trees compared to the two- and five-layer networks proposed by \citet{poirazi2003pyramidal,beniaguev2021single}.
 While scientific interest in passive dendritic effects has waned over the past two decades, our work approaches this topic from a new angle, and, importantly, produces results that are compatible with the aforementioned empirical observations regarding shunting inhibition.
 Furthermore, as demanded by \citet{london2005dendritic}, we demonstrate that our theoretical results hold up in noisy spiking networks with relatively low firing rates and few neurons.
 
-There are two primary reasons why we think that integrating dendritic computation into the NEF is important.
-First, the presence of dendritic structures suggests that individual neurons are computationally more powerful than typically assumed in the NEF.
-This may be misleading when using the NEF as a litmus test for exploring whether a certain high-level function could at all be implemented in a biological network (cf.~\Cref{sec:nef_purpose}).
+There are two primary reasons why we think that integrating dendritic computation into the \NEF is important.
+First, the presence of dendritic structures suggests that individual neurons are computationally more powerful than typically assumed in the \NEF.
+This may be misleading when using the \NEF as a litmus test for exploring whether a certain high-level function could at all be implemented in a biological network (cf.~\Cref{sec:nef_purpose}).
 One example of this, and a recurring theme in this chapter, is the matter of computing nonnegative multiplication, also referred to as \enquote{gain modulation} \citep{salinas2000gain}.
-This function can only be computed in the standard NEF if the multiplicands are represented in a common pre-population \citep[Section~6.3]{eliasmith2003neural}.
+This function can only be computed in the standard \NEF if the multiplicands are represented in a common pre-population \citep[Section~6.3]{eliasmith2003neural}.
 However, we know that certain circuits in the brain, such layer six in visual cortex, act as gain-control mechanisms that do not rely on common representations \citep{olsen2012gain,bobier2014unifying}.
 
 Second, accounting for dendritic computation may be of interest for neuromorphic computing.
@@ -57,38 +57,38 @@ This is particular true for mixed-signal neuromorphic hardware systems, where in
 Introducing dendritic trees could potentially move more of the computation into the analogue domain, and thus improve the power efficiency of the system.
 
 \subsubsection{Prior work}
-There is some prior work regarding the integration of dendritic computation into the NEF.
-For example, \Citet[Chapter~4]{tripp2009search} shows that two-compartment neurons with conductance-based synapses can in principle be used in NEF networks.
+There is some prior work regarding the integration of dendritic computation into the \NEF.
+For example, \Citet[Chapter~4]{tripp2009search} shows that two-compartment neurons with conductance-based synapses can in principle be used in \NEF networks.
 However, Tripp does not investigate how these neurons could be systematically exploited to perform computation.
 
 \Citet{bobier2014unifying} implement a model of visual attention based on the aforementioned gain-control signals present in layer six of the visual cortex.
-As originally suggested by \Citet[Section~6.3]{eliasmith2003neural}, Bobier et al.~work around the limitations of the NEF by presupposing that pyramidal cells are capable of nonnegative multiplication.
-Similar techniques have been pursued in the context of the FORCE and EBN frameworks \citep{thalmeier2016learning,alemi2018learning}.
+As originally suggested by \Citet[Section~6.3]{eliasmith2003neural}, Bobier et al.~work around the limitations of the \NEF by presupposing that pyramidal cells are capable of nonnegative multiplication.
+Similar techniques have been pursued in the context of the FORCE and \EBN frameworks \citep{thalmeier2016learning,alemi2018learning}.
 While supported by empirical evidence, these approaches are not generalisable to systematically solving for arbitrary functions under biological constraints.
 
-Another line of research related to ours is integrating detailed multi-compartment neuron models into NEF networks.
-\Citet{eliasmith2016biospaun} demonstrate that it is possible to replace portions of the SPAUN model \citep{eliasmith2012largescale} with detailed multi-compartment neurons, while mostly retaining the performance of the model. Similarly, \citet{duggins2017incorporating} presents techniques for integrating detailed neurons into NEF networks.
-Our goal is less to demonstrate that such detailed neurons can be used in NEF models, but that accounting for this detail can be advantageous with respect to high-level function.
+Another line of research related to ours is integrating detailed multi-compartment neuron models into \NEF networks.
+\Citet{eliasmith2016biospaun} demonstrate that it is possible to replace portions of the SPAUN model \citep{eliasmith2012largescale} with detailed multi-compartment neurons, while mostly retaining the performance of the model. Similarly, \citet{duggins2017incorporating} presents techniques for integrating detailed neurons into \NEF networks.
+Our goal is less to demonstrate that such detailed neurons can be used in \NEF models, but that accounting for this detail can be advantageous with respect to high-level function.
 
 \subsubsection{Structure of this chapter}
 In \Cref{sec:dendritic_computation_theory}, we define the concept of \enquote{dendritic computation} in a theoretical function approximation context.
 Specifically, we treat different synaptic sites in the dendritic structure as separate \enquote{input channels}, resulting in a multivariate neural nonlinearity.
 We find that such multi-channel neurons are not universal function approximators, but can potentially outperform two-layer networks in real-world scenarios.
 
-Next, in \Cref{sec:nef_extension}, we extend the NEF to support biologically plausible multi-channel neurons.
+Next, in \Cref{sec:nef_extension}, we extend the \NEF to support biologically plausible multi-channel neurons.
 To this end, we first generalise the weight-optimisation problem to act in current space (resulting in full weight matrices $\mat W$) instead of representational space (resulting in decoders $\mat D$).
 We furthermore discuss solving for non-negative weights, as is required for conductance-based channels in more realistic neuron models, and introduce \enquote{subthreshold relaxation}, a method for de-emphasising subthreshold target currents and improving superthreshold accuracy.
 
-We continue in \Cref{sec:nlif} by formally defining \nlif neurons, a family of $n$-compartment LIF neurons.
+We continue in \Cref{sec:nlif} by formally defining \nlif neurons, a family of $n$-compartment \LIF neurons.
 We to derive an approximate closed-form expression for the average current flowing into the somatic compartment.
 Further theoretical analysis of this expression yields rules according to which input channels interact divisively, multiplicatively, or linearly.
 
-Subsequently, in \Cref{sec:two_comp_lif}, we apply these theoretical insights to the simplest non-trivial \nlif neuron, the two-compartment LIF neuron.
+Subsequently, in \Cref{sec:two_comp_lif}, we apply these theoretical insights to the simplest non-trivial \nlif neuron, the two-compartment \LIF neuron.
 We derive a convex optimisation problem that allows us to solve for near-optimal synaptic weights and show that we can exploit this neuron model to compute a wide range of functions at similar or lower errors than two-layer spiking neural networks.
 
 Finally, in \Cref{sec:nlif_opt}, we discuss a general weight-solving method for \nlif neurons.
 While we cannot guarantee that the resulting weights are globally optimal, our method typically converges within a few iterations.
-We show that we can use this method to systematically solve for weights to compute functions such as XOR with a single neuron.
+We show that we can use this method to systematically solve for weights to compute functions such as \XOR with a single neuron.
 
 We close with a discussion of our results in \Cref{sec:nlif_discussion}.
 An overview of the software libraries developed to perform the experiments presented here is given in \Cref{app:software}.

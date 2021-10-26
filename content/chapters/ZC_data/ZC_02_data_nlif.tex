@@ -5,7 +5,7 @@
 
 This section contains additional tables and figures for the experiments conducted in Chapter~3.
 \Cref{tbl:two_comp_neuron_parameters} lists neuron parameters used throughout \Cref{sec:two_comp_lif,sec:nlif_opt} unless explicitly stated differently.
-The model parameters derived in \Cref{sec:two_comp_lif_experiment_1} are given in \Cref{tbl:two_comp_model_parameters}; functions used in the two-compartment LIF network experiment are given in \Cref{tbl:two_comp_functions}.
+The model parameters derived in \Cref{sec:two_comp_lif_experiment_1} are given in \Cref{tbl:two_comp_model_parameters}; functions used in the two-compartment \LIF network experiment are given in \Cref{tbl:two_comp_functions}.
 \Cref{fig:nlif_parameters_contours_no_calibration} depicts rate approximation errors for more complex \nlif neurons without calibration.
 
 \input{content/chapters/ZC_data/ZC_02_tbl_neuron_parameters}
@@ -14,8 +14,8 @@ The model parameters derived in \Cref{sec:two_comp_lif_experiment_1} are given i
 
 \input{content/chapters/ZC_data/ZC_02_tbl_functions}
 
-Extended results for our two-compartment LIF network experiments are provided in \Cref{tbl:function_approximations_complete}.
-All error values correspond to the NRMSE (relative to the RMS of the target function).
+Extended results for our two-compartment \LIF network experiments are provided in \Cref{tbl:function_approximations_complete}.
+All error values correspond to the \NRMSE (relative to the \RMS of the target function).
 The error $E_\mathrm{model}$ corresponds to the static decoding errors assuming the dendritic model is accurate;
 the error $E_\mathrm{net}$ is the decoding error after passing the input through the entire network.
 The given errors are the mean and standard deviation over $N = 100$ experiments.
@@ -26,13 +26,13 @@ Also refer to \Cref{tbl:function_approximations} for a more detailed legend.
 \subsection{Regularisation Factor and Pre-filter Sweep}
 \label{app:two_comp_regularisation_factor_sweep}
 
-The regularisation factors $\lambda$ used in the theoretical analysis of the two-compartment LIF nonlinearity (\Cref{sec:two_comp_lif_experiment_2}) were determined by performing a parameter sweep with a spatial low-pass filter coefficient of $\rho^{-1} = 0.5$.
+The regularisation factors $\lambda$ used in the theoretical analysis of the two-compartment \LIF nonlinearity (\Cref{sec:two_comp_lif_experiment_2}) were determined by performing a parameter sweep with a spatial low-pass filter coefficient of $\rho^{-1} = 0.5$.
 Results of this sweep are depicted in \Cref{fig:two_comp_2d_regularisation_sweep}.
 \begin{figure}
 	\centering
 	\includegraphics{media/chapters/ZC_data/two_comp_2d_regularisation_sweep.pdf}
 	%TODO Make sure the regularisation factors are called lambda everywhere; double-check the equations
-	\caption[Regularisation sweep for the theoretical analysis of the two-compartment LIF nonlinearity]{Regularisation sweep for the theoretical analysis of the two-compartment LIF nonlinearity (\Cref{sec:two_comp_lif_experiment_2}). Depicted lines are the median error over $N=128$ experiments for random 2D-functions with spatial filter $\rho^{-1} = 0.5$.
+	\caption[Regularisation sweep for the theoretical analysis of the two-compartment LIF nonlinearity]{Regularisation sweep for the theoretical analysis of the two-compartment \LIF nonlinearity (\Cref{sec:two_comp_lif_experiment_2}). Depicted lines are the median error over $N=128$ experiments for random 2D-functions with spatial filter $\rho^{-1} = 0.5$.
 	%Black crosses correspond to the minimum error for each curve.
 	\textbf{(A)} Is without subthreshold relaxation, \textbf{(B)} with subthreshold relaxation.}
 	\label{fig:two_comp_2d_regularisation_sweep}
@@ -52,13 +52,13 @@ This rules out that the positive effects of the two-compartment neuron are prima
 Notably, this low-pass filter is not included in the filter-chain for the target signal used to compute the estimation error.
 Hence, the chosen filter time-constant must balance between suppressing noise in the input and not dampening high-frequency components in the target signal.
 
-As depicted in \Cref{fig:regularization_parameter_sweep_nosubth,fig:regularization_parameter_sweep_subth}, the pre-filter does not result in any appreciable improvement in error for single layer networks with standard LIF neurons.
-For both the two-layer LIF network, and the two-compartment LIF neurons without noise model, the error is minimized for a filter coefficient of about \SIrange{10}{20}{\milli\second}.
-As one would expect, when using the two-compartment LIF noise model, adding a pre-filter is more detrimental than useful.
+As depicted in \Cref{fig:regularization_parameter_sweep_nosubth,fig:regularization_parameter_sweep_subth}, the pre-filter does not result in any appreciable improvement in error for single layer networks with standard \LIF neurons.
+For both the two-layer LIF network, and the two-compartment \LIF neurons without noise model, the error is minimized for a filter coefficient of about \SIrange{10}{20}{\milli\second}.
+As one would expect, when using the two-compartment \LIF noise model, adding a pre-filter is more detrimental than useful.
 
 Function approximation errors are given in (cf.~\Cref{tbl:function_approximations_pre_filter}).
 Again, we provide the mean and standard deviation of the model and network errors for $N = 100$ samples; see above for a complete description of the table.
-The pre-filter reduces the error by only about $1$-$2\%$ across all network setups, which is far less than the observed reduction in error when using the two-compartment model compared to the standard LIF neuron model.
+The pre-filter reduces the error by only about $1$-$2\%$ across all network setups, which is far less than the observed reduction in error when using the two-compartment model compared to the standard \LIF neuron model.
 We conclude that, while additional low-pass filters in the network can help to reduce the overall error, the reduction in error is too small to be an explanation for the smaller errors produced by the two-compartment model.
 
 \begin{figure}[p]
@@ -74,7 +74,7 @@ We conclude that, while additional low-pass filters in the network can help to r
 \end{figure}
 
 \begin{table}
-	\caption[Regularisation factors and pre-filter time-constants.]{Regularisation factors and pre-filter time-constants for the two-compartment LIF network experiments. See text for a description.
+	\caption[Regularisation factors and pre-filter time-constants.]{Regularisation factors and pre-filter time-constants for the two-compartment \LIF network experiments. See text for a description.
 	\textsuperscript{\dag}With subthreshold relaxation.
 	}
 	\label{tbl:regularization_paremteters}

@@ -166,7 +166,7 @@ There are no continuous, real-valued functions $f_1$, $f_2$, $\sigma$ such that 
 
 \begin{figure}
 	\includegraphics{media/chapters/03_nlif/03_01/mlp.pdf}
-	\caption[Sketch of a two-layer neural network]{Sketch of a two-layer neural network with rectified linear units (ReLUs). If the encoding vectors $\vec e_i$ and the biases $\beta_i$ are sampled appropriately, this network is a universal function approximator.}
+	\caption[Sketch of a two-layer neural network]{Sketch of a two-layer neural network with rectified linear units (\ReLUpl). If the encoding vectors $\vec e_i$ and the biases $\beta_i$ are sampled appropriately, this network is a universal function approximator.}
 	\label{fig:mlp}
 \end{figure}
 
@@ -287,10 +287,10 @@ For any fixed $\sigma : \mathbb{R}^k \longrightarrow \mathbb{Y}$, there always e
 	f(x_1, \ldots, x_\ell) = \sigma(\xi_1, \ldots, \xi_k) = \sigma\bigl( g^1_1(x_1) + \ldots + g^1_\ell(x_\ell), \ldots,  g^k_1(x_1) + \ldots + g^k_\ell(x_\ell)\bigr) \text{ for all } \vec x \in \Xrepr \,.
 \end{align*}
 \end{conjecture}
-\noindent While a rigorous proof eludes us, counting the degrees of freedom (DOF) required to describe an $\ell$-dimensional function $f$ suggests that this should be true.
+\noindent While a rigorous proof eludes us, counting the degrees of freedom (\DOF) required to describe an $\ell$-dimensional function $f$ suggests that this should be true.
 Given $\oh$ orthogonal one-dimensional basis functions, the corresponding $\ell$-dimensional basis has $\oh^\ell$ basis functions.
-Correspondingly, $\oh^\ell$ DOF are required to describe an $\ell$-dimensional $f$ with a basis of order $\oh$.
-However, when using dendritic computation, we only use $k \ell$ one-dimensional functions; correspondingly, there are only $\oh k \ell$ DOF.
+Correspondingly, $\oh^\ell$ \DOF are required to describe an $\ell$-dimensional $f$ with a basis of order $\oh$.
+However, when using dendritic computation, we only use $k \ell$ one-dimensional functions; correspondingly, there are only $\oh k \ell$ \DOF.
 For $\oh \to \infty$, and $\ell > 1$, $\oh k \ell$ grows much slower than $\oh^\ell$.
 Hence, there are always functions than cannot be computed using dendritic computation.%
 \footnote{Mathematically, the cardinality of the set of continuous functions $f$ constructed from a function basis of order $\oh$ is $|\mathbb{R}^{\oh^\ell}|$, while the cardinality of functions that can be constructed using dendritic computation is $|\mathbb{R}^{\oh k \ell}|$.
@@ -344,7 +344,7 @@ Replacing the pre-population in the additive network with $\oh$ basis functions,
 	f_\mathrm{add}(x_1, x_2) &= g_1(x_1) + g_2(x_2) = \sum\nolimits_{i = 0}^{\oh} w^1_{i} P_i(x_1) + \sum\nolimits_{i = 0}^{\oh} w^2_{i} P_i(x_2) \,,
 	\label{eqn:f_add}
 \end{align}
-where $w_i^1$, $w_i^2$ (for $2o$ degrees-of-freedom; DOF) can be computed using least squares.
+where $w_i^1$, $w_i^2$ (for $2o$ degrees-of-freedom; \DOF) can be computed using least squares.
 For our analysis of dendritic computation, we choose $\sigma(\xi_1, \xi_2) = \xi_1 \xi_2$ as a nonlinearity $\sigma$ and obtain
 \begin{align}
 	\begin{aligned}
@@ -355,8 +355,8 @@ For our analysis of dendritic computation, we choose $\sigma(\xi_1, \xi_2) = \xi
 	\end{aligned}
 	\label{eqn:f_den}
 \end{align}
-Solving for $w^1_{i}$, $w^2_{i}$, $w^3_{i}$, $w^4_{i}$ (for a total of $4\oh$ DOF) is a non-convex optimisation problem that tends to possess numerous local minima.
-We use the BFGS quasi-Newton method \citep[Chapter~8]{nocedal2006numerical} with ten random initialisations and pick the best solution.
+Solving for $w^1_{i}$, $w^2_{i}$, $w^3_{i}$, $w^4_{i}$ (for a total of $4\oh$ \DOF) is a non-convex optimisation problem that tends to possess numerous local minima.
+We use the \BFGS quasi-Newton method \citep[Chapter~8]{nocedal2006numerical} with ten random initialisations and pick the best solution.
 
 Finally, we emulate the universal approximator nature of multi-layer networks by constructing an additive network based on two-dimensional basis functions $P_{ij}(x_1, x_2) = P_{i}(x_1) P_j(x_2)$:
 \begin{align}
@@ -364,7 +364,7 @@ Finally, we emulate the universal approximator nature of multi-layer networks by
 		&= \sum\nolimits_{i = 0}^{\oh} \sum\nolimits_{j = 0}^{\oh} w_{ij} P_{ij}(x_1, x_2) = \sum\nolimits_{i = 0}^{\oh} \sum\nolimits_{j = 0}^{\oh} w_{ij} P_{i}(x_1) P_j(x_2) \,.
 	\label{eqn:f_mlp}
 \end{align}
-Again, the weights $w_{ij}$ (for a total of $o^2$ DOF) can be optimally determined using least-squares.
+Again, the weights $w_{ij}$ (for a total of $o^2$ \DOF) can be optimally determined using least-squares.
 
 %We can immediately see that $f_\mathrm{add}$ does not contain products between $x_1$ and $x_2$.
 Note that if we had chosen $\sigma(\xi) = \xi^2$ in \Cref{eqn:f_add}, then $f_\mathrm{add}$, $f_\mathrm{den}$ and $f_\mathrm{mlp}$ would all be composed of the same $\oh^2$ product-terms.
@@ -384,7 +384,7 @@ This is the case if only the first few basis functions can be decoded well from 
 	\caption[Function approximation using different network setups]{Function approximation using different network setups.
 	\textbf{(A)} Grid of the first $10 \times 7$ 2D Legendre basis functions $\tilde P_{ij}(x_1, x_2)$. The 1D basis functions depending only on $x_1$ and $x_2$ are to the left/top of the dashed lines.
 	\textbf{(B)} Randomly generated target functions of different complexity $\rho^{-1}$.
-	\textbf{(C,~D,~E)}~Approximations of the target functions using the different networks discussed in the text. Inset error values are the normalised RMSE in percent.
+	\textbf{(C,~D,~E)}~Approximations of the target functions using the different networks discussed in the text. Inset error values are the normalised \RMSE in percent.
 	}
 	\label{fig:dendritic_computation_legendre_overview}
 \end{figure}
@@ -435,7 +435,7 @@ Interestingly, the point at which $f_\mathrm{den}$ and $f_\mathrm{mlp}$ diverge 
 \begin{figure}
 	\centering
 	\includegraphics{media/chapters/03_nlif/03_01/decode_basis_functions.pdf}
-	\caption[Number of decodable basis functions over the number of neurons]{Number of decodable basis functions over the number of neurons. Each line is the mean number of Legendre polynomials  that can be decoded with an error smaller than the indicated threshold from a ReLU neuron population of size $n$ (mean is over $100$ trials). The three columns correspond to a one-, two- and three-dimensional population. The total number of basis functions tested for each data point is $20^\ell$, where $\ell$ is the dimensionality of the population.
+	\caption[Number of decodable basis functions over the number of neurons]{Number of decodable basis functions over the number of neurons. Each line is the mean number of Legendre polynomials  that can be decoded with an error smaller than the indicated threshold from a \ReLU neuron population of size $n$ (mean is over $100$ trials). The three columns correspond to a one-, two- and three-dimensional population. The total number of basis functions tested for each data point is $20^\ell$, where $\ell$ is the dimensionality of the population.
 	The number of decodable basis functions is not drastically larger for higher-dimensional neuron populations.}
 	\label{fig:decode_basis_functions}
 \end{figure}

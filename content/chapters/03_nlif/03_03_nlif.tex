@@ -138,7 +138,7 @@ Some conductances $g_{k}^i(t)$ and currents $J_{k}^i(t)$ are constant, such as t
 \end{table}
 
 \subsubsection{Canonical matrix form}
-We can rearrange \cref{eqn:nlif_single_compartment} to \emph{resemble} a canonical LTI system.%
+We can rearrange \cref{eqn:nlif_single_compartment} to \emph{resemble} a canonical \LTI system.%
 \footnote{
 In general, \cref{eqn:nlif_matrix} is \emph{not} a linear dynamical system.
 However, there are two conditions under which this system is linear: either $\vng(t)$ is constant, or there are no product terms between $\vng(t)$ and $\vvMem(t)$.
@@ -640,7 +640,7 @@ The same holds for \nlif neurons that only possess current-based input channels.
 That is, conductance-based input channels act \enquote{divisively} on the other input channels in that compartment; they contribute to the denominator of one of the fractions in \Cref{thm:nlif_product_terms}.
 
 Mathematically, this kind of nonlinear interaction is apparent in the dendritic nonlinearity for the two-compartment neuron (eq.~\ref{eqn:two_comp_lif}); the excitatory and inhibitory conductances $g_\mathrm{E}$ and $g_\mathrm{I}$ act divisively on $H$.
-While the magnitude of this effect depends on the ratio between the input and the coupling- and leak-conductances, shunting in a single compartment cannot be used to compute \enquote{interesting} functions such as XOR (proof in \Cref{app:thm_two_comp_xor}):
+While the magnitude of this effect depends on the ratio between the input and the coupling- and leak-conductances, shunting in a single compartment cannot be used to compute \enquote{interesting} functions such as \XOR (proof in \Cref{app:thm_two_comp_xor}):
 \begin{restatable}{theorem}{ThmTwoCompXor}
 \label{thm:two_comp_xor}
 Let $g_\mathrm{E}(x_1, x_2) = g_\mathrm{E}^1(x_1) + g_\mathrm{E}^2(x_2)$ and $g_\mathrm{I}(x_1, x_2) = g_\mathrm{I}^1(x_1) + g_\mathrm{E}^2(x_2)$ be nonnegative functions.
@@ -649,7 +649,7 @@ The two-compartment \LIF nonlinearity
 \begin{align*}
 	\phi(x_1, x_2) = H(g_\mathrm{E}(x_1, x_2), g_\mathrm{I}(x_1, x_2)) &= \frac{b_0 + b_1 g_\mathrm{E}(x_1, x_2) - b_2 g_\mathrm{I}(x_1, x_2)}{a_0 + a_1 g_\mathrm{E}(x_1, x_2) + a_2 g_\mathrm{I}(x_1, x_2)}
 \end{align*}
-cannot be used to solve the weak XOR problem (see \Cref{def:weak_xor}).
+cannot be used to solve the weak \XOR problem (see \Cref{def:weak_xor}).
 \end{restatable}
 
 Still, and as we demonstrate in the next section, a single layer of two-compartment neurons can compute a wide range of functions with a substantially smaller error than a single layer, or, in some cases, even two layers of standard \LIF neurons.
@@ -662,12 +662,12 @@ First, conductance-based inputs are nonnegative, and can thus only cover the qua
 While current-based channels can provide positive and negative input, there is at most one current-based input per product term.
 
 Second, the multiplicative terms are similar in magnitude to the linear terms---for example, all terms in the numerator in \cref{eqn:three_comp_lif_long} are the product of two conductances and one voltage, whereas all terms in the denominator at the product of two conductances.
-This implies that, to compute a function such as XOR, we must find synaptic weights that compensate for the linear terms, while, at the same time, computing the desired nonlinear function.
+This implies that, to compute a function such as \XOR, we must find synaptic weights that compensate for the linear terms, while, at the same time, computing the desired nonlinear function.
 
 Lastly, there is a tradeoff between the coupling conductances $c_{ij}$ and the maximum somatic current that can be produced by a compartment.
 This current is proportional to the product of the intermediate coupling conductances, making it more difficult for distal compartments to influence the soma.
 Countering this by choosing larger $c_{ij}$ results in more linear $H$.
 
-Still, as we demonstrate in \Cref{sec:nlif_opt}, it is indeed possible to solve the weak XOR problem using a single three-compartment neuron.
+Still, as we demonstrate in \Cref{sec:nlif_opt}, it is indeed possible to solve the weak \XOR problem using a single three-compartment neuron.
 In particular, we discuss an iterative weight optimisation scheme that in practice quickly converges to locally optimal weights.
 

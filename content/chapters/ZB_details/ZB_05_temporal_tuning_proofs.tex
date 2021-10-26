@@ -4,12 +4,12 @@
 \label{app:temporal_tuning_proofs}
 
 This section contains proofs for the mathematical claims made throughout \Cref{chp:temporal_tuning}.
-Specifically, we prove that our least-squares loss generalises the NEF dynamics principle, that our notion of a \enquote{delay re-encoder} works as intended, and provide the complete derivation of the LDN system using the delay re-encoder.
+Specifically, we prove that our least-squares loss generalises the \NEF dynamics principle, that our notion of a \enquote{delay re-encoder} works as intended, and provide the complete derivation of the \LDN system using the delay re-encoder.
 
 \subsection{Proof for \Cref{thm:temporal_lstsq}}
 \label{app:lstsq_nef_equivalence}
 
-We claimed in \Cref{sec:temporal_tuning_lti} that solving our least-squares loss function in linear networks with homogeneous first-order low-pass filters results in exactly the same solution as using the NEF dynamics principle.
+We claimed in \Cref{sec:temporal_tuning_lti} that solving our least-squares loss function in linear networks with homogeneous first-order low-pass filters results in exactly the same solution as using the \NEF dynamics principle.
 Correspondingly, our method of solving for connection weights is strictly a generalisation of the dynamics principle.
 More precisely, we claimed the following:
 
@@ -63,7 +63,7 @@ Expressing the convolution operations vectorially over all $i$ in the Laplace do
 	0 &\supposedEq \,  E(s) X(s) - \mat B' H(s) X(s) - \mat A' H(s) E(s) X(s) \,.
 	\label{eqn:temporal_tuning_opt_laplace}
 \end{align}
-Per definition, $E(s)$ is the impulse response of the LTI system defined by $\mat A$, $\mat B$.
+Per definition, $E(s)$ is the impulse response of the \LTI system defined by $\mat A$, $\mat B$.
 Let $M(s)$ be the Laplace transform of the linear system state $\vec m(t)$.
 We have the following quantities:
 \begin{align*}
@@ -99,16 +99,16 @@ Substituting these definitions along with $\mat A' = \tau \mat A + \mat I$ and $
 	\includegraphics{media/chapters/ZB_details/homogeneous_heterogeneous_filters.pdf}%
 	{\phantomsubcaption\label{fig:homogeneous_heterogeneous_filters_a}}%
 	{\phantomsubcaption\label{fig:homogeneous_heterogeneous_filters_b}}%
-	\caption[Block-diagram of a recurrent networks with homogeneous and heterogeneous filters]{Block-diagram of a recurrent networks with homogeneous and heterogeneous filters in the Laplace domain. $U(s)$ is the input signal, $M(s)$ is the state vector with the desired LTI dynamics $s M(s) = \mat A M(s) + \mat B U(s)$.
-	\textbf{(A)} Recurrent network used in the derivation of the NEF dynamics principle. The input and feedback pass through the same filter $H(s)$.
-	This filter takes the role of the integrator in a standard LTI system; $\mat A'$ and $\mat B'$ compensate for the lack of an integrator to realise the desired dynamics.
+	\caption[Block-diagram of a recurrent networks with homogeneous and heterogeneous filters]{Block-diagram of a recurrent networks with homogeneous and heterogeneous filters in the Laplace domain. $U(s)$ is the input signal, $M(s)$ is the state vector with the desired \LTI dynamics $s M(s) = \mat A M(s) + \mat B U(s)$.
+	\textbf{(A)} Recurrent network used in the derivation of the \NEF dynamics principle. The input and feedback pass through the same filter $H(s)$.
+	This filter takes the role of the integrator in a standard \LTI system; $\mat A'$ and $\mat B'$ compensate for the lack of an integrator to realise the desired dynamics.
 	\textbf{(B)} For heterogeneous $H_1(s)$, $H_2(s)$, both $\mat A'(s)$ and $\mat B'(s)$ are time-dependent filters themselves.
 	}
 	\label{fig:homogeneous_heterogeneous_filters}
 \end{figure}
 
 We mentioned in \Cref{sec:lti_complex_networks} that compensating for the dynamics of a network with heterogeneous time constants requires access to the derivative of the input and feedback signal.
-To get some intuition for this, recall the derivation of the original NEF dynamics principle (cf.~\Cref{sec:nef_dynamics}; \cite{eliasmith2003neural}, Chapter~8).
+To get some intuition for this, recall the derivation of the original \NEF dynamics principle (cf.~\Cref{sec:nef_dynamics}; \cite{eliasmith2003neural}, Chapter~8).
 Using the homogeneous network illustrated in \Cref{fig:homogeneous_heterogeneous_filters_a}
 \begin{align}
 	M(s) &= \frac{1}{s} \bigl( \mat A M(s) + \mat B U(s) \bigr) \,, \label{eqn:desired_dyn}\\
@@ -139,7 +139,7 @@ Solving for $\mat A'(s)$ and $\mat B'(s)$ results in two first-order high-pass f
 	\mat A'(s) &= \frac{(\mat A \tau_1 \tau_2 + \tau_1 + \tau_2) s + 1}{\tau_1 s + 1} \,, &
 	\mat B'(s) &= \frac{\mat B \tau_1 \tau_2 s}{\tau_2 s + 1} \,.
 \end{align*}
-Curiously, this solution does not coincide with the original NEF solution for $\tau_1 = \tau_2$; this is due to the problem of finding $\mat A'(s)$ and $\mat B'(s)$ being underconstrained.
+Curiously, this solution does not coincide with the original \NEF solution for $\tau_1 = \tau_2$; this is due to the problem of finding $\mat A'(s)$ and $\mat B'(s)$ being underconstrained.
 However, and without providing a proof, for $\tau_1 \neq \tau_2$, $s$ will always be in the numerator of $\mat A'(s)$ and $\mat B'(s)$; correspondingly, these filters require access to the derivative of their input.
 
 \subsection{Homogeneous Recurrent Networks With Interneurons}
@@ -155,7 +155,7 @@ However, and without providing a proof, for $\tau_1 \neq \tau_2$, $s$ will alway
 	\textbf{(B)} For heterogeneous filters, there is no time-invariant solution for the input and feedback matrices. See \Cref{sec:lti_complex_networks} for a numerical approximation.}
 \end{figure}
 
-We claimed in \Cref{sec:lti_complex_networks} that the time-invariant matrices $\mat A' = \tau \mat A + \mat I$, $\mat B' = \tau \mat B$ can be used to realise any desired LTI system in a recurrent neural network with an intermediate population and homogeneous synaptic filters (cf.~\Cref{fig:intermediate_population_filters_a}).
+We claimed in \Cref{sec:lti_complex_networks} that the time-invariant matrices $\mat A' = \tau \mat A + \mat I$, $\mat B' = \tau \mat B$ can be used to realise any desired \LTI system in a recurrent neural network with an intermediate population and homogeneous synaptic filters (cf.~\Cref{fig:intermediate_population_filters_a}).
 We discuss why this is the case below---we first provide an intuitive solution, and then prove the result more rigorously.
 Note that, similarly to the argument made in the previous section, finding time-invariant $\mat A'$, $\mat B'$ is generally not possible for recurrent networks with heterogeneous filters (cf.~\Cref{fig:intermediate_population_filters_b}).
 
@@ -173,7 +173,7 @@ Hence, the total input of the upper synaptic filter $H_1(s)$ is
 \begin{align*}
 	(1 + \tau s) M(s) = M(s) + \tau s M(s) = M(s) + \tau \mat A M(s) + \tau \mat B U(s) = \underbrace{(\tau \mat A + I)}_{\mat A_1'} M(s) + \underbrace{\tau \mat B}_{\mat B_1'} U(s)
 \end{align*}
-Since these $\mat A_1'$, $\mat B_1'$ eliminate the upper synaptic filter, we can now treat $\mat A'_2$ and $\mat B_2'$ as implementing a \enquote{normal} recurrent NEF network.
+Since these $\mat A_1'$, $\mat B_1'$ eliminate the upper synaptic filter, we can now treat $\mat A'_2$ and $\mat B_2'$ as implementing a \enquote{normal} recurrent \NEF network.
 Hence $\mat A_1' = \mat A_2' = \mat A' = \tau \mat A + \mat I$, $\mat B_1' = \mat B_2' = \mat B' = \tau \mat B$.
 
 \paragraph{Proof}
@@ -204,7 +204,7 @@ Correspondingly, the given solution is consistent with the network exactly produ
 \subsection{Proof of \Cref{lem:leg_sys}}
 \label{app:leg_sys_proof}
 
-In \Cref{sec:ldn_derivation}, we discussed a LTI system with an impulse response that perfectly traces out the Legendre polynomials.
+In \Cref{sec:ldn_derivation}, we discussed a \LTI system with an impulse response that perfectly traces out the Legendre polynomials.
 In particular, we claimed the following:
 
 \LemLegSys*

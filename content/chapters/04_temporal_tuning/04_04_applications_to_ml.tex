@@ -4,18 +4,18 @@
 \label{sec:applications_to_ml}
 
 The Legendre Memory Unit (LMU)---originally proposed by \citet{voelker2019lmu}---is a building block for spatiotemporal computing in deep neural networks.
-The LMU, just like our models of spatiotemporal biological neuron populations, is a dynamical system that intrinsically performs stream-to-stream processing.
-At its core, each LMU consists of a recurrent linear layer implementing the LDN, and a nonlinear layer transforming the LDN state.
-By harnessing the ability of the LDN to approximate a sliding window spectrum of length $\theta$, the LMU can, even with little training, integrate information over longer time-spans than competing architectures, while requiring a minimal amount of resources, both in terms of memory and computation.
+The \LMU, just like our models of spatiotemporal biological neuron populations, is a dynamical system that intrinsically performs stream-to-stream processing.
+At its core, each \LMU consists of a recurrent linear layer implementing the \LDN, and a nonlinear layer transforming the \LDN state.
+By harnessing the ability of the \LDN to approximate a sliding window spectrum of length $\theta$, the \LMU can, even with little training, integrate information over longer time-spans than competing architectures, while requiring a minimal amount of resources, both in terms of memory and computation.
 
-Crucially, the LMU often outperforms other recurrent neural network architectures in stream processing tasks.
+Crucially, the \LMU often outperforms other recurrent neural network architectures in stream processing tasks.
 This includes Long Short-Term Memories (LSTMs; \cite{hochreiter1997long}), Gated Recurrent Units (GRUs; \cite{chung2014empirical}) and Echo State Networks (ESNs; \cite{jaeger2004harnessing}).
-The LMU performance has been verified for synthetic benchmarks (\cite{voelker2019}, Chapter~6.2; \cite{voelker2019lmu}; \cite{gu2020hippo}), as well as real-world applications such as keyword spotting \citep{blouw2021hardware}, bird song classification \citep{gupta2021comparing}, and natural language processing (NLP; \cite{chilkuri2021parallelizinga}; \cite{chilkuri2021parallelizing}).
-A recent study on NLP tasks by \citet{chilkuri2021language} suggests that networks based on a variant of the LMU achieve a ten-times higher data efficiency than Transformers \citep{vaswani2017attention}.
-According to Chilkuri et al., this is comparable to the improvement offered by Transformers over LSTMs.
+The \LMU performance has been verified for synthetic benchmarks (\cite{voelker2019}, Chapter~6.2; \cite{voelker2019lmu}; \cite{gu2020hippo}), as well as real-world applications such as keyword spotting \citep{blouw2021hardware}, bird song classification \citep{gupta2021comparing}, and natural language processing (\NLP; \cite{chilkuri2021parallelizinga}; \cite{chilkuri2021parallelizing}).
+A recent study on \NLP tasks by \citet{chilkuri2021language} suggests that networks based on a variant of the \LMU achieve a ten-times higher data efficiency than Transformers \citep{vaswani2017attention}.
+According to Chilkuri et al., this is comparable to the improvement offered by Transformers over \LSTMpl.
 
-The goal of this section is to explore in how far the success of the LMU depends on projecting the input signal onto the \emph{Legendre} polynomials, and to further characterize the LMU time and space complexity.
-Specifically, we test how well our modified Fourier system (cf.~\Cref{sec:lti_autoregression}) fares in place of the LDN system.
+The goal of this section is to explore in how far the success of the LMU depends on projecting the input signal onto the \emph{Legendre} polynomials, and to further characterize the \LMU time and space complexity.
+Specifically, we test how well our modified Fourier system (cf.~\Cref{sec:lti_autoregression}) fares in place of the \LDN system.
 Given that we are no longer in a biological setting, we furthermore test sliding-window transformations that rely on perfect memory.
 
 %Our results indicate that \emph{any} reasonable orthogonal sliding window transformation results in a comparable performance.
@@ -34,13 +34,13 @@ Given that we are no longer in a biological setting, we furthermore test sliding
 	{\phantomsubcaption\label{fig:lmu_c}}%
 	{\phantomsubcaption\label{fig:lmu_d}}%
 	\caption[Overview of the Legendre Memory Unit]{Overview of the Legendre Memory Unit. See text for more detail. \textbf{(A)} Variant of the LMU network as proposed by \citet{voelker2019lmu}. The important signal paths are highlighted with bold arrows.
-	\textbf{(B, C)} The reduced LRGF and FIR LMU (our acronyms) proposed by \citet{chilkuri2021parallelizing}. \textbf{(D)} In practice, multiple LDN systems are stacked a single layer.}
+	\textbf{(B, C)} The reduced LRGF and \FIR \LMU (our acronyms) proposed by \citet{chilkuri2021parallelizing}. \textbf{(D)} In practice, multiple \LDN systems are stacked a single layer.}
 \end{figure}
 
-The original LMU proposed by \citet{voelker2019lmu} is depicted in \Cref{fig:lmu_a}.
+The original \LMU proposed by \citet{voelker2019lmu} is depicted in \Cref{fig:lmu_a}.
 Fundamentally, the idea is to project an input $\vec x_t \in \mathbb{R}^d$ onto a scalar $u_t$ by means of an encoding vector $\vec e_{\vec x}$.%
 \footnote{Since artificial neural network operate within discretised time, all input \emph{signals} $\mathfrak{x}$ become input \emph{sequences} ${\vec x}_t$.}
-This scalar is then fed into a zero-order hold (ZOH) discretised LDN system with input matrix $\mat{\tilde B}$ and feedback matrix $\mat{\tilde A}$.
+This scalar is then fed into a zero-order hold (\ZOH) discretised \LDN system with input matrix $\mat{\tilde B}$ and feedback matrix $\mat{\tilde A}$.
 Specifically, it holds \citep[e.g.,][Section~9.8]{brogan1991modern}:
 \begin{align}
 	\vec m_{t + 1} &= \mat{\tilde A} \vec m_t + \mat{\tilde B} u_t \,,
@@ -59,14 +59,14 @@ The LTI matrices $\mat{\tilde A}$, $\mat{\tilde B}$ are kept fixed.
 \subsubsection{The LRGF and FIR LMU}
 \Citet[Section~3.1.3]{chilkuri2021parallelizinga} observes that the added connections outside the main signal path have little to no positive impact on the performance of the system.
 In fact, removing these connections altogether---and thus reducing the number of trainable weights---has a net positive impact on the system performance \citep{chilkuri2021parallelizing}.
-This leaves the LDN as the only recurrent component in the network (cf.~\Cref{fig:lmu_b}).
-\Citet{tsoi1997discrete} refer to such networks as \enquote{locally recurrent, globally feed-forward} (LRGF).
+This leaves the \LDN as the only recurrent component in the network (cf.~\Cref{fig:lmu_b}).
+\Citet{tsoi1997discrete} refer to such networks as \enquote{locally recurrent, globally feed-forward} (\LRGF).
 
-Since the state-space matrices $\mat{\tilde A}$, $\mat{\tilde B}$ are fixed, we can replace the LDN system by a convolution operation (cf.~\Cref{fig:lmu_c}; \cite{chilkuri2021parallelizing}).
-Taking advantage of the fact that the LDN impulse response decays rapidly after $N = \theta \Delta t^{-1}$ samples, we can \emph{approximate} the convolution operation using a \emph{finite} impulse response (FIR) filter of length $N$.
+Since the state-space matrices $\mat{\tilde A}$, $\mat{\tilde B}$ are fixed, we can replace the \LDN system by a convolution operation (cf.~\Cref{fig:lmu_c}; \cite{chilkuri2021parallelizing}).
+Taking advantage of the fact that the \LDN impulse response decays rapidly after $N = \theta \Delta t^{-1}$ samples, we can \emph{approximate} the convolution operation using a \emph{finite} impulse response (\FIR) filter of length $N$.
 
 Let $\vec u_t = (u_{t - N + 1}, \ldots, u_t)$ be a slice of the input sequence.
-We can construct a matrix of $q$ FIR filters $\mat H \in \mathbb{R}^{q \times N}$, such that $\vec m_t \approx \mat H \vec u_t$ is the state of the LDN system at time $t$.
+We can construct a matrix of $q$ \FIR filters $\mat H \in \mathbb{R}^{q \times N}$, such that $\vec m_t \approx \mat H \vec u_t$ is the state of the \LDN system at time $t$.
 As pointed out by Chilkuri, the $k$th column of $\mat H$ is simply $(\mat H^T)_k = \mat{\tilde A}^k \mat{\tilde B}$.
 This is equivalent to the mean impulse response of the continuous system during the $k$th discrete time-step \citep[cf.][]{stockel2021discrete}:
 \begin{align}
@@ -75,26 +75,26 @@ This is equivalent to the mean impulse response of the continuous system during 
 	\label{eqn:ldn_h_matrix}
 \end{align}
 
-Replacing the LTI system with a set of FIR filters makes the network purely feed-forward.
-We thus do not have to rely on backpropagation through time \citep[e.g.,][]{werbos1990backpropagation} for training, and can use the FFT to quickly convolve pre-recorded test and training signals with the $q$ FIR filters.
+Replacing the \LTI system with a set of \FIR filters makes the network purely feed-forward.
+We thus do not have to rely on backpropagation through time \citep[e.g.,][]{werbos1990backpropagation} for training, and can use the FFT to quickly convolve pre-recorded test and training signals with the $q$ \FIR filters.
 This can vastly improve training throughput on GPUs \citep{chilkuri2021parallelizing}.
 Still, once training has completed, we can always switch back to the recurrent implementation---this \emph{may} (see below) be more efficient when performing realtime stream processing.
 %and is one of the advantages that also makes Transformer networks more attractive than LSTMs \citep{vaswani2017attention}.
 
-The idea of using FIR filters (i.e., temporal convolutions) in neural networks is by no means new.
+The idea of using \FIR filters (i.e., temporal convolutions) in neural networks is by no means new.
 In fact, it harkens back to the early days of multi-layer networks \citep[e.g.,][]{waibel1989phoneme,back1991fir} and has lately been repopularised by \citet{bai2018empirical}.
-The novelty of the feed-forward LMU lies in using \emph{fixed} FIR filters approximating an \emph{orthogonal} sliding window spectrum, as well as exploiting the duality between the recurrent and feed-forward networks for efficient inference and training.
+The novelty of the feed-forward \LMU lies in using \emph{fixed} \FIR filters approximating an \emph{orthogonal} sliding window spectrum, as well as exploiting the duality between the recurrent and feed-forward networks for efficient inference and training.
 
 \subsubsection{LMU layers and spatiotemporal tuning}
-When constructing neural networks, we generally stack multiple LMUs into an \emph{LMU layer} (cf.~\Cref{fig:lmu_d}).
-That is, the $d$-dimensional spatial input $\vec x_t$ is projected onto $\ell$ LMUs using encoding vectors $\vec e^1_{\vec h}$, $\ldots$, $\vec e^\ell_{\vec h}$.
+When constructing neural networks, we generally stack multiple \LMUpl into an \emph{\LMU layer} (cf.~\Cref{fig:lmu_d}).
+That is, the $d$-dimensional spatial input $\vec x_t$ is projected onto $\ell$ \LMUpl using encoding vectors $\vec e^1_{\vec h}$, $\ldots$, $\vec e^\ell_{\vec h}$.
 This results in a vector $\mat m_t$ of $\ell q$ states feeding into a nonlinear layer of $n$ neurons via a weight matrix $\mat W_{\vec m}$.
 
-Importantly, using encoding vectors $\vec e^i_{\vec h}$ is only efficient if the number of LMUs is smaller than the number of spatial input dimensions, i.e., $\ell < d$.
+Importantly, using encoding vectors $\vec e^i_{\vec h}$ is only efficient if the number of \LMUpl is smaller than the number of spatial input dimensions, i.e., $\ell < d$.
 Otherwise, due to the linearity of convolution, we can simply filter each input dimension separately and implicitly learn the encoding vectors as a part of $\mat W_{\vec m}$.
 In this case, each row in $\mat W_{\vec m}$ is a vector of length $d q$.
 This vector \emph{exactly} corresponds to a flattened version of our encoding matrix $\mat{E}^\mathrm{t}$ (cf.~eq.~\ref{eqn:temporal_encoding_vector}).
-Put differently, an LMU layer is a spatiotemporal NEF population with LDN tuning (cf.~\Cref{sec:spatiotemporal}).
+Put differently, an \LMU layer is a spatiotemporal \NEF population with \LDN tuning (cf.~\Cref{sec:spatiotemporal}).
 
 % Background:
 % -- A single LMU is an LDN LTI system projecting (using a spatial encoder) a d-dimensional spatial input onto an LDN system. The resulting signal of order q is followed by a nonlinear layer; all other possible connections are then added to the network. All weight matrices except for the fixed LDN LTI system are learned. x
@@ -126,22 +126,22 @@ Put differently, an LMU layer is a spatiotemporal NEF population with LDN tuning
 \subsection{Computational Efficiency of Evaluating the LDN LTI System}
 \label{sec:ldn_computational_efficiency}
 
-The main advantage of using an order $q$ LTI system to approximate a sliding-window spectrum (as in the LRGF LMU) is memory efficiency in \emph{online} stream-to-stream processing applications.
-After all, we only need to remember $q$ state dimensions, compared to the last $N = \theta / \Delta t$ input samples when using FIR filters (as in the FIR LMU).
+The main advantage of using an order $q$ LTI system to approximate a sliding-window spectrum (as in the LRGF \LMU) is memory efficiency in \emph{online} stream-to-stream processing applications.
+After all, we only need to remember $q$ state dimensions, compared to the last $N = \theta / \Delta t$ input samples when using \FIR filters (as in the \FIR \LMU).
 Correspondingly, we can operate the network in regimes where $N \gg q$ without requiring large amounts of memory.
 However, there are some trade-offs to consider with respect to computational efficiency.
 
 \subsubsection{FIR filters can be more computational efficient than state-space LTI systems}
-On the surface, it may seem as if evaluating a discrete LTI system of order $q$ in every time-step should be computationally more efficient than evaluating $q$ FIR filters.
-After all, computing $\vec m_{t + 1} = \mat{\tilde A} \vec m_t + \mat{\tilde B} u_t$ requires $\mathcal{O}(q^2)$ operations per time-step, while computing $\vec m_t = \mat H \vec u_t$, that is, convolving $\vec u_t$ with a set of FIR filters \emph{online}, requires $\mathcal{O}(qN)$ operations, where $N \geq q$.
+On the surface, it may seem as if evaluating a discrete \LTI system of order $q$ in every time-step should be computationally more efficient than evaluating $q$ \FIR filters.
+After all, computing $\vec m_{t + 1} = \mat{\tilde A} \vec m_t + \mat{\tilde B} u_t$ requires $\mathcal{O}(q^2)$ operations per time-step, while computing $\vec m_t = \mat H \vec u_t$, that is, convolving $\vec u_t$ with a set of \FIR filters \emph{online}, requires $\mathcal{O}(qN)$ operations, where $N \geq q$.
 
-However, as pointed out by \citet{gardner1995efficient}, online convolution with $q$ FIR filters can be implemented efficiently in about $34 q \log_2(N)$ operations (amortised), albeit at the cost of $\mathcal{O}(N \log(N))$ memory.
-Still, this means that for large $q$, using FIR filters can be \emph{computationally} more efficient than evaluating a generic LTI system.
+However, as pointed out by \citet{gardner1995efficient}, online convolution with $q$ \FIR filters can be implemented efficiently in about $34 q \log_2(N)$ operations (amortised), albeit at the cost of $\mathcal{O}(N \log(N))$ memory.
+Still, this means that for large $q$, using \FIR filters can be \emph{computationally} more efficient than evaluating a generic \LTI system.
 
 \subsubsection{Euler LDN update}
 
-Fortunately, the LDN system is not a generic LTI system.
-In fact, as pointed out by \citet[Figure~6.6]{voelker2019} in the form of a circuit diagram, it is possible to compute the state update in $\mathcal{O}(q)$ operations if we discretise the LDN using an Euler step instead of the ZOH method from \cref{eqn:ldn_discretisation}.
+Fortunately, the \LDN system is not a generic \LTI system.
+In fact, as pointed out by \citet[Figure~6.6]{voelker2019} in the form of a circuit diagram, it is possible to compute the state update in $\mathcal{O}(q)$ operations if we discretise the \LDN using an Euler step instead of the \ZOH method from \cref{eqn:ldn_discretisation}.
 We get the following update equation and transformation matrix $\mat H'$:%
 \begin{align}
 	\vec m_{t + 1} = \vec m_{t} + \frac{\mat A \vec m_{t} + \mat B u_t}{N} = \mat {\tilde A}' \vec m_t + \mat {\tilde B}' u_t \,,
@@ -152,7 +152,7 @@ We get the following update equation and transformation matrix $\mat H'$:%
 \end{align}
 \begin{algorithm}[t]
 	\begin{minipage}{0.98\textwidth}
-	\caption[Euler linear time LDN update]{Euler linear time LDN update. The function below takes the current LDN system state $\vec m = (m_1, \ldots, m_q)$, input $u_t$, system order $q$, window-width $\theta$, as well as the time-step $\Delta t$ and computes the state update $\vec m'$ according to \cref{eqn:ldn_system_euler} in $\mathcal{O}(q)$.
+	\caption[Euler linear time LDN update]{Euler linear time \LDN update. The function below takes the current \LDN system state $\vec m = (m_1, \ldots, m_q)$, input $u_t$, system order $q$, window-width $\theta$, as well as the time-step $\Delta t$ and computes the state update $\vec m'$ according to \cref{eqn:ldn_system_euler} in $\mathcal{O}(q)$.
 	}
 	\label{alg:ldn_euler}
 	\end{minipage}
@@ -175,7 +175,7 @@ An algorithm for computing $\vec m_{t + 1}$ in $\mathcal{O}(q)$ time is outlined
 
 As any textbook on numerically solving differential equations will warn \citep[e.g.,][Chapter~17.1]{press2007numerical}, Euler integration is rarely a good choice.
 It introduces instabilities and, with a $\mathcal{O}(\Delta t)$ residual, is rather imprecise for the expended computational effort.
-In contrast, the ZOH scheme is an optimal discretisation of the system impulse response (cf.~eq.~\ref{eqn:ldn_h_matrix}).
+In contrast, the \ZOH scheme is an optimal discretisation of the system impulse response (cf.~eq.~\ref{eqn:ldn_h_matrix}).
 
 We characterise the error introduced by Euler discretisation and its asymptotic stability in \Cref{fig:ldn_euler_vs_zoh}.
 However, note that---in our case---deviations from the continuous system are irrelevant as long as $\mat H'$ spans an orthogonal basis.
@@ -201,13 +201,13 @@ Runge-Kutta methods consist of $p$ nested Euler steps, all of which can be evalu
 	{\phantomsubcaption\label{fig:ldn_euler_vs_zoh_a}}%
 	{\phantomsubcaption\label{fig:ldn_euler_vs_zoh_b}}%
 	\caption[Exploring the effect of Euler discretisation on the LDN impulse response and stability]{
-	Exploring the effect of Euler discretisation on the LDN impulse response and stability for different state-space dimensions $q$ and sample counts $N = \theta \Delta t^{-1}$.
+	Exploring the effect of Euler discretisation on the \LDN impulse response and stability for different state-space dimensions $q$ and sample counts $N = \theta \Delta t^{-1}$.
 	Circled numbers correspond to the $(N, q)$-pairs in \Cref{fig:ldn_euler_vs_zoh_orth} below. Thin dashed line to the left indicates $N < q$.
-	\textbf{(A)} NRMSE between the ZOH and Euler basis transformation matrices $\mat H$, $\mat H'$ (eqs.~\ref{eqn:ldn_discretisation},~\ref{eqn:ldn_system_euler}) and an $\mat H'$ computed using Euler's method.
+	\textbf{(A)} \NRMSE between the \ZOH and Euler basis transformation matrices $\mat H$, $\mat H'$ (eqs.~\ref{eqn:ldn_discretisation},~\ref{eqn:ldn_system_euler}) and an $\mat H'$ computed using Euler's method.
 	\textbf{(B)} Asymptotic stability and basis quality.
 	Points above the black line are asymptotically unstable, the Euler system possesses a growth factor $|1 + \lambda_i / N| > 1$.
 	Coloured background is the sum of the (normalised) singular values $\Sigma$ of $\mat H'$ divided by the same quantity for $\mat H$ at this point.
-	A value of $100\%$ indicates that the spanned basis is as expressive as the one obtained with ZOH discretisation.
+	A value of $100\%$ indicates that the spanned basis is as expressive as the one obtained with \ZOH discretisation.
 	}
 	\label{fig:ldn_euler_vs_zoh}
 \end{figure}
@@ -216,11 +216,11 @@ Runge-Kutta methods consist of $p$ nested Euler steps, all of which can be evalu
 	\centering
 	\includegraphics{media/chapters/04_temporal_tuning/04_04/ldn_euler_vs_zoh_orth.pdf}
 	\caption[Orthogonality of the ZOH and Euler LDN basis transformation matrix]{
-	Orthogonality of the ZOH and Euler LDN basis transformation matrix for $q = 20$.
-	Each plot is the result of multiplying \emph{(A)} the ZOH based $\mat H$ or \emph{(B)} Euler based $\mat H'$ with its own transpose.
+	Orthogonality of the \ZOH and Euler \LDN basis transformation matrix for $q = 20$.
+	Each plot is the result of multiplying \emph{(A)} the \ZOH based $\mat H$ or \emph{(B)} Euler based $\mat H'$ with its own transpose.
 	Dark red cells corresponds to an entry of $-1$, dark blue cells to $1$.
 	$\Sigma$ is the sum of the normalised singular values for each $\mat H$ or $\mat H'$; this roughly indicates the number of \enquote{hidden} orthogonal basis functions (optimally $\Sigma = q$).
-	\textbf{(A)}~The ZOH based basis transformation matrix $\mat H$ is nearly orthogonal for all $N$.
+	\textbf{(A)}~The \ZOH based basis transformation matrix $\mat H$ is nearly orthogonal for all $N$.
 	\textbf{(B)}~The Euler based $\mat H'$ requires a twenty times larger $N$ to reach the same degree of orthogonality.
 	}
 	\label{fig:ldn_euler_vs_zoh_orth}
@@ -230,7 +230,7 @@ Runge-Kutta methods consist of $p$ nested Euler steps, all of which can be evalu
 	\centering
 	\includegraphics{media/chapters/04_temporal_tuning/04_04/ldn_higher_order_vs_zoh.pdf}%
 	\caption[Exploring the effect of higher order discretisation on the LDN basis quality]{
-	Exploring the effect of higher order discretisation on the LDN basis quality and stability.
+	Exploring the effect of higher order discretisation on the \LDN basis quality and stability.
 	Same plot as \Cref{fig:ldn_euler_vs_zoh_b}, but for \textbf{(A)} the midpoint integrator (a second-order Runge-Kutta method) or \textbf{(B)} the fourth-order Runge-Kutta integrator. Both perform substantially better than Euler's method.
 	}
 	\label{fig:ldn_higher_order_vs_zoh}
@@ -246,7 +246,7 @@ Crucially, using a higher-order integrator does not affect contour line curvatur
 
 \subsubsection{Efficient modified Fourier system update}
 
-An efficient Euler state update algorithm exists for the modified Fourier LTI system as well.
+An efficient Euler state update algorithm exists for the modified Fourier \LTI system as well.
 In the continuous case, the feedback matrix is the difference between $\mat A_\mathrm{F}$, a matrix describing a set of harmonic oscillators, and an information erasure dampening term $\mat \Gamma_\mathrm{F}$ (cf.~eq.~\ref{eqn:information_erasure_approx}).
 The dampening term $\mat \Gamma_\mathrm{F}$ is an outer product $\vec e(\theta) \otimes \vec d(\theta)$, and hence $\mat \Gamma_\mathrm{F} \vec m$ can be computed in $\mathcal{O}(q)$.
 Moreover, $\mat A_\mathrm{F}$ merely consists of a series of $2 \times 2$ block matrices along the diagonal; correspondingly, computing $\mat A_\mathrm{F} \vec m$ is also in $\mathcal{O}(q)$.
@@ -259,7 +259,7 @@ Still, $N$ remains slightly superlinear in $q$ (i.e., $N \approx q^{\frac{4}3}$)
 	\includegraphics{media/chapters/04_temporal_tuning/04_04/mod_fourier_higher_order_vs_zoh.pdf}
 	\caption[Effect of higher order discretisation on the modified Fourier basis]{Effect of higher order discretisation on the modified Fourier basis. Same analysis as in \Cref{fig:ldn_euler_vs_zoh,fig:ldn_higher_order_vs_zoh}, however, for the modified Fourier system.
 	Only odd $q$ are included in the analysis.
-	\textbf{(A)} Compared to the LDN, a large portion of the space is unstable when using the midpoint method.
+	\textbf{(A)} Compared to the \LDN, a large portion of the space is unstable when using the midpoint method.
 	The contour lines no longer describe a strictly quadratic relationship between $q$ and $N$, and a large portion of the space generates an expressive basis.
 	\textbf{(B)} No asymptotic instabilities are visible when using the fourth-order Runge-Kutta solver; $N$ is \emph{almost} linear in $q$.
 	Markers correspond to \Cref{fig:modified_euler_stress}.
@@ -309,7 +309,7 @@ Still, $N$ remains slightly superlinear in $q$ (i.e., $N \approx q^{\frac{4}3}$)
 \label{sec:efficient_sliding_window}
 
 The superlinear dependency between $N$ and $q$ for Runge-Kutta state updates implies that we effectively only reach a time complexity between $\mathcal{O}(q^{2.3})$ and $\mathcal{O}(q^3)$ over a window period $\theta$ with $N$ samples.
-Moreover, and independent of the discretisation method, remember that we only \emph{approximate} a sliding-window spectrum (\Cref{sec:sliding_window_lti}) if we use an order $q$ LTI system.
+Moreover, and independent of the discretisation method, remember that we only \emph{approximate} a sliding-window spectrum (\Cref{sec:sliding_window_lti}) if we use an order $q$ \LTI system.
 This is due to ringing caused by not being able to losslessly reconstruct the history of non-bandlimited inputs from the state $\vec m_t$ when performing information erasure (eq.~\ref{eqn:information_erasure_discrete}; \Cref{fig:construct_lti_erasure}).
 
 For discrete sliding-window transformations, these artefacts can be avoided at the cost of recording the input history $\vec u_t$.
@@ -354,7 +354,7 @@ Particularly, the SDFT is given as (using real instead of complex coefficients):
 	\label{eqn:sdft}
 \end{align}
 where $m_t^{2k - 1}$ and $m_t^{2k}$ are the real and imaginary coefficients belonging to the frequency term $f_k$.
-Note the similarity to a harmonic oscillator LTI system with an additional delayed input, akin to our perfect continuous LTI rectangle window in \Cref{lem:rectangle_window}.%
+Note the similarity to a harmonic oscillator LTI system with an additional delayed input, akin to our perfect continuous \LTI rectangle window in \Cref{lem:rectangle_window}.%
 \footnote{Note that, in contrast to the Haar basis, computing the SDFT does not require random access to the signal history $\vec u_t$. This drastically reduces the required memory bandwidth.}
 
 \newcommand{\symLTI}{\includegraphics{media/chapters/04_temporal_tuning/04_04/sym_lti.pdf}}
@@ -366,7 +366,7 @@ Note the similarity to a harmonic oscillator LTI system with an additional delay
 	Memory requirements only take state retained state between updates into account; we exclude constant matrices and filters.
 	The column \enquote{window $N$} describes the relationship between $N$ and $q$ (typically $N \geq q$).
 	Batch processing corresponds to computing the sliding window spectrum for every point in time for an entire recorded signal $\vec u$ of length $N$ in one go.
-	Any sliding-window transformation has an FIR representation and can always fall back to one of the algorithms in the first three rows.
+	Any sliding-window transformation has an \FIR representation and can always fall back to one of the algorithms in the first three rows.
 	}
 	\label{tbl:time_comparison}
 	\small\sffamily
@@ -404,9 +404,9 @@ Note the similarity to a harmonic oscillator LTI system with an additional delay
 	\end{tabular}\\[1em]
 	}
 	{\footnotesize
-		\symLTI~Sliding transformation with a continuous LTI state-space system of order $q$;
+		\symLTI~Sliding transformation with a continuous \LTI state-space system of order $q$;
 		\symSDT~Discrete sliding transformation with a fast update equation;
-		\symFIR~Sliding transformation with a FIR filter representation.
+		\symFIR~Sliding transformation with a \FIR filter representation.
 		[1] \cite{cooley1965algorithm};
 		[2] \cite{gardner1995efficient};
 		[3] See \cref{eqn:ldn_discretisation};
@@ -423,8 +423,8 @@ Note the similarity to a harmonic oscillator LTI system with an additional delay
 	\caption[Comparing the orthogonality of different methods for generating sliding-window spectra]{
 		Comparing the orthogonality of different methods for generating sliding-window spectra.
 		Plotted is the sum $\Sigma$ of the normalised singular values of the system transformation matrices $\mat H$ for different $q$ (at $N = 1000$).
-		When using sliding discrete transformations (\symSDT) or simple a set of arbitrary FIR filters (\symFIR), it holds $\Sigma = q$.
-		The quality of the basis generated by the LDN and the modified Fourier system (\symLTI) is suboptimal.
+		When using sliding discrete transformations (\symSDT) or simple a set of arbitrary \FIR filters (\symFIR), it holds $\Sigma = q$.
+		The quality of the basis generated by the \LDN and the modified Fourier system (\symLTI) is suboptimal.
 	Note that $\Sigma \approx 0.88q$ for the modified Fourier basis (for odd $q$); the slope of $88\%$ is close to the percentage to which the individual state dimensions have been slowed down ($90\%$).
 	}
 	\label{fig:sliding_trafo_sigmas}
@@ -456,15 +456,15 @@ Note the similarity to a harmonic oscillator LTI system with an additional delay
 \subsection{Experiments}
 \label{sec:lmu_experiments}
 
-So far, we have seen several alternatives to the LDN system used in the Legendre Memory Unit.
+So far, we have seen several alternatives to the \LDN system used in the Legendre Memory Unit.
 As is summarised in \Cref{tbl:time_comparison}, these systems can be implemented in different ways, each with different characteristics in terms of time and space complexity, and different degrees to which they realise an orthogonal function basis (\Cref{fig:sliding_trafo_sigmas}).
 
-To explore how well these systems actually perform in a neural network context, we repeat two experiments from the original LMU paper \citep{voelker2019lmu}; specifically, the psMNIST and Mackey-Glass tasks.
-Our goal is to explore in how far changing the sliding-window transformation affects the performance of the LMU in comparison to the LDN variant.
-Readers interested in studies comparing the LMU to other neural network architectures are kindly referred to the beginning of this section, where we provide several references.
+To explore how well these systems actually perform in a neural network context, we repeat two experiments from the original \LMU paper \citep{voelker2019lmu}; specifically, the psMNIST and Mackey-Glass tasks.
+Our goal is to explore in how far changing the sliding-window transformation affects the performance of the \LMU in comparison to the \LDN variant.
+%Readers interested in studies comparing the \LMU to other neural network architectures are kindly referred to the beginning of this section, where we provide several references.
 
 Our results indicate that the basis choice has a significant, but small effect on the system performance.
-The power of the LMU architecture stems from using a \emph{fixed} and \emph{orthogonal} temporal projection; the particular shape and quality of this projection are secondary.
+The power of the \LMU architecture stems from using a \emph{fixed} and \emph{orthogonal} temporal projection; the particular shape and quality of this projection are secondary.
 Practitioners should select a transformation from \Cref{tbl:time_comparison} that suits their particular constraints.
 
 \subsubsection{psMNIST}
@@ -496,9 +496,9 @@ Specifically, two additional constraints should be met.
 First, the network should use less state memory than is required to just store the whole image \citep{voelker2019lmu}, and, second, support \emph{serial execution} \citep{chandar2019nonsaturating}.
 In other words, the network must produce correct classifications over time, even if multiple input signals are concatenated.
 
-Implementing temporal convolution as FIR filters of length $N$ (cf.~\Cref{sec:lmu}) intrinsically fulfils the serial execution constraint, but violates the memory constraint.
-Each filter requires access to the past $N$ samples; we essentially just compute the inner product between each of the $q$ FIR filters and the input.
-The point of using the LDN or modified Fourier system impulse response is that same convolution can be performed by an LTI system of order (and thus memory) $q < N$ within the recurrent LRGF LMU network.%
+Implementing temporal convolution as \FIR filters of length $N$ (cf.~\Cref{sec:lmu}) intrinsically fulfils the serial execution constraint, but violates the memory constraint.
+Each filter requires access to the past $N$ samples; we essentially just compute the inner product between each of the $q$ \FIR filters and the input.
+The point of using the \LDN or modified Fourier system impulse response is that the same convolution can be performed by an \LTI system of order (and thus memory) $q < N$ within the recurrent \LRGF \LMU network.%
 \footnote{Note that both the LDN and modified Fourier system impulse response produce ringing artefacts that extend beyond the first $N$ samples (cf.~\Cref{fig:modified_euler_stress}), that is, there is some interaction between two consecutively presented input images.
 We ignore this to be consistent with the way the psMNIST task is typically evaluated in the literature.
 However, we take ringing into account in the Mackey-Glass experiment.}
@@ -507,8 +507,8 @@ However, the results for our $\mathcal{O}(N)$ memory transformations should be t
 \paragraph{Methods}
 Our network architecture is similar to the setup used by \citet{voelker2019lmu}.
 We provide an overview of the model in \Cref{fig:psmnist_overview}; the code describing the network can be found in \Cref{app:lmu_code}.
-We apply a set of $q = 468$ FIR filters to the $N = 784$ input samples.
-The filter output is passed through a 50\% dropout layer for regularisation \citep{hinton2012improving}, followed by $n = 346$ ReLU neurons that non-linearly processes the temporal representation.
+We apply a set of $q = 468$ \FIR filters to the $N = 784$ input samples.
+The filter output is passed through a 50\% dropout layer for regularisation \citep{hinton2012improving}, followed by $n = 346$ \ReLU neurons that non-linearly processes the temporal representation.
 The neural activities are linearly projected onto a one-hot coded output.
 Note that $q = 468$ is motivated by the amount of memory used by \citet{chandar2019nonsaturating}.
 
@@ -516,11 +516,11 @@ As is customary, we split the MNIST dataset into $50\,000$ training and $10\,000
 We use a categorical cross-entropy loss function and an Adam optimizer \citep{kingma2015adam} with default parameters over $100$ epochs at a batch size of $100$.
 The reported test errors are computed for the epoch with the smallest validation error.
 For $q = 468$ the number of trainable parameters is $\approx\num{166000}$.
-Per default, the FIR filters are fixed and initialised with one of the previously discussed discretised basis transformations with window length $N = 786$ (i.e., the number of pixels).
-The LTI systems are discretised using zero-order hold.
+Per default, the \FIR filters are fixed and initialised with one of the previously discussed discretised basis transformations with window length $N = 786$ (i.e., the number of pixels).
+The \LTI systems are discretised using zero-order hold.
 
-As a point of comparison, we repeat the experiments with randomly initialised FIR filters, as well as enabled learning for the FIR filter matrices.
-Learning the FIR filters adds another \num{350000} parameters and is supposed to test in how far our original transformations are optimal.
+As a point of comparison, we repeat the experiments with randomly initialised \FIR filters, as well as enabled learning for the \FIR filter matrices.
+Learning the \FIR filters adds another \num{350000} parameters and is supposed to test in how far our original transformations are optimal.
 
 \begin{figure}
 \centering
@@ -747,21 +747,21 @@ Symbols correspond to possible algorithms from \Cref{tbl:time_comparison}.
 
 \paragraph{Results}
 Results are depicted in \Cref{fig:psmnist_results} and \Cref{tbl:psmnist_results,tbl:psmnist_significance}; learning curves are provided in \Cref{fig:lmu_trajs}.
-The modified Fourier, Fourier, cosine and discrete Legendre (DLOP; \Cref{sec:function_bases}) basis outperform the LDN and Haar wavelets slightly but significantly.
-The LDN result is state-of-the art for the psMNIST task at about $98.5\%$ accuracy \citep{chilkuri2021parallelizing}.
-There is no significant difference between initialisations when learning the convolution; enabling learning on the FIR filters always results in the same, substantially worse performance.
+The modified Fourier, Fourier, cosine and discrete Legendre (\DLOP; \Cref{sec:function_bases}) basis outperform the \LDN and Haar wavelets slightly but significantly.
+The \LDN result is state-of-the art for the psMNIST task at about $98.5\%$ accuracy \citep{chilkuri2021parallelizing}.
+There is no significant difference between initialisations when learning the convolution; enabling learning on the \FIR filters always results in the same, substantially worse performance.
 
 \paragraph{Discussion}
 Learned convolutions performing worse is likely a result of the increased parameter count and overfitting to the training data (cf.~\Cref{fig:lmu_trajs}).
-Visualising the learned FIR filters (data not shown), we find that they do not differ substantially from their original initialisation.
+Visualising the learned \FIR filters (data not shown), we find that they do not differ substantially from their original initialisation.
 This suggests that our orthogonal transformations are locally optimal.
 
-Thinking about the FIR filter matrix $\mat H$ purely in terms of a projection $\mat H \vec u$, it is unclear why our systematic bases work better than a random initialisation---after all, this results in an (almost) orthogonal projection as well.
+Thinking about the \FIR filter matrix $\mat H$ purely in terms of a projection $\mat H \vec u$, it is unclear why our systematic bases work better than a random initialisation---after all, this results in an (almost) orthogonal projection as well.
 There is a history of successfully applying orthogonal basis transformations such as the discrete Cosine or Haar transform to the MNIST dataset for spatial decorrelation \citep{baldominos2019survey}.
 However, these experiments are without pixel permutation; with permutation, spatial decorrelation is an unlikely explanation.
 
 One hint at the worse performance of the random initialisation is our \enquote{orthogonality measure} $\Sigma$ (that is, the sum of the normalised singular values).
-For the random FIR filters $\Sigma$ is only about $0.5q$, while we reach higher $\Sigma$ for our other bases (cf.~\Cref{fig:sliding_trafo_sigmas}).
+For the random \FIR filters $\Sigma$ is only about $0.5q$, while we reach higher $\Sigma$ for our other bases (cf.~\Cref{fig:sliding_trafo_sigmas}).
 
 
 \subsubsection{Mackey-Glass}
@@ -793,7 +793,7 @@ All trajectories are different due to the stochasticity of the initial $u(t)$ fo
 
 We randomly extract 100 input sequences of length $117$ followed by a target sequence of length 15 from each trajectory; this results in 40\,000 training samples. We similarly generate \num{10000} validation and \num{10000} test samples.
 Training, validation, and test samples are all taken from separately generated trajectories.
-The sample length $117$ corresponds to the absolute width of the combined FIR filters in our network; as is illustrated in \Cref{fig:mackey_glass_overview_overlay_b}, only the last $37$ samples are effectively taken into account for the prediction.
+The sample length $117$ corresponds to the absolute width of the combined \FIR filters in our network; as is illustrated in \Cref{fig:mackey_glass_overview_overlay_b}, only the last $37$ samples are effectively taken into account for the prediction.
 
 \begin{figure}
 	\includegraphics{media/chapters/04_temporal_tuning/04_04/mackey_glass_overview.pdf}%
@@ -802,12 +802,12 @@ The sample length $117$ corresponds to the absolute width of the combined FIR fi
 	{\phantomsubcaption\label{fig:mackey_glass_overview_overlay_b}}%
 	\caption[Overview of the Mackey-Glass prediction network and dataset]{
 		Overview of the Mackey-Glass prediction network and dataset.
-		\textbf{(A)} Samples $u_t$ fed into the network pass a series of four LMU layers (here depicted as FIR LMUs); the output is a prediction $\vec{\hat y}_t$ of the next fifteen samples $u_{t + 1}, \ldots, u_{t + 15}$.
+		\textbf{(A)} Samples $u_t$ fed into the network pass a series of four \LMU layers (here depicted as \FIR LMUs); the output is a prediction $\vec{\hat y}_t$ of the next fifteen samples $u_{t + 1}, \ldots, u_{t + 15}$.
 		Every sample fed into the network immediately updates the prediction in the output.
-		When using the LDN or the modified Fourier system as a sliding transformation, the FIR LMUs can of course be replaced with a corresponding recurrent LRGF LMU.
+		When using the \LDN or the modified Fourier system as a sliding transformation, the \FIR LMUs can of course be replaced with a corresponding recurrent LRGF \LMU.
 		\textbf{(B)} Exemplary input-target pair for $\tau = 17$.
-		The absolute window of the FIR filters in our network amounts to $117$ samples; samples older than this cannot \emph{possibly} affect the output. However, only the last $37$ samples \emph{effectively} influence the system.
-		The longer absolute window ensures that we account for ringing artefacts in the LDN and modified Fourier system (cf.~\Cref{fig:lmu_mackey_glass_filters}).
+		The absolute window of the \FIR filters in our network amounts to $117$ samples; samples older than this cannot \emph{possibly} affect the output. However, only the last $37$ samples \emph{effectively} influence the system.
+		The longer absolute window ensures that we account for ringing artefacts in the \LDN and modified Fourier system (cf.~\Cref{fig:lmu_mackey_glass_filters}).
 	}
 \end{figure}
 
