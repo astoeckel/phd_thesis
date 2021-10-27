@@ -79,7 +79,8 @@ axs[0].text(-0.26,
             ha="right",
             transform=axs[0].transAxes)
 
-axs[1].plot(xs, Js_post, 'k:', linewidth=0.5)
+axs[1].plot(xs, Js_post, 'k', linewidth=0.5)
+axs[1].plot(xs, Js_post, 'white', linestyle=':', linewidth=0.5, zorder=100)
 for i in range(N_post):
     c = mpl.cm.get_cmap('viridis')(i / (N_post - 1))
     axs[1].plot(xs, As_pre @ W1[i].T, color=c)
@@ -96,7 +97,8 @@ axs[1].text(-0.15,
             ha="right",
             transform=axs[1].transAxes)
 
-axs[2].plot(xs, Js_post2, 'k:', linewidth=0.5)
+axs[2].plot(xs, Js_post2, 'k', linewidth=0.5)
+axs[2].plot(xs, Js_post2, 'white', linestyle=':', linewidth=0.5, zorder=100)
 for i in range(N_post):
     c = mpl.cm.get_cmap('viridis')(i / (N_post - 1))
     axs[2].plot(xs, As_pre @ W2[i].T, color=c)

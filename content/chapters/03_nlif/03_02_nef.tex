@@ -23,7 +23,7 @@ Using a least-squares loss (and omitting the regularisation term), we have
 	\end{aligned}
 	\label{eqn:dendritic_computation_optimisation}
 \end{align}
-On way to minimise this loss-function would be to use stochastic gradient descent.
+One way to minimise this loss-function would be to use stochastic gradient descent.
 In fact, this can be a viable strategy---and may be the only option for many detailed neuron models.
 
 Still, we would like to suggest a more systematic approach that, in some cases, reduces the task of finding weights to a convex \qprog.
@@ -60,7 +60,7 @@ Here, $N$ is the number of samples, $\mat W \in \mathbb{R}^{m \times \Npop}$ is 
 	{\phantomsubcaption\label{fig:current_translation_decoding_b}}%
 	{\phantomsubcaption\label{fig:current_translation_decoding_c}}%
 	{\phantomsubcaption\label{fig:current_translation_decoding_d}}%
-	\caption[Decoding for currents instead of represented values]{Decoding for currents instead of represented values. \textbf{(A)} Tuning curves of a pre-populations with $100$ \LIF neurons (only $50$ tuning curves are shown). \textbf{(B)} Decoding affine current translation functions $J_i$ (black dotted lines are the target). The function $\phi$ being computed in re\-pre\-sen\-tat\-ion space is the identity function. Dashed line corresponds to the threshold current $J_\mathrm{th} = \SI{1}{\nano\ampere}$.
+	\caption[Decoding for currents instead of represented values]{Decoding for currents instead of represented values. \textbf{(A)} Tuning curves of a pre-population with $100$ \LIF neurons (only $50$ tuning curves are shown). \textbf{(B)} Decoding affine current translation functions $J_i$ (dotted lines are the target). The function $\phi$ being computed in re\-pre\-sen\-tat\-ion space is the identity function. Dashed line corresponds to the threshold current $J_\mathrm{th} = \SI{1}{\nano\ampere}$.
 	\textbf{(C)} Same as \emph{(B)} but for Gaussian current-translation functions $J_i$. Such functions can be used to produce localised tuning curves.
 	\textbf{(D)} First six singular values of the two weight matrices $\mat W$ from \emph{(B, C)}.
 	Singular values are normalised by dividing by their sum, resulting in the relative contribution of each singular value to the decoding.
@@ -105,7 +105,7 @@ The former determine how well a constant offset can be decoded, the latter deter
 
 In the case of \enquote{standard} \NEF tuning with uniform $x$-intercepts and random encoders (cf.~\Cref{fig:bias_decoding_impact_a}), constant functions can, counter-intuitively, only be decoded with a slightly higher error than the identity function (error is about $15\%$ higher; cf.~\Cref{fig:bias_decoding_impact_b}).
 This becomes apparent when considering the principal components of the pre-population tuning curves.
-As for example discussed in \citet[Chapter~7]{eliasmith2003neural}, the principal component analysis (PCA) can be seen as \enquote{uncovering} the best orthogonal basis that linearly generates the tuning-curves.
+As, for example, discussed in \citet[Chapter~7]{eliasmith2003neural}, the principal component analysis (PCA) can be seen as \enquote{uncovering} the best orthogonal basis that linearly generates the tuning-curves.
 %(see \cite[Chapter~12]{bishop2006pattern} for general information on the PCA).
 In turn, the first principal components characterise the functions that can be decoded well from a population.
 As illustrated in \Cref{fig:bias_decoding_impact_c}, the principal components $f_i$ of the \enquote{standard} \NEF tuning curves resemble the Legendre polynomials (cf.~\Cref{sec:function_bases} for a definition).
@@ -150,7 +150,7 @@ For two populations, and skipping regularisation, we have
 We can bring this problem into a canonical form by the stacking the pre-activities and weights (see below for an example).
 However, note that we now need to sample a much higher-dimensional space.
 This is worrisome if we attempt to decode $f_i$ that must be finely sampled to obtain a good decoding.
-Again, under the assumption that $J_i$ is affine, it is possible to expand the above integral and to solve for an---relatively easy to decode---population-spanning bias decoder $\mat D^1$ independent of the (untouched) function decoders $\mat D^{f_1}$ and $\mat D^{f_2}$ (\Cref{fig:nef_decode_bias_c}).
+Again, under the assumption that $J_i$ is affine, it is possible to expand the above integral and to solve for a---relatively easy to decode---population-spanning bias decoder $\mat D^1$ independent of the (untouched) function decoders $\mat D^{f_1}$ and $\mat D^{f_2}$ (\Cref{fig:nef_decode_bias_c}).
 
 %\begin{align*}
 %E^\beta &= \frac{1}{\vol(\Xrepr)^2} \! \int_{\Xrepr} \! \int_{\Xrepr} \left( \beta_i - \langle \vec w^\beta_{1, i}, \vec a_1^\mathrm{pre}(\vec x_1) \rangle - \langle \vec w^\beta_{i, 2}, \vec a_2^\mathrm{pre}(\vec x_2) \rangle \right)^2 \, d\vec x_1 \, d\vec x_2
@@ -185,11 +185,11 @@ Combining this current term with \cref{eqn:decode_current} yields the following 
 	\end{aligned}
 	\label{eqn:decode_nonneg}
 \end{align}
-To obtain a canonical least-squares form, let $N$ be the number of samples, $n^+$, $n^-$ be the number of excitatory and inhibitory pre-neurons%
+To obtain a canonical least-squares form, let $N$ be the number of samples, $n^+$, $n^-$ be the number of excitatory and inhibitory pre-neurons,%
 \footnote{
-It must not necessarily hold that $n = n^+ + n^-$; neurons can \emph{technically} be marked as both excitatory and inhibitory. Specifically, the special case $n = n^+ = n^-$ reduces the \NNLS problem to standard least squares.
-}%
-, and $\mat A$ be the sampled, stacked, and signed pre-activities $(\mat A^+, -\mat A^-) \in \mathbb{R}^{N \times (n^+ + n^-)}$.
+It does not necessarily hold that $n = n^+ + n^-$; neurons can \emph{technically} be marked as both excitatory and inhibitory. Specifically, the special case $n = n^+ = n^-$ reduces the \NNLS problem to standard least squares.
+}
+and $\mat A$ be the sampled, stacked, and signed pre-activities $(\mat A^+, -\mat A^-) \in \mathbb{R}^{N \times (n^+ + n^-)}$.
 Additionally, let $\mat W$ be the stacked weight matrices $(\mat W^+, \mat W^-) \in \mathbb{R}^{m \times (n^+ + n^-)}$, and $\vec J \in \mathbb{R}^{N \times m}$ be a matrix of sampled target currents. We have
 \begin{align}
 	\bigl\| \bigl( \mat A^T \mat A + N \sigma^2 \mat I \bigr) \mat W - \mat A^T \mat J \bigr\|_2^2 \quad\quad \text{subject to } \mat W \geq 0 \,.
@@ -197,7 +197,7 @@ Additionally, let $\mat W$ be the stacked weight matrices $(\mat W^+, \mat W^-) 
 \end{align}
 This is a standard nonnegative least-squares (\NNLS) problem that can be solved in polynomial time \citep[Chapter~23]{lawson1995solving}.
 An overview of efficient algorithms to solve this kind of problem is given in \citet{chen2009nonnegativity}.%
-\footnote{Most linear algebra software packages bundle a solver for nonnegative least-squares; for example \texttt{scipy.optimize.nnls} in SciPy or \texttt{lsqnonneg} in Matlab. Alternatively, a gernal quadratic programming (\QP) solver can be used; this is what we do in our library \emph{libnlif} that we discuss in \Cref{app:libnlif}.}
+\footnote{Most linear algebra software packages bundle a solver for nonnegative least-squares; for example \texttt{scipy.optimize.nnls} in SciPy or \texttt{lsqnonneg} in Matlab. Alternatively, a general quadratic programming (\QP) solver can be used; this is what we do in our library \emph{libnlif} that we discuss in \Cref{app:libnlif}.}
 Of course, similarly to \cref{eqn:decode_current_additive}, the optimisation problem can be extended to take multiple pre-populations into account.
 
 \begin{figure}[p]
@@ -211,7 +211,7 @@ Of course, similarly to \cref{eqn:decode_current_additive}, the optimisation pro
 	{\phantomsubcaption\label{fig:nonnegative_experiments_e}}%
 	\caption[Impact of the ratio between excitatory to inhibitory neurons on network function]{Impact of the ratio between excitatory to inhibitory neurons on network function.
 	\textbf{(A)} A variable $x$ is represented in a pre-population. This population is randomly split into $n^+$ excitatory and $n^-$ inhibitory neurons. Nonnegative weights $\mat W^+$, $\mat W^-$ are optimised according to \cref{eqn:decode_nonneg_canon}. An identity decoder $\mat D$ is used to decode the value represented in the post-population.
-	\textbf{(B, C)} Median normalised \RMSE (relative to the \RMS of $\phi(x)$) between the decoded value and the desired value $\phi(x) = 2x^2 - 1$ \emph{(B)} or $\phi(x) = x^2$ \emph{(C)} for different ratios $n^+ \!\! : \! n^-$ over $1000$ runs ($n = m = 100$, $\sigma = 10$, maximum rates between $50$ and $100$). The shaded area depicts the 25/75 percentiles. The dashed line depicts results for the intrinsic biases. The horizontal dotted line is the least-squares baseline.
+	\textbf{(B, C)} Median normalised \RMSE (relative to the \RMS of $\phi(x)$) between the decoded value and the desired value $\phi(x) = x$ \emph{(B)} or $\phi(x) = 2x^2 - 1$ \emph{(C)} for different ratios $n^+ \!\! : \! n^-$ over $1000$ runs ($n = m = 100$, $\sigma = 10$, maximum rates between $50$ and $100$). The shaded area depicts the 25/75 percentiles. The dashed line depicts results for the intrinsic biases. The horizontal dotted line is the least-squares baseline.
 	Except for extreme $n^+ \!\! : \! n^-$, the network works well over a large range of ratios.
 	Intrinsic biases are detrimental in purely excitatory networks.
 	\textbf{(D, E)} Examples of desired versus actual post-population tuning at different excitatory to inhibitory pre-neuron count ratios.
@@ -231,7 +231,7 @@ In contrast, purely excitatory connections can work reasonably well, at least wh
 We further reduce this error below, using \enquote{subthreshold relaxation}.
 
 Note that purely excitatory connections do not work for the selected post-tuning in the presence of intrinsic bias currents.
-The excitatory input cannot counter positive $\beta_i$ for neurons with negative $x$-intercept, making it impossible to reach firing rates smaller than $a_i(\beta_i)$.%
+The excitatory input cannot counter positive $\beta_i$ for neurons with negative $x$-intercepts, making it impossible to reach firing rates smaller than $a_i(\beta_i)$.%
 \footnote{This phenomenon is also described in the documentation for the \texttt{Nnls} solver in Nengo. 
 Our optimisation procedure differs from that in Nengo in that we account for excitatory and inhibitory pre-neurons and that we can choose to decode the current translation function, eliminating the post-population tuning restrictions.}
 
@@ -294,7 +294,7 @@ The $L_2$ regularisation factor $\sigma^2$ accounts for Gaussian noise and ensur
 	Sparsity up to $25\%$ has no impact on the error; errors increase drastically for sparsities over $75\%$.
 	\textbf{(B)}~Encouraging sparsity using an $L_1$ term (in addition to $L_2$ regularisation) results in lower errors compared to the enforced sparsity.
 	\textbf{(C)}~Solving for nonnegative $\mat W^+$, $\mat W^-$ using \cref{eqn:decode_nonneg_canon}.
-	For a large range of excitatory to inhibitory ratios this results in a sparsity of about $50\%$ errors similar to $L_1$ regularisation for the same sparsity.
+	For a large range of excitatory to inhibitory ratios this results in a sparsity of about $50\%$, with errors similar to $L_1$ regularisation for the same sparsity.
 	}
 	\label{fig:nonnegative_sparsity}
 \end{figure}
@@ -379,7 +379,7 @@ Results of an experiment exploring this technique are depicted in \Cref{fig:inhi
 While computing the identity function---i.e., constructing a pure communication channel---works well, nonlinear functions can only be decoded with a considerable error, just as with purely excitatory connections channels (cf.~\Cref{fig:nonnegative_experiments}).
 This is due to the standard \NEF pre-population tuning curves not providing a good basis for nonnegative decoding of many nonmonotonic functions.
 In principle, it should be possible to have pre-population tuning such that any nonnegative target current function can be nonnegatively decoded with an arbitrarily small error.
-An example would be this Gaussian tuning curves similar to those depicted in \Cref{fig:bias_decoding_impact_c}.
+An example would be the Gaussian tuning curves similar to those depicted in \Cref{fig:bias_decoding_impact_c}.
 
 Inhibitory networks similar to what we discussed here are explored in some more detail by \citet{tripp2016function}.
 However, as with the Parisien transform, this prior work relies on specific tuning of the inhibitory neurons, as well as intrinsic biases.
@@ -402,7 +402,7 @@ However, as with the Parisien transform, this prior work relies on specific tuni
 Most biological model neurons act as rectifiers.
 That is, input currents below a certain, usually positive, threshold $J_\mathrm{th}$ do not result in any output activity.
 In the case of our simplified \LIF neuron model (cf.~\Cref{sec:simplified_neuron_models}), the threshold current $J_\mathrm{th}$ is \SI{1}{\nano\ampere} (\Cref{fig:subthreshold_illustration_a}).
-We did not take this account in our above current-space optimisation schemes.
+We did not take this into account in our above current-space optimisation schemes.
 
 To the contrary, our current-based loss functions in \cref{eqn:decode_current,eqn:decode_nonneg} aim at \emph{precisely} evoking certain post-synaptic currents $J_\mathrm{tar}$.
 Notably, the negative currents required by the affine current translation function $J_i(\xi)$ can be larger in magnitude than the positive currents (\Cref{fig:subthreshold_illustration_b,fig:subthreshold_illustration_c}).
@@ -624,13 +624,13 @@ In contrast, we described neurons with nonlinear synapses as follows
 	\label{eqn:def_response_curve_g}
 \end{align}
 Here, $k$ is the number of input channels, and the vector $\vec g_i = (g^1_i$, $\ldots$, $g^k_i)$ describes some abstract \enquote{channel state}.
-Again, we assume that, on average, each channel state $g^j_i$ is linear in the weights and the ´activities $\vec a_j$ of the neurons connecting to the $j$th channel.
+Again, we assume that, on average, each channel state $g^j_i$ is linear in the weights and the activities $\vec a_j$ of the neurons connecting to the $j$th channel.
 However, we do not make any assumption regarding the effect of $g^j_i$ on the somatic current $J$; more fundamentally, we do not assume that there exists an easily identifiable somatic current at all.
 
 The lack of an identifiable somatic current makes it more challenging to integrate such neurons into the \NEF.
 The optimisation problems we discussed in this section relied on the current translation function $J_i(\xi)$ to enforce the normative tuning constraint $a_i(\vec x)$.
 Of course, as mentioned above, we could resort to gradient descent to optimise \cref{eqn:dendritic_computation_optimisation}.
-However, our current-based optimisation schemes work amiably well in that they allow us to quickly solve for globally optimal weights.
+However, our current-based optimisation schemes work well in that they allow us to quickly solve for globally optimal weights.
 As we will see, it is still possible to perform global current-space optimisation for some multi-channel neurons.
 Additionally, we can use the same ideas to iteratively solve for locally optimal weights in more complex multi-compartment neurons.
 

@@ -19,12 +19,12 @@ Furthermore, we showed that synaptic filters and neural dynamics can be exploite
 In terms of Marr and Poggio's famous \enquote{levels of description} (quoted on the previous page; cf.~\Cref{fig:marr_levels}; \cite{marr1976understanding}), we have been concerned with levels three and four, that is, thinking about how algorithms can be \enquote{committed} to mechanisms, and how these mechanisms are in turn implemented in a (simulated) neural substrate.
 
 Hence, the primary goal of this chapter is to provide an example of how the methods discussed above can be used to bridge all four levels of abstraction.
-Specifically, we implement a simple \enquote{cognitive} system in the form a model of eyeblink conditioning in the cerebellum---starting from the high-level computation (namely \enquote{implementing eyeblink conditioning}) down to the constrained cerebellar microcircuit (\Cref{fig:marr_levels_c}).
-Since constructing an intricately detailed model of the entire cerebellum is out of the scope for this thesis, we particularly focus on temporal representations in the Granule-Golgi circuit.
+Specifically, we implement a simple \enquote{cognitive} system in the form a model of eyeblink conditioning in the cerebellum---starting from the high-level computation (namely \enquote{implementing eyeblink conditioning}) down to the constrained cerebellar microcircuit (cf.~\Cref{fig:marr_levels_c}).
+Since constructing an intricately detailed model of the entire cerebellum is out of scope for this thesis, we particularly focus on temporal representations in the Granule-Golgi circuit.
 
 \subsubsection{Implications for cognitive modelling}
 Our methodology is remarkably different from the way in which many cognitive scientists and psychologists approach constructing cognitive models.
-In these disciplines, models tend to be at the computational and algorithmic levels, and do not explicitly take limitations of the neural substrate into account \citep{eliasmith2015marr}.
+In these disciplines, models tend to be at the computational and algorithmic levels, and seldom take limitations of the neural substrate into account \citep{eliasmith2015marr}.
 
 Ignoring biological detail can be reasonable depending on the hypothesis that is being explored. 
 Yet, as we discussed in \Cref{sec:nef}, a closer look at biology may help in two complementary ways.
@@ -49,16 +49,18 @@ That is, the cerebellum may be recruited by various brain regions as a \enquote{
            e2014metaanalysis,
            sanger2020expansion}.
 
-Our experiments suggest that---at least under the constraints we consider---the Granule-Golgi circuit is well-suited to encode temporal information using temporal representations.
-This representation can be used in the context of a spiking neural network to learn delays by modulating synaptic weights in the granular-to-Purkinje projection in accordance with the Marr-Albus hypothesis \citep{marr1969theory,albus1971theory,sanger2020expansion}.
+Our experiments suggest that---at least under the constraints we consider---the Granule-Golgi circuit is well-suited to encode temporal information using an approximated sliding-window transformation.
+The resulting representation can be used to learn delays by modulating synaptic weights in the granular-to-Purkinje projection in accordance with the Marr-Albus hypothesis \citep{marr1969theory,albus1971theory,sanger2020expansion}.
 These results support earlier simulation work \citep{rossert2015edge}.
 We furthermore use our model to generate hypotheses as to why some biological parameters are as observed.
 
 \subsubsection{Structure of this chapter}
-The remainder of this chapter is structured as follows.
-We first review the eyeblink conditioning task, the particular neurophysiological constraints of the cerebellum, and the theorised mechanisms underpinning delay learning.
+%The remainder of this chapter is structured as follows.
+We first review the eyeblink conditioning task
+%and the particular neurophysiological constraints of the cerebellum,
+and the theorised neurophysiological mechanisms underpinning delay learning.
 We then discuss five neural network implementations with an increasing number of biological constraints, followed by a series of experiments to explore the impact of biological detail on the high-level function.
 
-Finally, we extend our model to the complete eyeblink conditioning task by incorporating the remaining cerebellar microcircuitry, albeit without incorporating quite as much biological detail.
+Finally, we extend our model to the complete eyeblink conditioning task by incorporating the remaining cerebellar microcircuitry, albeit without incorporating quite as much biological detail as our most detailed circuits considered to this point.
 We compare the output of this model to empirical data and show that we are able to---at least qualitatively---reproduce the behaviour of experimental animals.
-An overview of our modelling tool NengoBio is provided in \Cref{app:nengo_bio}.
+While building this model, we developed a software library that implements many of the methods described in previous chapters (cf.~\Cref{app:nengo_bio}).

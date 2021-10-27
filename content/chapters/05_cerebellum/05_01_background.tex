@@ -3,7 +3,7 @@
 \section{Background}
 
 In order to explore the consequences of adding biological details to a neural system, we need to decide---on a computational and algorithmic level---what task the neural system should ideally perform.
-As we mentioned above, we would like to implement eyeblink conditioning based on a temporal basis representation.
+As we mentioned above, we would like to implement eyeblink conditioning by mapping an \LTI system generating a sliding-window transformation (cf.~\Cref{sec:temporal_bases}), specifically, the \LDN system, onto the recurrent Granule-Golgi circuit.
 We first provide a review of eyeblink conditioning, followed by an overview of the cerebellar microcircuitry thought to be responsible for this behaviour, and, finally, a discussion of hypothesised mechanisms.
 
 \subsection{Eyeblink conditioning}
@@ -49,7 +49,7 @@ This indicates that the cerebellum is not only capable of establishing the conne
 Before we continue to discuss the two prevalent theories on how the cerebellum could learn the conditioned response, it is worthwhile to review the cerebellar microcircuitry depicted in \Cref{fig:cerebellum_anatomy}.
 Afferent nerves from pre-cerebellar nuclei (\PCN; brainstem and cerebral cortex carrying sensory signals) project as \enquote{mossy fibres} onto granule cells in the cerebellar cortex.
 Cerebellar granule cells are tiny and account for the majority of neurons in the mammalian brain.
-Thus, few pre-cerebellar neurons connect onto many granule cells.
+Thus, small numbers of pre-cerebellar neurons connect onto many granule cells.
 
 Granule cells also have interneurons interspersed amongst them, the Golgi cells.
 These form an inhibitory feedback loop with the granule cells.
@@ -63,13 +63,13 @@ The ratio of granule to Golgi cells is about $400$:$1$ \citep{korbo1993total}.
 Granule cell axons, the so called \enquote{parallel fibres}, project onto the Purkinje cells, which inhibit neurons in the cerebellar nucleus, and in turn project back onto the brainstem and cerebral cortex \citep{ito2010cerebellar,llinas2010olivocerebellar}.
 So-called \enquote{climbing fibres} project from Inferior Olive neurons in the deep cerebellar nucleus onto Purkinje cells. 
 Evidence suggests that activity in the climbing fibres is responsible for modulating the synaptic strength of granule to Purkinje projections.
-Climbing fibre activity can thus be interpreted as an \enquote{error signal} $\epsilon(t)$ responsible for driving learning in the cerebellar cortex \citep{ito2010cerebellar}.
+Climbing fibre activity is often interpreted as an \enquote{error signal} $\epsilon(t)$ responsible for driving learning in the cerebellar cortex \citep{ito2010cerebellar}.
 
 \subsection{Hypothesised Mechanisms Supporting Delay Learning}
 
 There is no current consensus on what the exact mechanism is that supports delay learning in the cerebellum.
 Specifically, there are two competing hypotheses: the classic adaptive filter theory and the view that intrinsic properties of the Purkinje are responsible for timing.
-We review these ideas in more detail below.
+%We review these ideas in more detail below.
 
 \subsubsection{Adaptive filter hypothesis}
 As originally pointed out by \citet{marr1969theory,albus1971theory}, the massive divergence (number of post-neurons for a single pre-neuron) and small convergence (number of pre-neurons for a single post-neuron) in the \PCN to granule projection suggests that granular cells are tuned to specific patterns of activity in the \PCN.
@@ -81,6 +81,7 @@ granule cell activity does not only depend on the current \PCN activities, but o
 Correspondingly, if this temporal tuning is diverse enough, that is, granule cells are sensitive to different time-courses, this will form a suitable temporal basis from which functions over time, such as delays, can be decoded.
 A possible source for the temporal tuning could be the recurrent granule-to-granule connections that are mediated by the inhibitory Golgi cells.
 Indeed, \citet{rossert2015edge} find that randomly connecting the Golgi and granule cells generates diverse tuning that can be exploited as a temporal basis.
+Our contribution is to test whether optimal temporal tuning---i.e., an \LTI system approximating a sliding-window transformation (cf.~\Cref{sec:temporal_bases})---could be realised in the Granule-Golgi circuit.
 
 
 \subsubsection{Intrinsic properties of the Purkinje cells}
@@ -92,7 +93,7 @@ Evidence for this comes from \citet{johansson2014memory}, who find that bypassin
 
 \subsubsection{Discussion}
 We think that these two theories are not inherently contradictory.
-Both temporal tuning of the granular cells and intrinsic temporal properties of the Purkinje cells could play a role in delay learning---as we saw in \Cref{chp:temporal_tuning}, both the intrinsic dynamics of neurons, and the network dynamics can be harnessed to produce desired dynamics.
+Both temporal tuning of the granular cells and intrinsic temporal properties of the Purkinje cells could play a role in delay learning---as we discussed in \Cref{chp:temporal_tuning}, both the intrinsic dynamics of neurons, and the network dynamics can in principle be harnessed to produce desired dynamics.
 
-The findings presented in this chapter provide a strong argument that the biology of the Granule-Golgi circuit is at least well suited for implementing some kind of temporal basis function generation, and as such confirms the results of previous studies  \citep[cf.][]{dean2010cerebellar,rossert2015edge}.
-Still, our work only takes a fraction of the available data on cerebellar neurophysiology into account and as such should not be seen as strong evidence for or against one of the two proposed mechanisms.
+The findings in this chapter provide a strong argument that the Granule-Golgi circuit is well-suited for implementing some kind of temporal basis, and as such confirms the results of previous studies \citep[cf.][]{dean2010cerebellar,rossert2015edge}.
+Still, our work only takes a fraction of the available data on cerebellar neurophysiology into account and as such should not be seen as strong evidence for or against either of the two proposed mechanisms.

@@ -119,7 +119,7 @@ Using this equation, we obtain the following partial derivatives of \cref{eqn:nl
 \end{align}
 To ensure that $\mrA[\vng]$ is non-singular, \vrap and \mrAp must be non-negative (see \Cref{sec:nlif_subth_properties}).
 Hence, when performing gradient descent, these parameters must be clipped to zero after every update step.
-When using quasi-Newton methods, an algorithm that supports bounds must be employed---an example of such an algorithm is L-BFGS-B \citep{byrd1995limited},
+When using quasi-Newton methods, an algorithm that supports bounds must be employed---an example of such an algorithm is L-BFGS-B \citep{byrd1995limited}.
 
 \subsubsection{Soft trust-region based optimisation}
 As mentioned above, optimising \cref{eqn:nlif_param_opt} is particularly difficult because of the matrix inverse $\mrA[\vec g_\ell]^{-1}$.
@@ -145,8 +145,8 @@ We could for example enforce strict equality using Lagrange multipliers \citep[e
 %However, it can be beneficial to set $\alpha_2$ to larger values; $\alpha_2 = 10^3$ leads to minimally (on the order of $10^{-4}$) smaller errors.
 %}
 
-Similarly to our \enquote{trick} in \Cref{sec:two_comp_lif_fit_model}, where we multiplied with the denominator of a rational function, we can now multiply with $-\mrA[\vec g_\ell; \vec \theta]$ inside the $L_2$-norm to eliminate the inverse.
-While this does not change the optimal solution for each individual sample $\ell$, doing so implicitly  reweighs the system, just as we discussed above.%
+Similar to our \enquote{trick} in \Cref{sec:two_comp_lif_fit_model}, where we multiplied with the denominator of a rational function, we can now multiply with $-\mrA[\vec g_\ell; \vec \theta]$ inside the $L_2$-norm to eliminate the inverse.
+While this does not change the optimal solution for each individual sample $\ell$, doing so implicitly reweights the system, just as we discussed above.%
 \footnote{We experimented with applying a Sanathanan-Koerner-inspired correction (cf.~eq.~\ref{eqn:sanathanan_koerner}) by weighting each sample proportionally to the inverse of the determinant of $\mrA[\vec g_\ell; \vec \theta]$ (i.e., the denominator of $-\mrA[\vec g_\ell; \vec \theta]^{-1} \vrb[\vec g_\ell; \vec \theta]$).
 However, we once again found that this has no appreciable positive effect on the quality of the obtained results.}
 Blissfully ignoring this, we obtain
@@ -242,11 +242,11 @@ To summarise, our final loss function $E'$ with two additional regularisation te
 Note that regularisation factor $\lambda_1$, as well as the first term of $E_3$ are scaled by $N$.
 This is because all other expressions are sums with $N$ elements; without the scaling factor, the impact of these terms would go to zero as the number of samples $N$ increases.
 
-With some patience, this problem, including nonnegativity constraints for \vrap and \mrAp, can be converted into a quadratic program with sparse $\mat P$ and $\mat G$ (cf.~\Cref{dec:qp}).%
+With some patience, this problem, including nonnegativity constraints for \vrap and \mrAp, can be converted into a quadratic program with sparse $\mat P$ and $\mat G$ (cf.~\Cref{def:qp}).%
 \footnote{
 Formally stating the quadratic program is rather tedious.
 The parameter matrices and vectors $\mrAp[\vec g_\ell; \vec \theta]$, $\vrap[\vec g_\ell; \vec \theta]$, $\mrBp[\vec g_\ell; \vec \theta]$, $\vrbp[\vec g_\ell; \vec \theta]$ must be split into constant sub-expressions and linear terms dependant on $\vec \theta$.
-Readers interested in these technicalities are kindly directed at the source code for \emph{libnlif}, specifically \texttt{nlif\_solver.cpp}.
+Readers interested in these technicalities are kindly directed at \emph{libnlif} source code (see \texttt{nlif\_solver\_parameters.cpp}).
 }
 Alternatively, this problem can be solved using an \NNLS solver, where \vrbp and \mrBp are allowed to be negative.
 
@@ -260,7 +260,7 @@ The final algorithm is listed in \Cref{alg:nlif_tr_parameters}.
 \begin{algorithm}[t]
 	\begin{minipage}{0.98\textwidth}
 	\caption[Soft trust-region parameter optimisation for $n$-LIF neurons]{Soft trust-region parameter optimisation for \nlif neurons. 
-	The hyperparameter selection is generally uncritical; good starting values are $\alpha_1 = \alpha_2 = 1$, $\alpha_3 = 10^{-5}$, $\lambda_1 = \lambda_2 = 10^{-9}$.
+	The hyperparameter selection is generally not critical; good starting values are $\alpha_1 = \alpha_2 = 1$, $\alpha_3 = 10^{-5}$, $\lambda_1 = \lambda_2 = 10^{-9}$.
 	For $n_\mathrm{iter} \geq 100$, the decay constant $\gamma$ should be set to $\gamma \approx 0.99$, for $n_\mathrm{iter} = 10$, $\gamma \approx 0.9$.
 	}
 	\label{alg:nlif_tr_parameters}
@@ -305,7 +305,7 @@ To test whether the algorithms converge to a solution even when starting from su
 First, the theoretical parameter estimate (e.g., \Cref{tbl:nlif_matrices_reduced}), and second, uniformly sampled parameters $\vec \theta_0$.
 
 We use the hyperparameters listed in \Cref{alg:nlif_tr_parameters} for our \QP.
-In our experience, most of these hyperparameters are relatively uncritical.
+In our experience, the specific values of these hyperparameters are not especially critical.
 The most important parameter is the soft trust-region weight $\alpha_3 = 10^{-5}$; for this parameter values between $10^{-4}$ and $10^{-6}$ seem to work well.
 As a stochastic gradient descent method, we use the \enquote{Adam} optimizer.
 Adam dynamically adapts the learning rate $\eta$ of each parameter based on the first and second gradient moments (i.e., mean and variance; \cite{kingma2015adam}).
@@ -355,7 +355,7 @@ Adam fails to converge to a good solution in the case of the two- and three-comp
 \paragraph{Discussion}
 Our hand-tailored optimisation method outperforms general-purpose methods.
 This is likely because we solve a less non-linear optimisation problem in a higher-dimensional space.
-Compared to quasi-Newton methods, our \QP possesses an explicit sparse Hessian $\mat P$ (cf.~\Cref{def:qp}), whereas L-BFGS-B has to estimate the Hessian over several iterations.
+Compared to quasi-Newton methods, our \QP possesses an explicit sparse Hessian $\mat P$ (cf.~\Cref{def:qp}), whereas L-BFGS-B must estimate the Hessian over several iterations.
 
 The previously mentioned issues with our method---incorrectly splitting the loss function into two parts, haphazardly multiplying with $\mrA[\vec g_\ell; \vec \theta]$ inside the $L_2$ norm, and potentially bad convergence behaviour due to using a soft trust-region---seem to have no effect on the quality of the solution.
 In fact, the two gradient-based optimisation methods tend to converge to the same solution (in terms of the final \NRMSE) despite them not relying on these simplifications.
@@ -377,7 +377,7 @@ To gauge how well our calibrated surrogate dendritic nonlinearity model predicts
 We simulate the individual neurons for one second with constant input $\vec g_\ell$ sampled from $[\SI{0}{\micro\siemens}, \SI{1}{\micro\siemens}]^k$ and record the average spike rates.
 Out of $N = 1000$ samples, those with a spike rate above \SI{12.5}{\per\second} are used to train our model, final parameters are given in \Cref{tbl:nlif_params}.%
 \footnote{
-Our optimisation library \emph{libnlif} optionally accounts for subthreshold relaxation in \cref{eqn:nlif_param_opt} (using the same techniques as in the next section).
+Our optimisation library \emph{libnlif} optionally accounts for subthreshold relaxation in \cref{eqn:nlif_param_opt} (using the same techniques as in \Cref{sec:nef_subthreshold}).
 While this can slightly improve the optimised model, the improvements are minuscule compared to the pragmatic method of just discarding subthreshold samples.
 }
 After calibration, we compute the true spike rates along several axis-aligned slices through the input space, and compare these data to the model prediction $G[\Hden(\vec g)]$.
@@ -612,7 +612,7 @@ Hence, while it is possible to compute multiplication, we expect noise to negati
 	\textbf{(B)} Computing multiplication as illustrated in \Cref{fig:nlif_decode_multiplication_example}.
 	The two-compartment neuron cannot approximate four-quadrant multiplication well.
 	Our \SQP algorithm converges to a good solution after about $25$ epochs and outperforms L-BFGS-B.
-	\SGD ultimately reaches solutions with slightly smaller errors, but possesses a larger variance.
+	\SGD ultimately reaches solutions with slightly smaller errors, but produces a larger variance.
 	}
 	\label{fig:nlif_weight_optimisation_comparison}
 \end{figure}
@@ -701,7 +701,7 @@ Still, the three- and four-compartment neurons perform more similarly, if not sl
 The two-compartment neuron is slightly worse than the multiplicative baseline, and features a much higher variance than the three- and four-compartment neurons.%
 \footnote{Note that the results for the one- and two-compartment neurons differ from those in \Cref{fig:two_comp_lif_frequency_sweep}.
 The errors for the one-compartment are larger than those for \LIF neuron in the previous experiment, while the errors for the two-compartment neuron are smaller.
-These discrepancies stem from using new regularisation factors, and, to some degree, from different neuron parameters and the \SQP weight solver.
+These discrepancies stem from using different regularisation factors, and, to some degree, from different neuron parameters.
 However, the results are qualitatively the same and, most importantly, results \emph{within} each experiment are consistent.}
 
 \subsubsection{Discussion}
@@ -709,7 +709,7 @@ The computational advantage of three- and four-compartment neurons is not as cle
 While three- and four-compartment neurons can clearly compute multiplicative and not just merely divisive terms, this only results in a small average improvement in performance for random functions.
 
 Since all pre-neurons connect to all input channels, the four-compartment neuron could, as per \Cref{thm:nlif_product_terms}, compute quadratic terms (i.e., $x_1^2$ and $x_2^2$).
-As is evident from the limited improvement in approximation errors, this does not seem to be the case in practice.
+As is evident from the limited improvement in approximation errors, this does not seem to be helpful in practice.
 
 This is likely due to the distal compartment requiring large coupling conductances.
 While tighter coupling is necessary to influence somatic currents, this also makes the neuron more linear, reducing its computational power (cf.~\Cref{sec:nlif_examples}).
@@ -900,7 +900,7 @@ However, among our \nlif neurons, baseline errors tend to increase with the numb
 That is, errors for the three-compartment neuron are slightly higher than those for the two-compartment neuron, and so on.
 
 A notable exception to this is four-quadrant multiplication.
-Here, the three- and four-compartment neuron clearly outperform the \LIF and two-compartment \LIF neurons.
+Here, the three- and four-compartment neurons clearly outperform the \LIF and two-compartment \LIF neurons.
 The standard \LIF neuron reaches an \NRMSE of $100\%$---the network outputs a constant zero, which indeed is the best linear approximation of multiplication over all four quadrants.
 Similarly, since the two-compartment \LIF neuron cannot compute \XOR, the error is at $78\%$.
 In contrast, the three- and four-compartment neurons reach errors of about $36\%$.
@@ -911,7 +911,7 @@ It is again worth pointing out that, for most functions, the errors achieved by 
 While it may seem as if these neurons are thus less \enquote{powerful}, this is not the case.%
 \footnote{
 The three- and four-compartment neuron are structural \enquote{supersets} of the two-compartment neuron.
-Correspondingly, the three- and four-compartment neurons \emph{cannot} be less powerful then the two-compartment neuron (assuming that the coupling conductance $c_{12}$ is the same, which is not the case in this specific experiment).
+Correspondingly, the three- and four-compartment neurons \emph{cannot} be less powerful than the two-compartment neuron (assuming that the coupling conductance $c_{12}$ is the same, which is not the case in this specific experiment).
 %In theory, compensating for the additional leak conductance, we could ignore the third and fourth compartment and achieve the same errors as the two-compartment neuron.
 }
 As we saw in \Cref{sec:nlif_opt_parameters_experiment}, and as follows from generally \emph{lower} static decoding errors (\Cref{tbl:function_approximations_nlif_model}), the increase in error compared to two-compartment neurons largely stems from the surrogate dendritic nonlinearity model being less accurate.
@@ -948,7 +948,7 @@ We are able to reach smaller errors with both L-BFGS-B and Adam for these partic
 However, we found in a preliminary experiments (data not shown) that using L-BFGS-B with $100$ epochs to solve for synaptic weights tends to \emph{increase} the overall network error $E_\mathrm{net}$.
 }
 Leaving this question open, a pragmatic solution to this problem is to simply change the tuning curves of the target population.
-However, this affects the classes functions that can be decoded from the target population.
+However, this affects the class of functions that can be decoded from the target population.
 
 The bottom portion of \Cref{tbl:function_approximations_nlif} labelled \enquote{adapted parameters} lists the results of an experiment where we tune the target-population $x$-intercepts $\xi_0$ to be strictly negative.
 As suggested by preliminary experiments, we furthermore reduce $\lambda$ to $10^{-6}$ and do not account for Dale's principle---this effectively increases the number of pre-neurons.

@@ -11,7 +11,7 @@
 	{\phantomsubcaption\label{fig:nef_multivariate_functions_c}}%
 	\caption[Using dendritic computation to approximate multivariate functions in the NEF]{Using dendritic computation to approximate multivariate functions in the \NEF. \textbf{(A)} Standard \NEF networks are additive: summation in activity space corresponds to addition in representation space.
 	\textbf{(B)} Computing nonlinear multivariate functions $f$ generally requires all variables to be represented in an intermediate population.
-	\textbf{(C)} The dendritic computation scheme discussed in here.
+	\textbf{(C)} The dendritic computation scheme discussed here.
 	Two pre-populations project onto a post-population with separate excitatory and inhibitory input channels.
 	%The nonlinear interaction between these channels is exploited to compute $\phi$.
 	}
@@ -25,7 +25,7 @@ These networks cannot approximate most multivariate functions.
 In contrast, \emph{two-layer networks} represent all variables in a common intermediate population.
 These networks are universal approximators.
 Lastly, our notion of \emph{dendritic computation} relies on non-linear interaction between independent neural input channels.
-While not as powerful as multi-layer networks, dendritic computation can approximate a larger class of functions as additive networks.
+While not as powerful as multi-layer networks, dendritic computation can approximate a larger class of than functions additive networks.
 
 \subsection{Additive Multivariate Networks}
 \label{sec:additive_net}
@@ -77,7 +77,7 @@ Summing functions incurs no additional decoding error.
 
 \subsubsection{Additive networks cannot compute most multivariate functions}
 The only way to compute general multivariate functions $f(x_1, x_2)$ in additive networks is to \emph{approximate} $f$ as an additive univariate decomposition.
-As is expressed by the following proposition (see Appendix~B.3.1 for a proof), it is impossible to compute many continuous multi-variate $f$ in this way.%
+As is expressed by the following proposition (see Appendix~B.3.1 for a proof), it is impossible to compute many continuous multivariate $f$ in this way.%
 \footnote{We limit our propositions to continuous functions for the sake of simplicity.
 However, we conjecture that the same results hold for larger classes of functions, for example square Lebesgue integrable functions.}
 This is true even if we can decode arbitrary univariate functions $f_1$, $\ldots$, $f_\ell$ over the pre-variables (this is equivalent to having an infinite number of pre-neurons, see below), and we were able to freely choose a fixed nonlinearity $\sigma$ (cf.~\Cref{fig:perceptron_a}).
@@ -171,7 +171,8 @@ There are no continuous, real-valued functions $f_1$, $f_2$, $\sigma$ such that 
 \end{figure}
 
 As already mentioned in \Cref{sec:nef_transformation}, an individual \NEF population can be interpreted as a two-layer neural network (cf.~\Cref{fig:mlp}).
-As long as the encoding vectors are sampled from the $\ell$-dimensional hypersphere and $x$-intercepts are uniformly distributed, such a neuron population is a universal function approximator, that is, we can compute arbitrary functions $f(x_1, \ldots, x_\ell)$ over the variables represented in the population.
+As long as the encoding vectors are sampled from the $\ell$-dimensional hypersphere and $x$-intercepts are uniformly distributed, such a neuron population is a universal function approximator.
+That is, we can compute arbitrary functions $f(x_1, \ldots, x_\ell)$ over the variables represented in the population.
 The following theorem states this more formally for neurons with a rectified linear unit (\ReLU) nonlinearity, i.e., $\sigma(\xi) = \max\{0, \xi\}$.
 
 \begin{restatable}{theorem}{ThmTwoLayerUniversal}
@@ -220,7 +221,7 @@ According to Theorem~\ref{thm:two_layer_universal} we can then decode any multiv
 \subsubsection{Potential issues with intermediate populations}
 In theory, the number of neurons required to cover a $d$-dimensional space rises exponentially with $d$.
 Representing a $d$-dimensional quantity in an intermediate population can thus require a large number of neurons to achieve a certain decoding error for all target functions.
-In practice, it is quite difficult to judge the number of neurons required to decode a certain function $f$ a-priori; the decoding error heavily depends on $f$ and the encoding vectors $\vec e_i$.
+In practice, it is quite difficult to judge the number of neurons required to decode a certain function $f$ \emph{a priori}; the decoding error heavily depends on $f$ and the encoding vectors $\vec e_i$.
 
 Another problem arises when modelling neurobiological systems.
 There may be no indication that an intermediate population exists in a particular biological circuit, although the hypothesised high-level function is a multivariate function.
@@ -241,7 +242,7 @@ Input fed through these channels interacts nonlinearly, modelling information pr
 	\includegraphics{media/chapters/03_nlif/03_01/dendritic_computation.pdf}%
 	{\phantomsubcaption\label{fig:dendritic_computation_net}}%
 	{\phantomsubcaption\label{fig:dendritic_computation_fun}}%
-	\caption[Overview of our notion of dendritic computation.]{Overview of our notion of dendritic computation. \textbf{(A)} Neuron with an excitatory and inhibitory input channel. In a network context, these functions are decoded from pre-populations representing these variables. Connectivity can be constrained such that excitatory and inhibitory pre-neurons only connect to the corresponding channel. \textbf{(B)} Conceptually, each channel receives a sum of univariate functions computed over the pre-variables $x_1$, $\ldots$, $x_\ell$.}
+	\caption[Overview of our notion of dendritic computation.]{Overview of our notion of dendritic computation. \textbf{(A)} A neuron with an excitatory and inhibitory input channel. In a network context, these functions are decoded from pre-populations representing these variables. Connectivity can be constrained such that excitatory and inhibitory pre-neurons only connect to the corresponding channel. \textbf{(B)} Conceptually, each channel receives a sum of univariate functions computed over the pre-variables $x_1$, $\ldots$, $x_\ell$.}
 \end{figure}
 
 Mathematically, the response curve describing the average neural activity is now a multivariate function $\mathscr{G}[\xi_1, \ldots, \xi_k]$, where the $\xi_i$ are linear combinations of the pre-activities (\Cref{fig:dendritic_computation_net}).
@@ -278,7 +279,7 @@ It is trivial to show that such networks are more powerful than additive network
 For example, let $\sigma(\xi_1, \xi_2) = \xi_1 \xi_2$.
 Now, setting the functions feeding into the second channel to one, i.e., $g_{1, i}^2(x_1) = \ldots = g_{\ell, 1}^2(x_\ell) = 1$, we obtain an additive network.
 Of course, in contrast to additive networks, we can use the same $\sigma$ to compute products of the pre-variables.
-Still, dendritic computation computation networks are not universal approximators:
+Still, dendritic computation networks are not universal approximators:
 \begin{conjecture}
 \label{thm:dendritic_compuation_incomplete}
 Let $\ell > 1$, $\Xrepr \subset \mathbb{R}^\ell$ and $\mathbb{Y} \subset \mathbb{R}$ be compact sets of full dimensionality, and $\sigma$, $f$, $g^j_i$ be continuous.
@@ -292,7 +293,7 @@ Given $\oh$ orthogonal one-dimensional basis functions, the corresponding $\ell$
 Correspondingly, $\oh^\ell$ \DOF are required to describe an $\ell$-dimensional $f$ with a basis of order $\oh$.
 However, when using dendritic computation, we only use $k \ell$ one-dimensional functions; correspondingly, there are only $\oh k \ell$ \DOF.
 For $\oh \to \infty$, and $\ell > 1$, $\oh k \ell$ grows much slower than $\oh^\ell$.
-Hence, there are always functions than cannot be computed using dendritic computation.%
+Hence, there are always functions that cannot be computed using dendritic computation.%
 \footnote{Mathematically, the cardinality of the set of continuous functions $f$ constructed from a function basis of order $\oh$ is $|\mathbb{R}^{\oh^\ell}|$, while the cardinality of functions that can be constructed using dendritic computation is $|\mathbb{R}^{\oh k \ell}|$.
 Unintuitively, even for $\oh \to \infty$, it holds $|\mathbb{R}^{\oh^\ell}| = |\mathbb{R}^{\oh k\ell}| = \mathfrak{c}$, where $\mathfrak{c}$ is the cardinality of the continuum \citep[e.g.,][Chapter~4]{jech2003set}.
 Fortunately, this is irrelevant in practice.
@@ -325,8 +326,8 @@ As a result, small $\rho^{-1}$ (i.e., large filters), result in almost linear fu
 Note that this scheme generates aperiodic functions.
 Correspondingly, while the filtered grid of $n' \times n'$ samples is band-limited, the final $n \times n$ samples are not.
 High frequencies are required to represent the discontinuous boundary---a result of applying a box-window to our data (cf.~the \enquote{windowing theorem}; e.g.,~\cite{oppenheim2009discretetime}, Section~2.9.7).
-Hence, there is no trivial way to sample these functions directly the frequency domain, and to make use of the fast inverse Fourier transform.
-Still, this scheme can be implemented efficiently by separating the Gaussian filters into horizontal and vertical components \citep[e.g.][]{bolon2006twodimensional}.
+Hence, there is no trivial way to sample these functions directly in the frequency domain, and to make use of the fast inverse Fourier transform.
+Still, this scheme can be implemented efficiently by separating the Gaussian filters into horizontal and vertical components \citep[e.g.,][]{bolon2006twodimensional}.
 }
 
 \subsubsection{Network models}
@@ -418,7 +419,7 @@ The dendritic network $f_\mathrm{den}$ sits somewhere in between;
 $f_\mathrm{den}$ can be used to decode the target function for $\rho^{-1} = 1$ at a reasonable $6\%$ \NRMSE, while failing to reconstruct the target function for $\rho^{-1} = 3.16$ at a $44\%$ error.
 
 \Cref{fig:dendritic_computation_fourier_example} depicts the results of a more systematic experiment.
-For a fixed basis function count (\Cref{fig:dendritic_computation_fourier_example_a}), the error achieved with an additive network $f_\mathrm{add}$ increases almost with $\rho$ on a log-log plot, while both $f_\mathrm{den}$ and $f_\mathrm{mpl}$ possess a sublinear plateau.
+For a fixed basis function count (\Cref{fig:dendritic_computation_fourier_example_a}), the error achieved with an additive network $f_\mathrm{add}$ increases almost with $\rho$ on a log-log plot, while both $f_\mathrm{den}$ and $f_\mathrm{mlp}$ possess a sublinear plateau.
 
 Increasing the basis order $\oh$ (\Cref{fig:dendritic_computation_fourier_example_b}) has only a small effect on $f_\mathrm{add}$ and $f_\mathrm{den}$.
 We only observe a small decrease in error for $f_\mathrm{den}$ below $\rho^{-1} < 0.5$, whereas there is virtually no change in error for $f_\mathrm{add}$.

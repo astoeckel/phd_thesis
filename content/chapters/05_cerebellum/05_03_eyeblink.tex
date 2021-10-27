@@ -50,7 +50,8 @@ The \enquote{puff} (\US) occurs \SI{250}{\milli\second} after the \CS onset.
 The model learns to have the eye closed when the puff occurs. Notably, individual instances of the network show slight differences in learning speed, just as individual experimental animals do.
 
 While our model reproduces key features of eyeblink conditioning, its behaviour differs from the experimental data in some aspects.
-Foremost, the model does not reproduce the increase in learning speed over time; to the contrary, learning slows down as the model converges to the optimal set of parameters.
+Foremost, our eyelid closure trajectories are quite linear, whereas the animal data shows pronounced curvature.
+This could point at a deficiency of our motor system model.
 Furthermore, our model shows far less inter-trial variance compared to experimental animals.
 We think that the reasons for this are twofold.
 First, the $10\,000$ granule cells used in our experiments provide an on average very stable temporal basis from which we can decode the motor control signal.

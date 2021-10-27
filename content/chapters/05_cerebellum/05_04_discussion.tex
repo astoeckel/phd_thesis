@@ -12,6 +12,7 @@ Instead of relying on random connectivity, we specify the high-level function we
 We demonstrated that measurements from our model can be used to generate hypotheses about the kind of electrophysiological data we would expect to find, if this function was indeed realised in the brain.
 Having access to low-level biological parameters \emph{in silico} furthermore facilitates the exploration of physiological changes that are difficult to achieve experimentally \emph{in vivo}.
 As discussed above with respect to the synaptic time-constants and convergence numbers, this allows us to investigate why certain parameters are as observed.
+Furthermore, directly tying the time constant to the behavioural performance suggests what kind of behavioural effects would be observed if we could shorten the time constant \emph{in vivo}.
 
 Importantly, our results indicate that the Granule-Golgi circuit could in principle implement a temporal basis function representation.
 However, as we discussed above, this is under the condition that the Granule cell response curves are diversified by some mechanism not directly captured by our model.
@@ -22,5 +23,5 @@ We furthermore predicted that the Granule-Golgi circuit would be better suited f
 While our model of eyeblink conditioning is concerned with a relatively low-level task, the techniques presented here for mapping function onto brain microcircuits are applicable to models of higher-level cognitive function as well, beyond what was already possible with the \NEF and Nengo.
 In particular, it would be interesting to see whether our model of the Granule-Golgi circuit in conjunction with the Purkinje cell's plasticity could serve as a supervised learner for timings in cognitive and perceptual tasks, as suggested by various studies \citep{oreilly2008cerebellum,e2014metaanalysis,sanger2020expansion}.
 
-Future work should focus on incorporating additional biological detail into the model (such as separate biological time-constants for all synapses); specifically, it would be interesting to extend the rigour applied to the Granule-Golgi circuit to the remaining portions of the cerebellar microcircuit.
+Future work should focus on incorporating additional biological detail into the model (such as separate biological time-constants for all synapses); specifically, it would be interesting to extend the detail applied to the Granule-Golgi circuit to the remaining portions of the cerebellar microcircuit.
 Furthermore, it would be interesting to find potential mechanisms for the diversification of the Granule cell tuning curves and to gain a better understanding of why the Legendre system cannot be mapped exactly onto the detailed Granule-Golgi circuit.

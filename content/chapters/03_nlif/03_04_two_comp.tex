@@ -153,8 +153,7 @@ In a network context, \gE and \gI are not constant, but, as we discussed in Sect
 This results in a considerable amount of \enquote{spike noise} in the conductance inputs.
 In this experiment, we generate artificial filtered spike trains using spike times from Poisson sources (simulation period $T = \SI{100}{\second}$; rates fitted to data from Experiment~3; see below).
 Synaptic weights are simulated by uniformly sampling scaling factors for each spike event.
-The resulting signals are scaled such that the averages conductances are equal to \gE, \gI.
-We de
+The resulting signals are scaled such that the average conductances are equal to \gE, \gI.
 We furthermore replace $G[J]$ with a \ReLU, that is $G[J] = \max\{ 0, \alpha J + \beta \}$.
 We know from preliminary experiments that the hard \LIF spike-onset is not present in noisy environments---this is not captured well by the standard \LIF response curve.
 While we could use a \enquote{soft} version of the \LIF response curve that takes this into account \citep[cf.][]{capocelli1971diffusion,hunsberger2014competing,kreutz2015mean}, a \ReLU appears to work well.
@@ -330,7 +329,7 @@ An earlier hypothesised mechanism for gain modulation is \emph{shunting inhibiti
 Here, the idea is that an inhibitory channel with a reversal potential close to the resting potential acts divisively on the average input current.
 This effect could in theory be used to implement multiplication \citep{koch1992multiplying}; however, in practice, increasing inhibitory conductances alone has a predominantly linear effect on the spike rate (since $a_2 \ll b_2$), or requires implausibly high conductance values \citep{holt1997shunting,abbott2005drivers}.
 
-Even when exploiting the common increase of excitation and inhibition, generating the large input conductances for small $x_1$, $x_2$ results in relative large synaptic weights.
+Even when exploiting the common-mode increase of excitation and inhibition, generating the large input conductances for small $x_1$, $x_2$ results in relative large synaptic weights.
 This is depicted in \Cref{fig:two_comp_weights_examples_statistics_c,fig:two_comp_weights_examples_statistics_d}.
 Compared to computing addition, the median synaptic weight increases by a factor of five.
 
@@ -389,7 +388,7 @@ Functions with $\slc \geq 0.5$ may possess multiple maxima/minima over $[-1, 1]^
 Trying to approximate these functions using \Hcur or \Hcond thus leads to a large error.
 
 This observation explains the difference between the multiplicative nonlinearity from the basis-function experiment (see the \enquote{multiplicative baseline} in the above figure) and the two-compartment \LIF neuron---the multiplicative nonlinearity \emph{can} be used to solve the \XOR problem.
-Evidently, networks capable of approximating \XOR-like functions are, using our terminology form \Cref{sec:dendritic_computation_theory}, more \enquote{powerful} than those limited to conductance-based shunting.
+Evidently, networks capable of approximating \XOR-like functions are, using our terminology from \Cref{sec:dendritic_computation_theory}, more \enquote{powerful} than those limited to conductance-based shunting.
 
 To summarise, this experiment demonstrates that the \twocomplif dendritic nonlinearity \Hcond substantially reduces the approximation error for $J_\rho$ with $\slc < 1$ compared to an additive network with nonlinearity \Hcur.
 The two-compartment neuron is competitive with a two-layer network for $\slc < 0.5$ and reaches similar errors as the multiplicative nonlinearity.
@@ -437,7 +436,7 @@ The regularisation factor $\sigma$ has been selected independently for each para
 	\centering
 	{\includegraphics{media/chapters/03_nlif/03_04/two_comp_2d_frequency_sweep_network.pdf}}%
 	\kern-158.06mm\includegraphics{media/chapters/03_nlif/03_04/two_comp_2d_frequency_sweep_overlay.pdf}
-	\caption[Median error for computing random bandlimited functions in a feed-forward network over 100 trials]{Median error for computing random bandlimited functions in a feed-forward network over 100 trials. Measured \NRMSE is the difference between the represented value $\hat y(t)$ and the expected value $f_\rho(x_1(t), x_2(t))$ relative to the standard deviation of $f_\rho$. See \Cref{fig:two_comp_lif_frequency_sweep} for a more detailed description.}
+	\caption[Median error for computing random bandlimited functions in a feed-forward network over 100 trials]{Median error for computing random bandlimited functions in a spiking feed-forward network over $100$ trials. Measured \NRMSE is the difference between the represented $\hat y(t)$ and the expected $f_\rho(x_1(t), x_2(t))$ relative to the standard deviation of $f_\rho$. See \Cref{fig:two_comp_lif_frequency_sweep} for a detailed description.}
 	\label{fig:frequency_sweep_network}
 \end{figure}
 
@@ -455,7 +454,7 @@ The elevated error levels are likely due to the spike noise that is now superimp
 Notably, this noise, as well as the added dynamics, do not affect the two-compartment neuron over-proportionally, as one might expect due to the simplifications made during the derivation of the dendritic nonlinearity model (cf.~\Cref{sec:nlif_derive_h}).
 To the contrary, the largest effect of the additional noise is on the two-layer network.
 
-We think that the larger errors for the two-layer network are caused by the representation of a two-dimensional quantity begin noisier than the representation of the individual scalars in the two pre-populations.
+We think that the larger errors for the two-layer network are caused by the representation of a two-dimensional quantity being noisier than the representation of the individual scalars in the two pre-populations.
 This is in line with our observation from \Cref{sec:dendritic_computation_theory_numerical}.
 Given a maximum error, the number of basis functions decodable from a multi-dimensional population is not much larger than the decodable function count for a one-dimensional population.
 
@@ -598,11 +597,11 @@ The current-based neuron is only competetive with the two-compartment neuron for
 Subthreshold relaxation decreases the error by up to $40\%$.
 
 \paragraph{Discussion}
-An effect that could contribute to the superior performance of the two-compartment neurons are the low-pass filter dynamics of the dendritic compartment.
+An effect that could contribute to the superior performance of the two-compartment neurons is the low-pass filter property of the dendritic compartment.
 This filter reduces high-frequency spike noise and thus may positively impact $E_\mathrm{net}$.
 We control for this effect in an experiment described in \Cref{app:two_comp_regularisation_factor_sweep}, where we add an optimal low-pass filter to each network setup.
 Results are shown in \Cref{tbl:function_approximations_pre_filter}.
-A matched pre-filter reduces the error in all setups by only $1\%$-$2\%$, which indicates that the low-pass filter dynamics of the dendritic compartment cannot bethe primary source for the reduction in error.
+A matched pre-filter reduces the error in all setups by only $1\%$-$2\%$, which indicates that the low-pass filter dynamics of the dendritic compartment cannot be the primary source for the reduction in error.
 
 To summarise our experiments, we demonstrated in three stages (validation of the nonlinearity model \Hcond for a single neuron, purley mathematical properties of \Hcond, and, finally, performance on a network-level) that we are able to successfully incorporate two-compartment \LIF neurons, an admittedly simple model of shunting in dendritic trees, into functional modeling frameworks.
 Instead of reducing the accuracy of our networks, the added detail can be systematically leveraged for computation.

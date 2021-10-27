@@ -145,7 +145,7 @@ However, there are two conditions under which this system is linear: either $\vn
 This is the case if the system has no conductance-based input channels and \mnAp is zero.
 Note that the constant offset \vnbp in \cref{eqn:nlif_matrix} does not make the dynamical system non-linear, but merely mandates one auxiliary dimension.
 }
-Let $k$ be the number of non-static input channels, and $\vng \in \mathbb{R}^k$ a vector representing the all input channel states, that is, all non-static conductances $g_{ij}$ and currents $J_{ij}$.
+Let $k$ be the number of non-static input channels, and $\vng \in \mathbb{R}^k$ a vector representing all input channel states, that is, all non-static conductances $g_{ij}$ and currents $J_{ij}$.
 This channel state is generally linear in the synaptic weights and the pre-activities (cf.~\Cref{sec:nef_nonlinear}).
 We have
 \begin{align}
@@ -178,7 +178,7 @@ More formally (see \Cref{app:thm_nlif_convergence} for a proof):
 Consider an $n$-LIF neuron with at least one static conductance-based channel and any input vector \vng with non-negative entries for conductance-based input channels.
 In this case, the feedback matrix $\mnA[\vng] \diag(\vCm)^{-1}$ is negative definite.
 \end{restatable}
-This is quite intuitive form a physical perspective.
+This is quite intuitive from a physical perspective.
 The \nlif neuron essentially is a resistor-capacitor network.
 When tying at least one point of the network to a voltage source, the capacitors will converge to some equilibrium potential $\vneq$.
 For constant \vng the dynamics are
@@ -198,12 +198,12 @@ Furthermore, note that \vneq does not depend on \vCm; both $\mnA[\vng]$ and $\vn
 
 \begin{figure}
 	\includegraphics{media/chapters/03_nlif/03_03/nlif_impulse_response_panels.pdf}
-	\label{fig:nlif_impulse_response_panels}
 	\caption[Impulse response of the $n$-LIF neuron]{Impulse response of the $n$-LIF neuron.
 	Injecting a pulse into a nonlinear conductance channel (injection sites \emph{1}, \emph{2}) at most charges the corresponding compartment up to the channel reversal potential.
 	In contrast, current inputs (injection site \emph{3}) can charge the membrane to arbitrary potentials.
 	The impulse is filtered and dampened while it is travelling through a neuron.
 	}
+	\label{fig:nlif_impulse_response_panels}
 \end{figure}
 The impulse response of the system is depicted in \Cref{fig:nlif_impulse_response_panels}.
 Each compartment acts as a first-order low-pass filter; the response in compartment $i$ to an impulse in compartment $j$ thus resembles a low-pass filter of order $d(i, j)$, the distance between nodes $i$, $j$.
@@ -214,7 +214,7 @@ Each compartment acts as a first-order low-pass filter; the response in compartm
 \label{sec:nlif_derive_h}
 
 As defined above (cf.~\Cref{def:dendritic_nonlinearity}), the dendritic nonlinearity $H$ maps a synaptic state $\vec g$ onto the synaptic current $J$ such that $G[J] = \mathscr{G}[\vec g]$, where $G[J]$ is a standard single-channel response curve and $\mathscr{G}[\vec g]$ is the response curve of the multi-channel neuron.
-If, for example, $G[J]$ is the \LIF response curve, then $H$ maps $\vec g$ into an \enquote{\LIF-equivalent} current.
+If, for example, $G[J]$ is the \LIF response curve, then $H$ maps $\vec g$ into a \enquote{\LIF-equivalent} current.
 
 Trivial cases aside, it is generally not possible to provide $H$ in closed form for \nlif neurons.
 This is due to the nonlinear interaction between the membrane potential and conductance-based input channels, as well as the influence of the nonlinear superthreshold dynamics on the dendritic compartments.
@@ -229,13 +229,13 @@ The current $H(\vec g; t)$ flowing into the somatic compartment at time $t$ for 
 	H(\vec g; t) = \big(\mat A[\vec g] \vec v(t) + \vec b[\vec g] \big)_1 \,.
 	\label{eqn:nlif_sub_momentary}
 \end{align}
-To obtain an \LIF-equivalent current, we must further subtract the leak current $g_\mathrm{L} \big( E_\mathrm{L} - v_1(t) \big)$; this current is already accounted for in the \LIF response curve $G[J]$.%
+To obtain a \LIF-equivalent current, we must further subtract the leak current $g_\mathrm{L} \big( E_\mathrm{L} - v_1(t) \big)$; this current is already accounted for in the \LIF response curve $G[J]$.%
 \footnote{
 Of course, $H$ depends on the specific choice of $G[J]$.
 For example, if we used the response curve for an non-leaky IF-neuron instead, we would not have to subtract the leak current.
 More specifically, in the next section, we discuss using a rectified linear unit instead of the \LIF response curve.
 Also note that, in practice, these details are not too critical.
-As we discuss below, we propose use a parametrised version of $H$ that is fit to numerical measurements of $J$; this process naturally compensates for missing offsets.
+As we discuss below, we propose using a parametrised version of $H$ that is fit to numerical measurements of $J$; this process naturally compensates for missing offsets.
 }
 
 \begin{figure}[p]
@@ -246,7 +246,9 @@ As we discuss below, we propose use a parametrised version of $H$ that is fit to
 	\caption[Mean somatic membrane potential over the neuron output rate]{Mean somatic membrane potential $\vSom$ over the output rate for a current-based \LIF neuron. Lines correspond to the average potential for different pre-synaptic spike rates.
 	Mean post-synaptic currents are fixed in individual trials, so the spike rate purely corresponds to the amount of noise.
 	Data over 128 random Poisson spike-trains per 1000 individual mean post-synaptic currents.
-	Synaptic filter time constant is $5\,\mathrm{ms}$. Shaded areas correspond to 25/75\% percentiles, lines to the mean. \textbf{(A)} Average membrane potential excluding the refractory and spike period. Dotted line is a  linear model that takes the relative length of the spike and refractory phase into account. \textbf{(B)} Average membrane potential including the refractory and spike period.}
+	Synaptic filter time constant is $5\,\mathrm{ms}$. Shaded areas correspond to 25/75\% percentiles, lines to the mean.
+	\textbf{(A)} Average membrane potential including the refractory and spike period.
+	\textbf{(B)} Average membrane potential excluding the refractory and spike period. Dotted line is a  linear model that takes the relative length of the spike and refractory phase into account.}
 	\label{fig:avg_vsom}
 \end{figure}
 
@@ -323,10 +325,10 @@ As we discuss below, we propose use a parametrised version of $H$ that is fit to
 \end{table}
 
 \subsubsection{Average superthreshold somatic potential}
-For or the purpose of building networks of spiking neurons, we are primarily interested in the superthreshold regime.
+For the purpose of building networks of spiking neurons, we are primarily interested in the superthreshold regime.
 Unfortunately, as mentioned above, the nonlinear superthreshold dynamics are notoriously difficult to analyse.
 
-We work around this by exploiting that \nlif neurons are tonically spiking (cf.~Section~2.2.1).
+We work around this by exploiting the fact that \nlif neurons are tonically spiking (cf.~Section~2.2.1).
 That is, the somatic compartment oscillates between the reset and threshold potential with a fixed frequency (cf.~Figure~2.20).
 %TODO Fix references
 We may thus assume that the somatic membrane potential is effectively clamped to some value $\vSom$ between reset and threshold potential; we discuss this in more detail in \citet{stockel2017point}.
@@ -397,7 +399,7 @@ However, before we do so, we explicitly derive $H$ for a few special cases and a
 \subsection{Some Worked Examples}
 \label{sec:nlif_examples}
 
-The above framework is well suited for algorithmically deriving the dendritic nonlinearity model $H$ for arbitrary \nlif neurons.
+The above framework is well-suited for algorithmically deriving the dendritic nonlinearity model $H$ for arbitrary \nlif neurons.
 Unfortunately, it may be less intuitive when manually analysing these models.
 %We can easily construct the corresponding model matrices and predict the somatic current for a given input configuration.
 Hence, we find it useful to at least provide the expanded dendritic nonlinearity $H$ for the first four models depicted in \Cref{fig:nlif}.

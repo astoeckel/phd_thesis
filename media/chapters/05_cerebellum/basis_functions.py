@@ -90,18 +90,20 @@ def plot_row(axs, titles, labels, fn):
     axs[2].set_ylabel("$\\sigma_i$")
     axs[2].set_yticks(np.linspace(0, 1, 5), minor=True)
 
-    Sigma = np.sqrt(np.sum(np.square(sigma)))
+    Sigma = np.sum(sigma[:6]) #np.sqrt(np.sum(np.square(sigma)))
     if sigma[3] > 0.5:
         axs[2].text(0.05,
                     0.1,
-                    "$\\|\\vec \\sigma\\| = {:0.2f}$".format(Sigma),
+                    #"$\\|\\vec \\sigma\\| = {:0.2f}$".format(Sigma),
+                    "$\\Sigma = {:0.2f}$".format(Sigma),
                     ha="left",
                     va="bottom",
                     transform=axs[2].transAxes)
     else:
         axs[2].text(1.0,
                     1.0,
-                    "$\\|\\vec \\sigma\\| = {:0.2f}$".format(Sigma),
+                    #"$\\|\\vec \\sigma\\| = {:0.2f}$".format(Sigma),
+                    "$\\Sigma = {:0.2f}$".format(Sigma),
                     ha="right",
                     va="top",
                     transform=axs[2].transAxes)

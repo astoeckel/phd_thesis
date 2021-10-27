@@ -5,7 +5,7 @@
 As we saw in the previous chapter, neurons possess intricately detailed dendritic trees (cf.~\Cref{fig:neuron_sketches}).
 While the growth of these structures can to some degree be modelled by stochastic processes \citep[e.g.,][]{nowakowski1992competitive}, dendrites are not merely a means to establishing random connectivity.
 Dendritic development is guided by several extrinsic signals, including the activities of neighbouring neurons \citep{mcallister2000cellular}.
-This suggests that dendries are fine-tuned to fulfil a certain computational function.
+This suggests that dendrites are fine-tuned to fulfil a certain computational function.
 
 Indeed, both theoretical and empirical studies show that the location of synaptic sites within the dendrites has a significant impact on neural computation \citep{mel1994information,koch2002singlecell,polsky2004computational}.
 Still, there is no widely accepted high-level theory of dendritic computation \citep{london2005dendritic}, that would, for example, be on a similar level of abstraction as the admirably successful \LIF neuron.
@@ -24,10 +24,10 @@ This is accomplished by mapping \enquote{and-not} expressions onto dendritic bra
 Unfortunately, this relies on the empirically not well-supported concept of \enquote{shunting inhibition} (cf.~\Cref{sec:two_comp_synaptic_weights}; \cite{holt1997shunting,abbott2005drivers}).
 
 More recent investigations into the theoretical properties of dendritic trees tend to take the active properties of dendritic compartments into account.
-For example, \citet{poirazi2003pyramidal} argue that the dendritic tree of cortical pyramidal is equivalent to a two-layer network of artificial neurons.
-This implies that artificial models of cortical circuits require at least twice as many neuron layers as the biological circuitry,
-Interestingly, this is consistent with comparisons between older deep neural network models and cerebral cortex \citep[e.g.,][]{guclu2015deep}.
-Taking dynamics into account, \citet{beniaguev2021single} even claim that a single cortical neuron is equivalent to a five-layer temporal convolutional neural network.
+\Citet{poirazi2003pyramidal} argue that the dendrites of a cortical pyramidal neuron are equivalent to a two-layer network of artificial neurons.
+This implies that artificial models of cortical circuits require at least twice as many layers as the biological circuitry.
+Interestingly, this is consistent with comparisons between older deep neural networks and cerebral cortex \citep[e.g.,][]{guclu2015deep}.
+Taking dynamics into account, \citet{beniaguev2021single} even claim that a single cortical neuron is equivalent to a five-layer temporal convolutional network (cf.~\Cref{sec:applications_to_ml}).
 
 Dendritic structures have also been found to play a significant role in learning.
 One of the most prominent examples of this are the Purkinje cells in the cerebellum, where basal input is believed to trigger synaptic plasticity (cf.~\Cref{chp:cerebellum}).
@@ -53,8 +53,8 @@ This function can only be computed in the standard \NEF if the multiplicands are
 However, we know that certain circuits in the brain, such layer six in visual cortex, act as gain-control mechanisms that do not rely on common representations \citep{olsen2012gain,bobier2014unifying}.
 
 Second, accounting for dendritic computation may be of interest for neuromorphic computing.
-This is particular true for mixed-signal neuromorphic hardware systems, where individual neurons are analogue model circuits, and communication infrastructure between neurons is digital.
-Introducing dendritic trees could potentially move more of the computation into the analogue domain, and thus improve the power efficiency of the system.
+This is particularly true for mixed-signal systems, where individual neurons are analogue model circuits, and communication infrastructure between neurons is digital \citep[e.g.,][]{neckar2019braindrop,schemmel2010waferscale}.
+Introducing dendrites could move more of the computation into the analogue domain, and thus improve the power efficiency of the system.
 
 \subsubsection{Prior work}
 There is some prior work regarding the integration of dendritic computation into the \NEF.
@@ -84,7 +84,7 @@ We to derive an approximate closed-form expression for the average current flowi
 Further theoretical analysis of this expression yields rules according to which input channels interact divisively, multiplicatively, or linearly.
 
 Subsequently, in \Cref{sec:two_comp_lif}, we apply these theoretical insights to the simplest non-trivial \nlif neuron, the two-compartment \LIF neuron.
-We derive a convex optimisation problem that allows us to solve for near-optimal synaptic weights and show that we can exploit this neuron model to compute a wide range of functions at similar or lower errors than two-layer spiking neural networks.
+We derive a convex optimisation problem that allows us to solve for near-optimal synaptic weights, and show that we can exploit this neuron model to compute a wide range of functions at similar or lower errors than two-layer spiking neural networks.
 
 Finally, in \Cref{sec:nlif_opt}, we discuss a general weight-solving method for \nlif neurons.
 While we cannot guarantee that the resulting weights are globally optimal, our method typically converges within a few iterations.
