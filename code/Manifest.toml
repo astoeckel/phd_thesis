@@ -603,7 +603,7 @@ generates = [
 is_multithreaded = true
 
 ["chapters/05_cerebellum/generate_pcn_tuning.py"]
-commit = "fb320ed663281d79d265ac512c80dc9b35c18bac"
+commit = "32272fda5438f17d9e48316c64332f23b41012b7"
 dockerfile = "experiments_base"
 generates = "granule_pcn_tuning.npz"
 is_multithreaded = true
