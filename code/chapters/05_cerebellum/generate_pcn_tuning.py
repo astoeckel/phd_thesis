@@ -33,7 +33,7 @@ def measure_granule_epscs(seed, bias_mode, T, n_granule=10000):
     np.random.seed(seed)
     ts, xs, ys, _, _, spatial_data, pcn_spikes = benchmark.build_and_run_test_network(
         T=T,
-        input_descr=benchmark.pulse_input(t_on=0.25, t_off=1.75),
+        input_descr=benchmark.single_pulse_input(t1=0.525, t2=0.6),
         probe_granule_decoded=True,
         probe_spatial_data=True,
         probe_pcn_spikes=True,

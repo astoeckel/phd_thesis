@@ -191,6 +191,8 @@ def pulse_input(t_off=0.9, t_on=0.1):
     """
     return ("pulse", t_off, t_on)
 
+def single_pulse_input(t1, t2):
+    return ("single_pulse", t1, t2)
 
 def build_test_network(input_descr,
                        T=10.0,
@@ -296,6 +298,10 @@ def build_test_network(input_descr,
             t_off, t_on = theta * t_off, theta * t_on
             nd_in = nengo.Node(
                 lambda t: 1.0 if (t % (t_on + t_off)) > t_off else 0.0)
+        elif input_type == "single_pulse":
+            _, t1, t2 = input_descr
+            nd_in = nengo.Node(lambda t: np.logical_and(t >= t1, t < t2))
+
 
         # Connect the input node to the pre-cerebellum nuclei
         nengo.Connection(nd_in, ens_pcn, synapse=None)
