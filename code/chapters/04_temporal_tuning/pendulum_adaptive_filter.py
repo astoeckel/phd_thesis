@@ -8,7 +8,6 @@ import numpy as np
 import pykinsim as pks
 import nengo
 import scipy.signal
-import matplotlib.pyplot as plt
 import h5py
 import tqdm
 
