@@ -278,7 +278,7 @@ If the state evolution is indeed the result of a time-invariant linear process, 
 	\mat{\tilde A} \vec m_{i} = \frac{\vec m_{i + 1} - \vec m_i}{\Delta t} \quad \text{for all} \quad 1 \leq i < N \,,
 \end{align*}
 where $\mat{\tilde B}$ describes the influence of the initial impulse on the state, and $\mat{\tilde A}$ is the state-transition matrix.
-Finding a $\mat{\tilde A}$ with this property can be written as a linear least-squares problem:
+Finding a matrix $\mat{\tilde A}$ with this property can be written as a linear least-squares problem:
 \begin{align}
 	\mat{\tilde A} = \arg\min_{\mat{\tilde A}} \sum_{i = 1}^{N - 1} \left\| \mat{\tilde A} \vec m_i - \frac{\vec m_{i + 1} - \vec m_i}{\Delta t} \right\|_\mathrm{F}^2 \,.
 	\label{eqn:construct_lti_lstsq}
@@ -302,7 +302,7 @@ where \enquote{$\log$} is the matrix logarithm, the inverse operation of taking 
 	\emph{Bottom:} First six dimensions of the reconstructed \LTI system impulse response for $q = 11$ basis functions (cf.~above arrow); dotted line is the reference.
 	\textbf{(A)} The Fourier basis can be constructed well by an \LTI system for odd $q$ (mean $E < 10^{-2}$).
 	\textbf{(B)} The cosine basis can only be realised as an \LTI system with relatively large errors (mean $E > 10^{-1}$). Adding more basis functions reduces the error for earlier basis functions.
-	\textbf{(C)} The Legendre basis can be realised well with small errors for all $q$ (mean $E < 2^{-2}$).
+	\textbf{(C)} The Legendre basis can be realised well with small errors for all $q$ (mean $E < 10^{-2}$).
 	}
 	\label{fig:construct_lti}
 \end{figure}
@@ -311,7 +311,7 @@ where \enquote{$\log$} is the matrix logarithm, the inverse operation of taking 
 The method works well for the Fourier and the Legendre basis, but results in large errors in the case of the cosine basis; particularly for later basis functions.
 Since the Fourier system consists of $(q - 1) / 2$ harmonic oscillators that require two state-dimensions each, $q$ must be odd.
 
-Rather unsurprisingly, the impulse response of the generated \LTI systems continues past the time-window $\theta$.
+Rather unsurprisingly, the impulse response of each generated \LTI system continues past the time-window $\theta$.
 In the case of the Fourier and cosine basis, the oscillation just continues, whereas the Legendre system diverges.
 To prevent this, we need to modify the system to rapidly decay to zero, preferably \emph{exactly} at time $\theta$.
 
@@ -320,7 +320,7 @@ To prevent this, we need to modify the system to rapidly decay to zero, preferab
 	\includegraphics{media/chapters/04_temporal_tuning/construct_lti_window.pdf}
 	\caption[Windowed LTI systems generating the Fourier, cosine and Legendre basis]{
 	Windowed \LTI systems generating the Fourier, cosine and Legendre basis.
-	Same experiment as in \Cref{fig:construct_lti_window}, but the target functions are multiplied with a linear window over $[0, \theta]$
+	Same experiment as in \Cref{fig:construct_lti}, but the target functions are multiplied with a linear window over $[0, \theta]$.
 	}
 	\label{fig:construct_lti_window}
 \end{figure}
@@ -361,8 +361,8 @@ Sequentially interleaving an \enquote{update} and an \enquote{erasure} step we o
  	\vec m_t &\gets \vec m_t - \vec m'_t = ( \mat I - ( \mat E^T )_N \otimes (\mat E^+)_N ) \vec m_t \,. & \tag{Erasure}\\[-0.5em]
  	\cline{1-2}
  	\vec m_t &\gets
- 		(\mat I - ( \mat E^T )_N \odot (\mat E^+)_N ) \mat{\tilde A} \vec m_t
- 		+ (\mat I - ( \mat E^T )_N \odot (\mat E^+ )_N ) \mat{\tilde B} u_t
+ 		(\mat I - ( \mat E^T )_N \otimes (\mat E^+)_N ) \mat{\tilde A} \vec m_t
+ 		+ (\mat I - ( \mat E^T )_N \otimes (\mat E^+ )_N ) \mat{\tilde B} u_t
  		=   \mat{{\tilde A}'} \vec m_{t - 1} + \mat{{\tilde B}'} u_t  \,.
 	\label{eqn:information_erasure_discrete}
 \end{align}
@@ -413,7 +413,7 @@ As we show next, the Legendre system can similarly be derived from first princip
 \subsection{Closed-Form Solution for the Legendre Basis}
 \label{sec:ldn_derivation}
 
-While our numerical method for approximating function basis generating \LTI systems works amiably well, we can, in some cases, analytically determine \LTI systems that generates bases over an approximated rectangle window.
+While our numerical method for approximating function basis generating \LTI systems works reasonably well, we can, in some cases, analytically determine \LTI systems that generate bases over an approximated rectangle window.
 For example, as we show next, we can analytically construct an \LTI system ${\mat A}$, ${\mat B}$ that \emph{exactly} traces out the Legendre polynomials.
 To this end, we use a continuous variant of our above information erasure technique to construct a dampening term $\mat \Gamma$ that limits the impulse response of the system to $[0, \theta]$.
 Subtracting $\mat \Gamma$ from $\mat A$ results in a rescaled version of the \LTI system underlying the Legendre Delay Network (\LDN; \cite{voelker2018improving}).
@@ -499,8 +499,8 @@ Given the concept of a \enquote{delay decoder} we can construct an approximate v
 		 = (\mat A - \mat \Gamma) \vec m(t) + \mat B u(t)
 	\label{eqn:information_erasure_approx} \,,
 \end{align}
-where the dampening term $\mat \Gamma = \vec e(\theta) \odot \vec d(\theta)$ is the \emph{delay re-encoder}.
-For the shifted Legendre polynomials $\tilde P_i(t \theta^{-1})$ with $\tilde P_i(1) = 1$ the resulting delay re-encoder is simply given as
+where the dampening term $\mat \Gamma = \vec e(\theta) \otimes \vec d(\theta)$ is the \emph{delay re-encoder}.
+For the shifted Legendre polynomials $\tilde P_i(t \theta^{-1})$ with $\tilde P_i(1) = 1$ the resulting delay re-encoder is given as
 \begin{align}
 	\big( \mat{\Gamma} \big)_{ij} &= e_i(\theta) d_j(\theta) = \frac{2j + 1}{\theta} \tilde P_{i - 1}(\theta \theta^{-1}) \tilde P_{j - 1}(\theta \theta^{-1}) = \frac{2j + 1}{\theta} \,.
 	\label{eqn:legendre_delay_reencoder}

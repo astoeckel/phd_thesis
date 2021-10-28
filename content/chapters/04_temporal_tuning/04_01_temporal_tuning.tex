@@ -152,17 +152,17 @@ Borrowing the gain and bias terms $\alpha$, $\beta$, as well as the response cur
 	\label{eqn:tuning_curve_from_temporal_receptive_field}
 \end{align}
 
-The space-time receptive fields of individual neurons (sometimes referred to as \enquote{weighting function}) can be reconstructed by exposing the animal to computer generated imagery \citep{mclean1989contribution}.
+The space-time receptive fields of individual neurons (sometimes referred to as \enquote{weighting functions}) can be reconstructed by exposing the animal to computer generated imagery \citep{mclean1989contribution}.
 An example of an artificial space-time recepitve field that qualitatively resembles empirical data \citep[cf.][]{deangelis1993spatiotemporal} is depicted in \Cref{fig:space_time_receptive_field}.
 
 \subsection{Temporal Tuning Curves and the Neural Engineering Framework}
 \label{sec:temporal_tuning_nef}
 
-The above summary of biological temporal response patterns provided some motivation as for why modelling temporal tuning can be desirable.
+The above summary of biological temporal response patterns provides some motivation as for why modelling temporal tuning can be desirable.
 We now define this concept more rigorously and, in the next subsection, compare it to the original \NEF dynamics principle.
 
-The most general definition of a \enquote{temporal tuning curve} is as \enquote{a function that maps the past history of a $d$-dimensional stimulus onto an average expected activation of a neuron}.
-	
+The most general definition of a \enquote{temporal tuning curve} is \enquote{a function that maps the past history of a $d$-dimensional stimulus onto the average expected activation of a neuron}.
+
 \begin{definition}
 	\label{def:temporal_tuning_curve}
 	A \emph{temporal tuning curve} $a(\vec{\mathfrak{x}})$ is a second-order function mapping from the past stimulus history $\mathfrak{x}$ onto the average neural activity at $t = 0$ (i.e., the present).
@@ -252,8 +252,8 @@ Correspondingly $(\mathfrak{x}_k \ast \delta_{\theta})(t) = \mathfrak{x}_k(t - \
 
 The term before the minus sign in \cref{eqn:weight_optimise_currents_temporal_no_trafo} is the current required to obtain our desired temporal tuning from \cref{eqn:temporal_tuning_curve}; the term after the minus sign uses the pre-population temporal tuning and the synaptic filters as a \emph{spatiotemporal function basis} to decode the desired currents.
 While we know that randomly choosing spatial encoders $\vec e_j$ results in diverse \emph{spatial} pre-population tuning (\Cref{sec:dendritic_computation_theory}), we discuss in \Cref{sec:temporal_bases} how this basis can be made as \emph{temporally} diverse as possible.
-Note that our optimisation problem is in principle similar to adaptive filters \citep[e.g.,][]{fujita1982adaptive}, but without the online adaptation.
-We construct truly \emph{adaptive} filters in \Cref{sec:adaptive_filter} and \Cref{chp:cerebellum}.
+Note that our optimisation problem is similar in principle to optimal Wiener filters \citep[Chapter~2]{wiener1949extrapolation,haykin2014adaptive}.
+We discuss this in more detail in the context of \emph{adaptive} filters in \Cref{sec:adaptive_filter} and \Cref{chp:cerebellum}.
 
 Lastly, note that our loss function is \emph{not} an integral over time---as is for example common in optimal control theory \citep[e.g.,][Chapter~14]{brogan1991modern}.
 Instead, we take advantage of the fact that our temporal tuning curves are defined as the average activity of the neuron in the \emph{present}, i.e., at time $t = 0$.
@@ -299,7 +299,7 @@ For the sake of simplicity, we first focus on linear networks and dynamical syst
 In particular, we discuss realising linear time-invariant (\LTI) systems in networks with linear response curves and current-translation (i.e., $G_i[J] = J$ and $J_i(\xi) = \xi$).
 Essentially, each \enquote{neuron} corresponds to a separate represented dimension.
 
-This restriction is less severe as it may seem.
+This restriction is less severe than it may seem.
 \LTI systems are quite useful, and we can use the \NEF representation and transformation principles (\Cref{sec:nef_representation,sec:nef_transformation}) to emulate linear networks with nonlinear neurons.
 Still, we discuss examples with more complex nonlinear networks and dynamics in \Cref{sec:recurrent_weights}.
 
@@ -360,10 +360,10 @@ This is despite it being, perhaps counter-intuitively, possible to exploit the d
 	\label{fig:low_pass_svd}
 \end{figure}
 
-Conversely, pertaining our second limitation, it is not possible to solve for dynamics with \emph{slower} time-constants than what is dictated by the longest chain of synaptic filters.
+Conversely, pertaining to our second limitation, it is not possible to solve for dynamics with \emph{slower} time-constants than what is dictated by the longest chain of synaptic filters.
 Correspondingly, feed-forward dynamics cannot realise infinite-impulse-response dynamics such as ideal integrators and oscillators, and they are not a good model of phenomena such as working memory that rely on sustained neural activity.%
 \footnote{Indeed, as elaborated by \citet[Section~8.4.1]{eliasmith2003neural}, local recurrent (and \emph{not} feed-forward) connections are known to generate sustained activity in biology (e.g., in eye-position control in goldfish, cf.~\cite{aksay2001vivo}).
-However, recent studies also suggest that momentary synaptic adaptation outweigh persistent activities as a primary mechanism supporting working memory \citep{lundqvist2018working}.}
+However, recent studies also suggest that momentary synaptic adaptation outweighs persistent activities as a primary mechanism supporting working memory \citep{lundqvist2018working}.}
 This is what \citet[Chapter~1, p.~4]{churchland1992computational} refer to when they claim that \enquote{complex effects are the outcome of the dynamics of neural networks} (see quote on the title page of this chapter).
 
 Regarding the third issue, the set of possible dynamics that can be realised in feed-forward networks is severely limited.
@@ -375,7 +375,7 @@ We analyse temporal bases in more detail in the next section.
 \subsubsection{Recurrent connections}
 
 Recurrent dynamics do not possess any of these limitations.
-Specifically, recurrences can diversify the temporal tuning, even if, as in the \NEF dynamics principle, the only temporal resource in a network are homogeneous synaptic filters.
+Specifically, recurrence can diversify the temporal tuning, even if, as in the \NEF dynamics principle, the only temporal resources in a network are homogeneous synaptic filters.
 %---this is, in a sense, exactly how we usually use the NEF dynamics principle.
 %However, in constrast to principle three (cf.~\Cref{sec:nef_dynamics}), and as we demonstrate below, we can now naturally solve for weights that take heterogenous synaptic weights and higher order filters into account---without explicitly having to provide differentials of the input signals, as the closed-form solutions proposed by \cite{voelker2018improving} require.
 % TODO: Note this in Section 2.3.3
@@ -400,13 +400,13 @@ We thus foster a self-fulfilling prophecy: we solve for dynamics assuming that t
 \end{figure}
 
 Notably, this assumption effectively turns the system into a feed-forward network, greatly simplifying solving for recurrent weights (cf.~\Cref{fig:recurrent_temporal_tuning}).
-In the special case of linear networks, solving for connection synaptic weights directly results in an input vector $\mat B'$ and a feedback matrix $\mat A'$.
-If, as additional requirements, the synaptic filter is a first-order low-pass filter, and the system that is being realised is an \LTI system, one can show that these matrices are equal to those returned by the \NEF dynamics principle.
-In other words, temporal tuning curves are a direct generalisation of the standard \NEF methods.
+In the special case of linear networks, solving for connection synaptic weights directly results in input and feedback matrices $\mat B'$ and a feedback matrix $\mat A'$.
+If, as additional requirements, the synaptic filter, is a first-order low-pass filter one can show that these matrices are equal to those returned by the \NEF dynamics principle.
+In other words, linear temporal tuning in \emph{linear} networks is a generalisation of the standard \NEF methods.
 
 \begin{restatable}{theorem}{thmTemporalLstsq}
 	\label{thm:temporal_lstsq}
-	Let $\mat A \in \mathbb{R}^{n \times n}$, $\mat B \in \mathbb{R}^n$ represent a stable \LTI system, $\mathfrak{e}_i$ be the impulse response of its $i$th state dimension, and $h(t)$ is the impulse response of a first-order low-pass:
+	Let $\mat A \in \mathbb{R}^{n \times n}$, $\mat B \in \mathbb{R}^{n \times m}$ (w.l.o.g. $m = 1$) represent an \LTI system, $\mathfrak{e}_i$ be the impulse response of its $i$th state dimension, and $h(t)$ be the impulse response of a first-order low-pass:
 	\begin{align*}
 		  \dot{\vec m}(t) &= \mat A \vec m(t) + \mat B \vec u(t)  \,, 
 		& \mathfrak{e}_i(t) &= \big(\!\exp( \mat A t ) \mat B \big)_i \,,
@@ -421,7 +421,7 @@ In other words, temporal tuning curves are a direct generalisation of the standa
 		          - \sum_{j=1}^n a'_{ij} h(\tau) \int_0^\infty \!\! \mathfrak{x}_k(-\tau - \tau') \mathfrak{e}_j(\tau') \, \mathrm{d}\tau' \mathrm{d}\tau \right)^2 \,.
 	\end{align*}
 \end{restatable}
-\noindent This loss function is equal to \cref{eqn:weight_optimise_currents_temporal} in the case of a linear network with $n$ neurons that recurrently connect to themselves, and a \enquote{zeroth} pre-neuron with no temporal tuning providing input, i.e., $a_0(t) = \mathfrak{x}_k(t)$.
+\noindent This loss function is equal to \cref{eqn:weight_optimise_currents_temporal_no_trafo} in the case of a linear network with $n$ neurons that recurrently connect to themselves, and a \enquote{zeroth} pre-neuron with no temporal tuning providing input, i.e., $a_0(t) = \mathfrak{x}_k(t)$.
 We provide a proof for this in \Cref{app:lstsq_nef_equivalence}.
 %Note that the requirement for linearly independent samples is a mere technicality; different $\mathfrak{x}_k$ could in theory map onto the same sample points if the $\mathfrak{e}_i$ are periodic.
 
@@ -454,7 +454,7 @@ These errors are mostly due to time-discretisation at $\Delta t = \SI{1}{\milli\
 
 \newpage
 
-\subsection{Realising LTI Systems in Networks With Complex Recurrences}
+\subsection{Realising LTI Systems in Networks With Complex Recurrence}
 \label{sec:lti_complex_networks}
 
 Admittedly, the results presented in the previous subsection are slightly underwhelming.
@@ -500,7 +500,7 @@ Second, and most importantly, the strength of our approach lies in being agnosti
 	Same training procedure as in \Cref{fig:recurrence_examples_1}; training signals $\mathfrak{x}_k$ are white noise filtered with a second-order low-pass filter with time constant \SI{100}{\milli\second}.
 	\textbf{(A)}~Implementing an integrator.
 	Recurrence is required to implement the integrator.
-	\textbf{(B)}~Emulating a $\SI{10}{\milli\second}$ first-order low-pass well requires recurrence and two or more filters per path.
+	\textbf{(B)}~Emulating a $\SI{10}{\milli\second}$ first-order low-pass requires recurrence and two or more filters per path (data for two and three filters are equal).
 	}
 	\label{fig:heterogeneous_recurrence_exploration}
 \end{figure}
@@ -517,7 +517,7 @@ Importantly, being able to realise these systems implies that we can implement a
 
 As is depicted in \Cref{fig:heterogeneous_recurrence_exploration}, the system performance critically depends on placing \emph{multiple} filters with different time-constants in the input and feedback path.%
 \footnote{Multiple synaptic filters per connection are technically not compatible with the way our optimisation problem is phrased in \cref{eqn:weight_optimise_currents_temporal}.
-However, we can assume that the different feed-forward filters correspond to diverse temporal tuning of different pre-population neurons, and the different recurrent filters could are obtained by simply splitting our single neuron into three with the same desired temporal tuning.}
+However, we can assume that the different feed-forward filters correspond to diverse temporal tuning of different pre-population neurons, and the different recurrent filters are obtained by simply splitting our single neuron into three with the same desired temporal tuning.}
 Curiously, this is \emph{more} biologically plausible, since there typically is some variance in synaptic time-constants in biology \citep{jones2014neurotransmitter}.
 For the integrator, increasing the number of filters reduces the error by up to two orders of magnitudes, well below what could be realised in a spiking neural network for input bandwidths up to \SI{100}{\hertz}.
 The \enquote{short low-pass} system only performs well for input frequencies up to \SI{10}{\hertz}, but similarly requires at least two filters per path.
@@ -526,7 +526,7 @@ The necessity for multiple filters follows from \citet[Section~4.4, p.~591]{voel
 To realise a dynamical system with an $n$th order synaptic filter, we must generally provide the first $n - 1$ time-dervatives of the input to the network, i.e., $\mathrm{d} / \mathrm{d} t \, \mathfrak{x}$, $\ldots$, $\mathrm{d} / \mathrm{d} t^{n - 1} \, \mathfrak{x}$.
 Accounting for heterogeneous filters similarly requires access to the derivative (cf.~\Cref{app:heterogenous_time_constants}).
 
-The different filters in the feed-forward path can be thought of being linearly combined to \emph{approximate} these differentials, akin to the \enquote{dual-time-constant networks} explored by \citet{tripp2010population}.
+The different filters in the feed-forward path can be thought of as being linearly combined to \emph{approximate} these differentials, akin to the \enquote{dual-time-constant networks} explored by \citet{tripp2010population}.
 Numerically solving the weight optimisation problem in \cref{eqn:weight_optimise_currents_temporal} automatically determines the weights that implicitly decode the differentials and that, at the same time, \emph{approximate} the desired dynamics.
 
 \begin{figure}
@@ -544,28 +544,28 @@ Numerically solving the weight optimisation problem in \cref{eqn:weight_optimise
 
 \subsubsection{Impact of the training samples $\mathfrak{x}_k$}
 The emphasis on \enquote{approximate} is important here.
-In contrast to the heterogeneous networks with first-order synaptic filter discussed in the context of \Cref{thm:temporal_lstsq}, there are no guarantees that the final network dynamics are \emph{exactly} the desired dynamics.
+In contrast to the heterogeneous networks with first-order synaptic filters discussed in the context of \Cref{thm:temporal_lstsq}, there are no guarantees that the final network dynamics are \emph{exactly} the desired dynamics.
 Moreover, the ability of the network to generalise depends on the input signals $\mathfrak{x}_k$ used for training.
 While this is the norm in most machine learning scenarios, the network in \Cref{thm:temporal_lstsq} did not have this constraint (cf.~\Cref{app:temporal_tuning_proofs}).
 
 We explore the effect of the training signals on the final network in \Cref{fig:heterogeneous_recurrence_exploration_xs_flt}.
 Specifically, we generate $\mathfrak{x}_k$ with different frequency content by varying the time-constant $\rho$ of the second-order low-pass filter that is applied to the generated white noise.
 Unsurprisingly, only supplying low-frequency inputs (i.e., using a large $\rho$) results in networks that achieve low errors for low-frequency inputs.
-A more wide-band input (i.e., using a small $\rho$) results in a compromise-solution with smaller errors for wide-band inputs, but (at least in the case of the integrator) both slightly higher errors for low-frequency inputs.
+A more wide-band input (i.e., using a small $\rho$) results in a compromise-solution with smaller errors for wide-band inputs, but (at least in the case of the integrator) slightly higher errors for low-frequency inputs.
 
 \subsubsection{Relationship to system identification}
 When solving for weights in a recurrent system using \cref{eqn:weight_optimise_currents_temporal}, we do not have any formal guarantee that the resulting system is stable---that is, unless the desired dynamics are stable and can be approximated \emph{precisely}.
-While, judging from our experience, exponentially decaying temporal tuning curves $\mathfrak{e}_i(t)$ result in stable network, it would be good to be able to characterise this more thoroughly.
+While, judging from our experience, exponentially decaying temporal tuning curves $\mathfrak{e}_i(t)$ result in stable networks, it would be good to be able to characterise this more thoroughly.
 
 While we are still working on a more thorough analysis, we can at least draw some interesting parallels to the problem of least-squares system identification \citep[cf.][specifically Chapters~7-10]{verhaegen2007filtering}.
-That is, we can treat the desired dynamics $\mathfrak{e}_i(t)$ as if they were the output of a black-box system in response to our input signals $\vec{\mathfrak{x}}_k(t)$.
+That is, we can treat the desired dynamics $\mathfrak{e}_i$ as if they were the output of a black-box system in response to our input signals $\vec{\mathfrak{x}}_k$.
 Our goal is to find model parameters $w_{ij}$ that predict the observed output.%
-\footnote{In our specific system identification problem is less complex than a general problem.
+\footnote{Our specific system identification problem is less complex than a general problem.
 We directly measure the state, and we do not have instantaneous impulse responses.
 Put differently, the output matrix $\mat C$ of our \LTI system is the identity, and the feedthrough matrix $\mat D$ is zero.}
 
 In fact, our optimisation problem in \cref{eqn:weight_optimise_currents_temporal} is a variant of the \enquote{integral-equation approach to system identification} presented by \citet{whitfield1987integralequation}, and, in less developed form, by \citet{squire1971simple}.
-The primary difference to our approach is that our networks do not contain perfect integrators---correspondingly, we convolve the with the synaptic filter instead of integrating.
+The primary difference to our approach is that our networks do not contain perfect integrators---correspondingly, we convolve with the synaptic filter instead of integrating.
 This is possible because the integral-equation approach is---at least if the system can be perfectly realised---invariant to convolution with a non-zero filter.
 
 A central challenge of the integral-equation approach is robustness to noise in the measurements, which---even in the case of zero-mean white noise---causes asymptotic biases in the resulting system \citep{sagara1989recursive}.
@@ -577,7 +577,7 @@ It may be possible to incorporate more modern weight solving approaches with imp
 
 \begin{figure}
 	\includegraphics{media/chapters/04_temporal_tuning/recurrent_network_intermediate.pdf}
-	\caption[Approximating dynamical systems across intermediate populations]{Approximating dynamical systems across intermediate populations. Both neuron populations receive input $u(t)$ through a set of synaptic filters with time-constants $\tau_1$, $\tau_2$; the upper, or \enquote{intermediate} population then projects onto the lower population, the lower population provides the output and projects onto the upper population. Each feedback path passes through another set of filters with time-constant $\tau_2$, $\tau_3$.
+	\caption[Approximating dynamical systems across intermediate populations]{Approximating dynamical systems across intermediate populations. Both neuron populations receive input $u(t)$ through a set of synaptic filters with time-constants $\tau_1$, $\tau_4$; the upper, or \enquote{intermediate} population then projects onto the lower population, the lower population provides the output and projects onto the upper population. Each feedback path passes through another set of filters with time-constant $\tau_2$, $\tau_3$.
 	As before, we can solve for connection weights $\mat A_1'$, $\mat A_2'$, $\mat B_1'$, $\mat B_2'$ by assuming that the desired dynamics have already been realised (scissor symbol and dotted lines).
 	We must then account for all possible paths (coloured backgrounds) from the input $u(t)$ to the output $\vec m(t)$.
 	}
@@ -609,7 +609,7 @@ We next discuss two ways to approach this problem.
 	\label{fig:recurrence_example_intermediate}
 \end{figure}
 
-\paragraph{Subscribing temporal tuning to the interneuron population}
+\paragraph{Ascribing temporal tuning to the interneuron population}
 First, we could simply decide on some temporal tuning for the interneuron population and use \cref{eqn:weight_optimise_currents_temporal} to solve for connection weights.
 If both neuron populations possess the same temporal tuning, then the interneurons appear as a pass-through to the primary population.
 Assuming homogeneous first-order synaptic filters with time-constant $\tau$, the closed-form solution is

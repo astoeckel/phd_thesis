@@ -25,7 +25,7 @@ We then confirm in several experiments that our methods can be used to successfu
 \subsection{Sampling Input Signals and Temporal Encoders}
 \label{sec:solve_dynamics_nonlinear_neurons}
 
-On the surface, switching from linear units to neurons with nonlinear response curves $G$ does not change our weight optimisation problem.
+On the surface, switching from linear units to neurons with nonlinear response curves, $G$, does not change our weight optimisation problem.
 Recall that our least-squares loss was given as
 \begin{align}
 	E &= \sum_{k = 1}^N \left[
@@ -213,7 +213,7 @@ Similar to \citet{voelker2018improving}, we qualitatively compare the resulting 
 %Finally, we explore heterogeneous synaptic filters and spatiotemporal networks.
 
 \subsubsection{Modified Fourier networks}
-In the previous section, we saw that the modified Fourier system---both with Bartlett and rectangle window---can outperform the \LDN system.
+In the previous section, we saw that the modified Fourier system---both with Bartlett and rectangle windows---can outperform the \LDN system.
 While the \LDN has been constructed with spiking neural networks in mind \citep{voelker2018improving}, we have so far not tested the modified Fourier system in a neural network context.
 
 Correspondingly, we first ensure that the two Fourier systems can be mapped onto a spiking neural network with the architecture depicted in \cref{fig:nef_dynamics_neurons_a} using the \NEF dynamics principle.
@@ -306,19 +306,10 @@ This may be due different sampling (i.e., using Halton sequences for uniform act
 		\emph{Top:} Activity of $73$ non-silent neurons randomly (selected from $n = 120$ neurons) in response to a short rectangle pulse (\SI{100}{\milli\second}, magnitude $10$). Neurons are sorted by their specific delay $\theta_i$ (dotted line).
 		\emph{Bottom:} Cosine similarity between the population activity vectors at different times; line is the diagonal.
 	}
-%	\caption[Illustration of time cells]{
-%		Illustration of time cells.
-%		The depicted simulation results (using the technique described by \cite{howard2014unified}) resemble the empirical data presented in \citet{tiganj2016sequential}.
-%		
-%		\textbf{(A)}~Normalised firing rate of $73$ simulated time cells with $\theta \in [\SI{0}{\second}, \SI{5}{\second}]$. Cells are sorted by the observed $\hat \theta$ (dotted line).
-%		Data obtained by feeding the impulse responses $h_\theta(t)$ depicted in \emph{(C)} into an ensemble of LIF neurons with noisy somatic currents.
-%		\textbf{(B)}~Cosine-similarity between the activity vectors for each time-pair. The similarities spread out for larger $t$, making it harder to decode $t$.
-%		\textbf{(C)}~Impulse responses proposed by \citet{howard2014unified}.
-%	}
 	\label{fig:recurrent_synaptic_weights_time_cells}
 \end{figure}
 
-\Citet{voelker2018improving} find that the activities of neurons in the Legendre delay network resembles that of empirical time cells.
+\Citet{voelker2018improving} find that the activities of neurons in the Legendre delay network resemble those of empirical time cells.
 In particular, the \LDN qualitatively matches recordings from prefrontal cortex (cf.~\cite{tiganj2016sequential} and \Cref{fig:time_cells_howard_tiganj_example}).
 
 As we discussed in \Cref{sec:temporal_tuning_biology}, time cells are neurons that reach their peak activity a fixed delay $\theta_i$ after an event at time $t_0$.
@@ -329,7 +320,7 @@ Methods and network setup are the same as before in this section; we use $n = 12
 Minor differences can be observed in the spread of the activity similarity over time.
 We observe a larger spread (i.e., lower temporal specificity) for both the modified Fourier basis with Bartlett window and the Legendre basis, while the Fourier system with rectangle window maintains a higher specificity.
 Still, overall, the three systems produce time cells with similar distributions of specific delays $\theta_i$.
-However, as merely coupled oscillators, the Fourier systems may be a slightly more biologically plausible alternative to the \LDN.
+%However, as merely coupled oscillators, the Fourier systems may be a slightly more biologically plausible alternative to the \LDN.
 
 \subsubsection{Heterogeneous synaptic filters}
 
@@ -367,14 +358,14 @@ Increasing $\sigma_\tau$ barely affects the solver loss.
 However, increasing $\sigma_\tau$ generally leads to an increase in \emph{tuning error}, the difference between the actual and expected spike rate.
 Importantly, when taking heterogeneous recurrent synapses into account, this increase is quite slow over a wide range of $\sigma_\tau$.
 For larger $\sigma_\tau$, the error approaches or even surpasses (for $q = 7$) the error for not taking heterogeneity into account.
-This error being surpassed is likely due to compensating for heterogeneous filter requiring larger weight magnitudes, amplifying noise in the system.
+This error being surpassed is likely due to compensating for heterogeneous filters requiring larger weight magnitudes, amplifying noise in the system.
 
 \subsection{Spatiotemporal Neuron Populations}
 \label{sec:spatiotemporal}
 
 As we suggested in \Cref{sec:solve_dynamics_nonlinear_neurons}, neurons can be simultaneously tuned spatially and temporally.
 Specifically, we proposed in \cref{eqn:temporal_encoding_vector} to construct temporal encoders $\mathfrak{e}_i$ by sampling separate temporal and spatial encoding vectors $\vec e^\mathrm{t}_i \in \mathbb{S}^q$, $\vec e_i \in \mathbb{S}^d$.
-This way, we obtain a rank one spatiotemporal encoding matrices $\mat{E}_i^\mathrm{t} \in \mathbb{R}^{d \times q}$, where $\mat{E}_i^\mathrm{t} = \vec e_i \otimes \vec e^\mathrm{t}_i$ and $\mathfrak{e}_i = \mat{E}_i^\mathrm{t} \mathfrak{h}$ (cf.~eq.~\ref{eqn:spatio_temporal_encoding_vector}; $i$ is the neuron index, $d$ the number of spatial dimensions, and $\mathfrak{h}$ is a temporal basis of order $q$).
+This way, we obtain a rank one spatiotemporal encoding matrix $\mat{E}_i^\mathrm{t} \in \mathbb{R}^{d \times q}$, where $\mat{E}_i^\mathrm{t} = \vec e_i \otimes \vec e^\mathrm{t}_i$ and $\mathfrak{e}_i = \mat{E}_i^\mathrm{t} \mathfrak{h}$ (cf.~eq.~\ref{eqn:spatio_temporal_encoding_vector}; $i$ is the neuron index, $d$ the number of spatial dimensions, and $\mathfrak{h}$ is a temporal basis of order $q$).
 
 In theory, for an infinite number of neurons and temporal basis dimensions, and $\mat{E}_i^\mathrm{t}$ being sampled uniformly, we can decode arbitrary continuous functions $f$ over space and time.
 More precisely, $f$ is a higher-order function $f : ([-\theta, 0] \longrightarrow \mathbb{X}) \longrightarrow \mathbb{R}^{d'}$, where $[-\theta, 0]$ is some temporal interval, $\mathbb{X} \subset \mathbb{R}^d$ is a compact spatial domain, and $d'$ is the number of target dimensions.%
@@ -473,14 +464,14 @@ The results for computing delayed computation show a drastic improvement (\Cref{
 Errors are between $30\%$ to $40\%$ for all $\theta'_1$, $\theta'_2$ pairs.
 
 \paragraph{Discussion}
-Improvements in the linear delay decoding task are due to slight reduction in our solver loss from \cref{eqn:weight_optimise_currents_temporal}; the more diverse tuning facilitates realising the desired tuning in the recurrent connection.
-The reduction in error for the delayed multiplication task is as expected.
+Improvements in the linear delay decoding task are due to a slight reduction in our solver loss from \cref{eqn:weight_optimise_currents_temporal}; the more diverse tuning facilitates realising the desired tuning in the recurrent connection.
+The reduction in error for delayed multiplication is as expected.
 
 Finally, note that the recurrent weight matrices are of low rank (\Cref{fig:spatio_temporal_d,fig:spatio_temporal_full_c}).
 This suggests that it is possible to realise the same network in the \NEF without temporal tuning.
 Indeed, as we show in \Cref{app:spatiotemporal_nef}, this is possible.
 However, we must realise a $qd$-dimensional representation in the population; implementing dynamical systems with spiking neurons in such high dimensional spaces can be challenging.
-Our approach offers the advantage of biasing the weight solver towards portions of the activity space relevant for a certain input signals and thus results in smaller errors in the delayed multiplication task.
+Our approach offers the advantage of biasing the weight solver towards portions of the activity space relevant for certain input signals and thus results in smaller errors in the delayed multiplication task.
 
 \subsubsection{Example: Recently travelled distance}
 
@@ -506,27 +497,134 @@ We define the \emph{recently travelled distance} $d_{[t - \theta, t]}$ as
 We test decoding this function using the spike data recorded in the experiment with rank one $\mat E_i^\mathrm{t}$.
 Results are depicted in \Cref{fig:path_integration}.
 We obtain an \NRMSE of $E \approx 22\%$ over $T = \SI{100}{\second}$.
-Crucially, using the full rank $\mat E_i^\mathrm{t}$ we obtain $E \approx 26\%$ (data not shown).
+Interestingly, using the full rank $\mat E_i^\mathrm{t}$ we obtain $E \approx 26\%$ (data not shown).
 
 \paragraph{Discussion}
 This experiment indicates that it can be beneficial to restrict the encoders to a lower rank.
 We apply a linear operator (the integral) to a function that is only nonlinear over the same point in time $\tau$---this is exactly the type of function supported by our rank one spatiotemporal encoding matrices.
 
-Overall, our experiments demonstrate that it is possible to realise populations with spatiotemporal tuning in the \NEF; our \emph{spiking} networks even outperform the popular Echo State Network (\cite{jaeger2004harnessing}) by a wide margin.
-A next step would be to use this technique to construct a neurophysiologically motivated model of spatiotemporal tuning in the brain.
+Overall, our experiments demonstrate that it is possible to realise populations with spatiotemporal tuning in the \NEF; our \emph{spiking} networks even outperform the popular non-spiking Echo State Network (\cite{jaeger2004harnessing}) by a wide margin.
+A next step would be to use this technique to construct a neurophysiologically motivated model of spatiotemporal tuning.
 
 \pagebreak
 
 \subsection{Adaptive Filters}
 \label{sec:adaptive_filter}
 
-\begin{itemize}
-	\item Using the spatiotemporal network we can build an adaptive filter that learns to predict a nonlinear dynamical systems!
-	\item Example: Pendulum. Input is the torque $\tau(t)$ and the delayed observed angle $\phi(t - \theta)$. Target is actual angle $\phi(t)$
-	\item Use PES learning rule
-	\item System learns to output the non-delayed angle! $\Rightarrow$ System learns how the torque over time will affect the angle $\Rightarrow$ We are learning the nonlinear dynamics!
-	\item Will provide another example (the cerebellum model) in the next chapter.
-\end{itemize}
+Another interesting application of neural networks with spatiotemporal tuning is to construct nonlinear \emph{adaptive filters}.
+Here, we discuss an adaptive variant of the Wiener filter \citep[Chapter~2]{wiener1949extrapolation,haykin2014adaptive}.
+\emph{Adaptive} refers to not determining the optimal filter parameters $\vec d$ in advance, but updating $\vec d(t)$ in response to an error signal $\epsilon(t)$ while the system is operating.
+This is in principle comparable to learning and adaptation in animals.
+
+The core idea of Wiener filters is to linearly combine filtered versions of an input signal with the goal to minimse a linear least-squares loss.%
+\footnote{Notably, Wiener provides conditions under which an optimal $\vec d$ can be obtained.
+\Citet{kalman1960new} broadens the optimality conditions by accounting for uncertainty and using an optimal update rule.}
+Let $h_i(t)$ be one of $n$ filter kernels, $\vec d = (d_1, \ldots, d_n)$ a set of weights, $\mathfrak{u}(t)$ an input signal, and $\mathfrak{x}(t)$ a desired output signal.
+Then, in the simplest case, this optimisation problem can be stated as follows:
+\begin{align}
+	E = \left( \int_0^T \!\! \mathfrak{x}(t) - \sum_{i = 1}^n d_i \, (\mathfrak{u} \ast h_i)(t) \, \mathrm{d}t \right)^2
+	\! = \left( \int_0^T \!\! \mathfrak{x}(t) - \sum_{i = 1}^n d_i a_i(\mathfrak{u} \ast \delta_{-t}) \, \mathrm{d}t \right)^2 \,.
+	\label{eqn:wiener}
+\end{align}
+where, as in \cref{eqn:weight_optimise_currents_temporal}, $\delta_{-t}$ is a shifted Dirac delta, and $a_i(\mathfrak{u}) = (\mathfrak{u} \ast h_i)(0)$.
+
+As pointed out by \Citet{wiener1949extrapolation}, this kind of optimisation problem can be interpreted in multiple ways, two of which are compatible with adaptation.
+First, \cref{eqn:wiener} can be used to find $\vec d$ that extract \enquote{hidden} information $\mathfrak{x}(t)$ from $\mathfrak{u}(t)$ by removing unwanted noise---hence the term \emph{filter}.
+Wiener refers to this as \emph{interpolation}.
+Second, if $\mathfrak{x}(t)$ corresponds to a future point in time relative to $\mathfrak{u}(t)$, then these equations can be used for \emph{prediction} or \emph{extrapolation}.
+
+Now, to adapt $\vec d$ over time, we take the gradient of $E$ in \cref{eqn:wiener} with respect to $\vec d$ for the current signal history $\mathfrak{u} : \mathbb{R}^- \longrightarrow \mathbb{R}$ and perform gradient descent over time:
+\begin{align}
+	\frac{\partial}{\partial d_i(t)} E \propto \left(y(t) - \sum\nolimits_{i = 1}^n d_i(t) \, a_i(\mathfrak{u}) \right) a_i(\mathfrak{u}) = \epsilon(t) a_i(\mathfrak{u}) \quad\quad \leadsto \quad\quad \dot{d}_i(t) = - \eta \epsilon(t) a_i(\mathfrak{u}) \,.
+	\label{eqn:delta_rule}
+\end{align}
+Here, $\epsilon(t)$ is the momentary error, and $\eta$ is a learning rate.
+Crucially, instead of setting $a_i$ to a linearly filtered version of $\mathfrak{u}$, we can use the activations $a_i$ of a nonlinear neural network with temporal tuning.
+In this case, \cref{eqn:delta_rule} is the \emph{delta learning rule}, a precursor to back\-pro\-pa\-ga\-tion that has been developed with nonlinear adapitve filters in mind \citep{widrow1960adaptive}.%
+\footnote{For nonlinear neurons, we have to multiply \cref{eqn:delta_rule} by a gradient term $a_i'$. We typically ignore this for \LIF neurons, which, if not saturated, resemble \ReLUpl. Correspondingly, $a_i'$ is a constant factor if the neuron is active.}
+
+\Citet{macneil2011finetuning} propose a biologically plausible version of \cref{eqn:delta_rule}, the Prescribed Error Sensitivity (\PES) rule,  that can be integrated into spiking neural networks.
+We discuss this rule in more detail in \Cref{sec:cerebellum_eyeblink}.
+For now, we would like to conclude by demonstrating that the combination of our spatiotemporal spiking \NEF populations and the delta rule results in a powerful adaptive filter that can, for example, learn to predict the nonlinear dynamics of a forced pendulum over time.
+Forced pendulums are found in most robotic actuators and can, under some conditions, exhibit chaotic behaviour \citep{hubbard1999forced}.
+
+\subsubsection{Methods}
+
+\begin{figure}
+	\centering
+	\includegraphics{media/chapters/04_temporal_tuning/04_03/pendulum_overview.pdf}
+	\includegraphics{media/chapters/04_temporal_tuning/04_03/pendulum_examples.pdf}%
+	{\phantomsubcaption\label{fig:pendulum_overview_a}}%
+	{\phantomsubcaption\label{fig:pendulum_overview_b}}%
+	{\phantomsubcaption\label{fig:pendulum_overview_c}}%
+	\caption[An adaptive filter learning pendulum dynamics]{
+		An adaptive filter learning pendulum dynamics.
+		\textbf{(A)} Illustration of the nonlinear pendulum system.
+		A point mass $m = \SI{1}{\kilogram}$ under the influence of gravity $\| \vec g \| = \SI{9.81}{\metre\per\square\second}$ is connected to a rotating joint through a rigid rod of length $L = \SI{1}{\metre}$.
+		A random torque $\tau(t)$ is applied to the joint; we measure the angle of the pendulum $\phi(t)$.
+		\textbf{(B)} The angle $\tau(t)$ and a delayed version of the angle $\phi(t - \theta')$ are fed into the full-rank spatiotemporal \NEF network from the previous subsection.
+		After passing the spikes through a short low-pass filter, we decode the angle at time $t$ using a decoding vector $\vec d$.
+		This decoding matrix is updated according to the delta rule; the network \emph{learns} the nonlinear pendulum dynamics.
+		\textbf{(C)}~Examples of the pendulum dynamics and prediction after different amounts of training.
+	}
+	\label{fig:pendulum_overview}
+\end{figure}
+As is depicted in \Cref{fig:pendulum_overview}, we apply a low-pass filtered white noise signal $\tau(t)$ as a torque to the rotational joint of a simulated pendulum.%
+\footnote{We use our library \emph{PyKinSim} (\url{https://github.com/astoeckel/pykinsim}) as a kinematic chain simulator.}
+Care has been taken to choose the frequencies and amplitude of $\tau(t)$ such that the pendulum regularly switches between a resonance mode---where the pendulum merely oscillates with its approximate resonance period $2 \pi \sqrt{L g^{-1}}$---and a mode where the pendulum is more directly influenced by $\tau(t)$.
+This is to some degree visible in the two rightmost plots of \Cref{fig:pendulum_overview_c}.
+
+Our spatiotemporal neuron population from the last subsection ($d = 2$, $q = 5$, $n = 1000$) receives both the torque vector $\tau(t)$ and a time-delayed version of the pendulum joint angle $\phi(t - \theta')$.
+Specifically, due the boundary effects visible in \Cref{fig:spatio_temporal_full}, we choose $\theta' = \SI{0.75}{\second}$.
+
+\pagebreak
+
+We autoregressively learn a decoding vector $\vec d$ using \cref{eqn:delta_rule} and the error signal $\epsilon(t) = \phi(t) - \hat \phi(t)$, where $\hat \phi(t)$ are the decoded and low-pass filtered spiking activities.
+Since the input angle is delayed, this means that the system essentially learns to \emph{predict} the motion of the pendulum $\theta'$ seconds into the future given the future torque trajectory.
+We set the learning rate $\eta$ to $\num{2e-4}$ and train over $\SI{1000}{\second}$.%
+\footnote{Larger learning rates---and shorter simulation times---are possible, but our setup generates enough data to construct a relatively noise-free learning curve, i.e., \Cref{fig:pendulum_overview_c}.}
+
+As a control experiment, we test only feeding one of the input dimensions---that is, either the angle $\phi(t - \theta')$ or the torque $\tau(t)$---into the system.
+This way, we can ensure that the predicted dynamics indeed depend on both the past pendulum state and the torque; for example, the torque $\tau(t)$ is mostly irrelevant if the pendulum is in its resonance mode.
+
+\subsubsection{Results}
+
+\begin{figure}
+	\centering
+	\includegraphics{media/chapters/04_temporal_tuning/04_03/pendulum_error_plots.pdf}
+	\caption[Adaptive filter error over time]{
+		Adaptive filter error over time.
+		Area right to the black dashed line is without adaptation.
+		\textbf{(A)} Error signal $\epsilon(t)$ over time; dark line is a low-pass filtered version.
+		\textbf{(B, C)} Control experiment where only one of the two input dimensions are available to the network.
+		Evidently, both are necessary to compute the function well.
+		\textbf{(D)} Same data as before, but as \NRMSE over bins of length $\SI{50}{\second}$.
+	}
+	\label{fig:pendulum_error_plots}
+\end{figure}
+
+Examples of the inputs and the predicted output are depicted in \Cref{fig:pendulum_overview_c}.
+A more thorough analysis of the error $\epsilon(t)$ over time is provided in \Cref{fig:pendulum_error_plots}.
+Generally, the phase of the prediction is correct, but the amplitude of the peaks is often slightly over- or under-estimated.
+The final \NRMSE reached by the network is about $20\%$.
+Our control experiments show that both $\tau(t)$ and $\phi(t - \theta')$ critically contribute to the prediction.
+
+\subsubsection{Discussion}
+
+Our nonlinear adaptive filter learns to predict the nonlinear pendulum dynamics reasonably well.
+Possible sources for error are the relatively small $q$, the limited neural resources, and the remaining spike noise.
+Interesting future work includes exploring the relationship between this kind of adaptive filter and hierarchical pedictive coding networks based on a more general formalisation of Kalman filtering \citep{bastos2012canonical}.
+We discuss adaptive filters in the context of a biologically constrained model of the cerebellum in \Cref{chp:cerebellum}.
+
+%\begin{itemize}
+%	\item Using the spatiotemporal network we can build an adaptive filter that learns to predict a nonlinear dynamical systems!
+%	\item Example: Pendulum. Input is the torque $\tau(t)$ and the delayed observed angle $\phi(t - \theta)$. Target is actual angle $\phi(t)$
+%	\item Use PES learning rule
+%	\item System learns to output the non-delayed angle! $\Rightarrow$ System learns how the torque over time will affect the angle $\Rightarrow$ We are learning the nonlinear dynamics!
+%	\item Will provide another example (the cerebellum model) in the next chapter.
+%\end{itemize}
+
+\clearpage
 
 \subsection{Accounting for Neural Dynamics}
 \label{sec:temporal_tuning_neural_dynamics}

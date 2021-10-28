@@ -84,7 +84,8 @@ def plot_result(fig,
                                (rmse / rms) * 100).format(),
                            ha="right",
                            va="baseline",
-                           transform=axs[0, j].transAxes)
+                           transform=axs[0, j].transAxes,
+                           bbox={"color": "white", "pad": 0.05})
 
             axs[0, 0].set_title("\\textit{Unit pulse}", y=1.1)
             axs[0, 1].set_title(

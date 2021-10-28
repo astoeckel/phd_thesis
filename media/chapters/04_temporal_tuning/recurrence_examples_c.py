@@ -98,7 +98,7 @@ plot_result(fig,
 
 utils.annotate(axs[0, 0],
                2.5,
-               0.65,
+               0.5,
                3.5,
                0.3,
                "Single filter response",

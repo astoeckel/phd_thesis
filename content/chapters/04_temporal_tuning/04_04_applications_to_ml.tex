@@ -123,7 +123,7 @@ Put differently, an \LMU layer is a spatiotemporal \NEF population with \LDN tun
 %... This suggests that the component critical to the function of the Legendre Memory Unit is performing some orthogonal basis transformation. In line with our exploration above, realising this transformation recurrently as an LTI system is merely an implementation detail.
 
 
-\subsection{Computational Efficiency of Evaluating the LDN LTI System}
+\subsection{Computational Efficiency of the LDN LTI System}
 \label{sec:ldn_computational_efficiency}
 
 The main advantage of using an order $q$ LTI system to approximate a sliding-window spectrum (as in the LRGF \LMU) is memory efficiency in \emph{online} stream-to-stream processing applications.
@@ -366,7 +366,7 @@ Note the similarity to a harmonic oscillator LTI system with an additional delay
 	Memory requirements only take state retained state between updates into account; we exclude constant matrices and filters.
 	The column \enquote{window $N$} describes the relationship between $N$ and $q$ (typically $N \geq q$).
 	Batch processing corresponds to computing the sliding window spectrum for every point in time for an entire recorded signal $\vec u$ of length $N$ in one go.
-	Any sliding-window transformation has an \FIR representation and can always fall back to one of the algorithms in the first three rows.
+	Any sliding-window transformation has a \FIR representation and can always fall back to one of the algorithms in the first three rows.
 	}
 	\label{tbl:time_comparison}
 	\small\sffamily
@@ -493,7 +493,8 @@ The input signal is thus of the form $\vec u = (u_{\pi(1)}, \ldots, u_{\pi(784)}
 \paragraph{Additional constraints}
 The psMNIST task as described above is slightly under-defined.
 Specifically, two additional constraints should be met.
-First, the network should use less state memory than is required to just store the whole image \citep{voelker2019lmu}, and, second, support \emph{serial execution} \citep{chandar2019nonsaturating}.
+First, the network should use less state memory than is required to just store the whole image \citep{voelker2019lmu}.
+Second, the network should support \emph{serial execution} \citep{chandar2019nonsaturating}.
 In other words, the network must produce correct classifications over time, even if multiple input signals are concatenated.
 
 Implementing temporal convolution as \FIR filters of length $N$ (cf.~\Cref{sec:lmu}) intrinsically fulfils the serial execution constraint, but violates the memory constraint.
@@ -502,7 +503,7 @@ The point of using the \LDN or modified Fourier system impulse response is that 
 \footnote{Note that both the LDN and modified Fourier system impulse response produce ringing artefacts that extend beyond the first $N$ samples (cf.~\Cref{fig:modified_euler_stress}), that is, there is some interaction between two consecutively presented input images.
 We ignore this to be consistent with the way the psMNIST task is typically evaluated in the literature.
 However, we take ringing into account in the Mackey-Glass experiment.}
-However, the results for our $\mathcal{O}(N)$ memory transformations should be taken with a grain of salt.
+Therefore, the results for our $\mathcal{O}(N)$ memory transformations should be taken with a grain of salt.
 
 \paragraph{Methods}
 Our network architecture is similar to the setup used by \citet{voelker2019lmu}.
@@ -833,7 +834,7 @@ The total number parameters is $2750$; another $476$ parameters are added if the
 We train the network for $100$ epochs with a batch size of $100$ using a standard Adam optimizer.
 The final test error is computed for the parameters in the epoch with the smallest validation error.
 Our training loss is the \MSE, we report the \NRMSE.
-Note that our results are not directly comparable those in the literature due to using a different $\tau$ and normalisation of the Mackey-Glass dataset.
+Note that our results are not directly comparable to those in the literature due to using a different $\tau$ and normalisation of the Mackey-Glass dataset.
 Our goal is merely to compare different \LMU variants.
 
 \paragraph{Results}

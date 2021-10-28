@@ -1,15 +1,15 @@
 % !TeX spellcheck = en_GB
 
-So far, we have mostly ignored network-level dynamics.
-Surely, our analysis of \emph{individual} \nlif neurons relied on harnessing the subthreshold dynamics of passive dendrites for computation.
+So far we have mostly ignored network-level dynamics.
+Clearly, our analysis of \emph{individual} \nlif neurons relied on harnessing the subthreshold dynamics of passive dendrites for computation.
 However, we primarily focused on the equilibrium state of this system and accounted for dynamics by fitting a static model to simulation data.
 We would certainly have reached lower errors in our experiments had the model not possessed additional dynamics.
 
 Even though neural dynamics may appear unwieldy, they play a critical role in cognition.
 More precisely, the central hypothesis of this chapter---and, if you will, a theoretical neuroscience \emph{theory} (cf.~\Cref{chp:modelling_neurobiological_systems})---is that temporal resources in biological neural networks give rise to the \emph{temporal tuning} of individual neurons.
-Underlying temporal resources include synaptic filters, intrinsic neural dynamics, transmission delays, and the temporal tuning of neighbouring neurons.
-That is, synaptic weights recombine diverse \emph{temporal tuning curves} to ultimately support high-level functions such as interpreting visual motion, forming working memory, or generating motor trajectories.
-Mathematically speaking, we can decode higher-order functions $f$ that do not only depend on the current represented value $\vec x \in \mathbb{R}^d$ alone, but on a \emph{signal} $\mathfrak{x}(t) : \mathbb{R}^- \longrightarrow \mathbb{R}^d$, where $t = 0$ corresponds to the present, and $t < 0$ references the past.
+These underlying temporal resources include synaptic filters, intrinsic neural dynamics, transmission delays, and the temporal tuning of neighbouring neurons.
+Such resources give rise to diverse temporal tuning curves and synaptic weights recombine those to ultimately support high-level functions such as interpreting visual motion, forming working memory, or generating motor trajectories.
+Mathematically speaking, we can decode higher-order functions $f$ that not only depend on the current represented value $\vec x \in \mathbb{R}^d$ alone, but on a \emph{signal} $\mathfrak{x}(t) : \mathbb{R}^- \longrightarrow \mathbb{R}^d$, where $t = 0$ corresponds to the present, and $t < 0$ references the past (cf.~\Cref{tbl:spatiotemporal}; we define $\mathbb{R}^- = \{ t \leq 0 \mid t \in \mathbb{R} \}$).
 
 Notably, our temporal tuning curve approach naturally extends the \NEF dynamics principle \citep[Chapter~8]{eliasmith2003neural}.
 That is, using temporal tuning curves, we can realise any dynamical system that could be realised using the dynamics principle.%
@@ -39,7 +39,7 @@ Under ideal conditions, temporal tuning curves can be used to construct recurren
 Given that we can tune neurons to arbitrary \LTI systems, we ask in \Cref{sec:temporal_bases} what \LTI system we should optimally implement to obtain a maximally diverse set of temporal tuning curves.
 This leads us to the concept of \LTI systems approximating sliding-window spectra.
 We introduce a simple technique for constructing such \LTI systems and re-derive the Legendre Delay Network (\LDN) using this approach.
-Furthermore, we unsuspectingly discover a \enquote{modified Fourier system} as a potential alternative to the \LDN.
+Furthermore, we discover a \enquote{modified Fourier system} as a potential alternative to the \LDN.
 
 In \Cref{sec:recurrent_weights}, we demonstrate that our temporal tuning curve approach still works in less ideal spiking neural networks.
 We show that, just like the \LDN, our modified Fourier system generates \enquote{time cells} when mapped onto a spiking neural network.
@@ -53,8 +53,8 @@ We close with a discussion \Cref{sec:temporal_tuning_conclusion}.
 We sometimes use Fraktur letters (e.g., $\mathfrak{a}$, $\mathfrak{b}$, \textellipsis) to convey that the mathematical objects we are referring to are now \emph{functions} over time.
 That is, we write a temporal encoder as $\vec{\mathfrak{e}}$ instead of $\vec e$.
 Note that $\vec{\mathfrak{e}}(t)$ refers to the result of evaluating the function $\vec{\mathfrak{e}}$ at a specific point in time $t$, whereas $\vec{\mathfrak{e}}$ refers to the function object as a whole.
-In other words, $\vec{\mathfrak{e}}$ is a map $\mathbb{R} \longrightarrow \mathbb{R}^d$, whereas $\vec{\mathfrak{e}}(t)$ is simply an element in $\mathbb{R}^d$.
+In other words, $\vec{\mathfrak{e}}$ is a map $\mathbb{R} \longrightarrow \mathbb{R}^d$, whereas $\vec{\mathfrak{e}}(t)$ is an element in $\mathbb{R}^d$.
 This distinction is important when expressing operations on functions, such as convolution.
 We furthermore assume in most of our definitions that $t = 0$ corresponds to the current point in time.
-Since nervous systems typically do not have access to future events, the stimulus history $\vec{\mathfrak{x}}(t)$ only needs to be defined for $t \leq 0$.
+%Since nervous systems typically do not have access to future events, the stimulus history $\vec{\mathfrak{x}}(t)$ only needs to be defined for $t \leq 0$.
 \end{Notation}
