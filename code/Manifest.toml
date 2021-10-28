@@ -483,7 +483,7 @@ generates=["esn_decode_delays_2d.h5"]
 is_multithreaded = true
 
 ["chapters/04_temporal_tuning/pendulum_adaptive_filter.py"]
-commit = "4213812140d107d9cc08632cd35a860e3d6dccd2"
+commit = "a1ccc49bb0854ccde92d2cc9b8de6fa2008b92bb"
 dockerfile = "experiment_pendulum"
 generates=["pendulum_adaptive_filter.h5"]
 is_multithreaded = false
