@@ -12,10 +12,10 @@ import h5py
 import tqdm
 
 DT = 1e-3
-T = 10000.0
+T = 1000.0
 NOISE_FREQ_HIGH = 0.2
 NOISE_RMS = 1.5
-ETA = 0.5e-4
+ETA = 2.0e-4
 
 
 def nts(T, dt=1e-3):
