@@ -12,10 +12,10 @@ import h5py
 import tqdm
 
 DT = 1e-3
-T = 1000.0
+T = 10000.0
 NOISE_FREQ_HIGH = 0.2
 NOISE_RMS = 1.5
-ETA = 0.2e-4
+ETA = 0.5e-4
 
 
 def nts(T, dt=1e-3):
@@ -199,7 +199,7 @@ def execute_network(taus,
                                   size_in=1)
         nengo.Connection(nd_out, nd_err, synapse=None)
         nengo.Connection(nd_tar, nd_err, transform=-1, synapse=tau_learn)
-        nengo.Connection(nd_tar, nd_err_valve, synapse=None)
+        nengo.Connection(nd_err, nd_err_valve, synapse=None)
         nengo.Connection(nd_err_valve, conn.learning_rule, synapse=None)
 
         # Record everything
