@@ -134,7 +134,7 @@ ens_x2 = bio.Ensemble(n_neurons=100, dimensions=1, p_inh=0.3)
 nengo.Connection(inp_x1, ens_x1)
 nengo.Connection(inp_x2, ens_x2)
 
-# Create a population of two-compartment \LIF neurons, use lower maximum rates
+# Create a population of two-compartment LIF neurons, use lower maximum rates
 # because of the current limit imposed by the conductance-based synapses
 ens_tar = bio.Ensemble(n_neurons=100, dimensions=1,
                        neuron_type=bio.neurons.TwoCompLIF(),

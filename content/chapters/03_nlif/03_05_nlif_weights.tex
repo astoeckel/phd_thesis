@@ -119,7 +119,7 @@ Using this equation, we obtain the following partial derivatives of \cref{eqn:nl
 \end{align}
 To ensure that $\mrA[\vng]$ is non-singular, \vrap and \mrAp must be non-negative (see \Cref{sec:nlif_subth_properties}).
 Hence, when performing gradient descent, these parameters must be clipped to zero after every update step.
-When using quasi-Newton methods, an algorithm that supports bounds must be employed---an example of such an algorithm is L-BFGS-B \citep{byrd1995limited}.
+When using quasi-Newton methods, an algorithm that supports bounds must be employed---an example of such an algorithm is \LBFGSB \citep{byrd1995limited}.
 
 \subsubsection{Soft trust-region based optimisation}
 As mentioned above, optimising \cref{eqn:nlif_param_opt} is particularly difficult because of the matrix inverse $\mrA[\vec g_\ell]^{-1}$.
@@ -311,8 +311,8 @@ As a stochastic gradient descent method, we use the \enquote{Adam} optimizer.
 Adam dynamically adapts the learning rate $\eta$ of each parameter based on the first and second gradient moments (i.e., mean and variance; \cite{kingma2015adam}).
 We use a batch size of $N_\mathrm{batch} = 10$ and $\alpha = 0.05$ as a base learning-rate.
 This last parameter was hand-tuned for fastest possible convergence without instabilities.
-Finally, as a quasi-Newton method, we choose L-BFGS-B, a popular low-memory approximation of \BFGS with support for bounded variables \citep{byrd1995limited}.
-In particular, we use the L-BFGS-B reference implementation with default parameters, i.e., the rank of the Hessian approximation is $m = 10$.
+Finally, as a quasi-Newton method, we choose \LBFGSB, a popular low-memory approximation of \BFGS with support for bounded variables \citep{byrd1995limited}.
+In particular, we use the \LBFGSB reference implementation with default parameters, i.e., the rank of the Hessian approximation is $m = 10$.
 
 \paragraph{Results}
 
@@ -320,42 +320,42 @@ In particular, we use the L-BFGS-B reference implementation with default paramet
 	\includegraphics{media/chapters/03_nlif/03_05/nlif_parameter_optimisation_comparison.pdf}%
 	{\phantomsubcaption\label{fig:nlif_parameter_optimisation_comparison_a}}%
 	{\phantomsubcaption\label{fig:nlif_parameter_optimisation_comparison_b}}%
-	\caption[Comparing different optimisers performing parameter optimisation]{Comparison between stochastic gradient descent, the quasi-Newton method L-BFGS-B, and our soft trust-region based parameter estimation for three different neuron models (see text).
+	\caption[Comparing different optimisers performing parameter optimisation]{Comparison between stochastic gradient descent, the quasi-Newton method \LBFGSB, and our soft trust-region based parameter estimation for three different neuron models (see text).
 	Depicted is the \NRMSE for the estimated somatic currents.
 	Solid lines are the median validation errors over $1000$ trials as described in the main text.
 	%based on $N = 100$ superthreshold validation and training samples $\vec g$ uniformly sampled from $[\SI{0}{\micro\siemens}, \SI{1}{\micro\siemens}]^k$, where $k$ is the number of inputs.
 	Dashed lines depict the training error.
 	Shaded areas correspond to the 25\% and 75\% percentiles.
 	\textbf{(A)} Optimisation starting from the original parameter estimate $\vec \theta$ as given in \Cref{tbl:nlif_matrices_reduced}.
-	Note that the data for L-BFGS-B ends after convergence to the local optimum.
+	Note that the data for \LBFGSB ends after convergence to the local optimum.
 	\textbf{(B)} Same for random initial parameters $\vec \theta_0$.
 	In both \emph{(A)} and \emph{(B)}, the soft trust-region algorithm on converges to a good solution after a few iterations.
-	\SGD and L-BFGS-B reach similar errors, but require more iterations and are less robust to noisy initialisation.
+	\SGD and \LBFGSB reach similar errors, but require more iterations and are less robust to noisy initialisation.
 	}
 	\label{fig:nlif_parameter_optimisation_comparison}
 \end{figure}
 
 Loss curve statistics are depicted in \Cref{fig:nlif_parameter_optimisation_comparison}.%
 \footnote{
-We count one iteration of our soft trust-region algorithm and L-\BFGS-B as a single epoch, although, internally, both algorithms iteratively solve a convex optimisation problem in each iteration.
+We count one iteration of our soft trust-region algorithm and \LBFGSB as a single epoch, although, internally, both algorithms iteratively solve a convex optimisation problem in each iteration.
 The wall-clock time taken for each epoch is roughly the same for each algorithm.
-At $N = 100$ about \SI{10}{\milli\second} for our trust-region algorithm, \SI{30}{\milli\second} for L-\BFGS-B, and \SI{20}{\milli\second} for Adam.
+At $N = 100$ about \SI{10}{\milli\second} for our trust-region algorithm, \SI{30}{\milli\second} for \LBFGSB, and \SI{20}{\milli\second} for Adam.
 All times scale about linearly with the number of samples $N$.
 However, these numbers are not very meaningful, since all three implementations are optimised to different degrees.
-%our soft trust-region algorithm is implemented in C++ using the highly optimised OSQP library, L-BFGS-B is implemented in Fortran with Python code computing the gradients and losses, and our Adam implementation is purely written in Python.
+%our soft trust-region algorithm is implemented in C++ using the highly optimised OSQP library, \LBFGSB is implemented in Fortran with Python code computing the gradients and losses, and our Adam implementation is purely written in Python.
 }
 When using the theoretical parameter estimate as an initialisation (cf.~\Cref{fig:nlif_parameter_optimisation_comparison_a}), all optimisers converge to similar errors.
-For the three- and four-compartment neuron models, our method reaches this seemingly optimal solution in two iterations, L-\BFGS-B in about $30$, and Adam after about $100$ iterations.
+For the three- and four-compartment neuron models, our method reaches this seemingly optimal solution in two iterations, \LBFGSB in about $30$, and Adam after about $100$ iterations.
 The optimal loss for the two-compartment neuron model is considerably lower, and convergence to this point is consistently slower among all tested methods.
 
 When using randomly initialised parameters (cf.~\Cref{fig:nlif_parameter_optimisation_comparison_b}), our method requires about five iterations to reach the same minimum as in the previous experiment.
-L-BFGS-B converges to the optimal solution within $200$ iterations.
+\LBFGSB converges to the optimal solution within $200$ iterations.
 Adam fails to converge to a good solution in the case of the two- and three-compartment neurons even after $400$ epochs.
 
 \paragraph{Discussion}
 Our hand-tailored optimisation method outperforms general-purpose methods.
 This is likely because we solve a less non-linear optimisation problem in a higher-dimensional space.
-Compared to quasi-Newton methods, our \QP possesses an explicit sparse Hessian $\mat P$ (cf.~\Cref{def:qp}), whereas L-BFGS-B must estimate the Hessian over several iterations.
+Compared to quasi-Newton methods, our \QP possesses an explicit sparse Hessian $\mat P$ (cf.~\Cref{def:qp}), whereas \LBFGSB must estimate the Hessian over several iterations.
 
 The previously mentioned issues with our method---incorrectly splitting the loss function into two parts, haphazardly multiplying with $\mrA[\vec g_\ell; \vec \theta]$ inside the $L_2$ norm, and potentially bad convergence behaviour due to using a soft trust-region---seem to have no effect on the quality of the solution.
 In fact, the two gradient-based optimisation methods tend to converge to the same solution (in terms of the final \NRMSE) despite them not relying on these simplifications.
@@ -470,7 +470,7 @@ In the other two cases, $\mathcal{E}$ is equal to $J_\mathrm{dec}$ with some off
 This does not affect the gradient.
 
 To enforce nonnegativity of $\mat W$, and thus non-singularity of $\mrA[\mat W \vec a_\ell]$, weights should be clipped to zero after each gradient descent step.
-In the case of quasi-Newton methods, a bounded algorithm such as L-BFGS-B must be used.
+In the case of quasi-Newton methods, a bounded algorithm such as \LBFGSB must be used.
 
 \subsubsection{Soft trust-region optimisation}
 We follow the same overall procedure as in \Cref{sec:nlif_opt_parameters} to derive a soft trust-region based \SQP.
@@ -606,12 +606,12 @@ Hence, while it is possible to compute multiplication, we expect noise to negati
 	{\phantomsubcaption\label{fig:nlif_weight_optimisation_comparison_b}}%
 	\caption[Comparing different optimisers performing synaptic weight optimisation]{Comparing different optimisers performing synaptic weight optimisation.
 	Solid lines are the median test error over $100$ trials, shaded areas the $25$ and $75$ percentiles.
-	The \SQP algorithm is executed for $50$ epochs, L-BFGS-B for at most $500$ epochs or until convergence.
+	The \SQP algorithm is executed for $50$ epochs, \LBFGSB for at most $500$ epochs or until convergence.
 	The last value is continued as a dotted line.
-	\textbf{(A)} Solving for a simple linear function. Note that we use a larger $\lambda = 10^{-1}$ to reduce overfitting. Our \SQP algorithm converges to a good solution in about five iterations and typically outperforms L-BFGS-B and \SGD. \SGD is prone to oscillations.
+	\textbf{(A)} Solving for a simple linear function. Note that we use a larger $\lambda = 10^{-1}$ to reduce overfitting. Our \SQP algorithm converges to a good solution in about five iterations and typically outperforms \LBFGSB and \SGD. \SGD is prone to oscillations.
 	\textbf{(B)} Computing multiplication as illustrated in \Cref{fig:nlif_decode_multiplication_example}.
 	The two-compartment neuron cannot approximate four-quadrant multiplication well.
-	Our \SQP algorithm converges to a good solution after about $25$ epochs and outperforms L-BFGS-B.
+	Our \SQP algorithm converges to a good solution after about $25$ epochs and outperforms \LBFGSB.
 	\SGD ultimately reaches solutions with slightly smaller errors, but produces a larger variance.
 	}
 	\label{fig:nlif_weight_optimisation_comparison}
@@ -624,7 +624,7 @@ We try to find synaptic weights $\mat W$ that, taking the nonlinearity model int
 
 Specifically, we compare approximating a linear current function and the four-quadrant multiplication described above.
 Optimisation is based on \num{256} training samples, test errors on \num{10000} samples.
-For our algorithm, we use the parameters given in \Cref{alg:nlif_tr_weights}; for L-BFGS-B we use the default parameters ($m = 10$).
+For our algorithm, we use the parameters given in \Cref{alg:nlif_tr_weights}; for \LBFGSB we use the default parameters ($m = 10$).
 For \SGD with Adam we use the largest possible learning rate without major instabilities of $\alpha = 10^{-5}$, and a batch size of $N_\mathrm{batch} = 10$.
 Note that we use a larger regularisation factor $\lambda$ for the linear function; this increases the training error by several orders of magnitude, but, surprisingly, has little to no effect on the test error.%
 \footnote{The primary reason for doing this was to make sure that the training errors fit onto the diagram in \Cref{fig:nlif_weight_optimisation_comparison}.}
@@ -634,8 +634,8 @@ For the linear function (\Cref{fig:nlif_weight_optimisation_comparison_a}), our 
 In the case of the three- and four-compartment neuron, \SGD converges to similar errors as our \SQP within $50$ epochs, but is more unstable.
 
 Four-quadrant multiplication (\Cref{fig:nlif_weight_optimisation_comparison_b}) can only be approximated well in the three- and four-compartment neurons.
-Both our \SQP and L-\BFGS-B converge to similar losses within $25$ and $100$ epochs, respectively.%
-\footnote{In a previous version of this experiment (not depicted) with fewer training samples ($100$ instead of $256$), L-\BFGS-B slightly outperformed both \SGD and our \SQP.
+Both our \SQP and \LBFGSB converge to similar losses within $25$ and $100$ epochs, respectively.%
+\footnote{In a previous version of this experiment (not depicted) with fewer training samples ($100$ instead of $256$), \LBFGSB slightly outperformed both \SGD and our \SQP.
 It is unclear why the increase in training samples leads to a worse performance; intuitively, more samples should lead to a better estimate of the Hessian and not require a larger approximation rank $m$.
 In contrast, both our \SQP and \SGD benefited more training samples being available.
 }
@@ -648,7 +648,7 @@ However, due to instabilities, \SGD is only a viable option if some kind of earl
 
 Given the vastly different implementations of the individual optimisers, it is hard to judge their performance in terms of wall-clock time.
 We cautiously claim that there is no appreciable difference between the approaches.
-At two seconds per epoch on a single processor, our \SQP is three times slower than L-BFGS-B and \SGD, but requires dramatically fewer epochs.
+At two seconds per epoch on a single processor, our \SQP is three times slower than \LBFGSB and \SGD, but requires dramatically fewer epochs.
 However, \SGD could be sped up significantly by optimising the gradient computation (eq.~\ref{eqn:nlif_weight_opt_gradient}) and parallelising across samples, e.g., using TensorFlow \citep{abadi2016tensorflow}.
 
 One issue with our \SQP method is that the worst-case run-time per epoch is in $\mathcal{O}(N^3)$.
@@ -944,8 +944,8 @@ However, the weight solver does not find good solutions for the current function
 It is unclear why this is the case.
 Potential culprits are the increased steepness of the current function, our random sampling not being dense enough to cover the relevant portions of $J_i(x_1, x_2)$, and systematic biases in the weight solver.%
 \footnote{
-We are able to reach smaller errors with both L-BFGS-B and Adam for these particular tuning curves.
-However, we found in a preliminary experiments (data not shown) that using L-BFGS-B with $100$ epochs to solve for synaptic weights tends to \emph{increase} the overall network error $E_\mathrm{net}$.
+We are able to reach smaller errors with both \LBFGSB and Adam for these particular tuning curves.
+However, we found in a preliminary experiments (data not shown) that using \LBFGSB with $100$ epochs to solve for synaptic weights tends to \emph{increase} the overall network error $E_\mathrm{net}$.
 }
 Leaving this question open, a pragmatic solution to this problem is to simply change the tuning curves of the target population.
 However, this affects the class of functions that can be decoded from the target population.

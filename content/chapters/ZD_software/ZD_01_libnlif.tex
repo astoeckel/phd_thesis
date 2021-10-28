@@ -155,7 +155,7 @@ Xs = np.array((xss.flatten(), yss.flatten())).T
 
 # Obtain the target current function and pre-activities
 Js = 0.5 * (1.0 + Xs[:, 0]) * (1.0 + Xs[:, 1]) * 1e-9
-As = [...] # (N_smpls x m_pre); use the \NEF tuning curve equations here
+As = [...] # (N_smpls x m_pre); use the NEF tuning curve equations here
 
 # Perform the actual training
 idcs = np.random.randint(0, Xs.shape[0], 256)  # Training samples
