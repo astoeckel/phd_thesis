@@ -4,9 +4,10 @@ FROM debian:10.10
 RUN apt-get update \
 	&& apt-get -y install \
 		git \
-		python3-numpy python3-scipy python3-pip python3-h5py
+		python3-numpy python3-pip python3-h5py
 
 RUN pip3 install \
+	scipy==1.7.1 \
 	tqdm==4.59.0 \
 	nengo==3.1.0 \
 	sympy==1.7.1
