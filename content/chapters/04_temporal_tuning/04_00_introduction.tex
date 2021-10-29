@@ -1,19 +1,21 @@
 % !TeX spellcheck = en_GB
 
-So far we have mostly ignored network-level dynamics.
-Clearly, our analysis of \emph{individual} \nlif neurons relied on harnessing the subthreshold dynamics of passive dendrites for computation.
-However, we primarily focused on the equilibrium state of this system and accounted for dynamics by fitting a static model to simulation data.
-We would certainly have reached lower errors in our experiments had the model not possessed additional dynamics.
+In the previous chapter, we exploited the dynamics of passive dendrites to compute a larger class of functions than previously possible with a single layer of point neurons.
+However, we primarily focused on the equilibrium state of the \nlif system---our dendritic nonlinearity $H$ does not expose the underlying dynamics to the network-level.
+This can be problematic for two reasons.
+First, when approximating dynamical systems using \NEF principle three (\Cref{sec:nef_dynamics}), not compensating for intrinsic neural dynamics may result in deviations from the desired outcome (cf.~\Cref{sec:nef_limitations}).
+Second, the intrinsic dynamics could in theory help establishing some desired dynamics; they may be viewed as a temporal resource that can be \emph{harnessed} for computation, and not just \emph{compensated} for.
 
-Even though neural dynamics may appear unwieldy, they play a critical role in cognition.
-More precisely, the central hypothesis of this chapter---and, if you will, a theoretical neuroscience \emph{theory} (cf.~\Cref{chp:modelling_neurobiological_systems})---is that temporal resources in biological neural networks give rise to the \emph{temporal tuning} of individual neurons.
+The goal of this chapter is to extend the \NEF to more readily take a variety of temporal resources into account.
+While we still focus on synaptic filters as a primary source of neural dynamics, the same approach can in principle accommodate intrinsic neural dynamics as well.
+More precisely, the central hypothesis of this chapter---and, if you will, a theoretical neuroscience \emph{theory}---is that temporal resources in biological neural networks establish the \emph{temporal tuning} of individual neurons.
 These underlying temporal resources include synaptic filters, intrinsic neural dynamics, transmission delays, and the temporal tuning of neighbouring neurons.
-Such resources give rise to diverse temporal tuning curves and synaptic weights recombine those to ultimately support high-level functions such as interpreting visual motion, forming working memory, or generating motor trajectories.
-Mathematically speaking, we can decode higher-order functions $f$ that not only depend on the current represented value $\vec x \in \mathbb{R}^d$ alone, but on a \emph{signal} $\mathfrak{x}(t) : \mathbb{R}^- \longrightarrow \mathbb{R}^d$, where $t = 0$ corresponds to the present, and $t < 0$ references the past (cf.~\Cref{tbl:spatiotemporal}; we define $\mathbb{R}^- = \{ t \leq 0 \mid t \in \mathbb{R} \}$).
+Such resources then give rise to diverse temporal tuning curves, and in turn are recombined by synaptic weights to ultimately support high-level functions such as interpreting visual motion, forming working memory, or generating motor trajectories.
+Mathematically speaking, we can decode higher-order functions $f$ from a temporally tuned neuron population that not only depend on the current represented value $\vec x \in \mathbb{R}^d$, but on a \emph{signal} $\mathfrak{x}(t)$ (cf.~\Cref{tbl:spatiotemporal}).
 
-Notably, our temporal tuning curve approach naturally extends the \NEF dynamics principle \citep[Chapter~8]{eliasmith2003neural}.
-That is, using temporal tuning curves, we can realise any dynamical system that could be realised using the dynamics principle.%
-\footnote{While it is possible to realise nonlinear dynamical systems using temporal tuning curves, we focus on linear dynamical systems for the sake of simplicity.}
+Notably, our temporal tuning curve approach naturally generalises the \NEF dynamics principle \citep[Chapter~8]{eliasmith2003neural}.
+That is, using temporal tuning curves, we can realise any dynamical system that could be realised using the dynamics principle.
+%\footnote{While it is possible to realise nonlinear dynamical systems using temporal tuning curves, we focus on linear dynamical systems for the sake of simplicity.}
 At the same time, temporal tuning curves facilitate taking the temporal properties of pre-populations and intermediate filters into account, including heterogeneous and higher-order synapses.
 
 However, the most important contribution of our temporal tuning curve approach is a shift in perspective.
@@ -25,11 +27,12 @@ A neuron can be tuned to a $d$-dimensional spatial quantity, and, at the same ti
 Crucially, this allows modellers to directly specify some desired neural behaviour.
 For example, a modeller could choose to assign time-cell like tuning \citep{pastalkova2008internally,tiganj2016sequential} to one population, and visual spatiotemporal receptive fields \citep{carandini1999linearity} to another.
 In theory, these tuning properties can be provided in the form of sampled data.
-So far, and as has been criticised by \citep{nicola2017supervised}, this was not possible using the \NEF dynamics principle---while the representation and transformation principle facilitate incorporating empirical data, the dynamics principle relied on modellers providing a mathematical model in terms of differential equations, with uncertain consequences for the impact on neural tuning.
+So far, and as criticised by \citet{nicola2017supervised}, this was more difficult to accomplish using the \NEF dynamics principle---while the representation and transformation principle facilitate incorporating empirical data, the dynamics principle typically relies on modellers providing closed-form equations (although partially data-driven dynamics were possible, e.g., the hand-writing generation in SPAUN; cf.~\cite{eliasmith2012largescale}; \cite{choo2018spaun}, Section~3.2.2).
 
 Almost more strikingly, temporal tuning is not just useful for modelling neurobiological systems.
 Introducing the right kind of dynamics into \emph{artificial} neural networks results in architectures that outperform successful approaches in machine learning by wide margins.
-Specifically, we show that a layer of Legendre Memory Units (\LMUpl; \cite{voelker2019lmu}) corresponds to a spatiotemporally tuned \NEF population. We use our insights from modelling biological systems to propose alternative variants of this system.
+Specifically, we show that a layer of Legendre Memory Units (\LMUpl; \cite{voelker2019lmu}) corresponds to a spatiotemporally tuned \NEF population.
+%We use our insights from modelling biological systems to propose alternative variants of this system.
 
 \subsubsection{Structure}
 We start \Cref{sec:temporal_tuning_curves} with a review of examples of \enquote{temporal tuning} in biology, and extend the \NEF by introducing the concept of a \enquote{temporal tuning curve}.

@@ -71,7 +71,7 @@ axs[3].set_xticks(np.linspace(0, 1.5, 7), minor=True)
 fig.text(0.085, 0.95, "\\textbf{A}", size=12, va="baseline", ha="left")
 fig.text(0.5, 0.95, "\\textbf{B}", size=12, va="baseline", ha="left")
 fig.text(0.3, 0.95, "\\textbf{Legendre system}", va="baseline", ha="center")
-fig.text(0.725, 0.95, "\\textbf{Windowed Legendre system}", va="baseline", ha="center")
+fig.text(0.725, 0.95, "\\textbf{Windowed Legendre system (LDN)}", va="baseline", ha="center")
 
 fig.align_labels(axs)
 

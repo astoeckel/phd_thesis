@@ -119,7 +119,7 @@ If we would like to emulate temporal tuning in visual cortex, then we select tem
 Or, to model time cells, we could explicitly set the temporal encoder of each neuron to a bell-shaped function with appropriately distributed peak times $\theta_i$, akin to a radial basis \citep{broomhead1988radial,stockel2020assorted}.
 This works (cf.~\Cref{fig:linearly_independent_tuning}), but, curiously, implementing temporal bases similarly induces time cells (see below).
 
-From our experience, networks constructed by explicitly choosing $\mathfrak{e}_i$ often perform similarly (in terms of delay decoding errors), but do not outperform networks linearly combining orthogonal basis functions.
+From our experience, networks constructed by explicitly choosing $\mathfrak{e}_i$ can perform similarly (in terms of delay decoding errors), but do not outperform networks linearly combining orthogonal basis functions.
 This is likely because this approach often implies using highly redundant and non-orthogonal basis functions.
 Typically, the first few singular values of these (discretised) bases decays rapidly (cf.~\Cref{fig:linearly_independent_tuning_b}).
 Hence, although we can theoretically decode more functions (fewer singular values are zero), this requires larger decoding weights compared to an orthonormal basis, thus amplifying the noise present in spiking neural network.
@@ -626,7 +626,7 @@ We discuss adaptive filters in the context of a biologically constrained model o
 
 \clearpage
 
-\subsection{Accounting for Neural Dynamics}
+\subsection{Accounting for Intrinsic Neural Dynamics}
 \label{sec:temporal_tuning_neural_dynamics}
 
 \begin{itemize}

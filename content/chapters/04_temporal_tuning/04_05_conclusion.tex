@@ -26,8 +26,8 @@ Modellers can specify the temporal tuning of a neuron population independently o
 We use our least-squares optimisation problem to realise this desired tuning.
 An example of this is the use of bell-shaped temporal encoders depicted in \Cref{fig:linearly_independent_tuning}.
 
-This way, our work eliminates a long-standing shortcoming of the \NEF dynamics principle.
-While it is possible to directly take empirical neurophysiological data into account when selecting spatial tuning properties (i.e., using the representation principle) and solving for spatial connection weights (i.e., using the transformation principle), the dynamics principle has so far relied on modellers providing closed-from differential equations.
+This way, our work eliminates a limitation of the \NEF dynamics principle.
+While it is possible to directly take empirical neurophysiological data into account when selecting spatial tuning properties (i.e., using the representation principle) and solving for spatial connection weights (i.e., using the transformation principle), the dynamics principle typically---with some exceptions---requires modellers to provide closed-from differential equations.
 Providing such closed-form equations is further complicated when attempting to realise dynamics in networks with heterogeneous or higher-order synapses \citep{voelker2018improving}.
 Our approach suggests a way to better take empirical data into account and to automate the process of solving for weights, even in networks with complex recurrences (cf.~\Cref{sec:lti_complex_networks,sec:solve_dynamics_nonlinear_neurons}).
 
@@ -55,4 +55,4 @@ It could similarly be interesting to model transmission delays using temporal tu
 
 In order to disseminate our methods to researchers modelling neurobiological systems, it would be interesting to integrate our approaches into a software tool such as the Nengo spiking neural network simulator \citep{bekolay2014nengo}.
 An interesting engineering challenge would be to define a convenient \API for temporal tuning that ties well into the existing system.
-In this respect, it would also be beneficial to find ways to efficiently solve the least-squares problem defined in \cref{eqn:weight_optimise_currents_temporal} by relying on spectral decompositions.
+In this respect, it would also be beneficial to find ways to more efficiently solve the least-squares problem defined in \cref{eqn:weight_optimise_currents_temporal} by relying on spectral decompositions.

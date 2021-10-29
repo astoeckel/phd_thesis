@@ -340,9 +340,9 @@ That is, the impulse response of our system should exactly trace out $\mathfrak{
 Phrasing this more colloquially, we must ensure that input older than $\theta$ seconds (or, in the discrete case, $N$ samples) is \enquote{forgotten}.
 
 Accomplishing this is indeed possible, and the fact that we are realising a function basis is key.
-Remember from \Cref{sec:sliding_window_lti} that we can decode a delayed version of the input signal $u(t - \theta')$ from the system state $\vec m(t)$.
-We can furthermore compute the specific contribution $\vec m'(t)$ of $u(t - \theta)$ to $\vec m(t)$.
-Subtracting $\vec m'(t)$ from $\vec m(t)$ effectively \enquote{erases} any information about $u(t - \theta)$ from the state vector, resulting in a finite impulse response.
+Remember from \Cref{sec:sliding_window_lti} that we can decode a delayed version of the input signal $u(t - \theta)$ from the system state $\vec m(t)$.
+We can furthermore compute the specific contribution $\vec{\tilde m}(t)$ of $u(t - \theta)$ to $\vec m(t)$.
+Subtracting $\vec{\tilde m}(t)$ from $\vec m(t)$ effectively \enquote{erases} any information about $u(t - \theta)$ from the state vector, resulting in a rapidly decaying and almost finite impulse response.
 
 We discuss this more thoroughly for continuous bases in the next subsection.
 For now, in the discrete case, assume that the impulse response of the discrete \LTI system $\mat{\tilde A}$, $\mat{\tilde B}$ perfectly reconstructs the basis transformation matrix $\mat E \in \mathbb{R}^{q \times N}$.
@@ -353,15 +353,15 @@ We can then reconstruct the input sample $u_{t - N + 1}$ from $\vec m_t$ using t
 Let \enquote{$\otimes$} denote the outer product.
 The contribution of $u_{t - N + 1}$ to the state $\vec m_t$ is then given as
 \begin{align*}
- 	\vec m'_t &= ( \mat E^T)_N u_{t - N + 1} = ( \mat E^T)_N \otimes (\mat E^+)_N\vec m_t \,.
+ 	\vec{\tilde m}_t &= ( \mat E^T)_N u_{t - N + 1} = ( \mat E^T)_N \otimes (\mat E^+)_N\vec m_t \,.
 \end{align*}
 Sequentially interleaving an \enquote{update} and an \enquote{erasure} step we obtain
 \begin{align}
- 	\vec m_t &\gets \mat{\tilde A} \vec m_{t - 1} + \mat{\tilde B} u_t \,, \tag{Update}\\
- 	\vec m_t &\gets \vec m_t - \vec m'_t = ( \mat I - ( \mat E^T )_N \otimes (\mat E^+)_N ) \vec m_t \,. & \tag{Erasure}\\[-0.5em]
+ 	\vec m_t' &\gets \mat{\tilde A} \vec m_{t - 1} + \mat{\tilde B} u_t \,, \tag{Update}\\
+ 	\vec m_t &\gets \vec m_t' - \vec{\tilde m}_t = ( \mat I - ( \mat E^T )_N \otimes (\mat E^+)_N ) \vec m_t' \,. & \tag{Erasure}\\[-0.5em]
  	\cline{1-2}
  	\vec m_t &\gets
- 		(\mat I - ( \mat E^T )_N \otimes (\mat E^+)_N ) \mat{\tilde A} \vec m_t
+ 		(\mat I - ( \mat E^T )_N \otimes (\mat E^+)_N ) \mat{\tilde A} \vec m'_t
  		+ (\mat I - ( \mat E^T )_N \otimes (\mat E^+ )_N ) \mat{\tilde B} u_t
  		=   \mat{{\tilde A}'} \vec m_{t - 1} + \mat{{\tilde B}'} u_t  \,.
 	\label{eqn:information_erasure_discrete}
@@ -414,20 +414,20 @@ As we show next, the Legendre system can similarly be derived from first princip
 \label{sec:ldn_derivation}
 
 While our numerical method for approximating function basis generating \LTI systems works reasonably well, we can, in some cases, analytically determine \LTI systems that generate bases over an approximated rectangle window.
-For example, as we show next, we can analytically construct an \LTI system ${\mat A}$, ${\mat B}$ that \emph{exactly} traces out the Legendre polynomials.
+For example, as we show next, we can analytically construct an \LTI system ${\mat A}'$, ${\mat B}'$ that \emph{exactly} traces out the Legendre polynomials.
 To this end, we use a continuous variant of our above information erasure technique to construct a dampening term $\mat \Gamma$ that limits the impulse response of the system to $[0, \theta]$.
-Subtracting $\mat \Gamma$ from $\mat A$ results in a rescaled version of the \LTI system underlying the Legendre Delay Network (\LDN; \cite{voelker2018improving}).
+Subtracting $\mat \Gamma$ from $\mat A'$ results in a rescaled version of the \LTI system underlying the Legendre Delay Network (\LDN; \cite{voelker2018improving}).
 This idea is similar to \citet{gu2020hippo} and can, as we discuss in more detail in \citet{stockel2021constructing}, be applied to arbitrary polynomial bases.
 
 \begin{restatable}{lemma}{LemLegSys}
-The impulse response of the linear time-invariant system $\theta \dot{\vec m}(t) = {\mat A} \vec m(t) + {\mat B} u(t)$ with $\vec m \in \mathbb{R}^q$, ${\mat A} \in \mathbb{R}^{q \times q}$ and ${\mat B} \in \mathbb{R}^{q \times 1}$
+The impulse response of the linear time-invariant system $\theta \dot{\vec m}(t) = {\mat A}' \vec m(t) + {\mat B}' u(t)$ with $\vec m \in \mathbb{R}^q$, ${\mat A}' \in \mathbb{R}^{q \times q}$ and ${\mat B}' \in \mathbb{R}^{q \times 1}$
 \begin{align*}
 	\begin{aligned}
-	\big({\mat A}\big)_{ij} &= (4j - 2) \begin{cases}
+	\big({\mat A'}\big)_{ij} &= (4j - 2) \begin{cases}
 			0 & \text{if } i \leq j \text{ or } i + j \text{ is even} \,, \\
 			4j - 2 & \text{if } i > j \text{ and } i + j \text{ is odd} \,,
 		\end{cases} &
-	\big({\mat B}\big)_i &= (-1)^{i + 1} \,,
+	\big({\mat B'}\big)_i &= (-1)^{i + 1} \,,
 	\end{aligned}
 \end{align*}
 are the first $q$ shifted Legendre polynomials $\tilde P_n(t \theta^{-1})$ scaled to $\tilde P_n(1) = 1$ over $t \in [0, \theta]$.
@@ -485,9 +485,9 @@ Then $\vec d(\theta') = (d_0(\theta'), \ldots, d_{q - 1}(\theta'))$ is called a 
 	{\phantomsubcaption\label{fig:ldn_example_a}}%
 	{\phantomsubcaption\label{fig:ldn_example_b}}%
 	\caption[Feedback matrices and impulse responses of the Legendre system]{Feedback matrices and impulse responses of the Legendre system.
-	\emph{Left:} The feedback matrix $\mat A$ of the corresponding system for $q = 6$ and $\theta = \SI{1}{\second}$. \emph{Right:} The corresponding impulse response.
-	\textbf{(A)} The undampened Legendre system as described in \Cref{lem:leg_sys}.
-	\textbf{(B)} The Legendre system with approximate rectangle window (cf.~eq.~\ref{eqn:ldn_system}).
+	\emph{Left:} The feedback matrix of the corresponding system for $q = 6$ and $\theta = \SI{1}{\second}$. \emph{Right:} The corresponding impulse response.
+	\textbf{(A)} The undampened Legendre system $\mat A'$, $\mat B'$ as described in \Cref{lem:leg_sys}.
+	\textbf{(B)} The Legendre system $\mat A$, $\mat B$ with approximate rectangle window (cf.~eq.~\ref{eqn:ldn_system}).
 	}
 	\label{fig:ldn_example}
 \end{figure}
@@ -505,7 +505,7 @@ For the shifted Legendre polynomials $\tilde P_i(t \theta^{-1})$ with $\tilde P_
 	\big( \mat{\Gamma} \big)_{ij} &= e_i(\theta) d_j(\theta) = \frac{2j + 1}{\theta} \tilde P_{i - 1}(\theta \theta^{-1}) \tilde P_{j - 1}(\theta \theta^{-1}) = \frac{2j + 1}{\theta} \,.
 	\label{eqn:legendre_delay_reencoder}
 \end{align}
-Correspondingly, the feedback matrix $\mat A' = \mat A - \mat \Gamma$ of the \LTI system generating the Legendre polynomials with approximated rectangle window is given as
+Correspondingly, the feedback matrix $\mat A = \mat A' - \mat \Gamma$ and the input vector $\mat B$ of the \LTI system generating the Legendre polynomials with approximated rectangle window are given as
 \begin{align}
 	\big( \mat A \big)_{ij} &= \frac{(2j - 1)}{\theta} \begin{cases}
 		-1 & \text{if } i \leq j \,, \\

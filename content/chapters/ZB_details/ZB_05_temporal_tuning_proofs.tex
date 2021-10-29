@@ -223,10 +223,10 @@ This recurrence relation terminates with $\tilde P_0$ or $\tilde P_1$ depending 
 Crucially, this recurrence relation implies that the differential of the $n$th Legendre polynomial can be expressed as a linear combination of the preceding Legendre polynomials.
 Let $\vec m(t) = (\tilde P_0(t \theta^{-1}), \ldots, \tilde P_{q - 1}(t \theta^{-1}))$. We can now write the above equation as a vector-matrix product
 \begin{align*}
-	\frac{\mathrm{d}}{\mathrm{d}t} \theta \vec m(t) &= {\mat A} \vec m(t) \,,
+	\frac{\mathrm{d}}{\mathrm{d}t} \theta \vec m(t) &= {\mat A}' \vec m(t) \,,
 \end{align*}
 where ${\mat A}$ is as defined in \cref{lem:leg_sys}.
-The vector ${\mat B} = \big( \tilde P_0(0), \ldots, \tilde P_{q - 1}(0)\big)$ defines the initial value of each state dimension in response to a Dirac pulse $u(t) = \delta(t)$. \qedhere
+The vector ${\mat B}' = \big( \tilde P_0(0), \ldots, \tilde P_{q - 1}(0)\big)$ defines the initial value of each state dimension in response to a Dirac pulse $u(t) = \delta(t)$. \qedhere
 \end{proof}
 
 \subsection{Proof of \Cref{lem:rectangle_window}}
