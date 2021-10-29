@@ -345,13 +345,13 @@ This is the same idea as in the time-cell model by \citet{howard2014unified}, al
 \end{figure}
 
 \subsubsection{Limitations of feed-forward dynamics}
-As we alluded to when discussing the \citet{howard2014unified} time-cell model, there are major limitations to approximating dynamics in feed-forward networks---at least if we model synapses as low-pass filters.
+As we alluded to when discussing the \citet{howard2014unified} time-cell model, there are major limitations to approximating dynamics in feed-forward networks with low-pass filter synapses.
 Specifically, network dynamics slow down as the network depth increases, the memory of a fixed-depth network is finite, and, generally speaking, the set of linear dynamics that can be realised is rather limited.
 
 Phrasing the first limitation more precisely, maintaining uniform dynamics across a series of chained populations becomes more difficult as the length of the chain increases.
 This is illustrated in in \Cref{fig:feed_forward_low_pass}.
 To reduce approximation errors, the desired temporal tuning for later populations must possess longer time-constants.
-This is despite it being, perhaps counter-intuitively, possible to exploit the diverse synaptic filters and temporal tuning to realise dynamics with \emph{faster} time-constants than the fastest synaptic filter in the post-population.
+This is despite it being, perhaps counter-intuitively, possible to exploit diverse synaptic filters and temporal tuning to realise dynamics with \emph{faster} time-constants than the fastest synaptic filter in the post-population.
 
 \begin{figure}[p]
 	\centering
@@ -361,10 +361,10 @@ This is despite it being, perhaps counter-intuitively, possible to exploit the d
 \end{figure}
 
 Conversely, pertaining to our second limitation, it is not possible to solve for dynamics with \emph{slower} time-constants than what is dictated by the longest chain of synaptic filters.
-Correspondingly, feed-forward dynamics cannot realise infinite-impulse-response dynamics such as ideal integrators and oscillators, and they are not a good model of phenomena such as working memory that rely on sustained neural activity.%
+Correspondingly, feed-forward dynamics cannot realise infinite impulse response (i.e., not exponentially decaying) dynamics such as integrators and oscillators, and they are not a good model of phenomena such as working memory that rely on sustained neural activity.%
 \footnote{Indeed, as elaborated by \citet[Section~8.4.1]{eliasmith2003neural}, local recurrent (and \emph{not} feed-forward) connections are known to generate sustained activity in biology (e.g., in eye-position control in goldfish, cf.~\cite{aksay2001vivo}).
 However, recent studies also suggest that momentary synaptic adaptation outweighs persistent activities as a primary mechanism supporting working memory \citep{lundqvist2018working}.}
-This is what \citet[Chapter~1, p.~4]{churchland1992computational} refer to when they claim that \enquote{complex effects are the outcome of the dynamics of neural networks} (see quote on the title page of this chapter).
+This is what \citet[Chapter~1, p.~4]{churchland1992computational} refer to when they claim that \enquote{complex effects are the outcome of the dynamics of neural networks} (see the title page of this chapter).
 
 Regarding the third issue, the set of possible dynamics that can be realised in feed-forward networks is severely limited.
 We can analyse this by performing a principal component analysis (PCA) of low-pass filter impulse responses.

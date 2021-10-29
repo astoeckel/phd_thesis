@@ -2,6 +2,8 @@
 \chapter{Introduction}
 \label{chp:introduction}
 
+\vspace{10pt}
+
 \begin{OpeningQuote}
 Network models [must] reflect the fundamental and
 essential temporal nature of actual nervous systems. External processes and
@@ -123,14 +125,15 @@ We find evidence that one of our \LTI systems may possess more favourable comput
 As a final experiment in \Cref{chp:cerebellum}, we combine the approaches outlined in the previous chapters to construct an adaptive filter model of the cerebellum \citep{fujita1982adaptive}.
 We apply our methods for building \NEF networks with more biological constraints (including Dale's principle; cf.~\Cref{chp:nlif}) in the context of the recurrent Granule-Golgi circuit.
 This circuit can in principle implement an \LTI system generating a temporal basis as discussed in \Cref{chp:temporal_tuning}.
-Building upon the Granule-Golgi circuit we constrcut a network that can learn to decode arbitrary delays, reproducing basic features of eyeblink conditioning \citep[e.g.,][]{heiney2014cerebellardependent}.
+Building upon the Granule-Golgi circuit we construct a network that can learn to decode arbitrary delays, reproducing basic features of eyeblink conditioning \citep[e.g.,][]{heiney2014cerebellardependent}.
 
 We conclude with a short discussion of our contributions and potential future work in \Cref{chp:conclusion}.
-Proofs and additional information may be found in \Cref{app:math_detail,app:data}, and an overview the software written for this thesis, namely \emph{libnlif} and \emph{NengoBio} in \Cref{app:software}.
+Proofs and additional information may be found in \Cref{app:math_detail,app:data}.
+We present some software libraries written for this thesis, namely \emph{libnlif} and \emph{NengoBio}, in \Cref{app:software}.
 
 \begin{FloatingBox}{Notation}
 \setlength{\parskip}{0.5em}
-%Some effort has been made to be as consistent as possible in the mathematical notation.
+Some effort has been made to be as consistent as possible in the mathematical notation.
 Bold lower-case letters (e.g., $\vec x$, $\vec \gamma$) denote vectors, while bold upper-case letters (e.g., $\mat X$, $\mat \Gamma$) denote matrices.
 Double-struck letters denote sets, with $\mathbb{N}$, $\mathbb{Z}$, $\mathbb{Q}$, $\mathbb{R}$, $\mathbb{C}$ being our usual number systems.
 $\mathbb{R}^+$ and $\mathbb{R}^-$ are the positive and negative real numbers (including zero).

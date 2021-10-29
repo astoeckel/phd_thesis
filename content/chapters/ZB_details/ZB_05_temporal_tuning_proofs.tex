@@ -97,10 +97,10 @@ Substituting these definitions along with $\mat A' = \tau \mat A + \mat I$ and $
 \label{app:temporal_tuning_nonlinear}
 
 We noted that temporal tuning is a generalisation of the \NEF dynamics principle.
-That is, we can use temporal tuning curves to implement any dynamical system that could be implemented using the dynamics principle.
+That is, we can---in addition to accounting for heterogeneous and higher-order filters, and taking empirical data into account---use temporal tuning curves to implement any dynamical system that could be implemented using the dynamics principle.
 This includes nonlinear dynamical systems.
 
-Below, we first review realising nonlinear dynamics in \NEF networks, and then, using the same argument as in our proof of \Cref{thm:temporal_lstsq} (cf.~\Cref{app:lstsq_nef_equivalence}), discuss why solving for weights using nonlinear temporal tuning curves must result in the same solution.
+%Below, we first review realising nonlinear dynamics in \NEF networks, and then, using the same argument as in our proof of \Cref{thm:temporal_lstsq} (cf.~\Cref{app:lstsq_nef_equivalence}), discuss why solving for weights using nonlinear temporal tuning curves must result in the same solution.
 
 \subsubsection{Nonlinear dynamical systems in the \NEF}
 
@@ -138,7 +138,7 @@ Of course, to realise an arbitrary $f'$ that is nonlinear over $\vec x(t)$, $\ve
 \subsubsection{Nonlinear temporal tuning curves}
 
 To realise nonlinear dynamical systems using the temporal tuning paradigm, we need to make use of the general concept of a temporal tuning curve from \Cref{def:temporal_tuning_curve}; \emph{linear} temporal tuning curves (\Cref{def:linear_temporal_tuning}) are restricted to \LTI systems.
-For the sake of simplicity, we only consider time-invariant systems; that is $f(\vec x, \vec u)$.%
+For the sake of simplicity, we only consider time-invariant systems, that is $f(\vec x, \vec u)$.%
 \footnote{
 The same considerations of course still hold if we supply an external time variable, for example as part of $\mathfrak{u}$.
 Technically, neither the temporal tuning approach, nor the \NEF are truly capable of realising time-variant systems. The universal approximator properties of two-layer networks only hold for compact domains $\mathbb{X}$ (cf.~\Cref{thm:two_layer_universal}); as soon as time is represented, $\mathbb{X}$ is no longer compact. In practice, $t$ could be compressed into a vector representation using Spatial Semantic Pointers \citep{komer2020biologically}.}
@@ -170,7 +170,7 @@ In particular, note that it must hold $E = 0$ if we can find a decoding matrix $
 \end{align*}
 Since $m, N \to \infty$, and our neuron population represents the current state $\vec x = \vec x(0, \mathfrak{u}_k)$ and the low-pass filtered input $\vec{\hat u}$, we can further simplify this to:
 \begin{align*}
-	(\vec x )_i = \int_0^\infty \!\!\! h(\tau) f'_i(\vec x, \vec{\hat u}) \,\mathrm{d}\tau \,.
+	(\vec x )_i = \int_0^\infty \!\!\! h(\tau) f'_i(\vec x(-\tau), \vec{\hat u}(-\tau)) \,\mathrm{d}\tau \,.
 \end{align*}
 In other words, the optimal solution is a function $f'$ that takes $\vec x$, the filtered $\vec{\hat u}$, and, if being passed through a first-order low-pass filter $h$ over time, returns the current state $\vec x$.
 Our $f'$ from above \emph{exactly} fulfills this property (cf.~\Cref{fig:nef_dyn_sys_b}); hence, by the same argument as in our proof for \Cref{thm:temporal_lstsq} (and under the same mild conditions), the optimisation problem \emph{must} solve for connection weights that realise $f'$.

@@ -5,14 +5,14 @@ However, we primarily focused on the equilibrium state of the \nlif system.
 In other words, our dendritic nonlinearity $H$ did not expose the underlying dynamics to the network-level.
 This can be problematic for two reasons.
 First, when approximating dynamical systems using \NEF principle three (\Cref{sec:nef_dynamics}), not compensating for intrinsic neural dynamics may result in deviations from the desired outcome (cf.~\Cref{sec:nef_limitations}).
-Second, the intrinsic dynamics could in theory help establishing some desired dynamics; they may be viewed as a temporal resource that can be \emph{harnessed} for computation, and not just \emph{compensated} for.
+Second, the intrinsic dynamics could in theory help establish some desired dynamics; they may be viewed as a temporal resource that can be \emph{harnessed} for computation, and not just \emph{compensated} for.
 
 The goal of this chapter is to extend the \NEF to more readily take a variety of temporal resources into account.
 While we still focus on synaptic filters as a primary source of neural dynamics, the same approach can in principle accommodate intrinsic neural dynamics as well.
 More precisely, the central hypothesis of this chapter---and, if you will, a theoretical neuroscience \emph{theory}---is that temporal resources in biological neural networks give rise to the \emph{temporal tuning} of individual neurons.
 These underlying temporal resources include synaptic filters, intrinsic neural dynamics, transmission delays, and the temporal tuning of neighbouring neurons.
 Such resources then establish diverse temporal tuning curves, and are recombined by synaptic weights to ultimately support high-level functions such as interpreting visual motion, forming working memory, or generating motor trajectories.
-Mathematically speaking, we can decode higher-order functions $f$ from a temporally tuned neuron population that not only depend on the current represented value $\vec x \in \mathbb{R}^d$, but on a \emph{signal} $\mathfrak{x}(t)$ (cf.~\Cref{tbl:spatiotemporal}).
+Mathematically speaking, we can decode higher-order functions $f$ from a temporally tuned neuron population that not only depends on the current represented value $\vec x \in \mathbb{R}^d$, but on a \emph{signal} $\mathfrak{x}(t)$ (cf.~\Cref{tbl:spatiotemporal}).
 
 Notably, our temporal tuning curve approach naturally generalises the \NEF dynamics principle \citep[Chapter~8]{eliasmith2003neural}.
 That is, using temporal tuning curves, we can realise any dynamical system that could be realised using the dynamics principle.
@@ -21,7 +21,7 @@ At the same time, temporal tuning curves facilitate taking the temporal properti
 
 However, the most important contribution of our temporal tuning curve approach is a shift in perspective.
 Just as we harness non-temporal tuning curves and neural nonlinearities to approximate spatial functions in neural networks, we are now able to harness the temporal tuning of pre-populations and intermediate filters to realise the temporal tuning of post-populations.
-Curiously, this includes recurrent neuron populations.
+Perhaps surprisingly, this includes recurrent neuron populations.
 We furthermore separate \emph{temporal} from \emph{spatial} tuning.
 A neuron can be tuned to a $d$-dimensional spatial quantity, and, at the same time, possess some temporal tuning, typically of finite order $q$.
 

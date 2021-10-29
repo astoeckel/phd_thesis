@@ -511,12 +511,12 @@ A next step would be to use this technique to construct a neurophysiologically m
 \subsection{Adaptive Filters}
 \label{sec:adaptive_filter}
 
-Another interesting application of neural networks with spatiotemporal tuning is to construct nonlinear \emph{adaptive filters}.
+Another interesting application of neural networks with spatiotemporal tuning is using them to construct nonlinear \emph{adaptive filters}.
 Here, we discuss an adaptive variant of the Wiener filter \citep[Chapter~2]{wiener1949extrapolation,haykin2014adaptive}.
-\emph{Adaptive} refers to not determining the optimal filter parameters $\vec d$ in advance, but updating $\vec d(t)$ in response to an error signal $\epsilon(t)$ while the system is operating.
+\emph{Adaptive} refers to updating the usually static filter parameters on-the-fly, in response to an error signal $\epsilon(t)$ while the system is operating.
 This is in principle comparable to learning and adaptation in animals.
 
-The core idea of Wiener filters is to linearly combine filtered versions of an input signal with the goal to minimse a linear least-squares loss.%
+The core idea of Wiener filters is to linearly combine filtered versions of an input signal with the goal of minimising a linear least-squares loss.%
 \footnote{Notably, Wiener provides conditions under which an optimal $\vec d$ can be obtained.
 \Citet{kalman1960new} broadens the optimality conditions by accounting for uncertainty and using an optimal update rule.}
 Let $h_i(t)$ be one of $n$ filter kernels, $\vec d = (d_1, \ldots, d_n)$ a set of weights, $\mathfrak{u}(t)$ an input signal, and $\mathfrak{x}(t)$ a desired output signal.
@@ -574,8 +574,8 @@ As is depicted in \Cref{fig:pendulum_overview}, we apply a low-pass filtered whi
 Care has been taken to choose the frequencies and amplitude of $\tau(t)$ such that the pendulum regularly switches between a resonance mode---where the pendulum merely oscillates with its approximate resonance period $2 \pi \sqrt{L g^{-1}}$---and a mode where the pendulum is more directly influenced by $\tau(t)$.
 This is to some degree visible in the two rightmost plots of \Cref{fig:pendulum_overview_c}.
 
-Our spatiotemporal neuron population from the last subsection ($d = 2$, $q = 5$, $n = 1000$) receives both the torque vector $\tau(t)$ and a time-delayed version of the pendulum joint angle $\phi(t - \theta')$.
-Specifically, due the boundary effects visible in \Cref{fig:spatio_temporal_full}, we choose $\theta' = \SI{0.75}{\second}$.
+Our spatiotemporal neuron population from the last subsection ($d = 2$, $q = 5$, $n = 1000$) receives both the torque $\tau(t)$ and a time-delayed version of the pendulum joint angle $\phi(t - \theta')$, where $\theta' = \SI{0.75}{\second}$.
+Inputs to the network are rescaled to the interval $[-1, 1]$.
 
 \pagebreak
 
