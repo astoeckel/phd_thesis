@@ -244,7 +244,7 @@ For even $N$, $F_{N - 1}$ must be rescaled to maintain orthonormality; we ignore
   	C_n(k; N) &= \frac{\sqrt{2}}{\sqrt{N}} \cos\left(\pi n \frac{k + \frac{1}2}{N}\right) \,.
   	\label{eqn:dft_dct}
 \end{align}
-In both cases, fast algorithms exist for computing $\mat F \vec x$ and $\mat C \vec x$ in $\mathcal{O}(N\log{N})$ instead of $\mathcal{O}(N^2)$, namely the FFT and FCT \citep[Chapter~12]{cooley1965algorithm,makhoul1980fast,press2007numerical}.
+In both cases, fast algorithms exist for computing $\mat F \vec x$ and $\mat C \vec x$ in $\mathcal{O}(N\log{N})$ instead of $\mathcal{O}(N^2)$, namely the \FFT and \FCT \citep[Chapter~12]{cooley1965algorithm,makhoul1980fast,press2007numerical}.
 
 \subsubsection{Discrete Legendre Orthogonal Polynomials (\DLOPpl)}
 A discrete version of the Legendre polynomials can be generated using the following recurrence relation (depicted in \Cref{fig:discrete_dlop}):
@@ -445,7 +445,7 @@ The impulse response of the following modified system is unchanged compared to t
 \end{align*}
 \end{restatable}
 
-Of course, we usually do not access to the delayed input signal $u(t - \theta)$.
+Of course, we usually do not have access to the delayed input signal $u(t - \theta)$.
 However, as we discussed in \Cref{sec:sliding_window_lti,sec:lti_autoregression}, we can decode an approximate $u(t - \theta')$ from the state $\vec m(t)$ using a delay decoder $\vec d(\theta')$.
 Below, we define the term \enquote{delay decoder} more precisely for input signals $\hat u(t - \theta)$ that are expressible using a $q$ basis functions.
 

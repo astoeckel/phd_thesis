@@ -3,18 +3,18 @@
 \section{Applications to Artificial Neural Networks}
 \label{sec:applications_to_ml}
 
-The Legendre Memory Unit (LMU)---originally proposed by \citet{voelker2019lmu}---is a building block for spatiotemporal computing in deep neural networks.
+The Legendre Memory Unit (\LMU)---originally proposed by \citet{voelker2019lmu}---is a building block for spatiotemporal computing in deep neural networks.
 The \LMU, just like our models of spatiotemporal biological neuron populations, is a dynamical system that intrinsically performs stream-to-stream processing.
 At its core, each \LMU consists of a recurrent linear layer implementing the \LDN, and a nonlinear layer transforming the \LDN state.
 By harnessing the ability of the \LDN to approximate a sliding window spectrum of length $\theta$, the \LMU can, even with little training, integrate information over longer time-spans than competing architectures, while requiring a minimal amount of resources, both in terms of memory and computation.
 
 Crucially, the \LMU often outperforms other recurrent neural network architectures in stream processing tasks.
-This includes Long Short-Term Memories (LSTMs; \cite{hochreiter1997long}), Gated Recurrent Units (GRUs; \cite{chung2014empirical}) and Echo State Networks (ESNs; \cite{jaeger2004harnessing}).
+This includes Long Short-Term Memories (\LSTMpl; \cite{hochreiter1997long}), Gated Recurrent Units (GRUs; \cite{chung2014empirical}) and Echo State Networks (\ESNpl; \cite{jaeger2004harnessing}).
 The \LMU performance has been verified for synthetic benchmarks (\cite{voelker2019}, Chapter~6.2; \cite{voelker2019lmu}; \cite{gu2020hippo}), as well as real-world applications such as keyword spotting \citep{blouw2021hardware}, bird song classification \citep{gupta2021comparing}, and natural language processing (\NLP; \cite{chilkuri2021parallelizinga}; \cite{chilkuri2021parallelizing}).
 A recent study on \NLP tasks by \citet{chilkuri2021language} suggests that networks based on a variant of the \LMU achieve a ten-times higher data efficiency than Transformers \citep{vaswani2017attention}.
 According to Chilkuri et al., this is comparable to the improvement offered by Transformers over \LSTMpl.
 
-The goal of this section is to explore in how far the success of the LMU depends on projecting the input signal onto the \emph{Legendre} polynomials, and to further characterize the \LMU time and space complexity.
+The goal of this section is to explore in how far the success of the \LMU depends on projecting the input signal onto the \emph{Legendre} polynomials, and to further characterize the \LMU time and space complexity.
 Specifically, we test how well our modified Fourier system (cf.~\Cref{sec:lti_autoregression}) fares in place of the \LDN system.
 Given that we are no longer in a biological setting, we furthermore test sliding-window transformations that rely on perfect memory.
 
@@ -33,8 +33,8 @@ Given that we are no longer in a biological setting, we furthermore test sliding
 	{\phantomsubcaption\label{fig:lmu_b}}%
 	{\phantomsubcaption\label{fig:lmu_c}}%
 	{\phantomsubcaption\label{fig:lmu_d}}%
-	\caption[Overview of the Legendre Memory Unit]{Overview of the Legendre Memory Unit. See text for more detail. \textbf{(A)} Variant of the LMU network as proposed by \citet{voelker2019lmu}. The important signal paths are highlighted with bold arrows.
-	\textbf{(B, C)} The reduced LRGF and \FIR \LMU (our acronyms) proposed by \citet{chilkuri2021parallelizing}. \textbf{(D)} In practice, multiple \LDN systems are stacked a single layer.}
+	\caption[Overview of the Legendre Memory Unit]{Overview of the Legendre Memory Unit. See text for more detail. \textbf{(A)} Variant of the \LMU network as proposed by \citet{voelker2019lmu}. The important signal paths are highlighted with bold arrows.
+	\textbf{(B, C)} The reduced \LRGF and \FIR \LMU (our acronyms) proposed by \citet{chilkuri2021parallelizing}. \textbf{(D)} In practice, multiple \LDN systems are stacked a single layer.}
 \end{figure}
 
 The original \LMU proposed by \citet{voelker2019lmu} is depicted in \Cref{fig:lmu_a}.
@@ -76,8 +76,8 @@ This is equivalent to the mean impulse response of the continuous system during 
 \end{align}
 
 Replacing the \LTI system with a set of \FIR filters makes the network purely feed-forward.
-We thus do not have to rely on backpropagation through time \citep[e.g.,][]{werbos1990backpropagation} for training, and can use the FFT to quickly convolve pre-recorded test and training signals with the $q$ \FIR filters.
-This can vastly improve training throughput on GPUs \citep{chilkuri2021parallelizing}.
+We thus do not have to rely on backpropagation through time \citep[e.g.,][]{werbos1990backpropagation} for training, and can use the \FFT to quickly convolve pre-recorded test and training signals with the $q$ \FIR filters.
+This can vastly improve training throughput on \GPUpl \citep{chilkuri2021parallelizing}.
 Still, once training has completed, we can always switch back to the recurrent implementation---this \emph{may} (see below) be more efficient when performing realtime stream processing.
 %and is one of the advantages that also makes Transformer networks more attractive than LSTMs \citep{vaswani2017attention}.
 
@@ -126,7 +126,7 @@ Put differently, an \LMU layer is a spatiotemporal \NEF population with \LDN tun
 \subsection{Computational Efficiency of the LDN LTI System}
 \label{sec:ldn_computational_efficiency}
 
-The main advantage of using an order $q$ LTI system to approximate a sliding-window spectrum (as in the LRGF \LMU) is memory efficiency in \emph{online} stream-to-stream processing applications.
+The main advantage of using an order $q$ \LTI system to approximate a sliding-window spectrum (as in the \LRGF \LMU) is memory efficiency in \emph{online} stream-to-stream processing applications.
 After all, we only need to remember $q$ state dimensions, compared to the last $N = \theta / \Delta t$ input samples when using \FIR filters (as in the \FIR \LMU).
 Correspondingly, we can operate the network in regimes where $N \gg q$ without requiring large amounts of memory.
 However, there are some trade-offs to consider with respect to computational efficiency.
@@ -251,7 +251,7 @@ In the continuous case, the feedback matrix is the difference between $\mat A_\m
 The dampening term $\mat \Gamma_\mathrm{F}$ is an outer product $\vec e(\theta) \otimes \vec d(\theta)$, and hence $\mat \Gamma_\mathrm{F} \vec m$ can be computed in $\mathcal{O}(q)$.
 Moreover, $\mat A_\mathrm{F}$ merely consists of a series of $2 \times 2$ block matrices along the diagonal; correspondingly, computing $\mat A_\mathrm{F} \vec m$ is also in $\mathcal{O}(q)$.
 
-The error characteristics for using the Euler update differ slightly from those of the LDN (cf.~\Cref{fig:mod_fourier_higher_order_vs_zoh,fig:modified_euler_stress}).
+The error characteristics for using the Euler update differ slightly from those of the \LDN (cf.~\Cref{fig:mod_fourier_higher_order_vs_zoh,fig:modified_euler_stress}).
 The system is highly unstable when using Euler (not depicted); however, when using a higher-order Runge-Kutta update, the system generates an expressive basis for a wide range of $q$ and $N$.
 Still, $N$ remains slightly superlinear in $q$ (i.e., $N \approx q^{\frac{4}3}$).
 
@@ -342,10 +342,10 @@ To see this, assume that we store both our current state $\vec m_t$ and the last
 Sliding one of the discrete basis functions $W_i$ over $\vec u_t$, there are at most three samples in the input history that cross a transition point (arrows in the figure) and thus influence the value of $\vec m_t$.
 Instead of re-convolving with $W_i$ and $\vec u_t$ in every time-step, we update $\vec m_t$ by accounting for the transitioning samples.
 
-\subsubsection{Sliding Discrete Fourier Transform (SDFT)}
+\subsubsection{Sliding Discrete Fourier Transform (\SDFT)}
 
-Similar $\mathcal{O}(q)$ update algorithms can be obtained for the discrete Fourier and cosine basis (cf.~\Cref{sec:function_bases}), namely the sliding discrete Fourier (SDFT; \cite{springer1991sliding,jacobsen2003sliding}) and cosine transformation (SDCT; \cite{kober2004fast}).
-Particularly, the SDFT is given as (using real instead of complex coefficients):
+Similar $\mathcal{O}(q)$ update algorithms can be obtained for the discrete Fourier and cosine basis (cf.~\Cref{sec:function_bases}), namely the sliding discrete Fourier (\SDFT; \cite{springer1991sliding,jacobsen2003sliding}) and cosine transformation (\SDCT; \cite{kober2004fast}).
+Particularly, the \SDFT is given as (using real instead of complex coefficients):
 \begin{align}
 	&\begin{aligned}
 		m^{2k - 1}_t &= m^{2k -1}_{t - 1} \cos(f_k) - m^{2k}_{t - 1} \sin(f_k) - u_{t - N} + u_{t}\,, \\
@@ -354,8 +354,8 @@ Particularly, the SDFT is given as (using real instead of complex coefficients):
 	\label{eqn:sdft}
 \end{align}
 where $m_t^{2k - 1}$ and $m_t^{2k}$ are the real and imaginary coefficients belonging to the frequency term $f_k$.
-Note the similarity to a harmonic oscillator LTI system with an additional delayed input, akin to our perfect continuous \LTI rectangle window in \Cref{lem:rectangle_window}.%
-\footnote{Note that, in contrast to the Haar basis, computing the SDFT does not require random access to the signal history $\vec u_t$. This drastically reduces the required memory bandwidth.}
+Note the similarity to a harmonic oscillator \LTI system with an additional delayed input, akin to our perfect continuous \LTI rectangle window in \Cref{lem:rectangle_window}.%
+\footnote{Note that, in contrast to the Haar basis, computing the \SDFT does not require random access to the signal history $\vec u_t$. This drastically reduces the required memory bandwidth.}
 
 \newcommand{\symLTI}{\includegraphics{media/chapters/04_temporal_tuning/04_04/sym_lti.pdf}}
 \newcommand{\symSDT}{\includegraphics{media/chapters/04_temporal_tuning/04_04/sym_sdt.pdf}}
@@ -803,9 +803,9 @@ The sample length $117$ corresponds to the absolute width of the combined \FIR f
 	{\phantomsubcaption\label{fig:mackey_glass_overview_overlay_b}}%
 	\caption[Overview of the Mackey-Glass prediction network and dataset]{
 		Overview of the Mackey-Glass prediction network and dataset.
-		\textbf{(A)} Samples $u_t$ fed into the network pass a series of four \LMU layers (here depicted as \FIR LMUs); the output is a prediction $\vec{\hat y}_t$ of the next fifteen samples $u_{t + 1}, \ldots, u_{t + 15}$.
+		\textbf{(A)} Samples $u_t$ fed into the network pass a series of four \LMU layers (here depicted as \FIR \LMUpl); the output is a prediction $\vec{\hat y}_t$ of the next fifteen samples $u_{t + 1}, \ldots, u_{t + 15}$.
 		Every sample fed into the network immediately updates the prediction in the output.
-		When using the \LDN or the modified Fourier system as a sliding transformation, the \FIR LMUs can of course be replaced with a corresponding recurrent LRGF \LMU.
+		When using the \LDN or the modified Fourier system as a sliding transformation, the \FIR \LMUpl can of course be replaced with a corresponding recurrent \LRGF \LMU.
 		\textbf{(B)} Exemplary input-target pair for $\tau = 17$.
 		The absolute window of the \FIR filters in our network amounts to $117$ samples; samples older than this cannot \emph{possibly} affect the output. However, only the last $37$ samples \emph{effectively} influence the system.
 		The longer absolute window ensures that we account for ringing artefacts in the \LDN and modified Fourier system (cf.~\Cref{fig:lmu_mackey_glass_filters}).

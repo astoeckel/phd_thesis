@@ -399,10 +399,9 @@ We thus foster a self-fulfilling prophecy: we solve for dynamics assuming that t
 	\label{fig:recurrent_temporal_tuning}
 \end{figure}
 
-Notably, this assumption effectively turns the system into a feed-forward network, greatly simplifying solving for recurrent weights (cf.~\Cref{fig:recurrent_temporal_tuning}).
-In the special case of linear networks, solving for connection synaptic weights directly results in input and feedback matrices $\mat B'$ and a feedback matrix $\mat A'$.
-If, as additional requirements, the synaptic filter, is a first-order low-pass filter one can show that these matrices are equal to those returned by the \NEF dynamics principle.
-In other words, linear temporal tuning in \emph{linear} networks is a generalisation of the standard \NEF methods.
+Notably, this assumption effectively turns the system into a feed-forward network, which greatly simplifies solving for recurrent weights (cf.~\Cref{fig:recurrent_temporal_tuning}).
+In the special case of linear networks, solving for weights directly results in input and feedback matrices $\mat B'$, $\mat A'$.
+For first-order synapses these matrices are equal to those returned by the \NEF dynamics principle.
 
 \begin{restatable}{theorem}{thmTemporalLstsq}
 	\label{thm:temporal_lstsq}
@@ -413,7 +412,7 @@ In other words, linear temporal tuning in \emph{linear} networks is a generalisa
 		& h(t) &= \tau^{-1} e^{-t \tau^{-1}} \,.
 	\end{align*}
 	Let $\mathfrak{x}_k : \mathbb{R}^- \to \mathbb{R}$ be one of $N \geq n + 1$ arbitrary (with some mild constraints; see proof) input signals.
-	If all $\mathfrak{e}_i$ and $\mathfrak{x}_k$ are pairwise linearly independent, $\mathfrak{e}_i$ the following least-squares loss has a unique minimum at $(b'_{i}, a'_{i, 1}, \ldots, a'_{in}) = ( \mat B', \mat A' )_i$ for all $i \in \{1, \ldots, n\}$, where $\mat A' = \tau \mat A + \mat I$, $\mat B' = \tau \mat B$:
+	If all $\mathfrak{e}_i$ and $\mathfrak{x}_k$ are pairwise linearly independent, the following least-squares loss has a unique minimum at $(b'_{i}, a'_{i, 1}, \ldots, a'_{in}) = ( \mat B', \mat A' )_i$ for all $i \in \{1, \ldots, n\}$, where $\mat A' = \tau \mat A + \mat I$, $\mat B' = \tau \mat B$:
 	\begin{align*}
 		E &=\sum_{k = 1}^{N} \left(
 					\int_{0}^{\infty} \!\! \mathfrak{e}_i(\tau) \mathfrak{x}_k(-\tau)
@@ -423,7 +422,8 @@ In other words, linear temporal tuning in \emph{linear} networks is a generalisa
 \end{restatable}
 \noindent This loss function is equal to \cref{eqn:weight_optimise_currents_temporal_no_trafo} in the case of a linear network with $n$ neurons that recurrently connect to themselves, and a \enquote{zeroth} pre-neuron with no temporal tuning providing input, i.e., $a_0(t) = \mathfrak{x}_k(t)$.
 We provide a proof for this in \Cref{app:lstsq_nef_equivalence}.
-%Note that the requirement for linearly independent samples is a mere technicality; different $\mathfrak{x}_k$ could in theory map onto the same sample points if the $\mathfrak{e}_i$ are periodic.
+Similarly, as we discuss in \Cref{app:temporal_tuning_nonlinear}, we can use temporal tuning curves to obtain the same results as the \NEF in the case of nonlinear dynamics and neurons.
+Temporal tuning curves are a \emph{generalisation} of the \NEF dynamics principle.
 
 \begin{figure}[p]
 	\centering

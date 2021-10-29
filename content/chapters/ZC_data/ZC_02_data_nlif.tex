@@ -53,7 +53,7 @@ Notably, this low-pass filter is not included in the filter-chain for the target
 Hence, the chosen filter time-constant must balance between suppressing noise in the input and not dampening high-frequency components in the target signal.
 
 As depicted in \Cref{fig:regularization_parameter_sweep_nosubth,fig:regularization_parameter_sweep_subth}, the pre-filter does not result in any appreciable improvement in error for single layer networks with standard \LIF neurons.
-For both the two-layer LIF network, and the two-compartment \LIF neurons without noise model, the error is minimized for a filter coefficient of about \SIrange{10}{20}{\milli\second}.
+For both the two-layer \LIF network, and the two-compartment \LIF neurons without noise model, the error is minimized for a filter coefficient of about \SIrange{10}{20}{\milli\second}.
 As one would expect, when using the two-compartment \LIF noise model, adding a pre-filter is more detrimental than useful.
 
 Function approximation errors are given in (cf.~\Cref{tbl:function_approximations_pre_filter}).

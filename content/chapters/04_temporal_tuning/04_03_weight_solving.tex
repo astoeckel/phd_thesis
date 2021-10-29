@@ -543,9 +543,9 @@ Crucially, instead of setting $a_i$ to a linearly filtered version of $\mathfrak
 In this case, \cref{eqn:delta_rule} is the \emph{delta learning rule}, a precursor to back\-pro\-pa\-ga\-tion that has been developed with nonlinear adapitve filters in mind \citep{widrow1960adaptive}.%
 \footnote{For nonlinear neurons, we have to multiply \cref{eqn:delta_rule} by a gradient term $a_i'$. We typically ignore this for \LIF neurons, which, if not saturated, resemble \ReLUpl. Correspondingly, $a_i'$ is a constant factor if the neuron is active.}
 
-\Citet{macneil2011finetuning} propose a biologically plausible version of \cref{eqn:delta_rule}, the Prescribed Error Sensitivity (\PES) rule,  that can be integrated into spiking neural networks.
-We discuss this rule in more detail in \Cref{sec:cerebellum_eyeblink}.
-For now, we would like to conclude by demonstrating that the combination of our spatiotemporal spiking \NEF populations and the delta rule results in a powerful adaptive filter that can, for example, learn to predict the nonlinear dynamics of a forced pendulum over time.
+\Citet{macneil2011finetuning} propose a biologically plausible version of \cref{eqn:delta_rule} that can be integrated into spiking neural networks.
+We discuss this Prescribed Error Sensitivity (\PES) rule in more detail in \Cref{sec:cerebellum_eyeblink}.
+For now, we would like to demonstrate that the combination of our spatiotemporal spiking \NEF populations and the delta rule results in a powerful adaptive filter that can, for example, learn to predict the nonlinear dynamics of a forced pendulum over time.
 Forced pendulums are found in most robotic actuators and can, under some conditions, exhibit chaotic behaviour \citep{hubbard1999forced}.
 
 \subsubsection{Methods}
@@ -579,8 +579,8 @@ Specifically, due the boundary effects visible in \Cref{fig:spatio_temporal_full
 
 \pagebreak
 
-We autoregressively learn a decoding vector $\vec d$ using \cref{eqn:delta_rule} and the error signal $\epsilon(t) = \phi(t) - \hat \phi(t)$, where $\hat \phi(t)$ are the decoded and low-pass filtered spiking activities.
-Since the input angle is delayed, this means that the system essentially learns to \emph{predict} the motion of the pendulum $\theta'$ seconds into the future given the future torque trajectory.
+We autoregressively learn a decoding vector $\vec d$ using \cref{eqn:delta_rule} and the error signal $\epsilon(t) = \phi(t) - \hat \phi(t)$, where $\hat \phi(t)$ is the decoded and low-pass filtered spiking activity.
+Since the input angle $\phi(t - \theta')$ is delayed, the system essentially learns to \emph{predict} the motion of the pendulum $\theta'$ seconds into the future given the future torque trajectory.
 We set the learning rate $\eta$ to $\num{2e-4}$ and train over $\SI{1000}{\second}$.%
 \footnote{Larger learning rates---and shorter simulation times---are possible, but our setup generates enough data to construct a relatively noise-free learning curve, i.e., \Cref{fig:pendulum_overview_c}.}
 
