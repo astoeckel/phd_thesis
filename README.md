@@ -29,10 +29,25 @@ We find that one of our LTI systems derived through “information erasure” ma
 Make sure to have the following installed:
 
 * `fuse-overlayfs`
-* A fully copy of TeX live
-* The `pip` package `pygements` for syntax highlighting
+* A fully copy of TeX Live 2020
+* The following `pip` packages:
+  * `pygments`
+  * `numpy==1.19.4`
+  * `scipy==1.7.1`
+  * `sympy==1.7.1`
+  * `matplotlib==3.3.4`
+  * `h5py==3.1.0`
+  * `tqdm==4.59.0`
+  * `nengo==3.1.0`
+  * `nengo-extras==0.4.0`
+  * `cython==0.29.22`
+  * `brian2==2.4.2`
+  * `scikit-learn==0.24.2`
+  * `autograd==1.3`
+  * `cvxopt==1.2.6`
+* Revision `7a788b59f` of `libbioneuronqp` from https://github.com/astoeckel/libbioneuronqp
+* Revision `04e992684` of `nengo-bio` from https://github.com/astoeckel/nengo-bio
 * Our `srinivasa` colour scheme from `contrib/srinivasa` (install via `pip install -e .`)
-* 
 
 We will provide an operating system image with all prerequisites installed at a future point in time.
 
