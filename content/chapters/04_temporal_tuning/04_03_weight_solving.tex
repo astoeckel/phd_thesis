@@ -518,7 +518,7 @@ This is in principle comparable to learning and adaptation in animals.
 
 The core idea of Wiener filters is to linearly combine filtered versions of an input signal with the goal of minimising a linear least-squares loss.%
 \footnote{Notably, Wiener provides conditions under which an optimal $\vec d$ can be obtained.
-\Citet{kalman1960new} broadens the optimality conditions by accounting for uncertainty and using an optimal update rule.}
+\Citet{kalman1960new} broadens the optimality conditions by accounting for uncertainty and proposing an optimal update rule.}
 Let $h_i(t)$ be one of $n$ filter kernels, $\vec d = (d_1, \ldots, d_n)$ a set of weights, $\mathfrak{u}(t)$ an input signal, and $\mathfrak{x}(t)$ a desired output signal.
 Then, in the simplest case, this optimisation problem can be stated as follows:
 \begin{align}
@@ -539,7 +539,7 @@ Now, to adapt $\vec d$ over time, we take the gradient of $E$ in \cref{eqn:wiene
 	\label{eqn:delta_rule}
 \end{align}
 Here, $\epsilon(t)$ is the momentary error, and $\eta$ is a learning rate.
-Crucially, instead of setting $a_i$ to a linearly filtered version of $\mathfrak{u}$, we can use the activations $a_i$ of a nonlinear neural network with temporal tuning.
+Crucially, instead of setting $a_i$ to a linearly filtered version of $\mathfrak{u}$, we can use the activities $a_i$ of a nonlinear neural network with temporal tuning.
 In this case, \cref{eqn:delta_rule} is the \emph{delta learning rule}, a precursor to back\-pro\-pa\-ga\-tion that has been developed with nonlinear adapitve filters in mind \citep{widrow1960adaptive}.%
 \footnote{For nonlinear neurons, we have to multiply \cref{eqn:delta_rule} by a gradient term $a_i'$. We typically ignore this for \LIF neurons, which, if not saturated, resemble \ReLUpl. Correspondingly, $a_i'$ is a constant factor if the neuron is active.}
 
@@ -621,29 +621,28 @@ We discuss adaptive filters in the context of a biologically constrained model o
 \subsection{Accounting for Intrinsic Neural Dynamics}
 \label{sec:temporal_tuning_neural_dynamics}
 
-So far we focused on synaptic filters as the primary temporal resource in spiking neural networks.
+So far, we have focused on synaptic filters as the primary temporal resource in spiking neural networks.
 However, as we mentioned several times throughout this thesis, neurons themselves can be a significant source of dynamics.
 Our temporal tuning approach suggests a way to account for neural dynamics while solving for weights; however, this is by no means a one-size-fits-all solution for every neuron model.
-Below, we discuss the abstract optimisation problem, point out potential solutions, and demonstrate that we can account for \ALIF dynamics.
+Below, we discuss the abstract optimisation problem, point out solution strategies, and demonstrate that we can account for \ALIF dynamics.
 
 \subsubsection{Optimisation problem}
 Remember that our temporal tuning paradigm assigns tuning properties to each neuron $i$---given some input signal $\mathfrak{x}_k$, we define a desired output rate $a_i(\mathfrak{x}_k)$.
-We then solve for weights $w_{ij}$ that, assuming that the pre-neurons $j$ adhere to their normative tuning, decode a current $J_i(\mathfrak{x}_k)$ that evokes the desired rate.
-The mapping between currents and rates is according to a \emph{static} response curve $G[J]$.
-It holds $a_i(\mathfrak{x}_k) = G[J_i(\mathfrak{x}_k)]$.
+Under the assumption that the pre-neurons $j$ adhere to their normative tuning, we then solve for weights $w_{ij}$ that decode a current $J_i(\mathfrak{x}_k)$ evoking the desired rate.
+The mapping between currents and rates is according to a \emph{static} response curve $G[J]$; it holds $a_i(\mathfrak{x}_k) = G[J_i(\mathfrak{x}_k)]$.
 
 If we would like to account for intrinsic neural dynamics, then we can no longer assume static response curves.
 Instead, we must model the average firing rate of a neuron depending on its input current history; we have a \emph{temporal} response curve $\Omega[\mathfrak{J}] : (\mathbb{R}^- \longrightarrow \mathbb{R}) \longrightarrow \mathbb{R}^+$, where $\mathfrak{J}$ is a signal describing the past post-synaptic currents, and $\Omega[\mathfrak{J}]$ is the rate at $t = 0$.
 
-Since our weight optimisation problem is in current space, we somehow need to map from the rate determined by the tuning curve $a_i(\mathfrak{x}_k)$ onto a current.
-More precisely we need a function of the form $\Omega^{-1}[\mathfrak{a}] : (\mathbb{R}^- \longrightarrow \mathbb{R}^+) \longrightarrow \mathbb{R}$.%
+Since our weight optimisation problem is in current space, we need to map from the rate determined by the tuning curve $a_i(\mathfrak{x}_k)$ onto a current.
+More precisely, we search for a function of the form $\Omega^{-1}[\mathfrak{a}] : (\mathbb{R}^- \longrightarrow \mathbb{R}^+) \longrightarrow \mathbb{R}$:%
 \footnote{Note that we write $\Omega^{-1}$ only for notational purposes; this is not strictly speaking the mathematical inverse of $\Omega$.
 Since $\Omega$ is unlikely to be bijective, $\Omega^{-1}$ is ill-defined.
 Furthermore, having $\Omega^{-1}$ only depend on the output history may not be sufficient for complex neuron models; the entire input history may play a role in determining the \enquote{correct} input current.
 It is unclear how this could be incorporated into our optimisation problem.
 }
-Given a desired output rate signal $\mathfrak{a}$, this function returns the post-synaptic current $J$ that should be injected into the neuron in the present, at $t = 0$.
-Now, our optimisation problem in \cref{eqn:weight_optimise_currents_temporal} becomes
+given a desired output rate signal $\mathfrak{a}$, this function returns the post-synaptic current $J$ that should be injected into the neuron in the present, at $t = 0$.
+Consequently, our optimisation problem in \cref{eqn:weight_optimise_currents_temporal} becomes
 \begin{align}
 	E = \sum\nolimits_{k = 1}^N \Bigl[
 		\Omega^{-1}[\mathfrak{a}_i(f(\mathfrak{x}_k)] -
@@ -668,9 +667,8 @@ This is similar to an approach described by \citet{duggins2017incorporating} tha
 
 \subsubsection{Accounting for \ALIF dynamics}
 $\Omega^{-1}(\mathfrak{a})$ is readily available for the adaptive leaky integrate-and-fire model (\ALIF).
-The \ALIF model accounts for firing-rate adaptation observed in biological neurons (cf.~\Cref{fig:izhikevich_whichmod_figure1f}).
-This is accomplished by increasing an exponentially decaying adaptation variable $n(t)$ by a constant amount $n_0$ every time the neuron spikes \citep{treves1993meanfield}.
-The specific \ALIF model discussed here applies this spike-triggered adaptation mechanism to a current-based \LIF neuron---the adaptation variable $n(t)$ is simply subtracted from the input current $J(t)$.
+The \ALIF model accounts for firing-rate adaptation observed in biological neurons (cf.~\Cref{fig:izhikevich_whichmod_figure1f}) by increasing an exponentially decaying adaptation variable $n(t)$ by a constant amount $n_0$ every time the neuron spikes \citep{treves1993meanfield}.
+The specific \ALIF model discussed here applies this spike-triggered adaptation mechanism to a current-based \LIF neuron by subtracting the adaptation variable $n(t)$ from the input current $J(t)$.
 Despite its simplicity, this model can be made to fit empirical spike data from cortical pyramidal cells well \citep{camera2004minimal}.
 
 \begin{figure}
@@ -679,7 +677,7 @@ Despite its simplicity, this model can be made to fit empirical spike data from 
 	{\phantomsubcaption\label{fig:alif_b}}%
 	\caption[Accounting for ALIF dynamics]{
 		Accounting for \ALIF dynamics.
-		\emph{Left:} Recurrent network implementing a \SI{2}{\hertz} undampened oscillator with $100$ standard \LIF neurons (maximum rates at \SI{200}{\per\second}).
+		\emph{Left:} Recurrent network implementing a \SI{2}{\hertz} oscillator with $100$ \LIF neurons (maximum rates at \SI{200}{\per\second}).
 		\emph{Middle:} Same network with \ALIF neurons; not taking dynamics into account.
 		\emph{Right:} Compensating for the \ALIF dynamics.
 		\textbf{(A)} Comparison between the actual response $\hat{\mathfrak{a}}_i(\mathfrak{x}_k)$ of a neuron $i$ for the $k$th sample $\mathfrak{x}_k$ to the expected response $\mathfrak{a}_i(\mathfrak{x}_k)$.
@@ -689,12 +687,12 @@ Despite its simplicity, this model can be made to fit empirical spike data from 
 	\label{fig:alif}
 \end{figure}
 
-To account for the \ALIF dynamics in \cref{eqn:weight_optimise_currents_temporal_nonlin}, we merely need to decode the adaptation current from the pre-population.
+To account for \ALIF dynamics within \cref{eqn:weight_optimise_currents_temporal_nonlin}, we merely need to decode the adaptation current from the pre-population.
 Given the adaptation decay time-constant $\tau_\mathrm{n}$, we have
 \begin{align*}
 	\Omega^{-1}(\mathfrak{a}) &= G^{-1}[\mathfrak{a}(0)] + n_0 (\mathfrak{a} \ast h_\mathrm{n})(0) \,, & \text{where } h_\mathrm{n}(t) = \tau_\mathrm{n}^{-1} \exp(-t \tau_\mathrm{n}) \,,
 \end{align*}
 and where $G^{-1}[a]$ is the current required to evoke a rate $a$ according to the static \LIF model.
-We demonstrate successfully accounting for \ALIF dynamics ($\tau_\mathrm{n} = \SI{100}{\milli\second}$, $n_0 = \SI{0.01}{\nano\ampere}$) in this way using \cref{eqn:weight_optimise_currents_temporal_nonlin} in \Cref{fig:alif}.
+We demonstrate successfully accounting for \ALIF dynamics ($\tau_\mathrm{n} = \SI{100}{\milli\second}$, $n_0 = \SI{0.01}{\nano\ampere}$) in this way in \Cref{fig:alif}.
 The only requirement for this to work is that the pre-population forms a temporal basis from which $h_\mathrm{n}$ can be decoded.
 In a sense, if we tune our neurons to possess low-pass dynamics, then this approach allows us to \emph{harness} the \ALIF dynamics---after all, the \ALIF neuron intrinsically implements a low-pass filter (cf.~\Cref{fig:neural_dynamics_firing_rates}).
