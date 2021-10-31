@@ -187,12 +187,12 @@ This asymptotically negates the effect of switching to a faster update equation.
 
 \subsubsection{Higher order methods}
 Choosing higher-order Runge-Kutta methods instead of Euler can substantially reduce errors \citep[Chapter~17.1]{press2007numerical}.
-For a Runge-Kutta method of order $p$, the discrete feedback matrix $\mat{\tilde A}^{\{p\}}$ is a truncated matrix exponential \citep[cf.][]{whitney1969more}:
+For a Runge-Kutta method of order $p$, the discrete feedback matrix $\smash{\mat{\tilde A}^{\{p\}}}$ is a truncated matrix exponential \citep[cf.][]{whitney1969more}:
 \begin{align*}
 	\mat{\tilde A}^{\{p\}} &= \sum_{k = 0}^p \frac{1}{k!} \left( \frac{\mat A}{N} \right)^k & \text{where} \quad \mat {\tilde A}^{\{1\}} = \mat I + \frac{\mat A}{N} = \mat{\tilde A}' \,, \quad \text{and} \quad \mat{\tilde A}^{\{\infty\}} = \exp\left(\frac{\mat A}{N}\right) = \mat{\tilde A} \,.
 \end{align*}
-Specifically, $\mat{\tilde A}^{\{2\}}$ corresponds to the midpoint method, and $\mat{\tilde A}^{\{4\}}$ to the canonical Runge-Kutta integrator.
-Note that the asymptotic complexity of computing $\mat{\tilde A}^{\{p\}} \vec m_t$ is still in $\mathcal{O}(q)$.
+Specifically, $\smash{\mat{\tilde A}^{\{2\}}}$ corresponds to the midpoint method, and $\smash{\mat{\tilde A}^{\{4\}}}$ to the canonical Runge-Kutta integrator.
+Note that the asymptotic complexity of computing $\smash{\mat{\tilde A}^{\{p\}}} \vec m_t$ is still in $\mathcal{O}(q)$.
 Runge-Kutta methods consist of $p$ nested Euler steps, all of which can be evaluated using \Cref{alg:ldn_euler}.
 
 \begin{figure}
