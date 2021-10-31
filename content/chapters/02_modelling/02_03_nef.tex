@@ -602,7 +602,7 @@ However, for smaller firing rates, the neural dynamics can have a significant im
 For example, for maximum firing rates below about $\SI{50}{\per\second}$, the sub-threshold low-pass dynamics of the \LIF neuron begin to have a moderate effect on the neural dynamics.
 This is depicted in \Cref{fig:neural_dynamics_firing_rates}.
 
-While these rate-dependent effects are relatively small, more complex neuron models possess strong internal dynamics.
+While these rate-dependent effects are relatively small, more complex neuron models possess strong intrinsic dynamics.
 For example, the adaptive \LIF (\ALIF) neuron model \citep[Chapter~14]{koch1999biophysics} accounts for firing rate adaptation; that is, each output spike increases the current required to evoke another output spike.
 This can be modelled as an inhibitory current resulting from low-pass filtering the neuron's output spike train.
 As demonstrated by \citet[Chapter~7]{tripp2009search}, the internal dynamics of the \ALIF neuron model can, under certain circumstances, be exploited to implement arbitrary dynamics using a variant of the equations derived for the \NEF dynamics principle.
@@ -612,8 +612,7 @@ As we saw in \Cref{sec:synaptic_transmission}, the synaptic time-constant can va
 We also saw that synaptic transmission is better modelled by higher-order filters.
 \Citet{voelker2018improving} discuss methods to generalise the dynamics principle to arbitrary synaptic filters; however, these methods require access to the input signal differentials.
 
-In Chapter~4, we suggest the concept of \enquote{temporal tuning curves} to---at least partially---account for these issues.
+In \Cref{chp:temporal_tuning}, we suggest the concept of \enquote{temporal tuning curves} to---at least partially---account for these issues.
 Temporal tuning curves are a direct extension of standard \NEF tuning curves, and are inspired by the concept of temporal receptive fields.
 In essence, we treat both synaptic and neural dynamics as temporal resources that can be harnessed to approximate a desired temporal tuning by solving a simple least-squares problem.
-This naturally extends the \NEF and unifies the approaches described by Tripp and Voelker in a systematic way.
-% Add reference to Chapter~4
+This naturally extends the \NEF and, to an extent, unifies the approaches described by Tripp and Voelker systematically.

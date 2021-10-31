@@ -122,7 +122,7 @@ This works (cf.~\Cref{fig:linearly_independent_tuning}), but, curiously, impleme
 From our experience, networks constructed by explicitly choosing $\mathfrak{e}_i$ can perform similarly (in terms of delay decoding errors), but do not outperform networks linearly combining orthogonal basis functions.
 This is likely because this approach often implies using highly redundant and non-orthogonal basis functions.
 Typically, the first few singular values of these (discretised) bases decays rapidly (cf.~\Cref{fig:linearly_independent_tuning_b}).
-Hence, although we can theoretically decode more functions (fewer singular values are zero), this requires larger decoding weights compared to an orthonormal basis, thus amplifying the noise present in spiking neural network.
+Hence, although we can theoretically decode more functions (fewer singular values are zero), this requires larger decoding weights compared to an orthonormal basis, thus amplifying the noise present in spiking neural networks.
 
 
 \subsubsection{Uniform activation sampling}
@@ -572,7 +572,7 @@ Forced pendulums are found in most robotic actuators and can, under some conditi
 As is depicted in \Cref{fig:pendulum_overview}, we apply a low-pass filtered white noise signal $\tau(t)$ as a torque to the rotational joint of a simulated pendulum.%
 \footnote{We use our library \emph{PyKinSim} (\url{https://github.com/astoeckel/pykinsim}) as a kinematic chain simulator.}
 Care has been taken to choose the frequencies and amplitude of $\tau(t)$ such that the pendulum regularly switches between a resonance mode---where the pendulum merely oscillates with its approximate resonance period $2 \pi \sqrt{L g^{-1}}$---and a mode where the pendulum is more directly influenced by $\tau(t)$.
-This is to some degree visible in the two rightmost plots of \Cref{fig:pendulum_overview_c}.
+These modes are to some degree visible in the two rightmost plots of \Cref{fig:pendulum_overview_c}.
 
 Our spatiotemporal neuron population from the last subsection ($d = 2$, $q = 5$, $n = 1000$) receives both the torque $\tau(t)$ and a time-delayed version of the pendulum joint angle $\phi(t - \theta')$, where $\theta' = \SI{0.75}{\second}$.
 Inputs to the network are rescaled to the interval $[-1, 1]$.
@@ -616,23 +616,85 @@ Possible sources for error are the relatively small $q$, the limited neural reso
 Interesting future work includes exploring the relationship between this kind of adaptive filter and hierarchical pedictive coding networks based on a more general formalisation of Kalman filtering \citep{bastos2012canonical}.
 We discuss adaptive filters in the context of a biologically constrained model of the cerebellum in \Cref{chp:cerebellum}.
 
-%\begin{itemize}
-%	\item Using the spatiotemporal network we can build an adaptive filter that learns to predict a nonlinear dynamical systems!
-%	\item Example: Pendulum. Input is the torque $\tau(t)$ and the delayed observed angle $\phi(t - \theta)$. Target is actual angle $\phi(t)$
-%	\item Use PES learning rule
-%	\item System learns to output the non-delayed angle! $\Rightarrow$ System learns how the torque over time will affect the angle $\Rightarrow$ We are learning the nonlinear dynamics!
-%	\item Will provide another example (the cerebellum model) in the next chapter.
-%\end{itemize}
-
 \clearpage
 
 \subsection{Accounting for Intrinsic Neural Dynamics}
 \label{sec:temporal_tuning_neural_dynamics}
 
-\begin{itemize}
-	\item Can modify eq. 4.7 to account for neural dynamics. Must find input current that produces the intended output current.
-	\item Simple for our $n$-LIF neurons, where we know that the passive dendritic tree acts as a series of low-pass filters. More complex all other cases. See Duggins' work.
-	\item Simple example: population of \LIF neurons with low firing rates; neural dynamics play a significant role in the overall network dynamics. Implementing an integrator is not successful.
-	\item In eq. 4.7 record the output spike train $a$ and the \enquote{neutral} output spike train $a'$ from a $\Delta\Sigma$ modulator. Use least squares to solve for a causal filter that maps from $a$ onto $a'$. Use that in eq. 4.7.
-	\item Note that neural dynamics may also be useful; trivial case: if the neuron has some dynamics, then we can easily realise these dynamics.
-\end{itemize}
+So far we focused on synaptic filters as the primary temporal resource in spiking neural networks.
+However, as we mentioned several times throughout this thesis, neurons themselves can be a significant source of dynamics.
+Our temporal tuning approach suggests a way to account for neural dynamics while solving for weights; however, this is by no means a one-size-fits-all solution for every neuron model.
+Below, we discuss the abstract optimisation problem, point out potential solutions, and demonstrate that we can account for \ALIF dynamics.
+
+\subsubsection{Optimisation problem}
+Remember that our temporal tuning paradigm assigns tuning properties to each neuron $i$---given some input signal $\mathfrak{x}_k$, we define a desired output rate $a_i(\mathfrak{x}_k)$.
+We then solve for weights $w_{ij}$ that, assuming that the pre-neurons $j$ adhere to their normative tuning, decode a current $J_i(\mathfrak{x}_k)$ that evokes the desired rate.
+The mapping between currents and rates is according to a \emph{static} response curve $G[J]$.
+It holds $a_i(\mathfrak{x}_k) = G[J_i(\mathfrak{x}_k)]$.
+
+If we would like to account for intrinsic neural dynamics, then we can no longer assume static response curves.
+Instead, we must model the average firing rate of a neuron depending on its input current history; we have a \emph{temporal} response curve $\Omega[\mathfrak{J}] : (\mathbb{R}^- \longrightarrow \mathbb{R}) \longrightarrow \mathbb{R}^+$, where $\mathfrak{J}$ is a signal describing the past post-synaptic currents, and $\Omega[\mathfrak{J}]$ is the rate at $t = 0$.
+
+Since our weight optimisation problem is in current space, we somehow need to map from the rate determined by the tuning curve $a_i(\mathfrak{x}_k)$ onto a current.
+More precisely we need a function of the form $\Omega^{-1}[\mathfrak{a}] : (\mathbb{R}^- \longrightarrow \mathbb{R}^+) \longrightarrow \mathbb{R}$.%
+\footnote{Note that we write $\Omega^{-1}$ only for notational purposes; this is not strictly speaking the mathematical inverse of $\Omega$.
+Since $\Omega$ is unlikely to be bijective, $\Omega^{-1}$ is ill-defined.
+Furthermore, having $\Omega^{-1}$ only depend on the output history may not be sufficient for complex neuron models; the entire input history may play a role in determining the \enquote{correct} input current.
+It is unclear how this could be incorporated into our optimisation problem.
+}
+Given a desired output rate signal $\mathfrak{a}$, this function returns the post-synaptic current $J$ that should be injected into the neuron in the present, at $t = 0$.
+Now, our optimisation problem in \cref{eqn:weight_optimise_currents_temporal} becomes
+\begin{align}
+	E = \sum\nolimits_{k = 1}^N \Bigl[
+		\Omega^{-1}[\mathfrak{a}_i(f(\mathfrak{x}_k)] -
+		\!\sum\nolimits_{j = 1}^m w_{ij} (h_{ij} \! \ast \! \mathfrak{a}_j(\mathfrak{x}_k))(0) \,\mathrm{d}\tau
+	\Bigr]^2 \!, \;\;
+	\text{where} \; (\mathfrak{a}_i(\mathfrak{x}_k))(t) = a_i(\mathfrak{x}_k \! \ast \! \delta_{-t}) \,.
+	\label{eqn:weight_optimise_currents_temporal_nonlin}
+\end{align}
+While this optimisation problem is still in linear least-squares form, $\Omega^{-1}$ is typically a rather complex spatiotemporal function.
+Correspondingly, we can only expect to solve \cref{eqn:weight_optimise_currents_temporal_nonlin} with a small error if the pre-population tuning forms an expressive spatiotemporal function basis.
+
+Determining $\Omega^{-1}$ is generally difficult, and, for most neuron models, a research project of its own.
+One approach explored by \citet{hunsberger2016system} is to employ linear-nonlinear models of the form $\Omega[\mathfrak{J}] = G[(\mathfrak{J} \ast \mathfrak{h})(0)]$.
+In this case, we do not necessarily have to use \cref{eqn:weight_optimise_currents_temporal_nonlin}, but can simply treat $\mathfrak{h}$ as an additional filter next to the $h_{ij}$ in \cref{eqn:weight_optimise_currents_temporal}; this will implicity solve for $\Omega^{-1}$.
+
+The following is another method for implicitly determining $\Omega^{-1}$---however, as of writing, this still requires further investigation.
+The basic idea is to iteratively compensate for errors introduced by the intrinsic neural dynamics.
+That is, after solving for weights as in \cref{eqn:weight_optimise_currents_temporal}, we can determine the actual population response $\hat a_i(\mathfrak{x}_k)$ for synthetic pre-population spike trains that perfectly follow the desired tuning $\mathfrak{a}_j(\mathfrak{x}_k)$ (cf.~\Cref{fig:alif_a}).
+Using the deviation from the desired output rate $\epsilon_{ik} = \hat a_i(\mathfrak{x}_k) - a_i(\mathfrak{x}_k)$, we estimate an offset current $J_{ik}$ that compensates for $\epsilon_{ik}$.
+We add this $J_{ik}$ to \cref{eqn:weight_optimise_currents_temporal}, solve for new weights, and repeat.
+This is similar to an approach described by \citet{duggins2017incorporating} that has been successfully applied to biologically detailed neurons.
+
+\subsubsection{Accounting for \ALIF dynamics}
+$\Omega^{-1}(\mathfrak{a})$ is readily available for the adaptive leaky integrate-and-fire model (\ALIF).
+The \ALIF model accounts for firing-rate adaptation observed in biological neurons (cf.~\Cref{fig:izhikevich_whichmod_figure1f}).
+This is accomplished by increasing an exponentially decaying adaptation variable $n(t)$ by a constant amount $n_0$ every time the neuron spikes \citep{treves1993meanfield}.
+The specific \ALIF model discussed here applies this spike-triggered adaptation mechanism to a current-based \LIF neuron---the adaptation variable $n(t)$ is simply subtracted from the input current $J(t)$.
+Despite its simplicity, this model can be made to fit empirical spike data from cortical pyramidal cells well \citep{camera2004minimal}.
+
+\begin{figure}
+	\includegraphics{media/chapters/04_temporal_tuning/04_03/alif_dynamics.pdf}%
+	{\phantomsubcaption\label{fig:alif_a}}%
+	{\phantomsubcaption\label{fig:alif_b}}%
+	\caption[Accounting for ALIF dynamics]{
+		Accounting for \ALIF dynamics.
+		\emph{Left:} Recurrent network implementing a \SI{2}{\hertz} undampened oscillator with $100$ standard \LIF neurons (maximum rates at \SI{200}{\per\second}).
+		\emph{Middle:} Same network with \ALIF neurons; not taking dynamics into account.
+		\emph{Right:} Compensating for the \ALIF dynamics.
+		\textbf{(A)} Comparison between the actual response $\hat{\mathfrak{a}}_i(\mathfrak{x}_k)$ of a neuron $i$ for the $k$th sample $\mathfrak{x}_k$ to the expected response $\mathfrak{a}_i(\mathfrak{x}_k)$.
+		The neuron receives synthetic spike trains matching the expected pre-population rates.
+		\textbf{(B)} Decoded system state of the freely running network. Without compensation, the low-pass dynamics of the \ALIF neuron cause a rapid decay; with compensation the network behaves as expected.
+	}
+	\label{fig:alif}
+\end{figure}
+
+To account for the \ALIF dynamics in \cref{eqn:weight_optimise_currents_temporal_nonlin}, we merely need to decode the adaptation current from the pre-population.
+Given the adaptation decay time-constant $\tau_\mathrm{n}$, we have
+\begin{align*}
+	\Omega^{-1}(\mathfrak{a}) &= G^{-1}[\mathfrak{a}(0)] + n_0 (\mathfrak{a} \ast h_\mathrm{n})(0) \,, & \text{where } h_\mathrm{n}(t) = \tau_\mathrm{n}^{-1} \exp(-t \tau_\mathrm{n}) \,,
+\end{align*}
+and where $G^{-1}[a]$ is the current required to evoke a rate $a$ according to the static \LIF model.
+We demonstrate successfully accounting for \ALIF dynamics ($\tau_\mathrm{n} = \SI{100}{\milli\second}$, $n_0 = \SI{0.01}{\nano\ampere}$) in this way using \cref{eqn:weight_optimise_currents_temporal_nonlin} in \Cref{fig:alif}.
+The only requirement for this to work is that the pre-population forms a temporal basis from which $h_\mathrm{n}$ can be decoded.
+In a sense, if we tune our neurons to possess low-pass dynamics, then this approach allows us to \emph{harness} the \ALIF dynamics---after all, the \ALIF neuron intrinsically implements a low-pass filter (cf.~\Cref{fig:neural_dynamics_firing_rates}).

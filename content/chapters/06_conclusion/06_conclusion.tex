@@ -40,7 +40,7 @@ Ultimately, the answer to this question depends on the purpose of the model.
 A model focusing on Purkinje cell plasticity should of course consider climbing firbe complex spikes, whereas an abstract learning rule may be sufficient in a more phenomenological model of eyeblink conditioning, such as the one discussed in \Cref{chp:cerebellum}.
 
 This is not to discourage the reader from integrating more complex neuron models into \NEF networks.
-To the contrary, we believe that our temporal tuning paradigm lays the groundwork for accomplishing this, although more research is required to move beyond the simple examples discussed in \Cref{sec:temporal_tuning_neural_dynamics}.
+To the contrary, we believe that our temporal tuning paradigm lays the groundwork for accomplishing this, although more research is required to move beyond the simple \ALIF example discussed in \Cref{sec:temporal_tuning_neural_dynamics}.
 
 \subsubsection{Proposed modelling projects}
 All this being said, the usefulness of the \NEF as a modelling technique---including the extensions presented in this thesis---arguably depends on the number of low- and high-level phenomena that can be successfully described.
@@ -73,7 +73,7 @@ Constructing each of these models is a small research project on its own (simila
 \subsubsection{Simulator software and neuromorphic hardware}
 
 As mentioned in \Cref{sec:temporal_tuning_conclusion}, a major remaining task is a better integration of our work into \emph{NengoBio} (cf.~\Cref{app:nengo_bio}).
-So far, \emph{NengoBio} only supports two-compartment \LIF neurons (instead of general \nlif neurons; \Cref{sec:nlif}), and does not implement temporal tuning; the experiments regarding temporal tuning performed in this thesis were solely implemented using prototype software.
+So far \emph{NengoBio} only supports two-compartment \LIF neurons (instead of general \nlif neurons; \Cref{sec:nlif}), and does not implement temporal tuning; the experiments regarding temporal tuning performed in this thesis were solely implemented using prototype software.
 
 While, as mentioned in \Cref{sec:temporal_tuning_conclusion}, deciding on a user-friendly \API for temporal tuning is one challenge, another difficulty lies in the run-time costs associated with simulating networks using our extensions.
 This includes subthresholed relaxation (\Cref{sec:nef_subthreshold}), user-defined diverse temporal tuning (cf.,~\Cref{fig:linearly_independent_tuning}), and, in particular, heterogeneous synaptic filters (\Cref{sec:solve_dynamics_nonlinear_neurons}).
