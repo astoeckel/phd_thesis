@@ -64,7 +64,7 @@ def mk_h(q, N, p=4):
     return H
 
 
-fig, axs = plt.subplots(1, 4, figsize=(8.0, 1.25))
+fig, axs = plt.subplots(1, 4, figsize=(8.0, 1.2))
 
 q = 101
 Ns = np.geomspace(200, 1000, axs.size, dtype=int)
@@ -96,7 +96,7 @@ for i, ax in enumerate(axs.flat):
             ha="center",
             va="center")
     ax.text(0.95,
-            0.85,
+            0.7,
             "$N = {}$\n$\\Sigma = {:0.1f}$".format(Ns[i], np.sum(S)),
             ha="right",
             va="baseline",
@@ -112,6 +112,7 @@ for i, ax in enumerate(axs.flat):
     ax.set_xticks(np.linspace(0, H.shape[1] / Ns[i], 7), minor=True)
     ax.spines["left"].set_visible(False)
     ax.set_yticks([])
+    ax.set_xlabel("Time $t$ (s)")
 
 utils.save(fig)
 
