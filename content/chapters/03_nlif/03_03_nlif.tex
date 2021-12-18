@@ -149,7 +149,7 @@ Let $k$ be the number of non-static input channels, and $\vng \in \mathbb{R}^k$ 
 This channel state is generally linear in the synaptic weights and the pre-activities (cf.~\Cref{sec:nef_nonlinear}).
 We have
 \begin{align}
-	\frac{d}{dt} \vCm \circ \vvMem(t)
+	\frac{\mathrm{d}}{\mathrm{d}t} \vCm \circ \vvMem(t)
 	&= \mnA\bigl[\vng(t)\bigr] \vvMem(t) + \vnb\bigl[\vng(t)\bigr]
 	 = -\bigl[\mnL + \mathrm{diag}\bigl(\vnap + \mnAp \vng(t)\bigr)\bigr] \vvMem(t) + \big[\vnbp + \mnAp \vng(t)\big] \,.
 	\label{eqn:nlif_matrix}
