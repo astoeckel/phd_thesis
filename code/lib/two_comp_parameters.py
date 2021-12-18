@@ -301,7 +301,7 @@ N_SIGMAS = 60
 N_REPEAT = 100
 
 # Number of regularisation factors to try
-N_REGS = 128
+N_REGS = 32
 
 # Sigmas to use
 SIGMAS = np.logspace(np.log10(0.075), 1, N_SIGMAS)[::-1]

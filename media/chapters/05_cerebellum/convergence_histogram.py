@@ -82,6 +82,7 @@ Ws_hist, Ws_mag = load_weight_hist(utils.datafile('weights.tar'),
 BIAS_MODE_TO_LABEL = {
     'realistic_pcn_intercepts': 'Realistic PCN Intercepts',
     'jbias_very_realistic_pcn_intercepts': 'Realistic PCN Intercepts',
+    'jbias_realistic_pcn_intercepts': 'Realistic PCN Intercepts',
     'uniform_pcn_intercepts': 'Uniform PCN Intercepts',
     'use_jbias': 'Realistic PCN Intercepts, with $J_\\mathrm{bias}$'
 }
