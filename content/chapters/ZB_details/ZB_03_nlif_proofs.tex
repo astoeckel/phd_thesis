@@ -5,7 +5,7 @@
 
 In this section, we provide proofs for the claims made in \Cref{chp:nlif}, where we discussed theoretical aspects of neural networks in general, and dendritic computation in particular.
 
-\subsection{Proof of \Cref{thm:xor_general}}
+\subsection{Proof of Theorem~3.1}
 
 In \Cref{sec:additive_net} we claimed that there are always functions $f$ that cannot be approximated using an additive network with a fixed nonlinearity $\sigma$.
 We prove this by constructing an $f$ that is constant along the sides of a rectangle, but maps onto a different value on the inside.
@@ -25,7 +25,7 @@ Since $\sigma$ is continuous, the functions $f_1(x_1)$, $f_2(x_2)$ must be const
 However, with $f_1$ and $f_2$ being constant over the indicated intervals, the second condition cannot be met. Hence, $f$ is a function that cannot be computed using additive networks, independent of $\sigma$.
 \end{proof}
 
-\subsection{Proof of Theorem~\ref{thm:weak_xor}}
+\subsection{Proof of Theorem~3.2}
 \label{app:thm_weak_xor}
 
 \Citet[Chapter~2]{minsky1987perceptrons} note that the Perceptron cannot compute \XOR.
@@ -46,7 +46,7 @@ Further expanding this definition by substituting in our additive network $\phi(
 	Assume without loss of generality that $\sigma$ is monotonically increasing. Then, the first line implies $\big(b_0' < b_1' \big) \wedge \big( b_0' > b_1' \big)$ and the second line $\big(a_0' < a_1' \big) \wedge \big( a_0' > a_1' \big)$. \Lightning
 \end{proof}
 
-\subsection{Proof of \Cref{thm:multiplication}}
+\subsection{Proof of Theorem~3.3}
 \label{app:thm_multiplication}
 
 Additive networks are capable of solving the weak \XOR problem if we allow a non-monotonic neural nonlinearity $\sigma$.
@@ -88,7 +88,7 @@ But, according to our assumption, it should also hold that
 However, since the values passed to $\sigma$ overlap in both cases, this is a contradiction. \Lightning
 \end{proof}
 
-\subsection{Discussion of \Cref{thm:two_layer_universal}}
+\subsection{Discussion of Theorem~3.4}
 \label{app:thm_two_layer_universal}
 
 \begin{figure}
@@ -121,7 +121,7 @@ Similarly, for higher-dimensional representations, we can linearly combine tunin
 As we increase the number of neurons, and if the conditions stated in the theorem are met, the enclosed regions converge to individual points.
 We can approximate any function $f(\vec x)$ by scaling and summing the individual decodings.
 
-\subsection{Proof of \Cref{thm:nlif_convergence}}
+\subsection{Proof of Theorem~3.6}
 \label{app:thm_nlif_convergence}
 
 Back in \Cref{sec:nlif_subth_properties} we claimed that the feedback matrix of the \nlif dynamical system is stable and does not possess any oscillatory behaviour.
@@ -247,7 +247,7 @@ Our original claim follows trivially.
 %This equality can only hold if $\vec x$ is orthogonal to $\vec{\epsilon}$, i.e., $\langle \vec x, \vec \epsilon \rangle = 0$.
 %\end{proof}
 
-\subsection{Proof of \Cref{thm:nlif_product_terms}}
+\subsection{Proof of Theorem~3.7}
 \label{app:nlif_product_terms}
 
 We stated in \Cref{sec:nlif_examples} that the dendritic nonlinearity $H$ of an $n$-LIF neuron only contains product terms between the input channels of different compartments, but not between input channels of the same compartment.
@@ -354,7 +354,7 @@ Hence, the entry $(\adj(\mat{\tilde C}[\vec g]))_{k\ell}$ neither contains the t
 This concludes our proof.
 \end{proof}
 
-\subsection{Proof of \Cref{thm:two_comp_xor}}
+\subsection{Proof of Theorem~3.8}
 \label{app:thm_two_comp_xor}
 
 We noted in \Cref{sec:nlif_examples} that the two-compartment \LIF nonlinearity cannot be used to solve the weak \XOR problem.
