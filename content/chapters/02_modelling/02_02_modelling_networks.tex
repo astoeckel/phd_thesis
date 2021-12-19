@@ -126,7 +126,7 @@ Typically, the rise-time of $g(t)$ is relatively short.
 Correspondingly, the second-order low-pass filter can be approximated by a first-order dynamical system with decay-time $\tau$.
 Mathematically, and as depicted the lower portion of \Cref{fig:synapse_filter_examples_traces}, the dynamics are
 \begin{align}
-	\dot g(t) &= -\frac{g(t)}{\tau} + \sum\nolimits_{i}  w_i \sum\nolimits_{j} \delta(t_{ij} - t) \,.
+	\dot g(t) &= -\frac{g(t)}{\tau} + \sum\nolimits_{i}  w_i \sum\nolimits_{j} \delta(t - t_{ij}) \,.
 	\label{eqn:low_pass_first_order}
 \end{align}
 
@@ -136,9 +136,9 @@ The above synaptic dynamics (eqs.~\ref{eqn:low_pass_second_order}, \ref{eqn:low_
 \LTI systems are fully characterised by their \emph{impulse response} $h(t)$ and can be replaced by a convolution (\enquote{$\ast$}) between $h(t)$ and the weighted input spike-train $u(t)$:
 \begin{align}
 	g(t)
-		&= (h \ast u)(t)
-		 = \int_0^\infty h(\tau) u(t - \tau) \,\mathrm{d}\tau
-		 = \int_0^\infty h(\tau) \sum\nolimits_{i}  w_i \sum\nolimits_{j} \delta(t_{ij} - \tau) \,\mathrm{d}\tau \,.
+		&= (u \ast h)(t)
+		 = \int_0^\infty u(t - t') h(t') \,\D t'
+		 = \int_0^\infty h(t') \sum\nolimits_{i}  w_i \sum\nolimits_{j} \delta(t - t_{ij} - t') \,\D t' \,.
 	\label{eqn:synapse_impulse}
 \end{align}
 For the first-order dynamics in \cref{eqn:low_pass_first_order}, the impulse response is $h(t) = \exp(-t/\tau)$ for $t \geq 0$ (and $h(t)= 0$ if $t < 0$); impulse responses of the second-order system are depicted in \Cref{fig:synapse_filter_examples_time_constants}.

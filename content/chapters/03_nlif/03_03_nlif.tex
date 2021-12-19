@@ -149,9 +149,9 @@ Let $k$ be the number of non-static input channels, and $\vng \in \mathbb{R}^k$ 
 This channel state is generally linear in the synaptic weights and the pre-activities (cf.~\Cref{sec:nef_nonlinear}).
 We have
 \begin{align}
-	\frac{d}{dt} \vCm \circ \vvMem(t)
+	\frac{\mathrm{d}}{\mathrm{d}t} \vCm \circ \vvMem(t)
 	&= \mnA\bigl[\vng(t)\bigr] \vvMem(t) + \vnb\bigl[\vng(t)\bigr]
-	 = -\bigl[\mnL + \mathrm{diag}\bigl(\vnap + \mnAp \vng(t)\bigr)\bigr] \vvMem(t) + \big[\vnbp + \mnAp \vng(t)\big] \,.
+	 = -\bigl[\mnL + \mathrm{diag}\bigl(\vnap + \mnAp \vng(t)\bigr)\bigr] \vvMem(t) + \big[\vnbp + \mnBp \vng(t)\big] \,.
 	\label{eqn:nlif_matrix}
 \end{align}
 Here, $\vCm \in \mathbb{R}^n$ is a vector of membrane capacitances, \enquote{$\circ$} denotes elementwise multiplication, $\mnA[\vng(t)] \in \mathbb{R}^{n \times n}$ is the \enquote{voltage feedback matrix}, and $\vnb[\vng(t)] \in \mathbb{R}^n$ describes the input to the system.
@@ -176,7 +176,7 @@ More formally (see \Cref{app:thm_nlif_convergence} for a proof):
 \begin{restatable}{theorem}{ThmNlifConvergence}
 \label{thm:nlif_convergence}
 Consider an $n$-LIF neuron with at least one static conductance-based channel and any input vector \vng with non-negative entries for conductance-based input channels.
-In this case, the feedback matrix $\mnA[\vng] \diag(\vCm)^{-1}$ is negative definite.
+In this case, the feedback matrix $\mnA[\vng] \diag(\vCm)^{-1}$ is negative definite for any constant input vector $\vng$.
 \end{restatable}
 This is quite intuitive from a physical perspective.
 The \nlif neuron essentially is a resistor-capacitor network.
@@ -407,7 +407,7 @@ Hence, we find it useful to at least provide the expanded dendritic nonlinearity
 \subsubsection{Single-compartment LIF neuron with current-based input}
 Expanding \cref{eqn:h_model} for the model depicted in \Cref{fig:nlif_a} using \Cref{tbl:nlif_matrices_reduced} yields 
 \begin{align*}
-	H(J_\mathrm{E}, J_\mathrm{I}) = J_\mathrm{E} - J_\mathrm{E} + g_\mathrm{L}(E_\mathrm{L} - \vSom) \,.
+	H(J_\mathrm{E}, J_\mathrm{I}) = J_\mathrm{E} - J_\mathrm{I} + g_\mathrm{L}(E_\mathrm{L} - \vSom) \,.
 \end{align*}
 This function is visualised in \Cref{fig:dendritic_nonlinearity_comparison_a}. To obtain the \LIF-equivalent current we subtract the leak current, as mentioned above.
 Using the fully parameterised version of the equations, and renaming the parameters for better readability, we obtain the following affine model:
@@ -448,7 +448,7 @@ Independent experiments by \citet{kiselev2020approximating} further support this
 Hence, single-compartment \LIF neurons with conductance-based synapses are rather uninteresting from a computational perspective.
 
 \subsubsection{Two-compartment LIF neuron}
-For the model depicted in \Cref{fig:nlif_b} we have
+For the model depicted in \Cref{fig:nlif_c} we have
 \begin{align}
 	H(g_\mathrm{E}, g_\mathrm{I}) = c_{12} \left(\frac{\vSom c_\mathrm{12} + E_\mathrm{L} g_\mathrm{L} + E_\mathrm{E} g_\mathrm{E} + E_\mathrm{I} g_\mathrm{I}}{c_\mathrm{12} + g_\mathrm{L} + g_\mathrm{E} + g_\mathrm{I}} - \vSom \right) + g_\mathrm{L}(E_\mathrm{L} - \vSom) \,.
 	\label{eqn:two_comp_lif_natural}
