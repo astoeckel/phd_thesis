@@ -140,7 +140,6 @@ For example, some cells only react to edges moving in a certain direction at a s
 %Historically, models of these directionality effects relied on nonlinear interactions in small model circuits \citep[e.g.,][]{emerson1977simple}.
 %Theoretical work by \citet{watson1983look,adelson1985spatiotemporal} suggested that neural activity could instead be modelled linearly.
 One possible way to construct a model of this spatiotemporal tuning is to use a \emph{space-time receptive field} $\mathfrak{e}(t; \xi_1, \xi_2)$, where $\xi_1$ and $\xi_2$ are coordinates in the visual field and $t \geq 0$ is time (\cite{watson1983look,adelson1985spatiotemporal}; see \cite{carandini1999linearity}, for a review).
-%\footnote{Since the space-time receptive field acts like a impulse response, non-negativity of $t$ is required to maintain causality of the filter.}
 Given stimulus history $\mathfrak{x}(t; \xi_1, \xi_2)$, the neural activity $a(\mathfrak{x})$ at $t = 0$ can be modelled by convolving over the instantaneous inner products between $\mathfrak{x}$ and $\mathfrak{e}$.
 Borrowing the gain and bias terms $\alpha$, $\beta$, as well as the response curve $G$ from the \NEF, we have
 \begin{align}

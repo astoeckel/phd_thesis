@@ -19,14 +19,6 @@ Iterative algorithms based on quadratic programs for solving non-convex optimisa
 Unfortunately, there are few guarantees with respect to the quality of the solution obtained with such iterative methods.
 %Generally speaking, this is because non-convex optimisation is, special cases aside, much harder than convex optimisation.
 Special cases such as the rational functions encountered in the two-compartment \LIF neuron aside, finding the global optimum of non-convex functions is generally \enquote{hopeless} in that this problem is NP-hard \citep[e.g.,]{sun2016when}.
-% TODO: Better reference
-%\citep[e.g.,][]{rockafellar1993lagrange}. 
-%\footnote{\citet{rockafellar1993lagrange} famously writes \enquote{In fact the great watershed in optimization isn't between linearity and nonlinearity, but convexity and
-%nonconvexity}.}
-%Of course, as for example discussed in detail by \citet{sun2016when}, there are classes of non-convex functions where the global optimum is equal to the local optimum.
-%However, this is unfortunately not the case in our application.
-%}
-%Correspondingly, there is no guarantee that a general-purpose weight or parameter solver will converge to the globally optimal solution.
 
 Still, and as we demonstrate below, we are able to exploit the structure of the surrogate nonlinearity model \Hden to construct an \SQP that outperforms quasi-Newton methods such as L-BFGS in terms of speed of convergence, while being highly competitive in the final test error.
 We continue by using our optimisation techniques to repeat the experiments pertaining the theoretical power of \nlif neurons and the actual performance in spiking neural networks.

@@ -362,20 +362,13 @@ As we discussed at the beginning of this chapter, it can be desirable build mode
 	\label{fig:visual_cortex_tuning}
 \end{figure}
 
-%Given that we can simulate large biological systems at different levels of abstraction, the primary challenge is to construct networks that actually give rise to the behaviours observed in nature.
-%Unfortunately, in many cases, too much about the brain is still unknown to successfully build such models.
-%This is particularly true for brain regions involved in higher level cognition, and that, in terms of connectivity, are farther away from the periphery.
-%Fortunately, brain regions \emph{closer} to the periphery are, relatively speaking, quite well understood.
-%\footnote{Neuroscience textbooks such as \citet{kandel2012principles} discuss the neural circuitry of brain regions involved in sensory and motor processing in great detail, while chapters concerning higher-level cognitive tasks mostly report behavioural observations and coarse measurements such as fMRI scans.}
 There are two important concepts that shed some light onto the organisation of brain networks---at least those brain networks involved in sensory processing: \emph{tuning curves} and \emph{receptive fields}.
 In turn, these ideas motivate \emph{population codes}, which we heavily rely on in the context of our modelling tool, the Neural Engineering Framework---we discuss this in the next section.
 
 \subsubsection{Tuning curves}
-%Early studies on these concepts were conducted by \citeauthor{hubel1959receptive}.
 In a famous \citeyear{hubel1959receptive} experiment (cf.~\Cref{fig:visual_cortex_tuning}), Hubel and Wiesel present a visual stimulus in the form of a bright rectangle at different orientations $\varphi$ to an experimental animal.
 At the same time, the activity of a neuron in the animal's visual cortex is recorded.
 This characterizes how the stimulus propagates through the brain up to the recording site.
-%We characterize neurons in terms of their own physiological properties \emph{and} in terms of the preceding network connectivity.
 
 In the recording depicted in \Cref{fig:visual_cortex_tuning}, we find that the neuron is most sensitive to---or, \emph{tuned} to---a certain orientation $\varphi$.
 We could say that in this specific case, vertical bars are the \emph{preferred stimulus} of the neuron.

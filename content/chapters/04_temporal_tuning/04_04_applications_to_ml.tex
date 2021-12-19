@@ -275,36 +275,6 @@ Still, $N$ remains slightly superlinear in $q$ (i.e., $N \approx q^{\frac{4}3}$)
 	\label{fig:modified_euler_stress}
 \end{figure}
 
-
-%\subsubsection{Exploiting LDN basis low-pass characteristics}
-%
-%This quadratic dependency between $N$ and $q$ negates some of the computational efficiency gains from switching to the $\mathcal{O}(q)$ update.
-%After all, processing an entire window of length $\theta$ now effectively requires $\mathcal{O}(q^3)$ operations.
-%
-%\begin{figure}
-%	\centering
-%	\includegraphics{media/chapters/04_temporal_tuning/04_04/ldn_spectrum.pdf}%
-%	{\phantomsubcaption\label{fig:ldn_spectrum_a}}%
-%	{\phantomsubcaption\label{fig:ldn_spectrum_b}}%
-%	{\phantomsubcaption\label{fig:ldn_spectrum_c}}%
-%	\caption[LDN basis power spectrum and low-pass characteristics]{LDN basis power spectrum and low-pass characteristics.
-%	\textbf{(A)} Power spectrum for different $q$ assuming $\theta = 1\,\mathrm{s}$. The LDN system acts as a strong low-pass filter.
-%	\textbf{(B)} Measuring the NRMSE $E$ when removing frequencies above $\hat f$ in a white noise test signal $u(t)$ before representing it in the LDN basis. Data are the mean over $1001$ test signals with $N = 1000$ samples. \textbf{(C)} Extracing the bandlimit frequencies~$\hat f$ for different $q$ from \emph{(B)} that result in a certain representation error $E$ (coloured lines).
-%	}
-%	\label{fig:ldn_spectrum}
-%\end{figure}
-%
-%Taking the low-pass characteristic of the LDN basis into account, we find that we can apply a hard bandlimit with cutoff $\hat f$ to the input without changing the representation much (\Cref{fig:ldn_spectrum_a,fig:ldn_spectrum_b}).%
-%\footnote{One could argue that the fact the the LDN is not a \emph{perfect} low-pass filter may be beneficial in machine learning applications; after all, some information about the higher frequencies is retained and could be extracted by the network.
-%However, our experiments below with the sliding Fourier spectrum---which acts as a perfect low-pass filter---suggest that the high frequencies likely play a lesser role.}
-%Crucially, the relationship between $q$ and $\hat f$ is \emph{sublinear} (\Cref{fig:ldn_spectrum_c}).
-%It can be more time efficient to low-pass filter the input signal, downsample to the Nyquist frequency, i.e., $N \geq 2 \hat f$, and to use the original $\mathcal{O}(q^2)$ ZOH state update.
-%Since $\hat f$, and thus $N$, are sublinear in $q$, we need fewer than $\mathcal{O}(q^3)$ operations to filter a window of length~$\theta$.
-%
-%One caveat of the downsampling technique is the inevitably introduced latency, making it less suited for realtime applications such as robotics.
-%However, as we discuss next, we can take this idea further to derive an---in theory---optimal sliding window transformation that is asymptotically optimal both with respect to memory and computation.
-
-
 \subsection{Efficient Sliding-Window Spectrum Transformations}
 \label{sec:efficient_sliding_window}
 
