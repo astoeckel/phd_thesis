@@ -14,7 +14,7 @@ The \LMU performance has been verified for synthetic benchmarks (\cite{voelker20
 A recent study on \NLP tasks by \citet{chilkuri2021language} suggests that networks based on a variant of the \LMU achieve a ten-times higher data efficiency than Transformers \citep{vaswani2017attention}.
 According to Chilkuri et al., this is comparable to the improvement offered by Transformers over \LSTMpl.
 
-The goal of this section is to explore in how far the success of the \LMU depends on projecting the input signal onto the \emph{Legendre} polynomials, and to further characterize the \LMU time and space complexity.
+The goal of this section is to explore in how far the success of the \LMU depends on projecting the input signal onto the \emph{Legendre} polynomials, and to further characterise the \LMU time and space complexity.
 Specifically, we test how well our modified Fourier system (cf.~\Cref{sec:lti_autoregression}) fares in place of the \LDN system.
 Given that we are no longer in a biological setting, we furthermore test sliding-window transformations that rely on perfect memory.
 
@@ -484,7 +484,7 @@ The neural activities are linearly projected onto a one-hot coded output.
 Note that $q = 468$ is motivated by the amount of memory used by \citet{chandar2019nonsaturating}.
 
 As is customary, we split the MNIST dataset into $50\,000$ training and $10\,000$ validation samples.
-We use a categorical cross-entropy loss function and an Adam optimizer \citep{kingma2015adam} with default parameters over $100$ epochs at a batch size of $100$.
+We use a categorical cross-entropy loss function and an Adam optimiser \citep{kingma2015adam} with default parameters over $100$ epochs at a batch size of $100$.
 The reported test errors are computed for the epoch with the smallest validation error.
 For $q = 468$ the number of trainable parameters is $\approx\num{166000}$.
 Per default, the \FIR filters are fixed and initialised with one of the previously discussed discretised basis transformations with window length $N = 786$ (i.e., the number of pixels).
@@ -797,11 +797,11 @@ Assuming that our sliding-transformation implements a perfect rectangle window, 
 The absolute window width stems from the impulse response of the \LDN and modified Fourier system technically extending beyond $N_i$.
 For good measure, we therefore extend the \FIR filters to be three times as long as the actual window width.
 
-As in the previous experiment, we compare fixed convolutions, including random initialisations, to a version of the network where the convolutions are initialized in the same way, but then trained during training.
+As in the previous experiment, we compare fixed convolutions, including random initialisations, to a version of the network where the convolutions are initialised in the same way, but then trained during training.
 Note that we do not train the extended filters.
 The total number parameters is $2750$; another $476$ parameters are added if the convolutions are trained.
 
-We train the network for $100$ epochs with a batch size of $100$ using a standard Adam optimizer.
+We train the network for $100$ epochs with a batch size of $100$ using a standard Adam optimiser.
 The final test error is computed for the parameters in the epoch with the smallest validation error.
 Our training loss is the \MSE, we report the \NRMSE.
 Note that our results are not directly comparable to those in the literature due to using a different $\tau$ and normalisation of the Mackey-Glass dataset.
@@ -1068,7 +1068,7 @@ Numerical values are given in \Cref{tbl:mackey_glass_results}.}
 Results are given in \Cref{fig:mackey_glass} and \Cref{tbl:mackey_glass_results}; see \Cref{fig:lmu_trajs} for learning curves.
 Overall, all bases perform similarly, with the \LDN outperforming the Fourier and modified Fourier bases.
 The modified Fourier basis performs worst.
-The random and identity initializations result in by far the highest errors, and the \LDN, cosine, and \DLOP filters result in the lowest error.
+The random and identity initialisations result in by far the highest errors, and the \LDN, cosine, and \DLOP filters result in the lowest error.
 Learning the convolution closes the performance-gap between the bases.
 
 \paragraph{Discussion}

@@ -299,7 +299,7 @@ First, the theoretical parameter estimate (e.g., \Cref{tbl:nlif_matrices_reduced
 We use the hyperparameters listed in \Cref{alg:nlif_tr_parameters} for our \QP.
 In our experience, the specific values of these hyperparameters are not especially critical.
 The most important parameter is the soft trust-region weight $\alpha_3 = 10^{-5}$; for this parameter values between $10^{-4}$ and $10^{-6}$ seem to work well.
-As a stochastic gradient descent method, we use the \enquote{Adam} optimizer.
+As a stochastic gradient descent method, we use the \enquote{Adam} optimiser.
 Adam dynamically adapts the learning rate $\eta$ of each parameter based on the first and second gradient moments (i.e., mean and variance; \cite{kingma2015adam}).
 We use a batch size of $N_\mathrm{batch} = 10$ and $\alpha = 0.05$ as a base learning-rate.
 This last parameter was hand-tuned for fastest possible convergence without instabilities.

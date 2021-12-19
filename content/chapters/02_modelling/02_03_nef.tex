@@ -53,9 +53,9 @@ In the case of \NEF models, we can, of course, compare the high-level behaviour 
 The smaller the deviations, the \enquote{better} the original mathematical model.%
 \footnote{Of course, naively evaluating models in this manner does not account for overfitting. The model could inadvertently be tuned to reproduce the behaviour of interest, but not be able to generalise to different scenarios. In contrast to other machine learning approaches, overfitting in this sense is typically less of a problem with \NEF models.
 This is due to the transparency of the training process, only few (typically hand-selected) parameters, and biological constraints, all of which can be seen as regularisation.}
-While such comparisons would also be possible with the high-level model alone, biological constraints can drastically influence the high-level behaviour of the model---hence, the \NEF is a good litmus test for the suitability of a mathematical model to be realized on a neural substrate.
-This is because the \NEF \emph{optimally} implements a set of mathematical equations as an idealized spiking neural network.
-If the model cannot be realized on a spiking neural substrate despite these idealised conditions, it is unlikely that it describes a biological process well.
+While such comparisons would also be possible with the high-level model alone, biological constraints can drastically influence the high-level behaviour of the model---hence, the \NEF is a good litmus test for the suitability of a mathematical model to be realised on a neural substrate.
+This is because the \NEF \emph{optimally} implements a set of mathematical equations as an idealised spiking neural network.
+If the model cannot be realised on a spiking neural substrate despite these idealised conditions, it is unlikely that it describes a biological process well.
 
 \NEF models can also be compared in terms of detailed neurophysiological data, and not just high-level behaviour.
 Because \NEF models are based on a biologically plausible neural substrate, researchers can measure neurophysiological quantities, such as spike trains, local field potentials, or blood oxy\-gen\-ation \citep[Chapters 5.8~\&~9.4]{eliasmith2013how}.
@@ -121,7 +121,7 @@ In the first part of this thesis, we discuss extensions to the \NEF that allow u
 In preparation for these extensions, we now provide a detailed discussion of the aforementioned \enquote{three principles} at the core of the \NEF.
 
 The first two \NEF principles are best explained assuming steady-state average activities, although, as mentioned before, biological neural networks inherently form dynamical systems.
-However, our use of average rate approximations should not be interpreted as the adoption of a \enquote{rate code} by the \NEF, but, as we discuss below, is a convenience for solving the synaptic weight optimization problem.
+However, our use of average rate approximations should not be interpreted as the adoption of a \enquote{rate code} by the \NEF, but, as we discuss below, is a convenience for solving the synaptic weight optimisation problem.
 All optimisations can be done in the spiking domain, but the computational costs are significantly higher~\citep{macneil2011finetuning}.
 
 For now, our goal is to map static equations of the form $\vec y = f(\vec x)$ onto rate approximations of spiking neural networks.
@@ -223,14 +223,14 @@ This could---for example---be accomplished using Bayesian inference, as we demon
 If the number of neurons \Npop in a population is large enough we can, to a very similar effect, just use a linear decoding matrix \Dec (\Cref{fig:nef_representation}; \cite{salinas1994vector}).
 
 The idea is to simply multiply the activities $\vec a$ with a matrix $\Dec \in \mathbb{R}^{d \times \Npop}$ such that the decoded $\vec{\hat x} = \Dec \vec a(\vec x)$ is approximately equal to the encoded $\vec x$, for any $\vec x \in \Xrepr$.
-Under the assumption that the activities $\vec a$ are subject to independent and identically distributed (i.i.d.) zero-mean Gaussian noise with standard-deviation $\sigma$, the decoding matrix \Dec can be obtained by minimizing a least-squares loss-function $E$:
+Under the assumption that the activities $\vec a$ are subject to independent and identically distributed (i.i.d.) zero-mean Gaussian noise with standard-deviation $\sigma$, the decoding matrix \Dec can be obtained by minimising a least-squares loss-function $E$:
 \begin{align}
 	E &= \frac{1}{\vol(\Xrepr)} \iint_{\Xrepr} \bigl\| \vec x - \Dec \bigl( \vec a(\vec x) + \nu \bigr) \bigr\|_2^2  \, \mathrm{d}\vec{x} \quad\quad \text{where } \nu \sim \Normal(0, \sigma) \,.
 	\label{eqn:lstsq_loss_identity}
 \end{align}
-Of course, minimizing this integral directly is infeasible.
+Of course, minimising this integral directly is infeasible.
 We approximate a solution numerically by drawing \Nsmpls samples from \Xrepr, denoted $\vec x_1$, $\ldots$, $\vec x_N$.
-Arranging the samples and the corresponding population activities in matrices $\mat X = \begin{pmatrix} \vec x_1, \ldots, \vec x_{\Nsmpls} \end{pmatrix} \in \mathbb{R}^{\Nsmpls \times \Ndim}$ and $\mat A = \begin{pmatrix}\vec a(\vec x_1), \ldots, \vec a(\vec x_{\Nsmpls})\end{pmatrix} \in \mathbb{R}^{\Nsmpls \times \Npop}$, we can phrase finding \Dec as a Tikhonov regularised least-squares optimization problem
+Arranging the samples and the corresponding population activities in matrices $\mat X = \begin{pmatrix} \vec x_1, \ldots, \vec x_{\Nsmpls} \end{pmatrix} \in \mathbb{R}^{\Nsmpls \times \Ndim}$ and $\mat A = \begin{pmatrix}\vec a(\vec x_1), \ldots, \vec a(\vec x_{\Nsmpls})\end{pmatrix} \in \mathbb{R}^{\Nsmpls \times \Npop}$, we can phrase finding \Dec as a Tikhonov regularised least-squares optimisation problem
 \begin{align}
 \min_{\Dec} \sum_{k = 1}^{\Nsmpls} \| \Dec \vec a(\vec x_k) - \vec x_k \|_2^2  + \| \sigma \Dec \|^2_\mathrm{F}
 &= \min_{\Dec} \| \mat A \Dec^T - \mat X \|_\mathrm{F}^2 + \sigma^2 \Nsmpls \| \Dec \|_\mathrm{F}^2 \,,
