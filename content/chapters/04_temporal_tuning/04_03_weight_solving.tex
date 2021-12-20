@@ -57,7 +57,7 @@ We must sample $\mathfrak{a}_j(\mathfrak{x}_k)$ densely enough to capture the cu
 
 \begin{figure}
 	\includegraphics{media/chapters/04_temporal_tuning/vectorial_temporal_encoder.pdf}
-	\caption[Linearly combining impulse responses to obtain temporal encoders]{Linearly combining impulse responses to obtain temporal encoders. \textbf{(A)} Starting with a set impulse responses $\mathfrak{h}_i(t)$, we can generate temporal tuning for each neuron by linearly combining these basis functions using an encoding vector $\vec{e}^\mathrm{t}$.
+	\caption[Linearly combining impulse responses to obtain temporal encoders]{Linearly combining impulse responses to obtain temporal encoders. \textbf{(A)} Starting with a set of impulse responses $\mathfrak{h}_i(t)$, we can generate temporal tuning for each neuron by linearly combining these basis functions using an encoding vector $\vec{e}^\mathrm{t}$.
 	\textbf{(B)} When choosing normalised $\vec{e}^\mathrm{t}$ (e.g., $\| \vec{e}^\mathrm{t} \| = 1$), this vector is directly equivalent to the spatial encoder $\vec e$ when realising an \LTI system as multiple spatial dimensions in the \NEF; each \enquote{direction} corresponds to a different temporal encoding.
 	}
 	\label{fig:vectorial_temporal_encoder}
@@ -561,7 +561,7 @@ Forced pendulums are found in most robotic actuators and can, under some conditi
 		\textbf{(A)} Illustration of the nonlinear pendulum system.
 		A point mass $m = \SI{1}{\kilogram}$ under the influence of gravity $\| \vec g \| = \SI{9.81}{\metre\per\square\second}$ is connected to a rotating joint through a rigid rod of length $L = \SI{1}{\metre}$.
 		A random torque $\tau(t)$ is applied to the joint; we measure the angle of the pendulum $\phi(t)$.
-		\textbf{(B)} The angle $\tau(t)$ and a delayed version of the angle $\phi(t - \theta')$ are fed into the full-rank spatiotemporal \NEF network from the previous subsection.
+		\textbf{(B)} The torque $\tau(t)$ and a delayed version of the angle $\phi(t - \theta')$ are fed into the full-rank spatiotemporal \NEF network from the previous subsection.
 		After passing the spikes through a short low-pass filter, we decode the angle at time $t$ using a decoding vector $\vec d$.
 		This decoding matrix is updated according to the delta rule; the network \emph{learns} the nonlinear pendulum dynamics.
 		\textbf{(C)}~Examples of the pendulum dynamics and prediction after different amounts of training.

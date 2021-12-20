@@ -84,7 +84,7 @@ In the context of the Neural Engineering Framework, we would then use available 
 		\textbf{(A)}~Normalised firing rate of $73$ simulated time cells with $\theta \in [\SI{0}{\second}, \SI{5}{\second}]$. Cells are sorted by the observed $\hat \theta$ (dotted line).
 		Data obtained by feeding the impulse responses $h_\theta(t)$ depicted in \emph{(C)} into an ensemble of \LIF neurons with noisy somatic currents.
 		\textbf{(B)}~Cosine-similarity between the activity vectors for each time-pair. The similarities spread out for larger $t$, making it harder to decode $t$.
-		\textbf{(C)}~Impulse responses proposed by \citet{howard2014unified}.
+		\textbf{(C)}~Impulse responses proposed by \citet{howard2014unified} for $\tau = \SI{0.1}{\second}$.
 	}
 	\label{fig:time_cells_howard_tiganj_example}
 \end{figure}
@@ -106,7 +106,7 @@ As time progresses, the population activities tend to become more similar (\Cref
 	&=
 		\alpha_\theta t^{\frac{\theta}{\tau}} e^{-\frac{t}{\tau}}
 	\approx
-		\sum_{i = 1}^q w_i e^{-\frac{t}{\tau}}
+		\sum_{i = 1}^q w_i e^{-\frac{t}{\tau_i}}
 	\quad \text{for } t \geq 0 \text{ and where } \alpha_\theta \text{ is such that } \int_{0}^\infty h_\theta(t) \,dt = 1 \,.
 \end{align*}
 This model is biologically plausible, qualitatively reproduces empirical data, and has been proposed as a model for spatial representations in hippocampus as well.

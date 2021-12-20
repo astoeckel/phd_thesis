@@ -152,8 +152,8 @@ The synaptic dynamics discussed so far attenuate low frequencies far less than h
 \subsection{Simplified Neuron Models}
 \label{sec:simplified_neuron_models}
 
-The models discussed in the previous section describe indiviudal neurons at a relatively low level of abstraction.
-This incurs a high computational cost, especially when considering detailed compartemental neurons with Hodgkin-Huxley-like super-threshold dynamics.
+The models discussed in the previous section describe individual neurons at a relatively low level of abstraction.
+This incurs a high computational cost, especially when considering detailed compartmental neurons with Hodgkin-Huxley-like super-threshold dynamics.
 
 Fortunately, important electrophysiological properties of neurons can be captured by less detailed, computationally inexpensive, models \citep[cf.][Chapter~14]{koch1999biophysics}.
 For example, the Izhikevich \citep{izhikevich2004which} and Adaptive Exponential \citep{brette2005adaptive} point neuron models require only two state variables, but are capable of reproducing spike patterns observed in nature.
@@ -302,7 +302,7 @@ We compare conductance- and current-based synapse models in more detail in the n
 	{\phantomsubcaption\label{fig:neural_networks_a}}%
 	{\phantomsubcaption\label{fig:neural_networks_b}}%
 	{\phantomsubcaption\label{fig:neural_networks_c}}%
-	\caption[Illustration of different neural network types]{Illustration of different neural network types. Blue circles depict individual neurons. \textbf{(A)} Feed-forward neural networks can be represented as acyclic graphs. \textbf{(B)} If the network connectivity contains cycles (e.g., the 5-2-4-5 cycle), the network is called \emph{recurrent}. Cycles can also be self-recurrences (e.g., neuron 6). \textbf{(C)} Artifical neurons (\emph{left}) process time-discrete samples. Spiking neurons (\emph{right}) are time-continous; they receive a weighted input spike train, filter it, and produce an output spike train.}
+	\caption[Illustration of different neural network types]{Illustration of different neural network types. Blue circles depict individual neurons. \textbf{(A)} Feed-forward neural networks can be represented as acyclic graphs. \textbf{(B)} If the network connectivity contains cycles (e.g., the 5-2-4-5 cycle), the network is called \emph{recurrent}. Cycles can also be self-recurrences (e.g., neuron 6). \textbf{(C)} Artificial neurons (\emph{left}) process time-discrete samples. Spiking neurons (\emph{right}) are time-continous; they receive a weighted input spike train, filter it, and produce an output spike train.}
 \end{figure}
 
 We are now well-equipped to construct and simulate spiking neural networks (\SNNpl).
@@ -334,7 +334,7 @@ The resulting $\mat W$ can then be used in a spiking context.
 Notably, such global optimisation methods can be useful when modelling neurobiological systems.
 For example, there are striking similarities between the neural tuning observed in visual cortex and the learned tuning of neurons in hierarchical image classification networks \citep{yamins2016using}.
 However, this is, to some degree, accidental, and not explicitly imposed.
-As we discussed at the beginning of this chapter, it can be desirable build models that reliably adhere to certain constraints---such as the aforementioned tuning properties.
+As we discussed at the beginning of this chapter, it can be desirable to build models that reliably adhere to certain constraints---such as the aforementioned tuning properties.
 
 \subsection{Neural Tuning and Population Codes}
 \label{sec:neural_tuning}
