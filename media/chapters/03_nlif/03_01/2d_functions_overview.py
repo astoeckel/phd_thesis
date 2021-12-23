@@ -62,8 +62,8 @@ for i, sigma in enumerate(np.logspace(-1, 1, axs.shape[1])):
 #    axs[2, i].set_ylabel("$x_2$", labelpad=0.0)
 
 
-axs[0, ic].text(0.5, 1.15, "\\textbf{Unfiltered Gaussian Noise}", va="bottom", ha="center", transform=axs[0, ic].transAxes)
-axs[1, ic].text(0.5, 1.45, "\\textbf{Gaussian Filter}", va="bottom", ha="center", transform=axs[1, ic].transAxes)
+axs[0, ic].text(0.5, 1.15, "\\textbf{Unfiltered Gaussian noise}", va="bottom", ha="center", transform=axs[0, ic].transAxes)
+axs[1, ic].text(0.5, 1.45, "\\textbf{Gaussian filter}", va="bottom", ha="center", transform=axs[1, ic].transAxes)
 axs[2, ic].text(0.5, 1.25, "\\textbf{Function $\\varphi(x_1, x_2)$}", va="bottom", ha="center", transform=axs[2, ic].transAxes)
 
 axs[0, 0].text(-0.5, 1.15, "\\textbf{A}", va="bottom", ha="left", transform=axs[0, 0].transAxes, size=12)

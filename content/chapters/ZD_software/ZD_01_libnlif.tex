@@ -82,11 +82,11 @@ The dynamical system is integrated under a zero-order hold assumption by solving
 \begin{figure}
 	\centering
 	\includegraphics{media/chapters/ZD_software/libnlif_rate_empirical_example.pdf}
-	\caption[Output of the \emph{libnlif} \enquote{rate\_empirical} function for different noise parameters]{Output of the \emph{libnlif} two-compartment \LIF \texttt{rate\_empirical} rate example. The specified $\lambda$ corresponds to the rate of the Poisson spike source; the low-pass filter time constant $\tau$ is set to $\SI{5}{\milli\second}$.}
+	\caption[Output of the \emph{libnlif} \enquote{rate\_empirical} function for different noise parameters]{Output of the \emph{libnlif} two-compartment \LIF \texttt{rate\_empirical} rate example. The specified $\lambda$ corresponds to the rate of the Poisson spike source; the low-pass filter time-constant $\tau$ is set to $\SI{5}{\milli\second}$.}
 	\label{fig:libnlif_rate_empirical_example}
 \end{figure}
 
-The assembled neuron object provides convenience functions for sampling the multi-variate response curves $\mathscr{G}(\vec g)$ (eq.~\ref{eqn:def_response_curve_g}).
+The assembled neuron object provides convenience functions for sampling the multivariate response curves $\mathscr{G}(\vec g)$ (eq.~\ref{eqn:def_response_curve_g}).
 The following code simulates the neuron for \SI{100}{\second} and estimates the average firing rate by taking the inverse of the median inter-spike interval.
 The optional \texttt{noise}, \texttt{rate}, and \texttt{tau} parameters specify Poisson-distributed spike-noise.
 \begin{pythoncode}
@@ -98,7 +98,7 @@ rates = two_comp_lif_assm.rate_empirical( # Simulate the neuron at each sample
 Evaluation of the sample points is distributed across all available processor cores.
 The output of the above code-snippet (with a $100 \times 100$ grid) is visualised in \Cref{fig:libnlif_rate_empirical_example} for different rates $\lambda$.
 
-\subsection{Predicting Somatic Currents and Solving For Parameters and Weights}
+\subsection{Predicting Somatic Currents and Solving for Parameters and Weights}
 
 \begin{figure}
 	\centering
@@ -146,7 +146,7 @@ Just like the \nlif simulator, the trust-region optimiser relies on a dynamicall
 \end{figure}
 
 The synaptic weight solvers discussed in \Cref{sec:nlif_opt_weights} are provided in the \texttt{nlif.weight\_optimisation} package.
-For example, to find synaptic weights that approximate non-negative multiplication we can use the following code:
+For example, to find synaptic weights that approximate nonnegative multiplication we can use the following code:
 \begin{pythoncode}
 # Sample the represented space
 xs, ys = np.linspace(-1, 1, 101), np.linspace(-1, 1, 101)

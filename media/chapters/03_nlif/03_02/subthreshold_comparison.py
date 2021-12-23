@@ -204,7 +204,7 @@ fig.legend([
     mpl.lines.Line2D([], [], **styles[2]),
     mpl.lines.Line2D([], [], **styles[3]),
 ], [
-    "Target current", "NNLS", "NNLS with clamped target current",
+    "Target current", "NNLS", "NNLS with clipped target current",
     "Subthreshold relaxation"
 ],
            handlelength=1.5,

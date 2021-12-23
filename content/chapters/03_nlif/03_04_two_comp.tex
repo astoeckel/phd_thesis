@@ -9,10 +9,10 @@ The goal of this section is to systematically incorporate the simplest non-trivi
 This represents the smallest possible step toward exploiting dendritic nonlinearities, and as such is a good test for our overall methodology.
 
 We proceed as follows.
-First, we discuss a method for estimating the parameters of our surrogate dendritic nonlinearity model $H$ using non-negative least-squares and test the quality of the estimated parameters in various scenarios.
-A similar approach can be used derive a \qprog for the synaptic weights that takes nonnegative connectivity and subthreshold relaxation into account.
+First, we discuss a method for estimating the parameters of our surrogate dendritic nonlinearity model $H$ using nonnegative least-squares and test the quality of the estimated parameters in various scenarios.
+A similar approach can be used to derive a \qprog for the synaptic weights that takes nonnegative connectivity and subthreshold relaxation into account.
 We use this approach to evaluate the computational advantage of the two-compartment \LIF nonlinearity in an optimal scenario without dynamics, akin to our experiment in \Cref{sec:dendritic_computation_theory_numerical}.
-Finally, we demonstrate that this theoretical advantage persists in a spiking neural network context.
+Finally, we demonstrate that this theoretical advantage persists in a dynamic spiking neural network context.
 
 \subsection{Estimating Model Parameters}
 \label{sec:two_comp_lif_fit_model}
@@ -23,7 +23,7 @@ While the model parameters $a_0$, $a_1$, $a_2$, $b_0$, $b_1$, $b_2$ can be estim
 One way to generate these data is to simulate the spiking neuron for different input conductances $g_{\mathrm{E}, k}$, $g_{\mathrm{I}, k}$ over a period of time $T$ and to compute the average spike rate $a_k = \mathscr{G}( g_{\mathrm{E}, k}, g_{\mathrm{I}, k})$.
 As discussed in \Cref{sec:nef_nonlinear}, we then obtain the somatic current $J_k$ by applying the inverse of the chosen one-dimensional response curve $G^{-1}$ to $a_k$.
 %From our experience, this method yields results superior to measuring $J_k$ directly in the simulation.
-Importantly, when doing this, samples with small $a_k$ should be ignored: $G^{-1}$ is not well-defined for zero rates, and $H$ was derived for superthreshold dynamics.
+Importantly, when doing this, samples with small $a_k$ should be ignored: $G^{-1}$ is not well-defined for zero rates, and our dendritic nonlinearity $H$ was derived for superthreshold dynamics.
 
 \subsubsection{Optimisation problem}
 Given the superthreshold samples $J_k$, $g_{\mathrm{E}, k}$, $g_{\mathrm{I}, k}$ we now have the following least-squares loss function over the parameters $a_i$, $b_i$:
@@ -35,14 +35,14 @@ Given the superthreshold samples $J_k$, $g_{\mathrm{E}, k}$, $g_{\mathrm{I}, k}$
 	\label{eqn:two_comp_optimal_parameters}
 \end{align}
 Note that this optimisation problem has one superfluous degree of freedom.
-A numerically stable normalisation is to set $b_1 = 1$.
+Setting $b_1 = 1$ tends to be a numerically stable normalisation.
 In this case, all parameters are expressed relative to the effect of the excitatory channel on the input current.%
 \footnote{As we mentioned in a footnote above, this is a result of the scale-invariance of the individual rows of $\mat{\tilde A}$ and $\vec{\tilde b}$. In general, a parameterised \nlif neuron has $n - 1$ superfluous degrees of freedom in its parameters.}
 
 \begin{figure}
 	\centering
 	\includegraphics{media/chapters/03_nlif/03_04/two_comp_lif_loss_comparison.pdf}
-	\caption[Comparison between the actual and substitute loss function.]{Comparison between the actual loss function (eq.~\ref{eqn:two_comp_optimal_parameters}; \textbf{A}) and the substitute loss function (eq.~\ref{eqn:two_comp_optimal_parameters_prime}; \textbf{B}).
+	\caption[Comparison between the actual and substitute loss function]{Comparison between the actual loss function (eq.~\ref{eqn:two_comp_optimal_parameters}; \textbf{A}) and the substitute loss function (eq.~\ref{eqn:two_comp_optimal_parameters_prime}; \textbf{B}).
 	Each plot depicts a slice of the error function $E$ or $E'$ over two parameters.
 	Black crosses correspond to the optimal solution with respect to the substitute loss function $E'$, black circles correspond to the closest local optimum in the actual loss function.
 	The underlying data is sampled from a two-compartment neuron with  $E_\mathrm{E} = \SI{20}{\milli\volt}$, $E_\mathrm{I} = \SI{-75}{\milli\volt}$, $E_\mathrm{L} = \SI{-65}{\milli\volt}$, $g_\mathrm{L} = \SI{50}{\nano\siemens}$, $c_{12} =\SI{30}{\nano\siemens}$ for $N = 318$ superthreshold samples of $\gE$, $\gI$ over $[\SI{0}{\nano\siemens}, \SI{500}{\nano\siemens}]$.
@@ -78,8 +78,8 @@ Arranging the samples in vectors $\vec J$, $\vec g_\mathrm{E}$, $\vec g_\mathrm{
 
 Crucially, and as is illustrated in \Cref{fig:two_comp_lif_loss_comparison}, the solutions obtained by minimising \cref{eqn:two_comp_optimal_parameters,eqn:two_comp_optimal_parameters_prime} are similar, but not equivalent.
 While both optimisation problems minimise the error for each sample, multiplication with the denominator in \cref{eqn:two_comp_optimal_parameters_prime} causes samples to be dynamically re-weighted.
-In our application, the impact of this is fairly low in practice, and the global minimum of the substitute loss seems to be close to a minimum in the actual loss function.
-This method has been proposed in the context of fitting transfer functions by \citet{levy1959complexcurve}.
+The impact of this is fairly low in practice, and the global minimum of the substitute loss seems to be close to a minimum in the actual loss function.
+Optimising rational function parameters by multiplying with the denominator is a common technique that has, for example, been proposed in the context of fitting transfer functions \citep{levy1959complexcurve}.
 
 \subsubsection{Parameter refinement}
 If an exact solution in terms of the closest local optimum of \cref{eqn:two_comp_optimal_parameters} is desired, the parameters can easily be refined using gradient descent.
@@ -97,7 +97,7 @@ For the sake of simplicity, and because we do not observe a significant reductio
 \subsection{Experiment 1: Precision of the Model Parameter Estimation}
 \label{sec:two_comp_lif_experiment_1}
 
-The following experiment tests in how far the surrogate model $G[H(\gE, \gI)]$ can be used to accurately predict the spike rate $\mathscr{G}(\gE, \gI)$ of a simulated spiking two-compartment \LIF neuron---both before and after fitting the model parameters to empirical data.
+The following experiment tests to what degree the surrogate model $G[H(\gE, \gI)]$ can be used to accurately predict the spike rate $\mathscr{G}(\gE, \gI)$ of a simulated spiking two-compartment \LIF neuron---both before and after fitting the model parameters to empirical data.
 We conduct this experiment in an artificial scenario with constant conductances \gE, \gI, and in a simulated network context with artificial temporal spike noise superimposed onto the inputs.
 
 \begin{figure}[t]
@@ -134,8 +134,8 @@ However, it fails to predict the spike onset correctly, placing it too early wit
 As we predicted in \Cref{sec:nlif_theory}, the linearity of $H$ increases as $c_{12}$ is increased, i.e., the contour lines become more \enquote{parallel} for larger $c_{12}$.
 
 \paragraph{Discussion}
-Overall, the model works well once the parameters have been fitted.
-The mismatch between measured rates and the theoretical model for large $c_{12}$ is likely due to the more pronounced effect of the somatic superthreshold dynamics on the dendritic compartment.
+Overall, the model predicts spike rates well once the parameters have been fitted.
+The mismatch between measured rates and the theoretical, unfitted model for large $c_{12}$ is likely due to the more pronounced effect of the somatic superthreshold dynamics on the dendritic compartment.
 Failure to predict the spike onset is likely due to our model not capturing low firing-rate regimes of the neuron well.
 
 \subsubsection{Experiment 1.2: Conductances with artificial temporal spike noise}
@@ -185,7 +185,7 @@ Given a function $f(\vec x)$ that we would like to compute, we optimally minimis
 	}{
 		a_0 + a_1 \langle \vec w^\mathrm{E}_i, \vec a(\vec x) \rangle + a_2 \langle \vec w^\mathrm{I}_i, \vec a(\vec x) \rangle
  	}	
-	\right)^2 \, d\vec x + \sigma^2 \| \vec w^\mathrm{E}_i \|^2_2 + \sigma^2 \| \vec w^\mathrm{I}_i \|^2_2 \,,
+	\right)^2 \, \D \vec x + \sigma^2 \| \vec w^\mathrm{E}_i \|^2_2 + \sigma^2 \| \vec w^\mathrm{I}_i \|^2_2 \,,
 	\label{eqn:two_comp_optimal_weights}
 \end{align}
 subject to $\vec w^\mathrm{E}_i$, $\vec w^\mathrm{I}_i \geq 0$,
@@ -202,7 +202,7 @@ Again, we work around this by multiplying with the denominator inside the square
 			J_i(f(\vec x)) (a_0 + a_1 \langle \vec w^\mathrm{E}_i, \vec a(\vec x) \rangle + a_2 \langle \vec w^\mathrm{I}_i, \vec a(\vec x) \rangle )\,, \\[-1em]
 		&\hspace{3.66em}		
 		b_0 + b_1 \langle \vec w^\mathrm{E}_i, \vec a(\vec x) \rangle - b_2 \langle \vec w^\mathrm{I}_i, \vec a(\vec x) \rangle
-		\Bigr)^2 \, d\vec x
+		\Bigr)^2 \, \D \vec x
 		 + \sigma^2 \| \vec w^\mathrm{E}_i \|^2_2 + \sigma^2 \| \vec w^\mathrm{I}_i \|^2_2 \,,
 	\end{aligned}
 	\label{eqn:two_comp_optimal_weights_prime}
@@ -254,8 +254,7 @@ Our post-neuron has a positive encoder, an $x$-intercept of zero, and a maximum 
 }
 As depicted in \Cref{fig:nef_multivariate_functions_c}, the synaptic weights implicitly define a set of conductance functions.
 Due to commutativity of addition and multiplication, the excitatory and inhibitory functions decoded from each pre-population optimally are the same; we have $\gE(x) = g_\mathrm{E}^1(x) = g_\mathrm{E}^2(x)$ and $\gI(x) = g_\mathrm{I}^1(x) = g_\mathrm{I}^2(x)$.
-We emulate current-based \LIF neurons by setting $a_0 = b_1 = 1$, $b_2 = -1$, and $a_1 = a_2 = b_0 = 0$ in the nonlinearity model $H$.
-For these parameters we have $H(J_\mathrm{E}, J_\mathrm{I}) = J_\mathrm{E} - J_\mathrm{I}$.
+We emulate current-based \LIF neurons by setting $a_0 = b_1 = 1$, $b_2 = -1$, and $a_1 = a_2 = b_0 = 0$ in the nonlinearity model $H$, that is, for these parameters we have $H(J_\mathrm{E}, J_\mathrm{I}) = J_\mathrm{E} - J_\mathrm{I}$.
 %while the synaptic weights implicitly describe excitatory and inhibitory current functions $J_\mathrm{E}(x)$ and $J_\mathrm{I}(x)$.
 
 \begin{figure}
@@ -284,7 +283,7 @@ Correspondingly, the denominator $a_0 + a_1 \gE + a_2 \gI$ stays approximately c
 	\includegraphics{media/chapters/03_nlif/03_04/two_comp_weights_examples_multiplication.pdf}%
 	{\phantomsubcaption\label{fig:two_comp_weights_examples_multiplication_a}}%
 	{\phantomsubcaption\label{fig:two_comp_weights_examples_multiplication_b}}%
-	\caption[Computing multiplication in single- and two-compartment neurons]{Computing multiplication in \textbf{(A)} single- and \textbf{(B)} two-compartment neurons. See text for a detailed description and \Cref{fig:two_comp_weights_examples_addition} for a legend. Nonnegative multiplication can be reasonably approximated using two-compartment neurons. Dotted line in \emph{(B)} is a hyperbolic fit.
+	\caption[Computing multiplication in single- and two-compartment neurons]{Computing multiplication in \textbf{(A)} single- and \textbf{(B)} two-compartment neurons. See text for a detailed description and \Cref{fig:two_comp_weights_examples_addition} for a legend. Nonnegative multiplication can be reasonably approximated using two-compartment neurons. \emph{Top:} Dotted line in \emph{(B)} is a hyperbolic fit.
 	}
 	\label{fig:two_comp_weights_examples_multiplication}
 \end{figure}
@@ -292,7 +291,7 @@ Correspondingly, the denominator $a_0 + a_1 \gE + a_2 \gI$ stays approximately c
 %\paragraph{Results: Multiplication}
 Results for computing nonnegative multiplication, that is $f(x_1, x_2) = x_1 x_2$ over $(x_1, x_2) \in [0, 1]^2$, are depicted in \Cref{fig:two_comp_weights_examples_multiplication}.
 Using current-based \LIF neurons we can, at best, approximate multiplication with a linear function. This results in an \NRMSE of about 25\%.
-In contrast, using the two-compartment \LIF nonlinearity results in an error of about 6\%, with the largest discrepancies being in regions are both $x_1$ and $x_2$ are close to one.
+In contrast, using the two-compartment \LIF nonlinearity results in an error of about 6\%, with the largest discrepancies being in regions where both $x_1$ and $x_2$ are close to one.
 
 
 \begin{figure}
@@ -318,7 +317,7 @@ This is in contrast to addition, where we can reach arbitrarily small errors by 
 It is possible to reach smaller (but not arbitrarily small) errors with multiple post neurons dividing up the represented space (we reach down to $4\%$; see $E_\mathrm{model}$ in \Cref{tbl:function_approximations_complete}).
 
 Curiously, looking at the conductance functions \gE and \gI, \emph{both} excitation and inhibition increase substantially for small $x_1$ or $x_2$, similar to a shifted and scaled hyperbola  $(\beta + \alpha x)^{-1}$ (black dotted line in \Cref{fig:two_comp_weights_examples_multiplication_b}).
-This may be counter-intuitive, given that inhibition is typically responsible for shutting off the target neuron.%
+This may be counter-intuitive, given that inhibition alone should suffice to shut off the target neuron.%
 \footnote{Remember that these results are for a single post-neuron with positive encoder. That is, to represent smaller values, the neuron must receive a smaller input current.}
 However, when increasing both excitation and inhibition, this common-mode increase mostly cancels out in the numerator (due to the inhibitory conductance being subtracted), but increases the magnitude of the denominator; this amplifies the divisive effect of the input.
 
@@ -327,7 +326,7 @@ The observation that both excitation and inhibition must be increased to multipl
 
 An earlier hypothesised mechanism for gain modulation is \emph{shunting inhibition}.
 Here, the idea is that an inhibitory channel with a reversal potential close to the resting potential acts divisively on the average input current.
-This effect could in theory be used to implement multiplication \citep{koch1992multiplying}; however, in practice, increasing inhibitory conductances alone has a predominantly linear effect on the spike rate (since $a_2 \ll b_2$), or requires implausibly high conductance values \citep{holt1997shunting,abbott2005drivers}.
+This effect could in theory be used to implement multiplication \citep{koch1992multiplying}; however, in practice, increasing inhibitory conductances alone predominantly has a linear effect on the spike rate (since $a_2 \ll b_2$), or requires implausibly high conductance values \citep{holt1997shunting,abbott2005drivers}.
 
 Even when exploiting the common-mode increase of excitation and inhibition, generating the large input conductances for small $x_1$, $x_2$ results in relative large synaptic weights.
 This is depicted in \Cref{fig:two_comp_weights_examples_statistics_c,fig:two_comp_weights_examples_statistics_d}.
@@ -339,9 +338,9 @@ Compared to computing addition, the median synaptic weight increases by a factor
 Given the encouraging results from the previous subsection, we would now like to analyse the theoretical advantage of the two-compartment \LIF model in a more systematic manner.
 In particular, our goal is to characterise the \enquote{computational power} of different network and neuron types using the methodology from our basis-function experiment in \Cref{sec:dendritic_computation_theory_numerical}.
 
-We implicitly assume that \Hcond accurately describes the somatic current flowing into the two-compartment neuron.
+We abbreviate the two-compartment \LIF nonlinearity with conductance-based synapses as \Hcond, and the standard current-based \LIF neuron as \Hcur.
+In addition, we implicitly assume that \Hcond accurately describes the somatic current flowing into the two-compartment neuron.
 This is supported by our earlier results from Experiment~1 (\Cref{sec:two_comp_lif_experiment_1}).
-Furthermore, note that we abbreviate the two-compartment \LIF nonlinearity with conductance-based synapses as \Hcond, and the standard current-based \LIF neuron as \Hcur.
 As mentioned before $\Hcur$, is simply defined as $\Hcur(J_\mathrm{E}, J_\mathrm{I}) = J_\mathrm{E} - J_\mathrm{I}$.
 
 \subsubsection{Methods}
@@ -362,7 +361,7 @@ The final error $E_\mathrm{model}$ is the \NRMSE over all grid points with Gauss
 	\includegraphics{media/chapters/03_nlif/03_04/two_comp_2d_frequency_sweep.pdf}%
 	\kern-158.06mm\includegraphics{media/chapters/03_nlif/03_04/two_comp_2d_frequency_sweep_overlay.pdf}
 	\caption[Two-compartment neuron decoding error for random multivariate current functions]{Decoding error for random multivariate current functions.
-	\NRMSE between random, two-dimensional current functions and the decoded approximation using different input-dependent nonlinearities; errors are based on the superthreshold error function $\mathcal{E}$ (eq.~\ref{eqn:decode_current_subthreshold}). The low-pass filter coefficient \slc is a proxy for the spatial frequency content in the target function (cf.~\Cref{sec:dendritic_computation_theory_numerical}). All points correspond to the median over \num{100} trials. Dashed lines show results for not taking the subthreshold relaxation into account when solving for weights.
+	\NRMSE between random, two-dimensional current functions and the decoded approximation using different input-dependent nonlinearities; errors are based on the superthreshold error function $\mathcal{E}$ (eq.~\ref{eqn:decode_current_subthreshold}). The low-pass filter coefficient \slc is a proxy for the spatial frequency content in the target function (cf.~\Cref{sec:dendritic_computation_theory_numerical}). All points correspond to the median over \num{100} trials. Dashed lines show results for not taking subthreshold relaxation into account when solving for weights.
 	Dotted lines are theoretical predictions from \Cref{fig:dendritic_computation_fourier_example_b}.	
 	The black lines show the results for a linear, current-based \Hcur; blue/green lines show the results for the two-compartment conductance-based model  \Hcond with parameters given in \Cref{tbl:two_comp_model_parameters} (without noise). Orange lines correspond a current-based network with two-dimensional pre-neuron tuning (i.e., a two-layer neural network). Shaded areas correspond to the 25/75 percentile for the current-based models and the conductance-based model with $c_{12} = \SI{50}{\nano\siemens}$.
 	}
@@ -373,7 +372,7 @@ Overall, the results depicted in \Cref{fig:two_comp_lif_frequency_sweep} are sim
 In particular, the error curve for the two-compartment neuron qualitatively resembles the multiplicative nonlinearity, although errors tend to be higher for \Hcond:
 the inflection point of the sigmoid is at $\slc \approx 0.7$ for the \twocomplif nonlinearity, and was at $\slc \approx 1$ for the multiplicative nonlinearity.
 
-Similarly to additive network in the basis-function experiment (cf.~the dotted line labelled \enquote{additive baseline}), the median error for \Hcur initially increases almost linearly on a log-log plot, starting from a $2.5\%$ error for low-frequency functions to an error of about $50\%$ for functions with \slc greater than one.
+Similarly to the additive network in the basis-function experiment (cf.~the dotted line labelled \enquote{additive baseline}), the median error for \Hcur initially increases almost linearly on a log-log plot, starting from a $2.5\%$ error for low-frequency functions to an error of about $50\%$ for functions with \slc greater than one.
 Subthreshold relaxation reduces this error by up to $50\%$.
 
 The error for the conductance-based \twocomplif nonlinearity initially increases sub-linearly on a log-log plot, starting at median errors of about $0.8\%$ for low-frequency functions.
@@ -459,12 +458,12 @@ This is in line with our observation from \Cref{sec:dendritic_computation_theory
 Given a maximum error, the number of basis functions decodable from a multi-dimensional population is not much larger than the decodable function count for a one-dimensional population.
 
 To solve this issue, we would optimally have to square the number of neurons used in the intermediate layer.
-In our case, we would have to use $100^2 = \num{10000}$ instead of \num{200}, which would not really be comparable to the single-layer setups.
+In our case, we would have to use $100^2 = \num{10000}$ neurons instead of \num{200}, which would not really be comparable to the single-layer setups.
 
 \subsubsection{Experiment 3.2: Benchmark functions}
 
 \begin{table}[t]
-	\caption[Spiking neural network approximation errors.]{Spiking neural network approximation errors for function approximations on $[0, 1]^2$. Error values correspond to the \NRMSE and are measured as the difference between the output decoded from the target population and the desired output for a ten second sweep across a 4th order 2D Hilbert curve\index{Hilbert curve} over the input space. Results are the mean and standard deviation over 256 trials. The best result for a target function is set in bold; darker background colours indicate a worse ranking of the result in the corresponding row. Columns labeled \enquote{standard} refer to the default, single layer network setup, \enquote{two layers} refers to the two-layer setup, and \enquote{noisy} to the single layer network setup with model parameters derived under noise (see Experiment 1.2). Additional tables can be found in \Cref{app:data_chp3}.}
+	\caption[Spiking neural network approximation errors]{Spiking neural network approximation errors for function approximations on $[0, 1]^2$. Error values correspond to the \NRMSE and are measured as the difference between the output decoded from the target population and the desired output for a ten second sweep across a 4th order 2D Hilbert curve\index{Hilbert curve} over the input space. Results are the mean and standard deviation over 256 trials. The best result for a target function is set in bold; darker background colours indicate a worse ranking of the result in the corresponding row. Columns labelled \enquote{standard} refer to the default, single layer network setup, \enquote{two layers} refers to the two-layer setup, and \enquote{noisy} to the single layer network setup with model parameters derived under noise (see Experiment 1.2). Additional tables can be found in \Cref{app:data_chp3}.}
 	\fontsize{10pt}{12pt}\selectfont
 	\renewcommand\arraystretch{1.2}
 	\sffamily
@@ -579,14 +578,14 @@ While the random functions in the above experiments are useful to systematically
 To this end, we selected eight benchmark functions $f(x_1, x_2)$ typically found in models of neurobiological systems and repeated the experiment.
 See \Cref{tbl:two_comp_functions} for a detailed list.
 
-Note that we rescale the input such that $(x_1, x_2) \in [-1, 1]^2$ map onto $[0, 1]^2$ and $[-1, 1]$.
+Note that we rescale the input $(x_1, x_2) \in [-1, 1]^2$ to map onto the domain $[0, 1]^2$.
 Similarly, we rescale the output of each function to fully cover the codomain $[-1, 1]$.
 This ensures that we fully utilise the range of values that can be represented by the neuron populations, while restricting functions such as multiplication to a single quadrant.
 
 \paragraph{Results}
 A summary of the results over $256$ trials per function and setup is given in \Cref{tbl:function_approximations}.
 More detailed results can be found in \Cref{tbl:function_approximations_complete}.
-The two-compartment model with a coupling conductance of $g_\mathrm{C} = \SI{50}{\nano\second}$ achieves the smallest error $E_\mathrm{net}$ across all target functions.
+The two-compartment model with a coupling conductance of $g_\mathrm{C} = \SI{50}{\nano\siemens}$ achieves the smallest error $E_\mathrm{net}$ across all target functions.
 
 Using the dendritic nonlinearity model parameters derived under noise (cf.~\Cref{sec:two_comp_lif_experiment_1}) is beneficial when computing multiplicative functions and the maximum.
 For these target functions, the synaptic connection matrix tends to be sparser, increasing individual parameter weights and thus input noise (cf.~\Cref{fig:two_comp_weights_examples_statistics_c,fig:two_comp_weights_examples_statistics_d}).
@@ -601,7 +600,7 @@ An effect that could contribute to the superior performance of the two-compartme
 This filter reduces high-frequency spike noise and thus may positively impact $E_\mathrm{net}$.
 We control for this effect in an experiment described in \Cref{app:two_comp_regularisation_factor_sweep}, where we add an optimal low-pass filter to each network setup.
 Results are shown in \Cref{tbl:function_approximations_pre_filter}.
-A matched pre-filter reduces the error in all setups by only $1\%$-$2\%$, which indicates that the low-pass filter dynamics of the dendritic compartment cannot be the primary source for the reduction in error.
+A matched pre-filter reduces the error in all setups by only $1\%$-$2\%$ (absolute), which indicates that the low-pass filter dynamics of the dendritic compartment cannot be the primary source for the reduction in error.
 
 To summarise our experiments, we demonstrated in three stages (validation of the nonlinearity model \Hcond for a single neuron, purley mathematical properties of \Hcond, and, finally, performance on a network-level) that we are able to successfully incorporate two-compartment \LIF neurons, an admittedly simple model of shunting in dendritic trees, into functional modeling frameworks.
 Instead of reducing the accuracy of our networks, the added detail can be systematically leveraged for computation.

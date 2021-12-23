@@ -11,7 +11,7 @@
 	{\phantomsubcaption\label{fig:temporal_responses_examples_c}}%
 	{\phantomsubcaption\label{fig:temporal_responses_examples_d}}%
 	{\phantomsubcaption\label{fig:temporal_responses_examples_e}}%
-	\caption[Illustration of some possible in situ temporal response patterns]{Illustration of some possible \emph{in situ} temporal response patterns.
+	\caption[Illustration of possible in situ temporal response patterns]{Illustration of some possible \emph{in situ} temporal response patterns.
 	\textbf{(A)} Neuron without pronounced temporal response.
 	Pure tonic responses are relatively rare (e.g., Ruffini mechanoreceptors, cf.~\cite{kandel2012principles}, Figures~22-5~\&~23-9).
 	\textbf{(B)} Neuron with a phasic response to a stimulus. Most sensory neurons are at least partially phasic (cf.~\cite{kandel2012principles}, Part~V).
@@ -23,7 +23,7 @@
 \end{figure}
 
 Some neurons in the brain exhibit pronounced temporal activity patterns.
-For example, as is illustrated in \Cref{fig:temporal_responses_examples}, their activities may extend beyond the stimulus period, cease before the stimulus has ended, repeat rhythmically, be tuned to specific spatiotemporal patterns, or any combination of thereof.
+For example, as is illustrated in \Cref{fig:temporal_responses_examples}, their activities may extend beyond the stimulus period, cease before the stimulus has ended, repeat rhythmically, be tuned to specific spatiotemporal patterns, or any combination thereof.
 Theoretical work suggests that diverse temporal responses form a representation of the past stimulus history \citep{grossberg1989neural,howard2014unified,voelker2018improving} and could, for example, support delay learning in the cerebellum (\cite{fujita1982adaptive,medina2000computer}; see also \Cref{chp:cerebellum}).
 While spatiotemporal neural responses have originally been extensively studied in visual cortex \citep[e.g.,][]{deangelis1993spatiotemporal,carandini1999linearity}, more recent evidence indicates that various brain areas---including hippocampus, striatum, and cerebellum---possess neurons with pronounced temporal responses \citep[e.g.,][]{lusk2016cerebellar}.
 
@@ -64,7 +64,7 @@ For example, the impulse response $h(t)$ of a second-order high-pass filter can 
 The idea behind \enquote{temporal tuning curves} (formalised below) is to treat $h(t)$ as a part of the neuron's tuning properties.
 That is, we replace the encoder, or \enquote{preferred stimulus}, $\vec e$ with a temporal encoder $\vec{\mathfrak{e}}(t) = \vec{e} \cdot h(t)$, resulting in a \enquote{temporal preferred stimulus}.
 
-Notably, in doing this, we do not subscribe to any specify the mechanism that produces the high-pass characteristics.
+Notably, in doing this, we do not subscribe to any specific mechanism that produces the high-pass characteristics.
 In fact, this response pattern could be the result of intrinsic neural or synaptic dynamics, or instead stem form network-level effects.
 As we discussed in \Cref{sec:neural_tuning}, this is one of the central ideas of a tuning curve---we characterise the behaviour of a neuron responding to an external stimulus \emph{in situ}, capturing both the computation performed by the network leading up to an individual neuron and the intrinsic properties of the neuron itself.
 In the context of the Neural Engineering Framework, we would then use available neural resources to systematically realise these desired tuning properties.
@@ -145,20 +145,20 @@ Borrowing the gain and bias terms $\alpha$, $\beta$, as well as the response cur
 \begin{align}
 	a(\mathfrak{x})
 		&= G\left[\alpha \! \iiint_0^\infty \!\!\! \mathfrak{e}(\tau; \xi_1, \xi_2) \, \mathfrak{x}(-\tau; \xi_1, \xi_2) \,
-		\mathit{d \tau} \mathit{d \xi_1} \mathit{d \xi_2} + \beta \right]
+		\D \tau \D \xi_1 \D \xi_2 + \beta \right]
 		 = G\left[\alpha \! \int_0^\infty \!\!\! \big\langle \mathfrak{e}(\tau), \mathfrak{x}(-\tau) \big\rangle \,
-		 \mathit{d \tau} + \beta \right] \, .
+		\D \tau + \beta \right] \, .
 	\label{eqn:tuning_curve_from_temporal_receptive_field}
 \end{align}
 
-The space-time receptive fields of individual neurons (sometimes referred to as \enquote{weighting functions}) can be reconstructed by exposing the animal to computer generated imagery \citep{mclean1989contribution}.
+The space-time receptive fields of individual neurons (sometimes referred to as \enquote{weighting functions}) can be reconstructed by exposing animals to computer generated imagery \citep{mclean1989contribution}.
 An example of an artificial space-time recepitve field that qualitatively resembles empirical data \citep[cf.][]{deangelis1993spatiotemporal} is depicted in \Cref{fig:space_time_receptive_field}.
 
 \subsection{Temporal Tuning Curves and the Neural Engineering Framework}
 \label{sec:temporal_tuning_nef}
 
 The above summary of biological temporal response patterns provides some motivation as for why modelling temporal tuning can be desirable.
-We now define this concept more rigorously and, in the next subsection, compare it to the original \NEF dynamics principle.
+We now define this concept more rigorously, and, in the next subsection, compare it to the original \NEF dynamics principle.
 
 The most general definition of a \enquote{temporal tuning curve} is \enquote{a function that maps the past history of a $d$-dimensional stimulus onto the average expected activation of a neuron}.
 
@@ -181,9 +181,10 @@ One particular class of temporal tuning curves that fits the \NEF well are \enqu
 		= G\left[ \alpha_i \! \int_{0}^\infty \!\!\! \big\langle \vec{\mathfrak{e}}_i(\tau), \vec{\mathfrak{x}}(-\tau) \big\rangle \,\mathrm{d}\tau + \beta_i \right] \,,
 		\label{eqn:temporal_tuning_curve}
 	\end{align}
-	where the \emph{temporal encoder} $\vec{\mathfrak{e}}_i$ is a function $\vec{\mathfrak{e}}_i : \mathbb{R}^+ \longrightarrow \mathbb{R}^d$ over time. The temporal encoder describes both an impulse response and a spatial receptive field.
+	where the \emph{temporal encoder} $\vec{\mathfrak{e}}_i$ is a function $\vec{\mathfrak{e}}_i : \mathbb{R}^+ \longrightarrow \mathbb{R}^d$ over time.
+	%The temporal encoder describes both an impulse response and a spatial receptive field.
 \end{definition}
-\noindent Limiting the temporal encoder to non-negative times ensures that $\vec{\mathfrak{e}}_i$ is a causal filter.
+\noindent Limiting the temporal encoder to nonnegative times ensures that $\vec{\mathfrak{e}}_i$ is a causal filter.
 As before, we assume that the current translation function $J_i(\xi)$ is affine with gain $\alpha_i$ and bias~$\beta_i$.
 
 As with standard tuning-curves, \cref{eqn:temporal_tuning_curve} is a \emph{normative constraint} (cf.~\Cref{sec:nef_representation}).
@@ -191,16 +192,16 @@ However, in addition to what we had before, the temporal encoder $\vec{\mathfrak
 This effectively unifies the \NEF dynamics and representation principles; as we discuss below, the weight solver can draw upon the dynamics of the pre-population as well as temporal resources such as synaptic filters to approximate the desired dynamics.
 
 \subsubsection{Normalisation and preferred temporal stimuli}
-In many cases, it may be useful to normalise the magnitude of the temporal encoder to an integral of one over time.
-In this way, and with some squinting, the temporal encoder can be interpreted as a \emph{preferred temporal stimulus}.%
+In many cases, it may be useful to normalise the magnitude of the temporal encoder to an integral of one over time:
+\begin{align}
+	\int_{0}^\infty \| \vec{\mathfrak{e}}(\tau) \| \,\D \tau &= 1 \,.
+	\label{eqn:normalisation}
+\end{align}
+In this way, and with some squinting, the temporal encoder can be interpreted as a \emph{preferred temporal stimulus}.
+Note that normalisation is not possible for temporal encoders with an infinite energy, such as oscillators and integrator dynamics without decay.%
 \footnote{Both the signal $\vec{\mathfrak{x}}$ and the encoder $\vec{\mathfrak{e}}$ must be normalised for the convolution between the encoder and the stimulus to correspond to a cosine similarity.
 However, given its unbounded nature, it is unclear how the signal history $\vec{\mathfrak{x}}$ should be normalised.
 Essentially, we would have to normalise with respect to some window function.}
-\begin{align}
-	\int_{0}^\infty \| \vec{\mathfrak{e}}(\tau) \| \,\mathit{d\tau}&= 1 \,.
-	\label{eqn:normalisation}
-\end{align}
-Note that normalisation is not possible for temporal encoders with an infinite energy, such as oscillators and integrator dynamics without decay.
 
 \subsubsection{Synaptic filters as temporal encoders}
 We can easily confirm that our notion of temporal tuning is compatible with the standard \NEF population dynamics.
@@ -419,7 +420,7 @@ For first-order synapses these matrices are equal to those returned by the \NEF 
 		          - \sum_{j=1}^n a'_{ij} h(\tau) \int_0^\infty \!\! \mathfrak{x}_k(-\tau - \tau') \mathfrak{e}_j(\tau') \, \mathrm{d}\tau' \mathrm{d}\tau \right)^2 \,.
 	\end{align*}
 \end{restatable}
-\noindent This loss function is equal to \cref{eqn:weight_optimise_currents_temporal_no_trafo} in the case of a linear network with $n$ neurons that recurrently connect to themselves, and a \enquote{zeroth} pre-neuron with no temporal tuning providing input, i.e., $a_0(t) = \mathfrak{x}_k(t)$.
+\noindent This loss function is equal to \cref{eqn:weight_optimise_currents_temporal_no_trafo} in the case of a linear network with $n$ neurons that recurrently connect to themselves, and a \enquote{zeroth} pre-neuron with no temporal tuning providing the input, i.e., $a_0(t) = \mathfrak{x}_k(t)$.
 We provide a proof for this in \Cref{app:lstsq_nef_equivalence}.
 Similarly, as we discuss in \Cref{app:temporal_tuning_nonlinear}, we can use temporal tuning curves to obtain the same results as the \NEF in the case of nonlinear dynamics and neurons.
 Temporal tuning curves are a \emph{generalisation} of the \NEF dynamics principle.
@@ -436,7 +437,7 @@ Temporal tuning curves are a \emph{generalisation} of the \NEF dynamics principl
 		Realising \LTI systems using temporal tuning curves.
 		The depicted networks possess homogeneous first-order low-pass filters as synaptic filters.
 		The computed matrices $\mat A$, $\mat B$ are equal to the matrices obtained using the \NEF dynamics principle down to two decimal places.
-		We use $N = 1000$ input signals $\mathfrak{x}_k$ of length $T = \SI{10}{\second}$ sampled at $\Delta t = \SI{1}{\milli\second}$ consisting of white noise filtered with a second-order low-pass filter (time constant $\vartheta = \SI{100}{\milli\second}$).
+		We use $N = 1000$ input signals $\mathfrak{x}_k$ of length $T = \SI{10}{\second}$ sampled at $\Delta t = \SI{1}{\milli\second}$ consisting of white noise filtered with a second-order low-pass filter (time-constant $\vartheta = \SI{100}{\milli\second}$).
 		Error values $E$ are the \NRMSE.
 		\textbf{(A)} Realising an integrator (step impulse-response).
 		Note that the system settles at a value slightly smaller than one for a unit pulse input (\emph{left}) due to the aforementioned imprecisions. For a white-noise input (\emph{right}) the result is effectively indistinguishable from the ground-truth solution.
@@ -453,7 +454,7 @@ These errors are mostly due to time-discretisation at $\Delta t = \SI{1}{\milli\
 
 \newpage
 
-\subsection{Realising LTI Systems in Networks With Complex Recurrence}
+\subsection{Realising LTI Systems in Networks with Complex Recurrence}
 \label{sec:lti_complex_networks}
 
 Admittedly, the results presented in the previous subsection are slightly underwhelming.
@@ -493,10 +494,10 @@ Second, and most importantly, the strength of our approach lies in being agnosti
 	\caption[Approximation errors in heterogeneous networks with second-order synaptic filters]{Approximation errors in heterogeneous networks with second-order synaptic filters.
 	Errors are the median \NRMSE between the actual and desired response for bandlimited white-noise input over $1000$ trials.
 	Dotted orange lines correspond to feed-forward networks; blue lines to recurrent networks.
-	See \Cref{fig:recurrence_examples_2} for the architecture and the minimum/maximum filter time constants in each path.
+	See \Cref{fig:recurrence_examples_2} for the architecture and the minimum/maximum filter time-constants in each path.
 	Dashed line is a reference network with homogeneous first-order filters ($\tau = \SI{100}{\milli\second}$).
 	Shaded areas are the $25$th and $75$percentiles.
-	Same training procedure as in \Cref{fig:recurrence_examples_1}; training signals $\mathfrak{x}_k$ are white noise filtered with a second-order low-pass filter with time constant \SI{100}{\milli\second}.
+	Same training procedure as in \Cref{fig:recurrence_examples_1}; training signals $\mathfrak{x}_k$ are white noise filtered with a second-order low-pass filter with time-constant \SI{100}{\milli\second}.
 	\textbf{(A)}~Implementing an integrator.
 	Recurrence is required to implement the integrator.
 	\textbf{(B)}~Emulating a $\SI{10}{\milli\second}$ first-order low-pass requires recurrence and two or more filters per path (data for two and three filters are equal).
@@ -505,7 +506,7 @@ Second, and most importantly, the strength of our approach lies in being agnosti
 \end{figure}
 
 \subsubsection{Realising integrators and low-pass filters in heterogeneous networks}
-To demonstrate this, we next analyse networks with second-order synaptic filters (cf.~\cref{sec:synaptic_transmission}; \cref{eqn:low_pass_second_order}) and long, heterogeneous time-constants $\tau$.
+To demonstrate this, we next analyse networks with second-order synaptic filters (cf.~\Cref{sec:synaptic_transmission}; eq.~\ref{eqn:low_pass_second_order}) and long, heterogeneous time-constants $\tau$.
 Results are depicted in \Cref{fig:recurrence_examples_2,fig:heterogeneous_recurrence_exploration}.
 %\begin{align}
 %	h(t) &= \frac{t^n}{n! \tau^{n + 1}}  e^{-\frac{t}{\tau}} \,, & H(s) &= \frac{1}{(1 + \tau s)^{n + 1}} \,, & \text{where } n = 1 \text{ results in a second-order filter} \,.
@@ -590,7 +591,7 @@ Fortunately, the interneurons typically do not dramatically affect the overall n
 
 There are, of course, exceptions to this.
 As we discuss in more detail in \Cref{chp:cerebellum}, the Granule-Golgi microcircuit in the cerebellum possesses relatively slow synapses in the connection from the excitatory granule cells to the inhibitory Golgi cells.%
-\footnote{As reported by \citet{dieudonne1998submillisecond}, the synaptic dynamics of the granule to Golgi projection can be modelled using second order filter dynamics and time constants of $\tau_1 \approx \SI{31}{\milli\second}$ and $\tau_2 \approx \SI{170}{\milli\second}$ (cf.~\cref{eqn:low_pass_second_order}); this corresponds to a first-order low-pass filter with a time constant of about \SIrange{60}{70}{\milli\second}.}
+\footnote{As reported by \citet{dieudonne1998submillisecond}, the synaptic dynamics of the granule to Golgi projection can be modelled using second order filter dynamics and time-constants of $\tau_1 \approx \SI{31}{\milli\second}$ and $\tau_2 \approx \SI{170}{\milli\second}$ (cf.~eq.~\ref{eqn:low_pass_second_order}); this corresponds to a first-order low-pass filter with a time-constant of about \SIrange{60}{70}{\milli\second}.}
 Additionally, the interneurons receive the same input $u(t)$ as the excitatory population \citep{dangelo2013cerebellar}, which does not fit our canonical picture of interneuron populations.
 
 \Cref{fig:recurrent_network_intermediate} illustrates this \enquote{Granule-Golgi circuit} schematically.

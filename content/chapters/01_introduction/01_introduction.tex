@@ -58,7 +58,7 @@ Put differently, and rephrasing the above \Citeauthor{churchland1992computationa
 		\cmidrule(l){2-2}\cmidrule(l){3-3}
 		&  $\begin{aligned} f: \mathbb{R}^d &\longrightarrow \mathbb{R}^{d'} \\ f(\vec x) &\mapsto \vec y \end{aligned}$ & $\begin{aligned} f : (\mathbb{R}^- \longrightarrow \mathbb{R}^d) &\longrightarrow \mathbb{R}^{d'} \\ f(\mathfrak{x}) &\mapsto \vec y\end{aligned}$ \\
 		\cmidrule{1-1}\cmidrule(l){2-2}\cmidrule(l){3-3}
-		\textit{Domain} & Input $\vec x \in \mathbb{R}^d$ & Signal $\mathfrak{x} \in \{ f \mid f : \mathbb{R}^- \longrightarrow \mathbb{R}^d) \}$ \\
+		\textit{Domain} & Input $\vec x \in \mathbb{R}^d$ & Signal $\mathfrak{x} \in \{ f \mid f : \mathbb{R}^- \longrightarrow \mathbb{R}^d \}$ \\
 		\cmidrule{1-1}\cmidrule(l){2-2}\cmidrule(l){3-3}
 		\textit{Codomain} & Output $\vec y \in \mathbb{R}^{d'}$ & Output $\vec y \in \mathbb{R}^{d'}$ \\
 		\cmidrule{1-1}\cmidrule(l){2-2}\cmidrule(l){3-3}
@@ -90,8 +90,8 @@ That is, our goal is \emph{not} to model biological phenomena at the greatest po
 This way, we hope to provide a useful tool for researchers wishing to model high-level function, while constraining their work to physiological data.
 
 Similarly important, and returning to our comparison between brains and computers, our approach is not only useful for cognitive modellers, but also for scientists working on brain-inspired computers (so called \emph{neuromorphic hardware}), and to the field of machine learning.
-Systematically thinking about ways in which the computational substrate connects to function informs both the architecture of neuromorphic computers, and suggests a \enquote{neural compiler} for realising desired algorithms on these devices \citep{boahen2017neuromorph,voelker2021programming}.
-Furthermore, our approach lends itself to thinking about the \enquote{best possible} representation that should be established in a neural network, and can thus pave the way for artificial neural networks that are faster to train, more data-efficient, and higher performing \citep{voelker2019lmu,chilkuri2021parallelizing}.
+Systematically thinking about ways in which the neural substrate connects to function informs both the architecture of neuromorphic computers, and suggests a \enquote{neural compiler} for realising desired algorithms on these devices \citep{boahen2017neuromorph,voelker2021programming}.
+Furthermore, our approach lends itself to thinking about the \enquote{best possible} representation that should be established in neural networks, and can thus pave the way for artificial neural networks that are faster to train, more data-efficient, and higher performing \citep{voelker2019lmu,chilkuri2021parallelizing}.
 
 \subsubsection{Structure and overview of this thesis}
 
@@ -114,7 +114,9 @@ Based on a model of spatiotemporal receptive fields in visual cortex \citep{cara
 This approach is a generalisation of the \NEF dynamics principle, and a paradigm shift that offers a unified view onto resources for temporal computation, including synaptic filters, time-delays, and, to some degree, intrinsic neural dynamics.
 
 Interestingly, we can, with small modifications, reuse a convex optimisation problem derived in the previous chapter to solve for weights that realise desired temporal tuning.
-The weight solving procedure does not distinguish between feed-forward and feedback connections, and we can employ feedback connections to realise diverse temporal tuning.
+The weight solving procedure does not distinguish between feed-forward and feedback connections, and we can employ feedback connections to realise diverse%
+\footnote{We use the term \enquote{diverse} to refer to a highly linearly independent basis.}
+temporal tuning.
 Building upon previous work by \citet{voelker2018improving}, we show that mapping linear time-invariant (\LTI) systems approximating sliding-window transformations onto spiking neural networks generates temporal tuning that resembles time cells \citep{pastalkova2008internally,howard2014unified,tiganj2016sequential}.
 We present a general method for constructing such \LTI systems.
 
@@ -125,7 +127,7 @@ We find evidence that one of our \LTI systems may possess more favourable comput
 As a final experiment in \Cref{chp:cerebellum}, we combine the approaches outlined in the previous chapters to construct an adaptive filter model of the cerebellum \citep{fujita1982adaptive}.
 We apply our methods for building \NEF networks with more biological constraints (including Dale's principle; cf.~\Cref{chp:nlif}) in the context of the recurrent Granule-Golgi circuit.
 This circuit can in principle implement an \LTI system generating a temporal basis as discussed in \Cref{chp:temporal_tuning}.
-Building upon the Granule-Golgi circuit we construct a network that can learn to decode arbitrary delays, reproducing basic features of eyeblink conditioning \citep[e.g.,][]{heiney2014cerebellardependent}.
+Building upon the Granule-Golgi circuit we construct a network that learns to decode arbitrary delays and reproduces basic features of eyeblink conditioning \citep[e.g.,][]{heiney2014cerebellardependent}.
 
 We conclude with a short discussion of our contributions and potential future work in \Cref{chp:conclusion}.
 Proofs and additional information may be found in \Cref{app:math_detail,app:data}.
@@ -135,7 +137,7 @@ We present some software libraries written for this thesis, namely \emph{libnlif
 \setlength{\parskip}{0.5em}
 Some effort has been made to be as consistent as possible in the mathematical notation.
 Bold lower-case letters (e.g., $\vec x$, $\vec \gamma$) denote vectors, while bold upper-case letters (e.g., $\mat X$, $\mat \Gamma$) denote matrices.
-Double-struck letters denote sets, with $\mathbb{N}$, $\mathbb{Z}$, $\mathbb{Q}$, $\mathbb{R}$, $\mathbb{C}$ being our usual number systems.
+Double-struck letters denote sets, with $\mathbb{N}$, $\mathbb{Z}$, $\mathbb{Q}$, $\mathbb{R}$, $\mathbb{C}$ being the usual number systems.
 $\mathbb{R}^+$ and $\mathbb{R}^-$ are the positive and negative real numbers (including zero).
 
 We generally assume that vectors are column vectors, i.e., $\vec x \in \mathbb{R}^d$ is implicitly a matrix $\vec x \in \mathbb{R}^{d \times 1}$.

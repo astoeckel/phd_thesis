@@ -192,7 +192,7 @@ Our $f'$ from above \emph{exactly} fulfills this property (cf.~\Cref{fig:nef_dyn
 	\label{fig:homogeneous_heterogeneous_filters}
 \end{figure}
 
-We mentioned in \Cref{sec:lti_complex_networks} that compensating for the dynamics of a network with heterogeneous time constants requires access to the derivative of the input and feedback signal.
+We mentioned in \Cref{sec:lti_complex_networks} that compensating for the dynamics of a network with heterogeneous time-constants requires access to the derivative of the input and feedback signal.
 To get some intuition for this, recall the derivation of the original \NEF dynamics principle (cf.~\Cref{sec:nef_dynamics}; \cite{eliasmith2003neural}, Chapter~8).
 Using the homogeneous network illustrated in \Cref{fig:homogeneous_heterogeneous_filters_a}
 \begin{align}
@@ -206,7 +206,7 @@ Multiplying both sides of \cref{eqn:homo_dyn} with $\tau s + 1$ and rearranging 
 \end{align*}
 
 We can now repeat the same procedure for the network with heterogeneous synaptic filters depicted in \Cref{fig:homogeneous_heterogeneous_filters_b}; however, we will obtain filters $\mat A'(s)$, $\mat B'(s)$.
-Assuming that $H_1(s)$ and $H_2(s)$ are first-order low pass filters with time-constants $\tau_1$, $\tau_2$, we have
+Assuming that $H_1(s)$ and $H_2(s)$ are first-order low-pass filters with time-constants $\tau_1$, $\tau_2$, we have
 \begin{align*}
 	M(s) &= \mat B'(s) H_1(s) U(s) + \mat A'(s) H_2(s) M(s) = \mat B'(s) \frac{1}{\tau_1 s + 1} U(s) + \mat A'(s) \frac{1}{\tau_2 s + 1} M(s) \,.
 	\label{eqn:hetero_dyn}
@@ -227,7 +227,7 @@ Solving for $\mat A'(s)$ and $\mat B'(s)$ results in two first-order high-pass f
 Curiously, this solution does not coincide with the original \NEF solution for $\tau_1 = \tau_2$; this is due to the problem of finding $\mat A'(s)$ and $\mat B'(s)$ being underconstrained.
 However, and without providing a proof, for $\tau_1 \neq \tau_2$, $s$ will always be in the numerator of $\mat A'(s)$ and $\mat B'(s)$; correspondingly, these filters require access to the derivative of their input.
 
-\subsection{Homogeneous Recurrent Networks With Interneurons}
+\subsection{Homogeneous Recurrent Networks with Interneurons}
 \label{app:granule_golgi_dynamics}
 
 \begin{figure}

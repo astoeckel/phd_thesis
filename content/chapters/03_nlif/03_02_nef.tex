@@ -7,7 +7,7 @@ Up to this point, we have formally defined dendritic computation and discussed i
 The goal of this section is to open avenues toward systematically integrating multi-compartment neuron models with dendritic trees into \NEF networks using the formalisms discussed above.
 
 Na\"ively, incorporating neurons with multiple nonlinear input channels into the \NEF is merely a matter of solving for $\vec w$ such that \Cref{eqn:dendritic} holds.
-Phrasing this as an optimisation problem, we must minimise the difference between the desired average activity according to the normative tuning-curve constraint $a_i(\vec x)$ and the average activity according to our multi-variate response curve $\mathscr{G}$.
+Phrasing this as an optimisation problem, we must minimise the difference between the desired average activity according to the normative tuning-curve constraint $a_i(\vec x)$, and the average activity according to our multivariate response curve $\mathscr{G}$.
 Using a least-squares loss (and omitting the regularisation term), we have
 \begin{align}
 	\begin{aligned}
@@ -19,7 +19,7 @@ Using a least-squares loss (and omitting the regularisation term), we have
 	&~\hspace{13.825em}
 		\langle \vec w_{1, i}^k, \vec a^\mathrm{pre}_1(x_1) \rangle + \ldots +
 		\langle \vec w_{\ell, i}^k, \vec a^\mathrm{pre}_\ell(x_\ell) \rangle
-	\bigr] \Bigr)^2 \,dx_1 \ldots dx_\ell \,.
+	\bigr] \Bigr)^2 \, \D x_1 \ldots \D x_\ell \,.
 	\end{aligned}
 	\label{eqn:dendritic_computation_optimisation}
 \end{align}
@@ -75,8 +75,8 @@ Side-stepping the neural nonlinearity $G$ enables a simple least-squares solutio
 Furthermore, this optimisation scheme supports arbitrary current-translation functions $J_i$, providing modellers with a greater flexibility over the tuning curve constraint (cf.~\Cref{fig:current_translation_decoding_a,fig:current_translation_decoding_b,fig:current_translation_decoding_c}).
 
 \subsubsection{Low-rank factorisation of $\mat W$}
-Solving the optimisation problem in \cref{eqn:decode_current} directly results in weight matrix $\mat W$ instead the low-rank factorisation $\mat W = \mat E \mat D^\phi$.
-As discussed in \Cref{sec:nef_transformation}, this factorisation is useful, as it enables $\mat W \vec a$ to be computed in $\mathcal{O}(n)$ instead of $\mathcal{O}(n^2)$.
+Solving the optimisation problem in \cref{eqn:decode_current} directly results in a weight matrix $\mat W$ instead the low-rank factorisation $\mat W = \mat E \mat D^\phi$.
+As discussed in \Cref{sec:nef_transformation}, this factorisation was useful, since it enables $\mat W \vec a$ to be computed in $\mathcal{O}(n)$ instead of $\mathcal{O}(n^2)$.
 
 Fortunately, at least in the case of the affine current-translation function $\alpha_i \langle \vec e_i, \phi(\vec x) \rangle + \beta_i$, we still obtain a factorisable matrix (cf.~\Cref{fig:current_translation_decoding_d}).
 The resulting $\mat W$ is merely of rank $d + 1$, where $d$ is the dimensionality of the post-population.
@@ -144,10 +144,10 @@ For two populations, and skipping regularisation, we have
 		J_i\bigl(\langle \vec e_i, f_1(\vec x_1) + f_2(\vec x_2) \rangle\bigr)
 		- \langle \vec w_{1, i}, \vec a_1^\mathrm{pre}(\vec x_1) \rangle
 		- \langle \vec w_{i, 2}, \vec a_2^\mathrm{pre}(\vec x_2) \rangle
-	\right)^2 \, d\vec x_1 d\vec x_2 \,.
+	\right)^2 \, \D\vec x_1 \D\vec x_2 \,.
 	\label{eqn:decode_current_additive}
 \end{align}
-We can bring this problem into a canonical form by the stacking the pre-activities and weights (see below for an example).
+We can bring this problem into a canonical form by stacking the pre-activities and weights (see below for an example).
 However, note that we now need to sample a much higher-dimensional space.
 This is worrisome if we attempt to decode $f_i$ that must be finely sampled to obtain a good decoding.
 Again, under the assumption that $J_i$ is affine, it is possible to expand the above integral and to solve for a---relatively easy to decode---population-spanning bias decoder $\mat D^1$ independent of the (untouched) function decoders $\mat D^{f_1}$ and $\mat D^{f_2}$ (\Cref{fig:nef_decode_bias_c}).
@@ -162,11 +162,10 @@ Again, under the assumption that $J_i$ is affine, it is possible to expand the a
 Biological neurons tend to follow Dale's principle---they act either excitatorily or inhibitorily (see~\Cref{sec:synaptic_transmission} for more detail).
 As discussed in \Cref{sec:nef_limitations}, we ignored this in our weight-solving procedures.
 Least-squares assigns arbitrary algebraic signs to the individual weights, typically with an even split between positive and negative (cf.~\Cref{fig:sparsity_and_dales_principle}).
-Such weights are not compatible with conductance-based synapses or, more generally, multi-compartment neurons.
-Here, modellers connect pre-neurons to specific post-neuron channels.
+Such weights are not compatible with conductance-based synapses or, more generally, multi-compartment neurons, where modellers may connect pre-neurons to specific post-neuron channels.
 The corresponding connection weights describe nonnegative quantities, such as the number of vesicles released from the pre-synapse, or the channel density in the post-synapse \citep{roth2009modeling}.
 
-\subsubsection{Solving for weights using non-negative least squares}
+\subsubsection{Solving for weights using nonnegative least squares}
 Solving for individual synaptic weights in current space suggests a simple procedure to account for nonnegativity.
 Assume that each population is arbitrarily split into a group of excitatory and inhibitory neurons.
 The somatic input current of post-neuron $i$ in response to pre-synaptic activity is $\langle \vec w_i^+, \vec a^+(\vec x) \rangle - \langle \vec w_i^-, \vec a^-(\vec x) \rangle$;
@@ -180,7 +179,7 @@ Combining this current term with \cref{eqn:decode_current} yields the following 
 		J_i\bigl(\langle \vec e_i, \phi(\vec x) \rangle\bigr)
 		- \langle \vec w_{i}^+, \vec a^+(\vec x) \rangle
 		+ \langle \vec w_{i}^-, \vec a^-(\vec x) \rangle
-	\right)^2 \, d\vec x + \sigma^2 \|\vec w_{i}^+\|_2^2 + \sigma^2 \|\vec w_{i}^-\|_2^2 \\
+	\right)^2 \, \D \vec x + \sigma^2 \|\vec w_{i}^+\|_2^2 + \sigma^2 \|\vec w_{i}^-\|_2^2 \\
 	& \text{subject to } \vec w_i^+, \vec w_i^- \geq 0 \,.
 	\end{aligned}
 	\label{eqn:decode_nonneg}
@@ -190,7 +189,7 @@ To obtain a canonical least-squares form, let $N$ be the number of samples, $n^+
 It does not necessarily hold that $n = n^+ + n^-$; neurons can \emph{technically} be marked as both excitatory and inhibitory. Specifically, the special case $n = n^+ = n^-$ reduces the \NNLS problem to standard least squares.
 }
 and $\mat A$ be the sampled, stacked, and signed pre-activities $(\mat A^+, -\mat A^-) \in \mathbb{R}^{N \times (n^+ + n^-)}$.
-Additionally, let $\mat W$ be the stacked weight matrices $(\mat W^+, \mat W^-) \in \mathbb{R}^{m \times (n^+ + n^-)}$, and $\vec J \in \mathbb{R}^{N \times m}$ be a matrix of sampled target currents. We have
+Additionally, let $\mat W$ be the stacked weight matrices $(\mat W^+, \mat W^-) \in \mathbb{R}^{(n^+ + n^-) \times m}$, and $\vec J \in \mathbb{R}^{N \times m}$ be a matrix of sampled target currents. We have
 \begin{align}
 	\bigl\| \bigl( \mat A^T \mat A + N \sigma^2 \mat I \bigr) \mat W - \mat A^T \mat J \bigr\|_2^2 \quad\quad \text{subject to } \mat W \geq 0 \,.
 	\label{eqn:decode_nonneg_canon}
@@ -243,7 +242,7 @@ Such simple workarounds are no longer possible for nonnegative $\mat W^+$, $\mat
 Still, we can construct low-rank approximations of $\mat W^+$ and $\mat W^-$ using their singular value decomposition.
 Generally, a rank-$k$ factorisation of a matrix $\mat M \in \mathbb{R}^{m \times n}$ can be obtained according to
 \begin{align}
-	\mat M_{(k)} = \sum_{i = 1}^k \sigma_k \vec u_k \bigl(\vec v_k \bigr)^T \,, \quad\quad
+	\mat M_{(k)} = \sum_{i = 1}^k \sigma_k \vec u_k \vec v_k^T \,, \quad\quad
 	\begin{aligned}	
 		&\text{where } \mat U^T \mat \Sigma \mat V = \mat M \,
 		\text{ and } \mat \Sigma = \mathrm{diag}(\sigma_1, \ldots, \sigma_{\min\{m, n\}}) \\
@@ -376,7 +375,7 @@ subject to $\vec w_{i}^+$, $\vec w_{i}^- > 0$.
 Crucially, we ignore $\vec \nu$ in our target function; we solely use the pre-population to provide background activity but ignore its represented value.
 
 Results of an experiment exploring this technique are depicted in \Cref{fig:inhibitory_comm_b}.
-While computing the identity function---i.e., constructing a pure communication channel---works well, nonlinear functions can only be decoded with a considerable error, just as with purely excitatory connections channels (cf.~\Cref{fig:nonnegative_experiments}).
+While computing the identity function---i.e., constructing a pure communication channel---works well, nonlinear functions can only be decoded with a considerable error, just as with purely excitatory channels (cf.~\Cref{fig:nonnegative_experiments}).
 This is due to the standard \NEF pre-population tuning curves not providing a good basis for nonnegative decoding of many nonmonotonic functions.
 In principle, it should be possible to have pre-population tuning such that any nonnegative target current function can be nonnegatively decoded with an arbitrarily small error.
 An example would be the Gaussian tuning curves similar to those depicted in \Cref{fig:bias_decoding_impact_c}.
@@ -438,7 +437,7 @@ and define a new current-space optimisation problem akin to \cref{eqn:decode_non
 		J_i(\langle \vec e_i, \phi(\vec x)\rangle),
 		\langle \vec w_i^+, \vec a^+(\vec x) \rangle +
 		\langle \vec w_i^-, -\vec a^-(\vec x) \rangle
-	\right)^2 \, d\vec x
+	\right)^2 \, \D \vec x
 	+ \sigma^2 \| \vec w^+_i \|_\mathrm{2}^2
 	+ \sigma^2 \| \vec w^-_i \|_\mathrm{2}^2\,.
 \label{eqn:decode_current_subthreshold}
@@ -457,10 +456,9 @@ A \emph{quadratic program} (\QP) is an optimisation problem of the form \citep[a
 	\text{subject to} &\quad
 		\mat G \vec \omega \leq \vec h \,,
 \end{align*}
-where $\vec \omega \in \mathbb{R}^{n}$, $\mat G \in \mathbb{R}^{n \times n}$, $\vec p \in \mathbb{R}^{n}$, $\mat H \in \mathbb{R}^{\ell \times n}$, $\vec q \in \mathbb{R}^{\ell}$.
+where $\vec \omega \in \mathbb{R}^{n}$, $\mat P \in \mathbb{R}^{n \times n}$, $\vec q \in \mathbb{R}^{n}$, $\mat G \in \mathbb{R}^{\ell \times n}$, $\vec h \in \mathbb{R}^{\ell}$.
 Here, $n$ is the number of variables and $\ell$ is the number of inequality constraints.
-If $\vec x^T \mat P \vec x$ is a convex function (i.e., if $\mat P$ is positive definite).
-%and the constraints $\mat G\vec x \leq \vec h$ form a convex polytope, then the QP is \emph{convex}.
+If $\vec \omega^T \mat P \vec \omega$ is a convex function (i.e., $\mat P$ is positive definite) and the constraints $\mat G \vec \omega \leq \vec h$ form a convex polytope, then the QP is \emph{convex}.
 \end{definition}
 
 Convex \qprogpl can be solved in polynomial time \citep{kozlov1980polynomial}.
@@ -561,7 +559,7 @@ Finally, nonnegativity of the weights is ensured by the second row of $\mat G$ a
 \subsubsection{Example: Individual post-neuron}
 In \Cref{fig:subthreshold_comparison} we decode the post-synaptic currents for a single post neuron using \NNLS, \NNLS with clamped target currents, and subthreshold relaxation.
 At least in this example, subthreshold relaxation substantially reduces the superthreshold decoding error.
-In contrast, clamping the target currents has only a limited positive effect.
+In contrast, clipping the target currents has only a limited positive effect.
 Notably, and particularly pronounced in the case of purely excitatory pre-neurons, the solution obtained with subthreshold relaxation is supported by more pre-neurons.
 This is visible in \Cref{fig:subthreshold_comparison_c}, where subthreshold relaxation decodes a non-zero current for negative $\xi$, resulting in a smaller regularisation error (i.e., weight \RMS of $0.8 \times 10^{-3}$ vs. $2 \times{10}^{-3}$).
 
@@ -570,7 +568,7 @@ This is visible in \Cref{fig:subthreshold_comparison_c}, where subthreshold rela
 	{\phantomsubcaption\label{fig:subthreshold_experiment_a}}%
 	{\phantomsubcaption\label{fig:subthreshold_experiment_b}}%
 	{\phantomsubcaption\label{fig:subthreshold_experiment_c}}%
-	\caption[Reduction in decoding error achieved with subthreshold relaxation]{Reduction in decoding error achieved with subthreshold relaxation compared to standard \NNLS and clamping the target current.
+	\caption[Reduction in decoding error achieved with subthreshold relaxation]{Reduction in decoding error achieved with subthreshold relaxation compared to standard \NNLS and clipping the target current.
 	\textbf{(A)} Reduction in the decoded post-synaptic currents error relative to \NNLS for different thresholds in the error measure $\mathcal{E}$.
 	Each box plot over three functions, $100$ random networks, $11$ noise magnitudes, and $9$ random samplings of the noise ($N = 29\,700$); whiskers are the extrema, boxes the quartiles, orange line is the median, green dashed line the mean.
 	\textbf{(B)}
@@ -600,7 +598,7 @@ This is further confirmed by the experiment in \Cref{fig:subthreshold_experiment
 For small amounts of noise subthreshold relaxation with $J_\mathrm{th} = \SI{1}{\nano\ampere}$ can lead to large improvements in the representation error; however, for larger noise magnitudes the overall benefit of subthreshold relaxation is smaller, with slightly reduced $J_\mathrm{th}$ performing the best.
 %We provide additional results from this experiment in Appendix C.2.
 
-Keep in mind that \LIF rate neurons are a worst-case scenario with respect to sensitivity to pre-activity noise injected near the threshold.
+Keep in mind that \LIF \emph{rate} neurons are a worst-case scenario with respect to sensitivity to pre-activity noise injected near the threshold.
 \LIF rate neurons possess a very steep activity onset, where small changes in current lead to large fluctuations in activity.
 This tends to be less of an issue with transient noise in spiking neural networks, which results in a smoother response curve (see our discussion below, as well as \cite{hunsberger2015spiking}).
 We can thus expect that, in practice, the impact of subthreshold relaxation is somewhere between the values obtained for the current decoding and representation error.
@@ -660,7 +658,7 @@ For example, if the neuron model is an extension to a \LIF neuron, $G$ can be th
 In this case, $H$ translates the input into an \enquote{\LIF-equivalent current}.
 In the trivial case of the above current-based \LIF neurons with excitatory and inhibitory inputs, we would obtain $H(J_\mathrm{E}, J_\mathrm{I}) = J_\mathrm{E} - J_\mathrm{I}$.
 
-We use the dendritic nonlinearity $H$ to define a new current-space loss
+We use the dendritic nonlinearity $H$ to define a new current-space loss function
 \begin{align}
 	E = \frac{1}{\vol(\Xrepr)} \int_{\Xrepr}
 		\mathcal{E} \bigl(
@@ -669,7 +667,7 @@ We use the dendritic nonlinearity $H$ to define a new current-space loss
 		\bigr)^2 \,\mathrm{dx} + \sigma^2 \sum_{j = 1}^\ell \| \vec w^j_i \|_2^2\,,
 \label{eqn:decode_nonlinear_synapses}
 \end{align}
-where $\mathcal{E}$ is the superthreshold error defined in \cref{eqn:subthreshold_error}, $\vec a^j$ are the pre-activities connection, and weights $\vec w_i$ may be---depending on the input channel type---nonnegative.
+where $\mathcal{E}$ is the superthreshold error defined in \cref{eqn:subthreshold_error}, $\vec a^j$ are the pre-activities, and connection weights $\vec w_i$ may be---depending on the input channel type---nonnegative.
 
 We next show that it is possible to derive $H$, or at least a suitable surrogate model, in closed form for multi-compartment \LIF neurons with conductance-based synapses.
 If $H$ cannot be derived in closed form, we can sample $\mathscr{G}$ over varying synaptic states and, as depicted in \Cref{fig:two_compartment_response_curve}, compute $H$ indirectly by applying an inverse mapping $G^{-1}$ to the recorded data.

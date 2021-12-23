@@ -19,7 +19,7 @@ The goal is to allow researchers to map high-level descriptions of cognitive phe
 As such, the \NEF provides a synthesis of bottom-up and top-down modelling, and is an attempt at a theory of neuroscience that spans multiple levels of analysis.
 
 To use the \NEF, researchers systematically apply three \enquote{principles} that encapsulate key assumptions about neurobiological systems.
-These principles exploit neural nonlinearities and synaptic filters to describe how vectorial quantities can be represented, transformed, and made to follow certain dynamics in a spiking neural computational fabric.
+These principles exploit neural nonlinearities and synaptic filters to describe how vectorial quantities can be represented, transformed, and made to follow certain dynamics in a spiking neural fabric.
 The resulting neural networks adhere to mechanistic constraints, such as neural connectivity, maximum firing rates, tuning properties, and synaptic time-constants.
 This is illustrated schematically in \Cref{fig:nef_overview}.
 A software tool that automates the process of translating mathematical models into spiking neural networks using the \NEF principles is part of the Nengo spiking neural network simulator package \citep{bekolay2014nengo}.\footnote{See \url{https://www.nengo.ai/} for more information on Nengo. Nengo is free for non-commercial use.}
@@ -31,7 +31,7 @@ A software tool that automates the process of translating mathematical models in
 %	the decoding process is linear.
 %	That is, there exists a matrix $\Dec \in \mathbb{R}^{d \times \Npop}$ such that $\vec x \approx \vec \Dec \vec a(\vec x)$.
 %	\item \emph{Transformation.}
-%	Synaptic connections between neural ensembles approximate non-linear transformations $f(\vec x)$ applied to the represented values, where $f : \mathbb{R}^d \longrightarrow \mathbb{R}^{d'}$ and $d$ and $d'$ are the dimensionalities of the quantities represented in the individual ensembles.
+%	Synaptic connections between neural ensembles approximate nonlinear transformations $f(\vec x)$ applied to the represented values, where $f : \mathbb{R}^d \longrightarrow \mathbb{R}^{d'}$ and $d$ and $d'$ are the dimensionalities of the quantities represented in the individual ensembles.
 %	\item \emph{Dynamics.}
 %	Represented values are state variables $\vec x(t)$ in a dynamical system. Recurrent connections approximate arbitrary dynamical systems of the form $\dot{\vec x} = f(\vec x(t), \vec u(t), t)$.
 %	Here, $\vec x(t)$ is the represented value, $\vec u(t)$ is some external input, and $t$ is the current time.
@@ -53,7 +53,8 @@ In the case of \NEF models, we can, of course, compare the high-level behaviour 
 The smaller the deviations, the \enquote{better} the original mathematical model.%
 \footnote{Of course, naively evaluating models in this manner does not account for overfitting. The model could inadvertently be tuned to reproduce the behaviour of interest, but not be able to generalise to different scenarios. In contrast to other machine learning approaches, overfitting in this sense is typically less of a problem with \NEF models.
 This is due to the transparency of the training process, only few (typically hand-selected) parameters, and biological constraints, all of which can be seen as regularisation.}
-While such comparisons would also be possible with the high-level model alone, biological constraints can drastically influence the high-level behaviour of the model---hence, the \NEF is a good litmus test for the suitability of a mathematical model to be realised on a neural substrate.
+While such comparisons would also be possible with the high-level model alone, biological constraints can drastically influence the high-level behaviour of the model.
+The \NEF is thus a good litmus test for the suitability of a mathematical model to be realised on a neural substrate.
 This is because the \NEF \emph{optimally} implements a set of mathematical equations as an idealised spiking neural network.
 If the model cannot be realised on a spiking neural substrate despite these idealised conditions, it is unlikely that it describes a biological process well.
 
@@ -69,7 +70,7 @@ Examples of cognitive theories developed in conjunction with the \NEF include th
 
 Second, \NEF models can be used to predict the behaviour of a system in experimental paradigms for which no empirical data exists (yet).
 This prediction then forms a hypothesis that can be compared to future empirical data.
-Furthermore, the \NEF also enables the systematic variation of observed biological parameters (e.g., time constants or connectivity), which is often not easily possible in real biological systems.
+Furthermore, the \NEF also enables the systematic variation of observed biological parameters (e.g., time-constants or connectivity), which is often not easily possible in real biological systems.
 Assessing the system performance in such artificial situations may yield hypotheses as for why evolution favoured certain parameter combinations.
 We give an example of this in \Cref{chp:cerebellum}.
 
@@ -86,7 +87,7 @@ Beyond these basic characteristics there is no consensus as for what exactly con
 However, most neuromorphic hardware systems execute computations asynchronously and possess provisions for sparse event-based signalling.
 Akin to biology, individual computational units independently generate binary events.
 In contrast to artificial neural networks, computation is inherently temporal; communication occurs sporadically and does not carry continuous values.
-Hence, the underlying communication infrastructure is solely carries temporally sparse spike events, minimising the amount of transferred data.
+Hence, the underlying communication infrastructure solely carries temporally sparse spike events, minimising the amount of transferred data.
 
 Current neuromorphic computers can be roughly split into two categories, depending on the specific realisation of the computing elements.
 Computation either takes place in analogue model circuits, similar to the \LIF circuit (\Cref{fig:lif}), or digital processors with varying degrees of programmability.
@@ -117,7 +118,7 @@ A variety of neuromorphic platforms have been included as an execution target in
 \label{sec:nef_representation}
 
 As we saw above, the Neural Engineering Framework has useful applications in both science and engineering.
-In the first part of this thesis, we discuss extensions to the \NEF that allow us to model neurobiological circuits more accurately and take better advantage of the computational resources found on neuromorphic computers.
+In the first part of this thesis, we discuss extensions to the \NEF that allow us to model neurobiological circuits more accurately and to take better advantage of the computational resources found on neuromorphic computers.
 In preparation for these extensions, we now provide a detailed discussion of the aforementioned \enquote{three principles} at the core of the \NEF.
 
 The first two \NEF principles are best explained assuming steady-state average activities, although, as mentioned before, biological neural networks inherently form dynamical systems.
@@ -125,7 +126,7 @@ However, our use of average rate approximations should not be interpreted as the
 All optimisations can be done in the spiking domain, but the computational costs are significantly higher~\citep{macneil2011finetuning}.
 
 For now, our goal is to map static equations of the form $\vec y = f(\vec x)$ onto rate approximations of spiking neural networks.
-The first \NEF principles describes how neural populations to represent quantities such as $\vec x$ and $\vec y$.
+The first \NEF principle describes how neuron populations represent quantities such as $\vec x$ and $\vec y$.
 Paraphrasing \citet{eliasmith2003neural}:
 \begin{framed}
 \noindent\emph{\NEF Principle 1.}
@@ -171,12 +172,12 @@ a_i(\vec x) = G\big[J_i\big(\langle \vec x, \vec e_i \rangle\big)\big] = G\big[\
 \end{align}
 Depending on the interpretation, the encoding vector $\vec e_i$ is equivalent to the \enquote{receptive field} or \enquote{preferred direction} of the neuron.
 For example, as depicted in \Cref{fig:nef_representation_2d}, a two-dimensional encoding vector can be used to construct bell-shaped tuning curves similar to those discussed in the context of orientation tuning in the visual cortex; here, the vector $\vec e_i$ would stand for a preferred direction.
-Of course, $\vec e_i$ and $\vec x$ could also be discretised visual stimuli---in this case, $\vec e_i$ would be a receptive field and \cref{eqn:encoding} is a direct approximation of \cref{eqn:tuning_curve_from_receptive_field}.
+Of course, $\vec e_i$ and $\vec x$ could also be discretised visual stimuli---in this case, $\vec e_i$ would be a receptive field and \cref{eqn:encoding} is a discrete approximation of \cref{eqn:tuning_curve_from_receptive_field}.
 
 The response curve $G[J]$ depends on the underlying neuron model; for example, we derived the response curve for \LIF neurons in \Cref{sec:simplified_neuron_models} (eq.~\ref{eqn:lif_response_curve}); 
 the current translation function $J_i(\xi)$ is typically an affine mapping parametrised by a gain $\alpha_i$ and a bias current $\beta_i$.
 
-When building \NEF systems, modellers chose the parameters of $a_i(\vec x)$ to characterise how a stimulus $\vec x$ \emph{should} be reflected in the activities of individual neurons.
+When building \NEF systems, modellers choose the parameters of $a_i(\vec x)$ to characterise how a stimulus $\vec x$ \emph{should} be reflected in the activities of individual neurons.
 This last emphasis on \emph{should} is important.
 Modellers establish a \emph{normative constraint}.
 They specify what the desired tuning should \emph{optimally} be---for example, taking biological data into account.
@@ -207,7 +208,8 @@ We denote the set of represented values as a compact set \Xrepr with finite, non
 
 Unless more specific data are available, we can for example assume that $\vec x$ are within a hyperball of radius $r$, i.e., $\Xrepr = r \Ball^d$.
 The encoding vectors $\vec e_i$ can be sampled from the unit hypersphere $\mathbb{S}^d$.
-For monotone increasing response curves $G$, gain $\alpha$ and bias $\beta$ can be computed for each neuron by sampling an \enquote{$x$-intercept} value $\xi_0$ from the interval $[-r, r]$ and a maximum rate $a_\mathrm{max}$ and to solve for $\alpha$, $\beta$ such that the following equations hold:
+For monotone increasing response curves $G$, gain $\alpha$ and bias $\beta$ can be computed for each neuron by sampling an \enquote{$x$-intercept} value $\xi_0$ from the interval $[-r, r]$ and a maximum rate $a_\mathrm{max}$.
+We then solve for $\alpha$, $\beta$ such that the following equations hold:
 \begin{align*}
 	\alpha \xi_0 + \beta &= J_0 = G^{-1}[0] \,, &
 	\alpha r + \beta &= J_\mathrm{max} = G^{-1}[a_\mathrm{max}] \,, & \text{where } G^{-1}[a] &\coloneqq \max \big\{ J \mid G[J] = a \big\} \,.
@@ -239,7 +241,7 @@ Arranging the samples and the corresponding population activities in matrices $\
 where $\lambda = N \sigma^2$ is the regularisation factor.
 From a probabilistic perspective, this particular choice of $\lambda$ results in the exact maximum a-posteriori solution for $\mat D$ with the prior assumption that there is Gaussian noise with standard deviation $\sigma$ on the measurements $\mat A$ \citep[Chapter~6]{boyd2004convex}. 
 Larger $\lambda$ increase the robustness of the solution with respect to noise, but decrease the noise-free approximation error.
-The solution can be expressed in terms of the regularised Moore-Penrose pseudo-inverse (cf.~Appendix~A.2):
+The solution can be expressed in terms of the regularised Moore-Penrose pseudo-inverse:
 \begin{align}
 \Dec^T &= \mat A^+ \mat X \,, &\text{where} \quad \mat A^+ &= \bigl(\mat A^T \mat A + \lambda N \mat I \bigr)^{-1} \mat A^T \,.
 \label{eqn:decoding}
@@ -261,28 +263,28 @@ Of course, individual neuron populations seldom exist in isolation.
 To construct \emph{networks} that realise the desired tuning properties, we need to determine synaptic weights $w_{ij}$ that describe the connection strength between the $j$th pre- and the $i$th post-neuron.
 In addition to realising the chosen representations, the \NEF puts a further modelling constraint on the synaptic weights:
 \begin{framed}
-\noindent\emph{\NEF Principle 2.} Synaptic connections between neural ensembles approximate non-linear transformations $\vec y = f(\vec x)$, where $\vec x \in \mathbb{R}^d$ is the value represented in the pre-population, and $\vec y \in \mathbb{R}^{d'}$ the value represented in the post-population.
+\noindent\emph{\NEF Principle 2.} Synaptic connections between neural ensembles approximate nonlinear transformations $\vec y = f(\vec x)$, where $\vec x \in \mathbb{R}^d$ is the value represented in the pre-population, and $\vec y \in \mathbb{R}^{d'}$ the value represented in the post-population.
 \end{framed}
 
 \begin{figure}
 	\centering
 	\includegraphics{media/chapters/02_modelling/02_03/nef_transformation_annotations.pdf}%
 	\kern-157.19mm\includegraphics{media/chapters/02_modelling/02_03/nef_transformation.pdf}
-	\caption[Examples of the function decoding scheme.]{Examples of the function decoding scheme. Instead of decoding the represented value $\vec x$ from a neuron population, we can approximate arbitrary functions $f(\vec x)$.
-	\textbf{(A)} $\Npop = 20$ tuning curves $\vec a(x)$; same parameters as in \cref{sec:nef_representation}. \textbf{(B-E)} Different linear decodings $\mat D^f \vec a(x)$ of the above tuning curves. Dotted line is the target function, thick line the decoded function. Inset $E$ is the \RMSE.
+	\caption[Examples of the function decoding scheme]{Examples of the function decoding scheme. Instead of decoding the represented value $\vec x$ from a neuron population, we can approximate arbitrary functions $f(\vec x)$.
+	\textbf{(A)} $\Npop = 20$ tuning curves $\vec a(x)$; same parameters as in \Cref{sec:nef_representation}. \textbf{(B-E)} Different linear decodings $\mat D^f \vec a(x)$ of the above tuning curves. Dotted line is the target function, thick line the decoded function. Inset $E$ is the \RMSE.
 	}
 	\label{fig:nef_transformation}
 \end{figure}
 
 That is, modellers can choose a transformation $f$ that should be computed in a connection.
 We can easily approximate functions $f$ of the value $\vec x$ represented in a pre-population using a \emph{function decoder} $\Dec^f$.
-This $\Dec^f$ has the property that $\vec{\hat y} = \Dec^f \vec a(\vec x)$ is approximately equal to $f(\vec x)$.
+This $\Dec^f$ has the property that $\Dec^f \vec a(\vec x) = \vec{\hat y} \approx \vec{y} = f(x)$.
 Modifying the least-squares loss from \cref{eqn:lstsq_loss_identity}, we get
 \begin{align}
 	E &= \frac{1}{\vol(\Xrepr)} \iint_{\Xrepr} \bigl\| f(\vec x) - \Dec \bigl( \vec a(\vec x) + \nu \bigr) \bigr\|_2^2  \, \mathrm{d}\vec{x} \quad\quad \text{where } \nu \sim \Normal(0, \sigma) \,.
 	\label{eqn:lstsq_loss_f}
 \end{align}
-Analogously to above, a discrete approximation of $\mat D^f$ for \Nsmpls samples ${\vec x}_1$, $\ldots$, ${\vec x}_{\Nsmpls}$ is given as 
+Analogously to the above, a discrete approximation of $\mat D^f$ for \Nsmpls samples ${\vec x}_1$, $\ldots$, ${\vec x}_{\Nsmpls}$ is given as 
 \begin{align*}
 	\bigl(\Dec^f\bigr)^T &= \mat A^+ \mat Y \,, &\text{where } \mat A &= \begin{pmatrix}\vec a(\vec x_1), \ldots, \vec a(\vec x_{\Nsmpls})\end{pmatrix} \in \mathbb{R}^{\Nsmpls \times \Npop} \,, & \mat Y &= \begin{pmatrix}f(\vec x_1), \ldots, f(\vec x_{\Nsmpls})\end{pmatrix} \in \mathbb{R}^{\Nsmpls \times \Ndim'} \,.
 \end{align*}
@@ -293,12 +295,12 @@ The decoding error $E$ depends on the number of pre-neurons \Npop, as well as th
 	\centering
 	\vspace{0.25mm}
 	\includegraphics{media/chapters/02_modelling/02_03/nef_transformation_diagram.pdf}
-	\caption[Neuron populations in the NEF as a single hidden-layer artificial neural network]{Neuron populations in the \NEF form a single hidden-layer artificial neural network. Encoders $\mat E$, gains $\vec \alpha$, and gains $\vec \beta$ correspond to a fixed input transformation. The function decoder $\Dec^f$ forms a set of linear output weights. Since the input transformations are fixed, computing $\Dec^f$ is simple.}
+	\caption[Neuron populations in the NEF as a single-hidden-layer artificial neural network]{Neuron populations in the \NEF form a single-hidden-layer artificial neural network. Encoders $\mat E$, gains $\vec \alpha$, and gains $\vec \beta$ correspond to a fixed input transformation. The function decoder $\Dec^f$ forms a set of linear output weights. Since the input transformations are fixed, computing $\Dec^f$ is simple.}
 	\label{fig:nef_transformation_diagram}
 \end{figure}
 
 \subsubsection{Comparison to artificial neural networks}
-From the perspective of artificial neural networks, the \NEF characterises neuron populations as a single-hidden layer neural network with a fixed input transformation consisting of the encoders, gains, and biases.
+From the perspective of artificial neural networks, the \NEF characterises neuron populations as a single-hidden-layer neural network with a fixed input transformation defined by the encoders, gains, and biases.
 Since the input transformation up to the neural nonlinearity---approximated by the response curve $G[J]$---is fixed, learning the output weights---the function decoder---is a convex optimisation problem and no stochastic optimisation such as gradient descent is required (\Cref{fig:nef_transformation_diagram}).
 
 Similar nonlinear encoding and linear decoding schemes have been explored in machine learning for decades.
@@ -337,7 +339,7 @@ Evaluating this requires $\mathcal{O}(mn)$ operations, where \Npop and $m$ are t
 In contrast, multiplying the low-rank factorisation with an activity vector, i.e., computing $\mat E ( \mat D \vec a 
 )$, requires only $\mathcal{O}(\Ndim n + \Ndim' m)$ operations.
 Since, typically, $d \ll n$ and $d' \ll m$, this is a linear time operation.
-Along with the linearity of homogeneous synaptic filters, this is what enables Nengo to simulate large spiking neural networks on commodity hardware \citep{bekolay2014nengo}.
+Along with the linearity of homogeneous synaptic filters, this enables Nengo to simulate large spiking neural networks on commodity hardware \citep{bekolay2014nengo}.
 
 \subsection{Principle 3: Dynamics}
 \label{sec:nef_dynamics}
@@ -357,7 +359,7 @@ Along with the linearity of homogeneous synaptic filters, this is what enables N
 
 So far, and as mentioned several times before, we have ignored the fact that spiking neural networks possess temporal dynamics.
 Instead, and very similar to the rate-based artificial neural networks used in machine learning, we assumed average firing rates in the encoding and decoding equations.
-Fortunately, this is less of a problem than it may seem.
+Fortunately, this is less of a problem as it may seem.
 
 Synaptic dynamics (cf.~\Cref{sec:synaptic_transmission}) act as a filter that estimates the pre-synaptic \emph{instantaneous firing rate} of a spike train.
 The instantaneous firing rate is the spike rate $a_i$ of a neuron at a single point in time $t$.
@@ -425,7 +427,8 @@ Fortunately, the low-pass filter dynamics of synapses are decoupled from the neu
 Moreover, as explained by
 \citet[Chapter~8 \& Appendix~F.1]{eliasmith2003neural},
 it is not unreasonable to assume that the synaptic filter dominates the overall neural dynamics.
-In other words, dynamics mainly stem from the synaptic filter $h(t)$---although, we revisit this assumption in \Cref{sec:nef_limitations}.
+In other words, dynamics mainly stem from the synaptic filter $h(t)$.
+We revisit this assumption in \Cref{sec:nef_limitations} below.
 
 We can easily derive a system that compensates for the low-pass filter dynamics using the Laplace transform.
 Assume that both the feedback and the input passes through the same first-order low-pass filter with time-constant $\tau$.
@@ -458,7 +461,7 @@ In other words, to compensate for low-pass filter dynamics, we scale the dynamic
 Using the representation and transformation principles, we can turn the block-diagram in \Cref{fig:nef_dynamics_synaptic} into a spiking neural network.
 This is schematically depicted in \Cref{fig:nef_dynamics_neurons_a}.
 The decoded state $\vec{\hat x}$ and the input $\vec u$ are passed through compensated \LTI matrices $\mat A'$ and $\mat B'$, summed, and fed into the synaptic filters.
-We gave an example of this in \Cref{fig:nef_overview}.
+We provided an example of this in \Cref{fig:nef_overview}.
 
 Of course, as before, the network can, due to linearity, be expanded into biologically plausible synaptic weights and arrays of synaptic filters (\Cref{fig:nef_dynamics_neurons_b}).
 Function decoders $\mat D^f$ can be used to support arbitrary nonlinear dynamics, and not just \LTI systems.
@@ -493,7 +496,7 @@ While such nonlinearities have been analysed in the context of the \NEF by \cite
 
 Adapting the \NEF to support nonlinear conductance-based synapses would increase compatibility with neuromorphic hardware platforms emulating conductance-based neurons (e.g.,~BrainScaleS; \cite{schemmel2010waferscale}) and allow modellers to more easily constrain models according to neurophysiological parameters, such as synaptic reversal potentials.
 Furthermore, individual synapse types (e.g.,~excitatory and inhibitory) act as independent input channels to a neuron.
-As we discuss in the next chapter, these input channels interact non-linearly in the case of multi-compartment neurons, increasing the class of functions that can be approximated using the same number of neurons.
+As we discuss in the next chapter, these input channels interact nonlinearly in the case of multi-compartment neurons, increasing the class of functions that can be approximated using the same number of neurons.
 
 
 \subsubsection{Limitation 2: Bias currents}
@@ -571,7 +574,7 @@ This imposes a certain structure onto the weight matrix (\Cref{fig:sparsity_and_
 \end{figure}
 
 \Citet[Section~6.4]{eliasmith2003neural} propose a method to account for Dale's principle later refined by \citet{parisien2008solving}.
-The basic idea of this \enquote{Parisien transform} is to decode a specially crafted \enquote{bias function} to the function computed in excitatory connections originating from the pre-population.
+The basic idea of this \enquote{Parisien transform} is to add a specially crafted \enquote{bias function} to the function computed in the excitatory connection.
 This bias function ensures that all connection weights are positive.
 An inhibitory inter-neuron population is then added to the network and connected in parallel to the excitatory connection to subtract the superfluous current induced by the bias function (\Cref{fig:parisien_transform}).
 
@@ -589,7 +592,7 @@ While reasonable, these modelling assumptions are, as so often, only coarse appr
 
 \begin{figure}[t]
 	\includegraphics{media/chapters/02_modelling/02_03/firing_rate_neural_dynamics.pdf}
-	\caption[Neural dynamics for different maximum firing rates]{Neural dynamics for different maximum firing rates $a_\mathrm{max}$. A \SI{100}{\second} band-limited white-noise signal $u(t)$ with a band-width of \SI{100}{\hertz} is fed through a \NEF population with uniform $x$-intercepts.
+	\caption[Neural dynamics for different maximum firing rates]{Neural dynamics for different maximum firing rates $a_\mathrm{max}$. A \SI{100}{\second} band-limited white-noise signal $u(t)$ with a band-width of \SI{100}{\hertz} is fed through an \NEF population with uniform $x$-intercepts.
 	The transfer function is determined from the decoded $\hat u(t)$ using the method described in \citet[Section~4.3.3]{eliasmith2003neural}.
 	We ensure a constant amount of spike noise by setting the number of neurons in the population to $100\,000 / a_\mathrm{max}$. \emph{Top:} Linear transfer function for different maximum rates $a_\mathrm{max}$. \emph{Bottom:} Slice through the transfer functions at the indicated locations.
 	\textbf{(A)} Data for a spiking rectified linear unit (\ReLU), a $\Delta\Sigma$-modulator with a rectified input current. This kind of neuron exhibits no significant dynamics of its own, independent of the firing rate. \textbf{(B)} Transfer function for the \LIF neuron. For small firing rates, the neuron acts as a low-pass with a relatively moderate attenuation of about \SI{-5}{\deci\bel}. For firing rates of about \SI{200}{\hertz}, the neuron acts as a pass-through. \textbf{(C)} While similar to the \LIF neuron, the \ALIF
@@ -603,7 +606,7 @@ For example, for maximum firing rates below about $\SI{50}{\per\second}$, the su
 This is depicted in \Cref{fig:neural_dynamics_firing_rates}.
 
 While these rate-dependent effects are relatively small, more complex neuron models possess strong intrinsic dynamics.
-For example, the adaptive \LIF (\ALIF) neuron model \citep[Chapter~14]{koch1999biophysics} accounts for firing rate adaptation; that is, each output spike increases the current required to evoke another output spike.
+For example, the adaptive \LIF (\ALIF) neuron model \citep{camera2004minimal} accounts for firing rate adaptation; that is, each output spike increases the current required to evoke another output spike.
 This can be modelled as an inhibitory current resulting from low-pass filtering the neuron's output spike train.
 As demonstrated by \citet[Chapter~7]{tripp2009search}, the internal dynamics of the \ALIF neuron model can, under certain circumstances, be exploited to implement arbitrary dynamics using a variant of the equations derived for the \NEF dynamics principle.
 

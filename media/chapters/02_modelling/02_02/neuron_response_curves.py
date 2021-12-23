@@ -73,7 +73,7 @@ gs1 = fig.add_gridspec(1, 2, wspace=0.4)
 ax02 = fig.add_subplot(gs1[0])
 ax12 = fig.add_subplot(gs1[1])
 
-do_plot(ax02, 'lif_ramp.npz', 'A', 'LIF Neuron', lif_rate)
+do_plot(ax02, 'lif_ramp.npz', 'A', 'LIF neuron', lif_rate)
 do_plot(ax12, 'hodgkin_huxley_ramp.npz', 'B', 'Hodgkin-Huxley neuron')
 
 Js = np.linspace(-0.5, 2.0, 1000) * 1e-9

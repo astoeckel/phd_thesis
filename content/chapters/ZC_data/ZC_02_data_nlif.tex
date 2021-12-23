@@ -23,7 +23,7 @@ Also refer to \Cref{tbl:function_approximations} for a more detailed legend.
 
 \input{content/chapters/ZC_data/ZC_02_tbl_two_comp_results}
 
-\subsection{Regularisation Factor and Pre-filter Sweep}
+\subsection{Regularisation Factor and Pre-Filter Sweep}
 \label{app:two_comp_regularisation_factor_sweep}
 
 The regularisation factors $\lambda$ used in the theoretical analysis of the two-compartment \LIF nonlinearity (\Cref{sec:two_comp_lif_experiment_2}) were determined by performing a parameter sweep with a spatial low-pass filter coefficient of $\rho^{-1} = 0.5$.
@@ -43,7 +43,7 @@ We combine this sweep with the \enquote{pre-filter experiment} described below; 
 The final parameters used in \Cref{sec:two_comp_lif_experiment_3} are listed in \Cref{tbl:regularization_paremteters}.
 
 The purpose of the pre-filter experiment is the following.
-As mentioned in the main text, the dendritic compartment in the two-compartment model can be interpreted as an additional first order low-pass filter with time constant $C_\mathrm{m} g_\mathrm{L}^{-1}$ (cf.~\Cref{tbl:two_comp_neuron_parameters}).
+As mentioned in the main text, the dendritic compartment in the two-compartment model can be interpreted as an additional first order low-pass filter with time-constant $C_\mathrm{m} g_\mathrm{L}^{-1}$ (cf.~\Cref{tbl:two_comp_neuron_parameters}).
 This low-pass filter reduces the amplitude of high-frequency transients in the input signal and may thus contribute to the reduction of the final approximation error $E_\mathrm{net}$.
 
 To explore the effects of low-pass filters in the network, we perform an additional experiment in which we introduced a first-order low-pass filter (the \enquote{pre-filter}) located at the input of the target population (for single-layer networks) or the input of the intermediate population (in the case of the two-layer network).
@@ -74,7 +74,7 @@ We conclude that, while additional low-pass filters in the network can help to r
 \end{figure}
 
 \begin{table}
-	\caption[Regularisation factors and pre-filter time-constants.]{Regularisation factors and pre-filter time-constants for the two-compartment \LIF network experiments. See text for a description.
+	\caption[Regularisation factors and pre-filter time-constants]{Regularisation factors and pre-filter time-constants for the two-compartment \LIF network experiments. See text for a description.
 	\textsuperscript{\dag}With subthreshold relaxation.
 	}
 	\label{tbl:regularization_paremteters}

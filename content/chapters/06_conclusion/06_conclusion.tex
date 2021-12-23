@@ -80,9 +80,9 @@ This includes subthresholed relaxation (\Cref{sec:nef_subthreshold}), user-defin
 Remember that typical \NEF networks can be simulated efficiently due to the factorisation of the weight matrix into encoder-decoder pairs (\Cref{sec:nef_transformation}; \cite{bekolay2014nengo}) and the ability to collapse the synaptic filter matrix $h_{ij}$ into a single filter (cf.~\Cref{fig:nef_dynamics_neurons}).
 This is no longer possible when using the aforementioned extensions.
 
-In the light of exploring our techniques further, it would therefore be interesting to map such networks onto neuromorphic neural network accelerators that are not limited to factorisable weight matrices, and that offer more flexibility regarding diverse synaptic time constants.
+In the light of exploring our techniques further, it would therefore be interesting to map such networks onto neuromorphic neural network accelerators that are not limited to factorisable weight matrices, and that offer more flexibility regarding diverse synaptic time-constants.
 Examples of such platforms include Loihi \citep{davies2018loihi}, BrainScaleS \citep{schemmel2010waferscale}, and SpiNNaker \citep{painkras2013spinnaker}; Nengo backends already exist for Loihi and SpiNNaker \citep{mundy2015efficient,blouw2019benchmarking}.
-BrainScaleS in particular could be an interesting target because of its energy-efficient analogue computation, per-neuron synaptic filter time constants, ability to simulate multi-compartment \LIF neurons with conductance-based synapses (\Cref{sec:nlif}), and an integrated plasticity processor that could be used to solve for weights on-chip \citep{friedmann2017demonstrating}.
+BrainScaleS in particular could be an interesting target because of its energy-efficient analogue computation, per-neuron synaptic filter time-constants, ability to simulate multi-compartment \LIF neurons with conductance-based synapses (\Cref{sec:nlif}), and an integrated plasticity processor that could be used to solve for weights on-chip \citep{friedmann2017demonstrating}.
 
 \subsubsection{Sliding-window transformations and machine learning}
 
