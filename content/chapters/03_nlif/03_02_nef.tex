@@ -163,7 +163,7 @@ Biological neurons tend to follow Dale's principle---they act either excitatoril
 As discussed in \Cref{sec:nef_limitations}, we ignored this in our weight-solving procedures.
 Least-squares assigns arbitrary algebraic signs to the individual weights, typically with an even split between positive and negative (cf.~\Cref{fig:sparsity_and_dales_principle}).
 Such weights are not compatible with conductance-based synapses or, more generally, multi-compartment neurons, where modellers may connect pre-neurons to specific post-neuron channels.
-The corresponding connection weights describe nonnegative quantities, such as the number of vesicles released from the pre-synapse, or the channel density in the post-synapse \citep{roth2009modeling}.
+The corresponding connection weights describe nonnegative quantities, such as the number of vesicles released from the pre-synapse, or the ion-channel density \citep{roth2009modeling}.
 
 \subsubsection{Solving for weights using nonnegative least squares}
 Solving for individual synaptic weights in current space suggests a simple procedure to account for nonnegativity.
