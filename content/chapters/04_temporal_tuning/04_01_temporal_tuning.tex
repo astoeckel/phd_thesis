@@ -376,17 +376,10 @@ We analyse temporal bases in more detail in the next section.
 
 Recurrent dynamics do not possess any of these limitations.
 Specifically, recurrence can diversify the temporal tuning, even if, as in the \NEF dynamics principle, the only temporal resources in a network are homogeneous synaptic filters.
-%---this is, in a sense, exactly how we usually use the NEF dynamics principle.
-%However, in constrast to principle three (cf.~\Cref{sec:nef_dynamics}), and as we demonstrate below, we can now naturally solve for weights that take heterogenous synaptic weights and higher order filters into account---without explicitly having to provide differentials of the input signals, as the closed-form solutions proposed by \cite{voelker2018improving} require.
-% TODO: Note this in Section 2.3.3
 
 Surprisingly, we do not have to take special precautions when solving for recurrent connection weights using \cref{eqn:weight_optimise_currents_temporal}---we simply treat the recurrent population as its own pre-population.
 Correspondingly, as with any other pre-population, we assume that the population possesses the temporal tuning defined by the tuning-curve constraint (eq.~\ref{eqn:temporal_tuning_curve}).
 We thus foster a self-fulfilling prophecy: we solve for dynamics assuming that the dynamics are already realised.
-
-%It is worth recalling that this is one of the fundamental assumptions of the NEF.
-%As we discussed in \Cref{sec:nef}, we assume that the pre-population tuning has been realised with a small error.
-%This drastically simplifies solving for synaptic weights---specifically in the context of recurrent connections.
 
 \begin{figure}
 	\centering

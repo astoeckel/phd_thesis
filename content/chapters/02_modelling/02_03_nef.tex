@@ -142,7 +142,6 @@ The second assumption deserves more explanation, given that vectors are abstract
 \subsubsection{Vectorial representations}
 The assumption that populations represent vectors $\vec x \in \mathbb{R}^d$ is---to some degree---a mathematical convenience.
 Many mathematical objects have useful equivalent vectorial representations, including functions \citep[Chapter 3]{eliasmith2003neural}, probability densities \citep[Chapter 9]{eliasmith2003neural}, and symbols (via vector symbolic architectures; see \cite{gayler2003vector}, \cite{eliasmith2012largescale} and \cite{eliasmith2013how}).
-% TODO: Reference review of function spaces
 
 Additionally, there is strong evidence that the activities of neural populations form smooth low-dimensional manifolds in a high-dimensional activity space \citep{gallego2017neural,stringer2019highdimensional}.
 There exists a mapping $\vec a: \mathbb{R}^d \longrightarrow \mathbb{R}^{\Npop}$ (with $d \ll \Npop$) between a low-dimensional vector $\vec x \in \mathbb{R}^d$ and the average neural activities $\vec a(\vec x) \in \mathbb{R}^{\Npop}$, where \Npop is the number of neurons in the population.
@@ -308,7 +307,6 @@ One early example are the radial basis function networks described by \citet{bro
 Going back even further, the overall idea is similar to the pattern-recognition model of granule cell activity in the cerebellum proposed by \citet{marr1969theory}.
 From a more theoretical perspective, neuron population tuning-curves $\vec a(\vec x)$ span a function space with a set of non-orthogonal basis functions. 
 \citet{hornik1989multilayer} show that---assuming a reasonable distribution of these basis functions---we can approximate any continuous function over \Xrepr to a desired degree by increasing the number of hidden units.
-% TODO: Reference to other basis function related stuff
 
 \subsubsection{Computing synaptic weights}
 As we have seen, function decoders $\Dec^f$ can approximate arbitrary functions $f$ over \Xrepr.
@@ -344,8 +342,6 @@ Along with the linearity of homogeneous synaptic filters, this enables Nengo to 
 \subsection{Principle 3: Dynamics}
 \label{sec:nef_dynamics}
 
-% TODO: Mention the key-word recurrent somwhere!
-
 \begin{figure}
 	\centering
 	\includegraphics{media/chapters/02_modelling/02_03/instantaneous_spike_rate.pdf}%
@@ -371,8 +367,7 @@ This is illustrated in \Cref{fig:instantaneous_spike_rate}.
 The low-pass filtered spike train is clearly centred around the ground-truth rate.
 The deviations from the ground-truth can be interpreted as noise.
 Conveniently, we already accounted for noise by relying on population codes, and regularising the decoding matrices $\mat D^f$ (eq.~\ref{eqn:lstsq_loss_f}).
-More information on this topic can be found in \citet[Chapter~4]{eliasmith2003neural}, as well as later in Chapter~4 of this thesis.
-%TODO: Reference to Chapter 4.
+More information on this topic can be found in \citet[Chapter~4]{eliasmith2003neural}, as well as later in \Cref{chp:temporal_tuning} of this thesis.
 
 Correspondingly, since synaptic filters approximate the instantaneous firing rate, the techniques discussed so far will also work well in the context of spiking neural networks.
 However, as discussed above, instead of merely translating mathematical descriptions into spiking neural networks, we would also like to know how resources available in biologically plausible spiking neural networks can \emph{support} high-level function.
@@ -483,9 +478,6 @@ Remember that our goal is to bridge low-level mechanism and high-level function.
 This distinguishes \NEF models from \enquote{bottom-up} approaches, that develop mechanistically detailed models of brain circuits, with the hope that the final system---if truthfully describing biology---exhibits some interesting function \citep[cf.][]{komer2016unified}.
 We think that, optimally, extensions to the \NEF should expose new low-level detail as a \enquote{computational resource} that can be systematically exploited for high-level function.
 At the very least, extensions should expose additional constraints that provide modellers with an opportunity to explore the impact of individual aspects of neurobiological mechanism on high-level function \citep[e.g.,][]{duggins2017incorporating}.
-% TODO: Cite Pete's paper when published
-
-%The two main extensions to the NEF we discuss in this thesis---nonlinear dendritic interactions and temporal tuning---fall into the first category, whereas the other extensions provide additional modelling constraints.
 
 \subsubsection{Limitation 1: Current-based synapses}
 In our discussion of Principle 2 (\Cref{sec:nef_transformation}), we implicitly assumed that neurons use current-based synapses (cf.~\Cref{sec:simplified_neuron_models}).
@@ -552,8 +544,7 @@ Natural neuron parameter variations are insufficient to explain this discrepancy
 \NEF weight matrices $\mat W = \mat E \mat D$ are typically dense.
 That is, they contain few zeros, implying all-to-all connectivity between neurons (\Cref{fig:sparsity_and_dales_principle_a}).
 However, in biology, connectivity in the brain can be quite sparse.
-For example, as detailed by \citet[Chapter~20]{braitenberg1998cortex}, the likelihood of two neighbouring cortical cells to be connected is less than $90\%$. Similarly, connectivity between Golgi and Granule cells in the cerebellum is highly constrained (cf.~Chapter~5).
-% TODO: Add reference to Chapter 5
+For example, as detailed by \citet[Chapter~20]{braitenberg1998cortex}, the likelihood of two neighbouring cortical cells to be connected is less than $90\%$. Similarly, connectivity between Golgi and Granule cells in the cerebellum is highly constrained (cf.~\Cref{chp:cerebellum}).
 It may be desirable to give modellers the opportunity to account for these statistics.
 
 A common way to enforce sparsity is to use $L_1$, or \enquote{lasso}, regularisation instead of the $L_2$ regularisation proposed in \cref{eqn:lstsq_loss_identity,eqn:lstsq_loss_f} \citep[Chapter~6]{boyd2004convex}.

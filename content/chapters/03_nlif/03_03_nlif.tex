@@ -69,8 +69,7 @@ The dynamics of the $i$th compartment are
 \end{align}
 where \Cmi is the membrane capacitance of the compartment, $M_i$ and $N_i$ are the number of conductance- and current-based channels, respectively, $g_{k}^i(t)$ is the momentary conductance of the $k$th conductance-channel with reversal potential $E_{k}^i$, and $J_{k}^i(t)$ is the current injected into the current-based channel $j$.
 Finally, \cij is the coupling conductance between the $i$th and the $j$th compartment.
-The adjacency matrix of coupling conductances $\mat C$ must be symmetric, and the connectivity graph encoded by $\mat C$ must have exactly one connected component (cf.~our discussion in Section~2.2.3).
-%TODO: Correct reference
+The adjacency matrix of coupling conductances $\mat C$ must be symmetric, and the connectivity graph encoded by $\mat C$ must have exactly one connected component (cf.~our discussion in \Cref{sec:comp}).
 Some conductances $g_{k}^i(t)$ and currents $J_{k}^i(t)$ are constant, such as the static leak channels and bias currents.
 
 \begin{table}
@@ -327,11 +326,9 @@ As we discuss below, we propose using a parametrised version of $H$ that is fit 
 For the purpose of building networks of spiking neurons, we are primarily interested in the superthreshold regime.
 Unfortunately, as mentioned above, the nonlinear superthreshold dynamics are notoriously difficult to analyse.
 
-We work around this by exploiting the fact that \nlif neurons are tonically spiking (cf.~Section~2.2.1).
-That is, the somatic compartment oscillates between the reset and threshold potential with a fixed frequency (cf.~Figure~2.20).
-%TODO Fix references
+We work around this by exploiting the fact that \nlif neurons are tonically spiking (cf.~\Cref{sec:simplified_neuron_models}).
+That is, the somatic compartment oscillates between the reset and threshold potential with a fixed frequency (cf.~\Cref{fig:izhikevich_whichmod_figure1}).
 We may thus assume that the somatic membrane potential is effectively clamped to some value $\vSom$ between reset and threshold potential; we discuss this in more detail in \citet{stockel2017point}.
-%TODO Use "clip" instead of "clamp" in the subthreshold description
 
 As is depicted in \Cref{fig:avg_vsom}, this assumption is reasonable for a wide range of output rates, as long as we ignore the spike and refractory period.
 This latter simplification is justified, since due to clamping, the current flowing into the somatic compartment during these periods has no direct influence on the output rate of the neuron.

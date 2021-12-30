@@ -150,16 +150,6 @@ More precisely, allowing $x_1$, $x_2$ to be zero makes it impossible to compute 
 There are no continuous, real-valued functions $f_1$, $f_2$, $\sigma$ such that $\sigma(f_1(x_1) + f_2(x_2)) = x_1 x_2$ for all $(x_1, x_2) \in [0, 1]^2$.
 \end{restatable}
 
-
-%Choosing this $\sigma$ implicitly introduces a nonlinear interaction between the variables $x_1$, $x_2$, for example
-%\begin{align*}
-%	\sigma\left( (w_1 x_1 + w_2 x_2 + \beta)^2 - 1\right) = 
-%	\sigma\left( w_1^2 x_1^2 + w_2^2 x_2^2 + 2 w_1 w_2 x_1 x_2 + 2 w_1 \beta x_1 + 2 w_2 \beta x_2 + \beta^2  - 1\right) \,.
-%\end{align*}
-%The product-term $w_1 w_2 x_1 x_2$ can be exploited to %compute multiplication-like functions.
-%Still, as stated in Theorem~1, there inevitably is a large set of functions that we cannot compute.
-% TODO Add reference
-
 \subsection{Two-Layer Networks and Intermediate Populations}
 \label{sec:two_layer_intermediate}
 
@@ -189,12 +179,6 @@ There exist $d_i \in \mathbb{R}$ such that
 This follows directly from \citet{hornik1989multilayer}.
 We provide a more thorough discussion in \Cref{app:thm_two_layer_universal}.
 This theorem can be extended to hold for arbitrary compact domains $\Xrepr$, codomain dimensionalities, and other neural nonlinearities $\sigma$.
-
-%It may not be obvious why \cref{eqn:two_layer_network} describes a \enquote{two-layer} neural network.
-%In essence, the encoding weights $\vec e_i$ map $\vec x$ onto the input of one of the $N$ neurons with nonlinearity $\sigma$.
-%This step forms the \enquote{first} or \enquote{hidden layer}.
-%The decoding weights $d_i$ then map the neural activities $\sigma(\xi_i)$ onto the output, which forms the \enquote{second layer} (cf.~Figure~2.20).
-%% TODO: Add actual reference
 
 \subsubsection{The role of uniformly sampled encoders}
 Theorem~\ref{thm:two_layer_universal} requires that the encoding vectors $\vec e_i$ are uniformly sampled from the hypersphere $\mathbb{S}^\ell$.%
