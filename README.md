@@ -1,8 +1,6 @@
 # Harnessing Neural Dynamics as a Computational Resource
 ### PhD Thesis, Andreas Stöckel, 2021, University of Waterloo
 
-**⚠ Warning: This is the thesis as presented to my committee; not a final version**
-
 ## Abstract
 
 Researchers study nervous systems at levels of scale spanning several orders of magnitude, both in terms of time and space.
