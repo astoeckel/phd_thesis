@@ -7,7 +7,7 @@ Up to this point, we have formally defined dendritic computation and discussed i
 The goal of this section is to open avenues toward systematically integrating multi-compartment neuron models with dendritic trees into \NEF networks using the formalisms discussed above.
 
 Na\"ively, incorporating neurons with multiple nonlinear input channels into the \NEF is merely a matter of solving for $\vec w$ such that \cref{eqn:dendritic} holds.
-Phrasing this as an optimisation problem, we must minimise the difference between the desired average activity according to the normative tuning-curve constraint $a_i(\vec x)$, and the average activity according to our multi\-variate response curve $\mathscr{G}$.
+Phrasing this as an optimisation problem, we must minimise the difference between the desired average activity according to the normative tuning-curve constraint $a_i(\vec x)$ and according to our multivariate response curve $\mathscr{G}$.
 Using a least-squares loss (and omitting the regularisation term), we have
 \begin{align}
 	\begin{aligned}
