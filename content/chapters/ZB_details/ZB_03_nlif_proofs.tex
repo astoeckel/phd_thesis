@@ -5,7 +5,7 @@
 
 In this section, we provide proofs for the claims made in \Cref{chp:nlif}, where we discussed theoretical aspects of neural networks in general, and dendritic computation in particular.
 
-\subsection{Proof of \Cref{thm:xor_general}}
+\subsection{Proof of Theorem~3.1}
 
 In \Cref{sec:additive_net} we claimed that there are always functions $f$ that cannot be approximated using an additive network with a fixed nonlinearity $\sigma$.
 We prove this by constructing an $f$ that is constant along the sides of a rectangle, but maps onto a different value on the inside.
@@ -17,15 +17,15 @@ Since $\mathbb{X}$ is a compact set with dimensionality $\dim(\mathbb{X}) = \ell
 $[a_0, a_1] \times [b_0, b_1] \times \{c_1\} \times \ldots \times \{c_{\ell - 2}\} \subseteq \mathbb{X}$.
 Now, consider an $f$ with
 \begin{align*}
-				     &f(a_0, x_2, c_1, \ldots, c_{\ell - 2}) = d \quad \text{for all } x_1 \in [a_0, a_1] \,, \\
-	\text{and} \quad &f(x_1, b_0, c_1, \ldots, c_{\ell - 2}) = d \quad \text{for all } x_2 \in [b_0, b_1] \,, \\
-	\text{and} \quad &f(x_1, x_2, c_1, \ldots, c_{\ell - 2}) \neq d \quad \text{for all } x_1 \in (a_0, a_1] \text{ and } x_2 \in (b_0, b_1] \,.
+				     &f(a_0, x_2, c_1, \ldots, c_{\ell - 2}) = d \quad \text{for } x_1 \in [a_0, a_1] \,, \\
+	\text{and} \quad &f(x_1, b_0, c_1, \ldots, c_{\ell - 2}) = d \quad \text{for } x_2 \in [b_0, b_1] \,, \\
+	\text{and} \quad &f(x_1, x_2, c_1, \ldots, c_{\ell - 2}) \neq d \quad \text{for } x_1 \in (a_0, a_1] \text{ and } x_2 \in (b_0, b_1] \,.
 \end{align*}
 Since $\sigma$ is continuous, the functions $f_1(x_1)$, $f_2(x_2)$ must be constant for all $x_1 \in [a_0, a_1]$ and $x_2 \in [b_0, b_1]$, otherwise the first two conditions cannot be met.
 However, with $f_1$ and $f_2$ being constant over the indicated intervals, the second condition cannot be met. Hence, $f$ is a function that cannot be computed using additive networks, independent of $\sigma$.
 \end{proof}
 
-\subsection{Proof of Theorem~\ref{thm:weak_xor}}
+\subsection{Proof of Theorem~3.2}
 \label{app:thm_weak_xor}
 
 \Citet[Chapter~2]{minsky1987perceptrons} note that the Perceptron cannot compute \XOR.
@@ -46,10 +46,10 @@ Further expanding this definition by substituting in our additive network $\phi(
 	Assume without loss of generality that $\sigma$ is monotonically increasing. Then, the first line implies $\big(b_0' < b_1' \big) \wedge \big( b_0' > b_1' \big)$ and the second line $\big(a_0' < a_1' \big) \wedge \big( a_0' > a_1' \big)$. \Lightning
 \end{proof}
 
-\subsection{Proof of \Cref{thm:multiplication}}
+\subsection{Proof of Theorem~3.3}
 \label{app:thm_multiplication}
 
-Additive networks are capable of solving the weak \XOR problem if we allow a non-monotonic neural nonlinearity $\sigma$.
+Additive networks are capable of solving the weak \XOR problem if we allow a nonmonotonic neural nonlinearity $\sigma$.
 However, as we already saw in \Cref{thm:xor_general}, being able to freely choose $\sigma$ does not mean that we can universally approximate any function.
 An example we gave in \Cref{thm:multiplication} is that of multiplication.
 While this is merely a special case of the kind of function used to prove \Cref{thm:xor_general}, we provide an alternative proof below.
@@ -88,7 +88,7 @@ But, according to our assumption, it should also hold that
 However, since the values passed to $\sigma$ overlap in both cases, this is a contradiction. \Lightning
 \end{proof}
 
-\subsection{Discussion of \Cref{thm:two_layer_universal}}
+\subsection{Discussion of Theorem~3.4}
 \label{app:thm_two_layer_universal}
 
 \begin{figure}
@@ -96,7 +96,7 @@ However, since the values passed to $\sigma$ overlap in both cases, this is a co
 	\includegraphics{media/chapters/ZB_details/universality_proof.pdf}%
 	{\phantomsubcaption\label{fig:universality_proof_a}}%
 	{\phantomsubcaption\label{fig:universality_proof_b}}%
-	\caption[Illustration of \Cref{thm:two_layer_universal}]{Illustration of \Cref{thm:two_layer_universal}. \textbf{(A)} 1D ensemble with step activation function. Lines are tuning curves, black arrows the encoder. For $n \to \infty$ neurons, every point on the $x$-axis is enclosed by two neighboring tuning-curves. Subtracting and scaling these two tuning curves appropriately, we can assign a value $f(x)$ to all $x \in [0, 1]$.
+	\caption[Illustration of \Cref{thm:two_layer_universal}]{Illustration of \Cref{thm:two_layer_universal}. \textbf{(A)} 1D ensemble with step activation function. Lines are tuning curves, black arrows the encoder. For $n \to \infty$ neurons, every point on the $x$-axis is enclosed by two neighbouring tuning-curves. Subtracting and scaling these two tuning curves appropriately, we can assign a value $f(x)$ to all $x \in [0, 1]$.
 	For example, the two highlighted tuning curves, enclose a small region on the $x$-axis (blue highlight).
 	\textbf{(B)} 2D ensemble with step activation. Lines are the intercept of an individual neuron, arrows the encoder.
 	The tuning curves can be linearly combined such that any convex region in the space is assigned a relatively large value.
@@ -121,7 +121,7 @@ Similarly, for higher-dimensional representations, we can linearly combine tunin
 As we increase the number of neurons, and if the conditions stated in the theorem are met, the enclosed regions converge to individual points.
 We can approximate any function $f(\vec x)$ by scaling and summing the individual decodings.
 
-\subsection{Proof of \Cref{thm:nlif_convergence}}
+\subsection{Proof of Theorem~3.6}
 \label{app:thm_nlif_convergence}
 
 Back in \Cref{sec:nlif_subth_properties} we claimed that the feedback matrix of the \nlif dynamical system is stable and does not possess any oscillatory behaviour.
@@ -135,7 +135,7 @@ Then $\vec x = \alpha \vec{1}$ with $\alpha \in \mathbb{R}$ is the only root (be
 \end{align*}
 \end{lemma}
 \begin{proof}
-Because of all $c_{ij}$ being positive, the quadratic form is clearly non-negative. In other words, $\mat L$ is positive semidefinite and all its eigenvalues are nonnegative.
+Because of all $c_{ij}$ being positive, the quadratic form is clearly nonnegative. In other words, $\mat L$ is positive semidefinite and all its eigenvalues are nonnegative.
 Since $\mat L$ is symmetric, its eigen-decomposition is $\mat Q \mat \Lambda \mat Q^T$, where $\mat Q$ is orthogonal.
 Let $\vec y = \mat Q^T \vec x$.
 It holds
@@ -161,7 +161,7 @@ The feedback matrix $\mat A[\vec g] \diag(\vCm)^{-1}$ has the following form:
 	&= -\bigl( \mat L + \diag(\vec a' + \mat A' \vec g) \bigr) \diag(\vCm)^{-1} 
 	 = -\bigl( \mat L + \diag(\vec \epsilon) \bigr) \diag(\vCm)^{-1}  \,,
 \end{align*}
-where $\mat L$ is the graph Laplacian, $\vCm$ is a positive vector of membrane capacitances, and $\vec \epsilon$ is, by the conditions specified in the theorem (i.e., there being at least one conductance-based channel), a non-negative vector with $\vec \epsilon \neq \vec 0$.
+where $\mat L$ is the graph Laplacian, $\vCm$ is a positive vector of membrane capacitances, and $\vec \epsilon$ is, by the conditions specified in the theorem (i.e., there being at least one conductance-based channel), a nonnegative vector with $\vec \epsilon \neq \vec 0$.
 Eliminating the minus sign, the following must hold to ensure negative definiteness:
 \begin{align*}
 	 \vec x^T \mat L' \vec x 
@@ -179,7 +179,7 @@ We get
 	 + \vec x^T \diag(\vec \epsilon) \diag(\vCm)^{-1} \vec x \\
 	&= \sum_{(i, j) \in E} c_{ij} \CmiInv (x_i - x_j)^2 + \sum_{i = 1}^n \epsilon_i \CmiInv x_i^2 \,.
 \end{align*}
-This expression is obviously non-negative due to $c_{ij}$, \CmiInv being positive and $\epsilon_i$ being non-negative.
+This expression is obviously nonnegative due to $c_{ij}$, \CmiInv being positive and $\epsilon_i$ being nonnegative.
 However, to show strict positivity, and correspondingly, negative definiteness of our original expression, consider the conditions under which $\vec x^T \mat L' \vec x$ could be zero:
 \begin{enumerate}[(i)]
 	\item The sum over $c_{ij} \CmiInv (x_i - x_j)^2$ is zero exactly if there are no edges in the graph (since the graph is connected, this is only possible for $n = 1$), or, under the conditions listed in \Cref{lem:laplacian_quadratic}, that is $\vec x = \alpha \vec{1}$, or, put differently, $x_i = x_j$ for all $i$, $j$.
@@ -203,7 +203,7 @@ Our original claim follows trivially.
 %To prove this, we will make use of the following lemmas, that, in similar form, can be found in the literature on graph theory; see the provided references for more information.
 %
 %\begin{lemma}
-%The Laplacian $\mat L$ of a positively weighted connected graph is positive semi-definite---all eigenvalues are real and non-negative.
+%The Laplacian $\mat L$ of a positively weighted connected graph is positive semi-definite---all eigenvalues are real and nonnegative.
 %The smallest eigenvalue is zero with multiplicity one.
 %\end{lemma}
 %
@@ -216,11 +216,11 @@ Our original claim follows trivially.
 %\end{align*}
 %where $\vec x \in \mathbb{R}^n$, $E$ are the edges in the graph, and $c_{ij}$ are the connection weights; nonnegativity holds because of $c_{ij}$ being nonnegative.
 %This is the definition of \enquote{positive semidefinite}.
-%Since $\mat L$ is symmetric, \enquote{positive semidefinite} is equivalent to \enquote{all eigenvalues are non-negative}.
+%Since $\mat L$ is symmetric, \enquote{positive semidefinite} is equivalent to \enquote{all eigenvalues are nonnegative}.
 %\end{proof}
 %
 %\begin{lemma}
-%Let $\mat L$ the Laplacian of a positively weighted connected graph. Then $\mat L' = \mat L + \diag(\vec{\epsilon})$ is non-singular for any non-negative $\vec{\epsilon} \in \mathbb{R}^n \setminus \{\vec{0}\}$.
+%Let $\mat L$ the Laplacian of a positively weighted connected graph. Then $\mat L' = \mat L + \diag(\vec{\epsilon})$ is non-singular for any nonnegative $\vec{\epsilon} \in \mathbb{R}^n \setminus \{\vec{0}\}$.
 %\end{lemma}
 
 %\begin{proof}
@@ -247,7 +247,7 @@ Our original claim follows trivially.
 %This equality can only hold if $\vec x$ is orthogonal to $\vec{\epsilon}$, i.e., $\langle \vec x, \vec \epsilon \rangle = 0$.
 %\end{proof}
 
-\subsection{Proof of \Cref{thm:nlif_product_terms}}
+\subsection{Proof of Theorem~3.7}
 \label{app:nlif_product_terms}
 
 We stated in \Cref{sec:nlif_examples} that the dendritic nonlinearity $H$ of an $n$-LIF neuron only contains product terms between the input channels of different compartments, but not between input channels of the same compartment.
@@ -354,7 +354,9 @@ Hence, the entry $(\adj(\mat{\tilde C}[\vec g]))_{k\ell}$ neither contains the t
 This concludes our proof.
 \end{proof}
 
-\subsection{Proof of \Cref{thm:two_comp_xor}}
+\pagebreak
+
+\subsection{Proof of Theorem~3.8}
 \label{app:thm_two_comp_xor}
 
 We noted in \Cref{sec:nlif_examples} that the two-compartment \LIF nonlinearity cannot be used to solve the weak \XOR problem.
@@ -366,7 +368,7 @@ The proof for this is analogous to the proof that additive networks cannot solve
 Particularly, we rely on the denominator being strictly positive.
 
 \begin{proof}
-For $b_0 \neq 0$, $H$ as given in the above theorem can be reparametrized to $H'$ as follows
+For $b_0 \neq 0$, $H$ as given in the above theorem can be reparametrised to $H'$ as follows
 \begin{align*} 
 	H(g_\mathrm{E}, g_\mathrm{I}) &= H'\left( \dfrac{b_1  g_\mathrm{E}}{| b_0 |}, \dfrac{b_2 g_\mathrm{I}}{| b_0 |} \right) = H'(x, y) = \frac{\pm 1 + x - y}{c_0 + c_1 x + c_2 y} \,,
 \end{align*}

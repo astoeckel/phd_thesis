@@ -6,7 +6,7 @@
 This section contains proofs for the mathematical claims made throughout \Cref{chp:temporal_tuning}.
 Specifically, we prove that our least-squares loss generalises the \NEF dynamics principle, that our notion of a \enquote{delay re-encoder} works as intended, and provide the complete derivation of the \LDN system using the delay re-encoder.
 
-\subsection{Proof for \Cref{thm:temporal_lstsq}}
+\subsection{Proof for Theorem~4.1}
 \label{app:lstsq_nef_equivalence}
 
 We claimed in \Cref{sec:temporal_tuning_lti} that solving our least-squares loss function in linear networks with homogeneous first-order low-pass filters results in exactly the same solution as using the \NEF dynamics principle.
@@ -192,7 +192,7 @@ Our $f'$ from above \emph{exactly} fulfills this property (cf.~\Cref{fig:nef_dyn
 	\label{fig:homogeneous_heterogeneous_filters}
 \end{figure}
 
-We mentioned in \Cref{sec:lti_complex_networks} that compensating for the dynamics of a network with heterogeneous time constants requires access to the derivative of the input and feedback signal.
+We mentioned in \Cref{sec:lti_complex_networks} that compensating for the dynamics of a network with heterogeneous time-constants requires access to the derivative of the input and feedback signal.
 To get some intuition for this, recall the derivation of the original \NEF dynamics principle (cf.~\Cref{sec:nef_dynamics}; \cite{eliasmith2003neural}, Chapter~8).
 Using the homogeneous network illustrated in \Cref{fig:homogeneous_heterogeneous_filters_a}
 \begin{align}
@@ -206,7 +206,7 @@ Multiplying both sides of \cref{eqn:homo_dyn} with $\tau s + 1$ and rearranging 
 \end{align*}
 
 We can now repeat the same procedure for the network with heterogeneous synaptic filters depicted in \Cref{fig:homogeneous_heterogeneous_filters_b}; however, we will obtain filters $\mat A'(s)$, $\mat B'(s)$.
-Assuming that $H_1(s)$ and $H_2(s)$ are first-order low pass filters with time-constants $\tau_1$, $\tau_2$, we have
+Assuming that $H_1(s)$ and $H_2(s)$ are first-order low-pass filters with time-constants $\tau_1$, $\tau_2$, we have
 \begin{align*}
 	M(s) &= \mat B'(s) H_1(s) U(s) + \mat A'(s) H_2(s) M(s) = \mat B'(s) \frac{1}{\tau_1 s + 1} U(s) + \mat A'(s) \frac{1}{\tau_2 s + 1} M(s) \,.
 	\label{eqn:hetero_dyn}
@@ -227,7 +227,7 @@ Solving for $\mat A'(s)$ and $\mat B'(s)$ results in two first-order high-pass f
 Curiously, this solution does not coincide with the original \NEF solution for $\tau_1 = \tau_2$; this is due to the problem of finding $\mat A'(s)$ and $\mat B'(s)$ being underconstrained.
 However, and without providing a proof, for $\tau_1 \neq \tau_2$, $s$ will always be in the numerator of $\mat A'(s)$ and $\mat B'(s)$; correspondingly, these filters require access to the derivative of their input.
 
-\subsection{Homogeneous Recurrent Networks With Interneurons}
+\subsection{Homogeneous Recurrent Networks with Interneurons}
 \label{app:granule_golgi_dynamics}
 
 \begin{figure}
@@ -286,7 +286,7 @@ Multiplying both sides with $s$ and substituting in our alleged solution for $\m
 Correspondingly, the given solution is consistent with the network exactly producing the desired dynamics. \hfill \qed
 
 
-\subsection{Proof of \Cref{lem:leg_sys}}
+\subsection{Proof of Lemma~4.2}
 \label{app:leg_sys_proof}
 
 In \Cref{sec:ldn_derivation}, we discussed a \LTI system with an impulse response that perfectly traces out the Legendre polynomials.
@@ -315,7 +315,7 @@ where ${\mat A}$ is as defined in \cref{lem:leg_sys}.
 The vector ${\mat B}' = \big( \tilde P_0(0), \ldots, \tilde P_{q - 1}(0)\big)$ defines the initial value of each state dimension in response to a Dirac pulse $u(t) = \delta(t)$. \qedhere
 \end{proof}
 
-\subsection{Proof of \Cref{lem:rectangle_window}}
+\subsection{Proof of Lemma~4.3}
 
 Recall \Cref{lem:rectangle_window}, which stated that we can construct a perfect rectangle window if we have access to a delayed input $u(t - \theta)$.
 
@@ -331,7 +331,7 @@ We show \emph{(1)} that the system state is unchanged for $t < \theta$, and \emp
 The resulting $\vec m$ is zero and remains zero as $u(t) = \delta(t) = 0$ for  $t \neq 0$.
 \end{proof}
 
-\subsection{Proof of \Cref{lem:legendre_delay_decoder}}
+\subsection{Proof of Lemma~4.4}
 \label{app:legendre_delay_decoder_proof}
 
 In \Cref{lem:legendre_delay_decoder} we claimed that, given a delay $\theta'$, the delay decoder (cf.~\Cref{def:delay_decoder}) for the Legendre polynomials has the following form:

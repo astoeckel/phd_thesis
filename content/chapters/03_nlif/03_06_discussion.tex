@@ -18,10 +18,10 @@ We systematically characterised the computational properties of the surrogate mo
 
 A particular focus of our studies was on the \twocomplif neuron, the simplest, non-trivial \nlif model.
 This model features two conductance-based input channels with divisive interaction.
-Notably, we can solve for synaptic weights in \twocomplif neurons by minimizing a loss function in rational least-squares form, which in turn can be approximated as a convex linear least-squares problem.
-Spiking neural networks with two-compartment neurons outperform two-layer networks for a variety of benchmark functions, as long as these functions do not implicitly generate a form of the \XOR problem.
+Notably, we can solve for synaptic weights in \twocomplif neurons by minimising a loss function in rational least-squares form, which in turn can be approximated as a convex linear least-squares problem.
+Spiking neural networks with two-compartment neurons outperform two-layer networks for a variety of benchmark functions, as long as these functions do not implicitly require solving the \XOR problem.
 
-Solving for surrogate model parameters and synaptic weights in arbitrary \nlif neurons is a hard non-convex optimisation problem.
+Solving for surrogate model parameters and synaptic weights in arbitrary \nlif neurons is a hard nonconvex optimisation problem.
 We demonstrated that it is possible to exploit the structure of the surrogate dendritic nonlinearity by constructing a sequential quadratic program (\SQP) that reaches relatively small losses after a few iterations and that often outperforms gradient-based methods such as L-\BFGS-B and Adam.
 
 The methods presented here can approximate \XOR-like functions such as four-quadrant multiplication using \nlif neurons with three or more compartments.
@@ -40,12 +40,12 @@ Another shortcoming of our surrogate model \Hden is the assumption that the aver
 While we accounted for this by calibrating the model parameters, this calibration is specific to the working-regime of the neuron.
 Deviations from the modelled behaviour are particularly apparent in situations with small output rates (cf.~\Cref{fig:avg_vsom,fig:synaptic_nonlinearity_fit_a,fig:synaptic_nonlinearity_fit_b,fig:nlif_parameter_optimisation_comparison}).
 Correspondingly, our surrogate dendritic nonlinearity may not be a suitable model for brain areas featuring extremely low maximum firing rates.
-Given that optimising for weights in arbitrary \nlif neurons is a \enquote{hopeless} non-convex optimisation problem anyway, it would be interesting to consider the use of a less constrained statistical model as a dendritic nonlinearity \Hden, such as a small neural network.
+Given that optimising for weights in arbitrary \nlif neurons is a \enquote{hopeless} nonconvex optimisation problem anyway, it would be interesting to consider the use of a less constrained statistical model as a dendritic nonlinearity \Hden, such as a small neural network.
 
 In light of these limitations, we would like to re-emphasize that, as stated in the introduction of this chapter, our goal was not to provide a detailed mechanistic model of dendritic computation.
 Instead, we hope to provide a useful tool that captures essential aspects of dendritic computation---a nonlinear interaction between input channels---while being computationally cheap and mathematically tractable, but still grounded in biophysics.
 
-In particular, we saw that both the two- and three-compartment neuron improve the multivariate function approximation performance of a single neuron population, while using more than tree compartments resulted in diminishing returns.
+In particular, we saw that both the two- and three-compartment neuron improve the multivariate function approximation performance of a single neuron population, while using more than three compartments resulted in diminishing returns.
 From a purely functional perspective, there thus seems to be no reason to use more complex models of \emph{passive} dendritic computation beyond two and three-compartment neurons.
 
 \subsubsection{Future work}

@@ -88,8 +88,6 @@ Mathematically, the post-synaptic current $J_\mathrm{syn}(t)$ flowing from the s
 Here, $E_\mathrm{E}$ and $E_\mathrm{I}$ are the equilibrium potentials of the gated ion channels.
 These potentials are not necessarily equal to ion reversal potentials (\Cref{tbl:nernst}).
 For example, NMDA and AMPA channels conduct both $\mathrm{Na^+}$ and $\mathrm{K^+}$, resulting in $E_\mathrm{E} \approx \SI{0}{\milli\volt}$ \citep[Chapter~10]{kandel2012principles}.
-%All receptors with the same reversal potential are summarised as single channel in the equivalent circuit.
-%Correspondingly, $g_\mathrm{E}$ and $g_\mathrm{I}$ are the sum over the state of multiple post-neurons (similar to \Cref{fig:electrical_circuit_individual_channels}).
 
 \subsubsection{Synaptic dynamics and weights}
 The time course of the conductance $g(t)$ depends on the neurotransmitter and receptor type.
@@ -113,11 +111,11 @@ We have \citep{roth2009modeling}:
 	\label{eqn:low_pass_second_order}
 \end{align}
 where $\delta(t)$ is the Dirac-delta, and $\alpha$ is a scaling factor such that the scalar $w_i$ corresponds to the peak value of $g_1(t)$ for a single action potential received from pre-neuron $i$ (\Cref{fig:synapse_filter_examples_traces}).
-For $\tau_1 = \tau_2$ this type of synaptic dynamics follow the so-called \emph{alpha function}.
+For $\tau_1 = \tau_2$ this type of synaptic dynamics follows the so-called \emph{alpha function}.
 
 Notably, the scalar $w_i$ is referred to as \emph{synaptic weight} in computational modelling, or as \emph{synaptic strength} in neuroscience.
 This scalar summarises various biological processes that determine the average response of the post-neuron to an action-potential received from the $i$th pre-neuron.
-For example, synaptic strength can depend on the amount of neurotransmitter released in the pre-synapse, or the ion-channel density in the post-synapse \citep[Chapter~12]{kandel2012principles}.
+For example, the synaptic strength can depend on the amount of neurotransmitter released in the pre-synapse, or the ion-channel density in the post-synapse \citep[Chapter~12]{kandel2012principles}.
 In this context, the term \emph{synaptic plasticity} refers to a change in synaptic strength over time.
 This plays a key role in learning---we discuss this in more detail in Chapter~5.
 
@@ -126,19 +124,18 @@ Typically, the rise-time of $g(t)$ is relatively short.
 Correspondingly, the second-order low-pass filter can be approximated by a first-order dynamical system with decay-time $\tau$.
 Mathematically, and as depicted the lower portion of \Cref{fig:synapse_filter_examples_traces}, the dynamics are
 \begin{align}
-	\dot g(t) &= -\frac{g(t)}{\tau} + \sum\nolimits_{i}  w_i \sum\nolimits_{j} \delta(t_{ij} - t) \,.
+	\dot g(t) &= -\frac{g(t)}{\tau} + \sum\nolimits_{i}  w_i \sum\nolimits_{j} \delta(t - t_{ij}) \,.
 	\label{eqn:low_pass_first_order}
 \end{align}
 
 \subsubsection{Synaptic dynamics as filters}
 The above synaptic dynamics (eqs.~\ref{eqn:low_pass_second_order}, \ref{eqn:low_pass_first_order}) are linear time-invariant (\LTI) systems.
-%of the form $\dot{\vec g}(t) = \mat A{\vec g(t)} + \mat B u(t)$, where $\mat A \in \mathbb{R}^{n \times n}$ is a state-transition matrix, $\mat B \in \mathbb{R}^{n \times 1}$ is the input matrix, and $u(t)$ is the input in the form of weighted pre-synaptic spike events; the output of the system (i.e., the conductance) is simply the first state-dimension $g_1$.
 \LTI systems are fully characterised by their \emph{impulse response} $h(t)$ and can be replaced by a convolution (\enquote{$\ast$}) between $h(t)$ and the weighted input spike-train $u(t)$:
 \begin{align}
 	g(t)
-		&= (h \ast u)(t)
-		 = \int_0^\infty h(\tau) u(t - \tau) \,\mathrm{d}\tau
-		 = \int_0^\infty h(\tau) \sum\nolimits_{i}  w_i \sum\nolimits_{j} \delta(t_{ij} - \tau) \,\mathrm{d}\tau \,.
+		&= (u \ast h)(t)
+		 = \int_0^\infty u(t - t') h(t') \,\D t'
+		 = \int_0^\infty h(t') \sum\nolimits_{i}  w_i \sum\nolimits_{j} \delta(t - t_{ij} - t') \,\D t' \,.
 	\label{eqn:synapse_impulse}
 \end{align}
 For the first-order dynamics in \cref{eqn:low_pass_first_order}, the impulse response is $h(t) = \exp(-t/\tau)$ for $t \geq 0$ (and $h(t)= 0$ if $t < 0$); impulse responses of the second-order system are depicted in \Cref{fig:synapse_filter_examples_time_constants}.
@@ -147,19 +144,16 @@ Convolutions such as \cref{eqn:synapse_impulse} can alternatively be expressed a
 	g(t) &= \mathcal{F}^{-1} \bigl(\mathcal{F}(h) \mathcal{F}(u) \bigr)(t) \,,
 \end{align}
 where $\mathcal{F}$ is the forward Fourier transform, and $\mathcal{F}^{-1}$ its inverse.
-From this signal-processing perspective, the synaptic dynamics attenuate frequencies in the input spike-train; they act as a \emph{filter}.
+From this signal-processing perspective, the synaptic dynamics attenuate certain frequencies in the input spike-train; they act as a \emph{filter}.
 The synaptic dynamics discussed so far attenuate low frequencies far less than higher frequencies; they are thus referred to as \emph{low-pass filters}.
-
-% TODO: Talk about filters in general
-% TODO: Provide some example synaptic time constants
 
 \newpage
 
 \subsection{Simplified Neuron Models}
 \label{sec:simplified_neuron_models}
 
-The models discussed in the previous section describe indiviudal neurons at a relatively low level of abstraction.
-This incurs a high computational cost, especially when considering detailed compartemental neurons with Hodgkin-Huxley-like super-threshold dynamics.
+The models discussed in the previous section describe individual neurons at a relatively low level of abstraction.
+This incurs a high computational cost, especially when considering detailed compartmental neurons with Hodgkin-Huxley-like super-threshold dynamics.
 
 Fortunately, important electrophysiological properties of neurons can be captured by less detailed, computationally inexpensive, models \citep[cf.][Chapter~14]{koch1999biophysics}.
 For example, the Izhikevich \citep{izhikevich2004which} and Adaptive Exponential \citep{brette2005adaptive} point neuron models require only two state variables, but are capable of reproducing spike patterns observed in nature.
@@ -170,7 +164,7 @@ Here, we focus on the even simpler \enquote{leaky integrate-and-fire} (\LIF) mod
 \begin{figure}[t]
 	\includegraphics[scale=0.3333]{media/chapters/02_modelling/02_02/lif_circuit.pdf}%
 	\kern-0.25cm\includegraphics{media/chapters/02_modelling/02_02/lif_traces.pdf}
-	\caption[Equivalent circuit diagram and membrane potential trace of a LIF neuron]{Equivalent circuit diagram and membrane potential trace of a \LIF neuron. \textbf{(A)} The \LIF model consists of a capacitative membrane with a \enquote{leak} channel. A reset mechanism clamps \vMem to the reset potential \vReset. \textbf{(B)} Membrane potential trace (\emph{top}) for rectangle pulse current inputs (\emph{middle}).  Vertical dashed lines are spike events. The bottom graph depicts the remaining refractory period.}
+	\caption[Equivalent circuit diagram and membrane potential trace of an LIF neuron]{Equivalent circuit diagram and membrane potential trace of an \LIF neuron. \textbf{(A)} The \LIF model consists of a capacitative membrane with a \enquote{leak} channel. A reset mechanism clamps \vMem to the reset potential \vReset. \textbf{(B)} Membrane potential trace (\emph{top}) for rectangle pulse current inputs (\emph{middle}).  Vertical dashed lines are spike events. The bottom graph depicts the remaining refractory period.}
 	\label{fig:lif}
 \end{figure}
 
@@ -234,15 +228,13 @@ This is not necessarily true; neurons can exhibit complex behaviours that violat
 For example, \emph{phasic} neurons only produce a limited number of spikes in response to an input step (Figure~\ref{fig:izhikevich_whichmod_figure1}B, D, E), while other neurons adapt to constant input currents over time, resulting in a reduction in frequency (Figure~\ref{fig:izhikevich_whichmod_figure1}F).
 Still, neurons often behave \emph{tonically} (Figure~\ref{fig:izhikevich_whichmod_figure1}A, C, G, H), and can be reasonably well characterised in terms of a response curve.
 
-Response curves and time-less \enquote{rate neurons} form the basis for artificial neural networks commonly used in machine learning. We discuss this in more detail later in this thesis.
-Furthermore, we revisit temporal properties of the response curve when we discuss temporal tuning curves. % LEAVE SPACE HERE
-% TODO add section references
+Response curves and time-less \enquote{rate neurons} form the basis for \emph{artificial} neural networks commonly used in machine learning. We discuss this in more detail later in this thesis.
+Furthermore, we revisit temporal properties of the response curve when we discuss temporal tuning curves in \Cref{chp:temporal_tuning}.
 
 \subsubsection{LIF response curve}
 For most neuron models, it is impossible to derive a closed-form expression for the average spike rate $G[J]$ given a constant current $J$; there typically is no closed-form solution for $G[J]$. 
-%\footnote{Very few differential equations posses closed-form solutions. Even slightly more complex models (e.g.,~first-order current-based synapses instead of constant $J$) require the analytic Lambert $\mathcal{W}$ function in the solution.}
-Instead, we have to rely on the method suggested by \cref{eqn:response_curve}.
-That is, we simulate the neural dynamics for a sufficiently long time-period and count the number of spikes $n_\mathrm{spikes}$.
+Instead, we have to rely on the numerical method suggested by \cref{eqn:response_curve}.
+That is, we simulate the neural dynamics over a sufficiently long time-period and count the number of spikes $n_\mathrm{spikes}$.
 
 The \LIF neuron is a notable exception to this, as its subthreshold dynamics form a simple first-order linear dynamical system.
 Using basic techniques for solving differential equations, the membrane potential \vMem at time $t$ for a constant input current $J$ is given as
@@ -309,7 +301,7 @@ We compare conductance- and current-based synapse models in more detail in the n
 	{\phantomsubcaption\label{fig:neural_networks_a}}%
 	{\phantomsubcaption\label{fig:neural_networks_b}}%
 	{\phantomsubcaption\label{fig:neural_networks_c}}%
-	\caption[Illustration of different neural network types]{Illustration of different neural network types. Blue circles depict individual neurons. \textbf{(A)} Feed-forward neural networks can be represented as acyclic graphs. \textbf{(B)} If the network connectivity contains cycles (e.g., the 5-2-4-5 cycle), the network is called \emph{recurrent}. Cycles can also be self-recurrences (e.g., neuron 6). \textbf{(C)} Artifical neurons (\emph{left}) process time-discrete samples. Spiking neurons (\emph{right}) are time-continous; they receive a weighted input spike train, filter it, and produce an output spike train.}
+	\caption[Illustration of different neural network types]{Illustration of different neural network types. Blue circles depict individual neurons. \textbf{(A)} Feed-forward neural networks can be represented as acyclic graphs. \textbf{(B)} If the network connectivity contains cycles (e.g., the 5-2-4-5 cycle), the network is called \emph{recurrent}. Cycles can also be self-recurrences (e.g., neuron 6). \textbf{(C)} Artificial neurons (\emph{left}) process time-discrete samples. Spiking neurons (\emph{right}) are time-continous; they receive a weighted input spike train, filter it, and produce an output spike train.}
 \end{figure}
 
 We are now well-equipped to construct and simulate spiking neural networks (\SNNpl).
@@ -338,17 +330,10 @@ Similar gradient-descent global optimisation methods can be applied in the conte
 The resulting $\mat W$ can then be used in a spiking context.
 \Citet{goltz2021fast} optimise synaptic weights such that desired spike-timings are generated by a black-box spiking neural network simulator.
 
-%Computational neuroscientists often distinguish between rate and temporal spike-codes, though the definitions of these concepts are quite vague.
-%For example, \citet[Chapter~1]{gerstner2002spiking} list three different definitions of the term \enquote{rate code}, while \citet{abbott2001theoretical} list four definitions.
-%Rates are estimated by either binning and counting, causal and acausal filtering, or (orthogonally) taking averages over entire populations into account.
-
-%A similar zoo of definitions is to be had for temporal codes. For example, as pointed out by \citet[Chapter~14]{koch1999biophysics}, researchers often interpret temporal codes as correlations between spike times carrying information (i.e., spikes from different pre-neurons arriving earlier or later relative to each other).
-%Another popular temporal code is \enquote{time-to-first-spike}, i.e., the notion that neurons rely on the time between some synchronisation event and the first received spike event \citep{vanrullen2005spike}.
-
 Notably, such global optimisation methods can be useful when modelling neurobiological systems.
 For example, there are striking similarities between the neural tuning observed in visual cortex and the learned tuning of neurons in hierarchical image classification networks \citep{yamins2016using}.
 However, this is, to some degree, accidental, and not explicitly imposed.
-As we discussed at the beginning of this chapter, it can be desirable build models that reliably adhere to certain constraints---such as the aforementioned tuning properties.
+As we discussed at the beginning of this chapter, it can be desirable to build models that reliably adhere to certain constraints---such as the aforementioned tuning properties.
 
 \subsection{Neural Tuning and Population Codes}
 \label{sec:neural_tuning}
@@ -362,20 +347,14 @@ As we discussed at the beginning of this chapter, it can be desirable build mode
 	\label{fig:visual_cortex_tuning}
 \end{figure}
 
-%Given that we can simulate large biological systems at different levels of abstraction, the primary challenge is to construct networks that actually give rise to the behaviours observed in nature.
-%Unfortunately, in many cases, too much about the brain is still unknown to successfully build such models.
-%This is particularly true for brain regions involved in higher level cognition, and that, in terms of connectivity, are farther away from the periphery.
-%Fortunately, brain regions \emph{closer} to the periphery are, relatively speaking, quite well understood.
-%\footnote{Neuroscience textbooks such as \citet{kandel2012principles} discuss the neural circuitry of brain regions involved in sensory and motor processing in great detail, while chapters concerning higher-level cognitive tasks mostly report behavioural observations and coarse measurements such as fMRI scans.}
 There are two important concepts that shed some light onto the organisation of brain networks---at least those brain networks involved in sensory processing: \emph{tuning curves} and \emph{receptive fields}.
-In turn, these ideas motivate \emph{population codes}, which we heavily rely on in the context of our modelling tool, the Neural Engineering Framework---we discuss this in the next section.
+In turn, these ideas motivate \emph{population codes}.
+We heavily rely on these codes in the context of our modelling tool, the Neural Engineering Framework (cf.~\Cref{sec:nef}).
 
 \subsubsection{Tuning curves}
-%Early studies on these concepts were conducted by \citeauthor{hubel1959receptive}.
 In a famous \citeyear{hubel1959receptive} experiment (cf.~\Cref{fig:visual_cortex_tuning}), Hubel and Wiesel present a visual stimulus in the form of a bright rectangle at different orientations $\varphi$ to an experimental animal.
 At the same time, the activity of a neuron in the animal's visual cortex is recorded.
-This characterizes how the stimulus propagates through the brain up to the recording site.
-%We characterize neurons in terms of their own physiological properties \emph{and} in terms of the preceding network connectivity.
+This characterises how the stimulus propagates through the brain up to the recording site.
 
 In the recording depicted in \Cref{fig:visual_cortex_tuning}, we find that the neuron is most sensitive to---or, \emph{tuned} to---a certain orientation $\varphi$.
 We could say that in this specific case, vertical bars are the \emph{preferred stimulus} of the neuron.
@@ -409,7 +388,7 @@ Borrowing some notation from the next section, the activity of the neuron $a(x)$
 	\label{eqn:tuning_curve_from_receptive_field}
 \end{align}
 Here, $\langle e, x \rangle$ is the inner product between the receptive field and the stimulus.
-Furthermore, $G$ is a rate approximation of the neuron model (see previous subsection), and, $\alpha > 0$ and $\beta$ translate the inner product into a neural input current.
+Furthermore, $G$ is a rate approximation of the neuron model (see previous subsection), and $\alpha > 0$ and $\beta$ translate the inner product into a neural input current.
 
 Importantly, if the stimulus and receptive field are normalised, then $\langle e, x \rangle$ is the cosine similarity between the two functions.
 Correspondingly, according to the above model, the neural response is maximised if $e = x$.
@@ -428,14 +407,14 @@ Choosing a vertically oriented Gabor filter as a receptive field, we can model t
 Thus, in a nutshell, a tuning curve is a characterisation of the neuron in terms of a specific stimulus property (e.g., the orientation of a bar of light), whereas the receptive field models its tuning properties in general (e.g., the predicted activity for any visual stimulus).
 
 \subsubsection{Population codes}
-Although tuning curves and receptive fields are inherently reconstructed from a network context, they still only characterise individual neurons.
+Although tuning curves and receptive fields are reconstructed within a network context, they only characterise individual neurons.
 To better understand biological neural networks, we need to consider the tuning properties of groups of neurons.
 
 Doing this, we find that neighbouring neurons often have similar tuning properties---they are tuned to the same sensory modality, and possess similar receptive fields \citep{berkowitz2009population}.
 Again, this has been explored well in context of orientation tuning in the visual cortex \citep[Chapter~25]{kandel2012principles}.
 For example, neurons in visual cortex are organised in \enquote{cortical columns}.
 Each column consists of several layers of neurons.
-Within a single layer of the same column, neurons possess the similar preferred orientations.
+Within a single layer of the same column, neurons possess similar preferred orientations.
 Between columns, preferred orientations differ significantly.
 
 This, as well as several other observations \citep{yuste2015neuron}, suggest that brain networks use \emph{population codes}.

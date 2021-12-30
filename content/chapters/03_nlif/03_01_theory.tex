@@ -24,8 +24,8 @@ Specifically, we compare three different network architectures (cf.~\Cref{fig:ne
 These networks cannot approximate most multivariate functions.
 In contrast, \emph{two-layer networks} represent all variables in a common intermediate population.
 These networks are universal approximators.
-Lastly, our notion of \emph{dendritic computation} relies on non-linear interaction between independent neural input channels.
-While not as powerful as multi-layer networks, dendritic computation can approximate a larger class of than functions additive networks.
+Lastly, our notion of \emph{dendritic computation} relies on nonlinear interaction between independent neural input channels.
+While not as powerful as multi-layer networks, dendritic computation can approximate a larger class of functions than additive networks.
 
 \subsection{Additive Multivariate Networks}
 \label{sec:additive_net}
@@ -115,8 +115,7 @@ We obtain the \emph{perceptron}, an early single-layer neural network (cf.~\Cref
 \Citet[Chapter~2; originally published in 1969]{minsky1987perceptrons} point out that such networks cannot compute the boolean \XOR function (\Cref{fig:xor_visualisation_a}).%
 \footnote{\Citet{minsky1987perceptrons} note that the perceptron was proved by Rosenblatt to \enquote{learn to do anything it was possible to program it to do}; this ambiguous statement endowed researchers with a surplus of optimism---especially since perceptrons sometimes learned difficult problems.
 Among other factors, realising that these networks could not be \emph{programmed} to solve trivial problems such as \XOR led to \enquote{the first AI winter} \citep[e.g.,][]{muthukrishnan2020brief}.}
-%In the continuous domain, the same is true for multiplication over $\mathbb{X} = [-1, 1]^2$, that is $\phi(x_1, x_2) = x_1 x_2$ (\Cref{fig:xor_visualisation_a}).
-Even the general additive networks from our theorem cannot solve a \emph{weaker} version of the \XOR problem, formalised below.
+Even the more general additive networks from our theorem cannot solve a \emph{weaker} version of the \XOR problem, formalised below.
 
 \begin{definition}
 \label{def:weak_xor}
@@ -138,7 +137,7 @@ Let $\sigma$ be monotonic. Then, an additive network of the form $\phi(x_1, x_2)
 This may be surprising, given that, as depicted in \Cref{fig:xor_visualisation_b}, we can generate highly nonlinear classification boundaries.
 We provide a proof in Appendix~B.3.2.
 
-To solve the \XOR problem, we can either, as discussed next, use multi-layer networks (cf.~\Cref{fig:xor_visualisation_c}), or, alternatively make $\sigma$ non-monotonic.
+To solve the \XOR problem, we can either, as discussed next, use multi-layer networks (cf.~\Cref{fig:xor_visualisation_c}), or, alternatively make $\sigma$ nonmonotonic.
 As depicted in \Cref{fig:xor_visualisation_d}, setting $\sigma(\xi) = \xi^2 - 1$ allows us to solve the \XOR problem.
 This illustrates our goal with dendritic computation: exploit \enquote{more powerful} $\sigma$ to approximate a larger class of functions.
 
@@ -151,27 +150,17 @@ More precisely, allowing $x_1$, $x_2$ to be zero makes it impossible to compute 
 There are no continuous, real-valued functions $f_1$, $f_2$, $\sigma$ such that $\sigma(f_1(x_1) + f_2(x_2)) = x_1 x_2$ for all $(x_1, x_2) \in [0, 1]^2$.
 \end{restatable}
 
-
-%Choosing this $\sigma$ implicitly introduces a non-linear interaction between the variables $x_1$, $x_2$, for example
-%\begin{align*}
-%	\sigma\left( (w_1 x_1 + w_2 x_2 + \beta)^2 - 1\right) = 
-%	\sigma\left( w_1^2 x_1^2 + w_2^2 x_2^2 + 2 w_1 w_2 x_1 x_2 + 2 w_1 \beta x_1 + 2 w_2 \beta x_2 + \beta^2  - 1\right) \,.
-%\end{align*}
-%The product-term $w_1 w_2 x_1 x_2$ can be exploited to %compute multiplication-like functions.
-%Still, as stated in Theorem~1, there inevitably is a large set of functions that we cannot compute.
-% TODO Add reference
-
 \subsection{Two-Layer Networks and Intermediate Populations}
 \label{sec:two_layer_intermediate}
 
 \begin{figure}
 	\includegraphics{media/chapters/03_nlif/03_01/mlp.pdf}
-	\caption[Sketch of a two-layer neural network]{Sketch of a two-layer neural network with rectified linear units (\ReLUpl). If the encoding vectors $\vec e_i$ and the biases $\beta_i$ are sampled appropriately, this network is a universal function approximator.}
+	\caption[Sketch of a two-layer neural network]{Sketch of a two-layer neural network with rectified linear units (\ReLUpl). If the encoding vectors $\vec e_i$ and biases $\beta_i$ are sampled appropriately, this network is a universal function approximator.}
 	\label{fig:mlp}
 \end{figure}
 
 As already mentioned in \Cref{sec:nef_transformation}, an individual \NEF population can be interpreted as a two-layer neural network (cf.~\Cref{fig:mlp}).
-As long as the encoding vectors are sampled from the $\ell$-dimensional hypersphere and $x$-intercepts are uniformly distributed, such a neuron population is a universal function approximator.
+Presuming that the encoding vectors are sampled from the $\ell$-dimensional hypersphere and $x$-intercepts are uniformly distributed, such a neuron population is a universal function approximator.
 That is, we can compute arbitrary functions $f(x_1, \ldots, x_\ell)$ over the variables represented in the population.
 The following theorem states this more formally for neurons with a rectified linear unit (\ReLU) nonlinearity, i.e., $\sigma(\xi) = \max\{0, \xi\}$.
 
@@ -191,26 +180,19 @@ This follows directly from \citet{hornik1989multilayer}.
 We provide a more thorough discussion in \Cref{app:thm_two_layer_universal}.
 This theorem can be extended to hold for arbitrary compact domains $\Xrepr$, codomain dimensionalities, and other neural nonlinearities $\sigma$.
 
-%It may not be obvious why \cref{eqn:two_layer_network} describes a \enquote{two-layer} neural network.
-%In essence, the encoding weights $\vec e_i$ map $\vec x$ onto the input of one of the $N$ neurons with nonlinearity $\sigma$.
-%This step forms the \enquote{first} or \enquote{hidden layer}.
-%The decoding weights $d_i$ then map the neural activities $\sigma(\xi_i)$ onto the output, which forms the \enquote{second layer} (cf.~Figure~2.20).
-%% TODO: Add actual reference
-
 \subsubsection{The role of uniformly sampled encoders}
 Theorem~\ref{thm:two_layer_universal} requires that the encoding vectors $\vec e_i$ are uniformly sampled from the hypersphere $\mathbb{S}^\ell$.%
 \footnote{There are weaker requirements for specific $f$.
 As demonstrated by \citet{gosmann2015precise} in the context of multiplication, there are certain distributions of encoding vectors that minimise the decoding error.
 Global optimisation methods such as stochastic gradient descent systematically select such \enquote{optimal} encoders.}
-To see why this is important, consider the case where the $\vec e_i$ are axis-aligned, i.e., $\|\vec e_i\|_0 = 1$ (cf.~Appendix~A.1).
-% TODO: Add reference for zero-norm in Appendix~A.1
+To see why this is important, consider the case where the $\vec e_i$ are axis-aligned, i.e., $\|\vec e_i\|_0 = 1$.
 In this case, we can split \cref{eqn:two_layer_network} into $\ell$ sub-networks, each decoding a function over a single variable $x_\ell$
 \begin{align*}
 		\sum_{i = 1}^N d_i \sigma\bigl( \langle \vec e_i, \vec x \rangle - \beta_i \bigr)
 	= 	\sum_{j = 1}^\ell \sum_{i = 1}^{N_j} d_{j i} \sigma\bigl( e_{j i} x_j - \beta_{j i} \bigr) \,, \text{where } e_{j i} \in \{ -1, 1\} \,.
 \end{align*}
 This is equivalent to the additive networks we discussed before.
-We can only decode sums of univariate functions over the individual $x_j$ from the pre-population.
+We can only decode sums of univariate functions over the individual $x_j$ represented in the pre-population.
 
 \subsubsection{Intermediate populations}
 As discussed by \citet[Chapter~6]{eliasmith2003neural}, multivariate functions $f(x_1, x_2)$ can in general only be computed in the \NEF if all variables $x_1$, $x_2$ are represented in a common population.
@@ -220,8 +202,8 @@ According to Theorem~\ref{thm:two_layer_universal} we can then decode any multiv
 
 \subsubsection{Potential issues with intermediate populations}
 In theory, the number of neurons required to cover a $d$-dimensional space rises exponentially with $d$.
-Representing a $d$-dimensional quantity in an intermediate population can thus require a large number of neurons to achieve a certain decoding error for all target functions.
-In practice, it is quite difficult to judge the number of neurons required to decode a certain function $f$ \emph{a priori}; the decoding error heavily depends on $f$ and the encoding vectors $\vec e_i$.
+Representing a $d$-dimensional quantity in an intermediate population can thus require a large number of neurons to achieve a certain decoding error for many different target functions.
+In practice, it is quite difficult to \emph{a priori} judge the number of neurons required to decode specific functions $f$ with some desired accuracy; the decoding error heavily depends on $f$ and the encoding vectors $\vec e_i$.
 
 Another problem arises when modelling neurobiological systems.
 There may be no indication that an intermediate population exists in a particular biological circuit, although the hypothesised high-level function is a multivariate function.
@@ -236,7 +218,7 @@ We see the effects of this later.
 
 Dendritic computation is one way to partially alleviate the limitations arising from intermediate populations.
 The basic idea is that each neuron possesses $k$ \emph{input channels}.
-Input fed through these channels interacts nonlinearly, modelling information processing within the dendrites.
+Inputs fed through these channels interact nonlinearly, modelling information processing within the dendrites.
 
 \begin{figure}
 	\includegraphics{media/chapters/03_nlif/03_01/dendritic_computation.pdf}%
@@ -370,7 +352,7 @@ Again, the weights $w_{ij}$ (for a total of $o^2$ \DOF) can be optimally determi
 %We can immediately see that $f_\mathrm{add}$ does not contain products between $x_1$ and $x_2$.
 Note that if we had chosen $\sigma(\xi) = \xi^2$ in \Cref{eqn:f_add}, then $f_\mathrm{add}$, $f_\mathrm{den}$ and $f_\mathrm{mlp}$ would all be composed of the same $\oh^2$ product-terms.
 Hence, the difference between these networks ultimatley lies in the degrees of freedom; additive networks and dendritic computation are fundamentally constrained in how these product-terms can be combined.
-In particular, we can expect $f_\mathrm{den}$ to compare favourably well to $f_\mathrm{mlp}$ if $4\oh \leq \oh^2$, that is $\oh \leq 4$.
+In particular, we can expect $f_\mathrm{den}$ to compare favourably well to $f_\mathrm{mlp}$ if $4\oh \geq \oh^2$, that is $\oh \leq 4$.
 This is the case if only the first few basis functions can be decoded well from the pre-population.
 
 \subsubsection{Experiment: Decoding random functions}
@@ -400,9 +382,9 @@ This is the case if only the first few basis functions can be decoded well from 
 	Each line is the median \NRMSE when approximating with respect to the \RMS of the target function over $N = 1000$ randomly generated functions with spatial filter coefficient $\rho^{-1}$ using $d$ Legendre basis functions (cf.~\Cref{fig:2d_functions_overview}).
 	Shaded areas correspond to the 25/75-percentile.
 	\textbf{(A, B)}
-	Median error for different filter coefficients $\rho^{-1}$ for fixed basis function counts~$d$. Dashed lines correspond from the median from the neighbouring diagram. Vertical dotted line is at $\rho^{-1} = 2$.
+	Median error for different filter coefficients $\rho^{-1}$ for fixed basis function counts~$d$. Dashed lines correspond to the median depicted in the neighbouring diagram. Vertical dotted line is at $\rho^{-1} = 2$.
 	\textbf{(C)}
-	Median error over different basis function counts for a fixed filter coefficient $\rho^{-1} = 2$.
+	Median error over different basis function counts and for a fixed filter coefficient $\rho^{-1} = 2$.
 	Increasing the basis function count only substantially decreases the error in the case of an additive network with 2D bases.
 	}
 	\label{fig:dendritic_computation_fourier_example}
@@ -419,7 +401,7 @@ The dendritic network $f_\mathrm{den}$ sits somewhere in between;
 $f_\mathrm{den}$ can be used to decode the target function for $\rho^{-1} = 1$ at a reasonable $6\%$ \NRMSE, while failing to reconstruct the target function for $\rho^{-1} = 3.16$ at a $44\%$ error.
 
 \Cref{fig:dendritic_computation_fourier_example} depicts the results of a more systematic experiment.
-For a fixed basis function count (\Cref{fig:dendritic_computation_fourier_example_a}), the error achieved with an additive network $f_\mathrm{add}$ increases almost with $\rho$ on a log-log plot, while both $f_\mathrm{den}$ and $f_\mathrm{mlp}$ possess a sublinear plateau.
+For a fixed basis function count (\Cref{fig:dendritic_computation_fourier_example_a}), the error achieved with an additive network $f_\mathrm{add}$ increases almost linearly with $\rho^{-1}$ on a log-log plot, while both $f_\mathrm{den}$ and $f_\mathrm{mlp}$ possess a sublinear plateau.
 
 Increasing the basis order $\oh$ (\Cref{fig:dendritic_computation_fourier_example_b}) has only a small effect on $f_\mathrm{add}$ and $f_\mathrm{den}$.
 We only observe a small decrease in error for $f_\mathrm{den}$ below $\rho^{-1} < 0.5$, whereas there is virtually no change in error for $f_\mathrm{add}$.

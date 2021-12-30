@@ -8,7 +8,7 @@ In particular, we incorporated a model of temporal tuning in visual cortex \cite
 This way, we can construct biologically plausible spiking neural networks that approximate spatiotemporal functions.
 We furthermore pointed out that there is a direct connection between the Legendre Memory Unit (\LMU; \cite{voelker2019lmu}), a promising component for stream-to-stream processing in artificial neural networks, and our spatiotemporal \NEF populations.
 
-Conceptually, our most important argument is that it is possible to systematically harnesses diverse temporal tuning as a resource for temporal computation.
+Conceptually, our most important argument is that it is possible to systematically harness diverse temporal tuning as a resource for temporal computation.
 That is, the pronounced dynamical properties of biological neural networks are an important part of the computation that is being performed.
 Just as neural nonlinearities and diverse \emph{spatial} tuning can be exploited to compute non-temporal functions, it is possible to exploit the dynamics inherent to biological networks to form temporal bases, from which we can in turn decode functions \emph{through time}.
 We focused on synaptic filters as a primary source of dynamics, but neural dynamics and even signal propagation delays could similarly be taken into account.
@@ -45,8 +45,8 @@ While we argued that our recurrent networks will realise the desired dynamics \e
 We observe in practice that our networks are typically well-behaved (i.e., not asymptotically unstable); however, it would be interesting to augment our weight solver with techniques from system identification that guarantee stability \citep[cf.][]{verhaegen2007filtering}.
 
 Another aspect that we have only considered in the context of our adaptive filter experiment, is using the temporal tuning curve paradigm to realise nonlinear tuning.
-This is easily possible using the \NEF dynamics principle \citep[Chapter~8]{eliasmith2003neural} and also not a hard limitation of our temporal tuning curve approach.
-In fact, our general definition of a temporal tuning curve is oblivious to the specific type of dynamics (cf.~\Cref{def:temporal_tuning_curve}).
+This is possible using the \NEF dynamics principle \citep[Chapter~8]{eliasmith2003neural} and also not a hard limitation of our temporal tuning curve approach.
+In fact, our general definition of a temporal tuning curve is oblivious to the specific type of dynamics (cf.~\Cref{def:temporal_tuning_curve}, \Cref{app:temporal_tuning_nonlinear}).
 Rather, the problem is one of finding a good mathematical formalisation; linear temporal encoders $\mathfrak{e}_i$ offer an intuitive parametrisation of temporal tuning curves that we would have to give.
 
 Taking intrinsic neural dynamics into account is another aspect of the work presented here that requires further research.

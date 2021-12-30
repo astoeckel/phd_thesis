@@ -14,7 +14,7 @@ The \LMU performance has been verified for synthetic benchmarks (\cite{voelker20
 A recent study on \NLP tasks by \citet{chilkuri2021language} suggests that networks based on a variant of the \LMU achieve a ten-times higher data efficiency than Transformers \citep{vaswani2017attention}.
 According to Chilkuri et al., this is comparable to the improvement offered by Transformers over \LSTMpl.
 
-The goal of this section is to explore in how far the success of the \LMU depends on projecting the input signal onto the \emph{Legendre} polynomials, and to further characterize the \LMU time and space complexity.
+The goal of this section is to explore in how far the success of the \LMU depends on projecting the input signal onto the \emph{Legendre} polynomials, and to further characterise the \LMU time and space complexity.
 Specifically, we test how well our modified Fourier system (cf.~\Cref{sec:lti_autoregression}) fares in place of the \LDN system.
 Given that we are no longer in a biological setting, we furthermore test sliding-window transformations that rely on perfect memory.
 
@@ -39,7 +39,7 @@ Given that we are no longer in a biological setting, we furthermore test sliding
 
 The original \LMU proposed by \citet{voelker2019lmu} is depicted in \Cref{fig:lmu_a}.
 Fundamentally, the idea is to project an input $\vec x_t \in \mathbb{R}^d$ onto a scalar $u_t$ by means of an encoding vector $\vec e_{\vec x}$.%
-\footnote{Since artificial neural network operate within discretised time, all input \emph{signals} $\mathfrak{x}$ become input \emph{sequences} ${\vec x}_t$.}
+\footnote{Since artificial neural networks use discretised time, all input \emph{signals} $\mathfrak{x}$ become input \emph{sequences} ${\vec x}_t$.}
 This scalar is then fed into a zero-order hold (\ZOH) discretised \LDN system with input matrix $\mat{\tilde B}$ and feedback matrix $\mat{\tilde A}$.
 Specifically, it holds \citep[e.g.,][Section~9.8]{brogan1991modern}:
 \begin{align}
@@ -49,7 +49,6 @@ Specifically, it holds \citep[e.g.,][Section~9.8]{brogan1991modern}:
 	\quad\quad \text{where } N \Delta t = \theta \,.
 	\label{eqn:ldn_discretisation}
 \end{align}
-%Here, $N = \theta \Delta t^{-1}$ is the length of the time-window as a number of samples.
 
 Finally, the $q$-dimensional state $\vec m_t$ is passed through a nonlinear layer, resulting in the output $\vec{h}_t \in \mathbb{R}^m$.
 Note that Voelker et al.~include all possible connections between the linear and nonlinear layers in the model.
@@ -62,7 +61,7 @@ In fact, removing these connections altogether---and thus reducing the number of
 This leaves the \LDN as the only recurrent component in the network (cf.~\Cref{fig:lmu_b}).
 \Citet{tsoi1997discrete} refer to such networks as \enquote{locally recurrent, globally feed-forward} (\LRGF).
 
-Since the state-space matrices $\mat{\tilde A}$, $\mat{\tilde B}$ are fixed, we can replace the \LDN system by a convolution operation (cf.~\Cref{fig:lmu_c}; \cite{chilkuri2021parallelizing}).
+Since the state-space matrices $\mat{\tilde A}$, $\mat{\tilde B}$ are fixed, we can replace the \LDN system with a convolution operation (cf.~\Cref{fig:lmu_c}; \cite{chilkuri2021parallelizing}).
 Taking advantage of the fact that the \LDN impulse response decays rapidly after $N = \theta \Delta t^{-1}$ samples, we can \emph{approximate} the convolution operation using a \emph{finite} impulse response (\FIR) filter of length $N$.
 
 Let $\vec u_t = (u_{t - N + 1}, \ldots, u_t)$ be a slice of the input sequence.
@@ -218,7 +217,7 @@ Runge-Kutta methods consist of $p$ nested Euler steps, all of which can be evalu
 	\caption[Orthogonality of the ZOH and Euler LDN basis transformation matrix]{
 	Orthogonality of the \ZOH and Euler \LDN basis transformation matrix for $q = 20$.
 	Each plot is the result of multiplying \emph{(A)} the \ZOH based $\mat H$ or \emph{(B)} Euler based $\mat H'$ with its own transpose.
-	Dark red cells corresponds to an entry of $-1$, dark blue cells to $1$.
+	Dark red cells correspond to an entry of $-1$, dark blue cells to $1$.
 	$\Sigma$ is the sum of the normalised singular values for each $\mat H$ or $\mat H'$; this roughly indicates the number of \enquote{hidden} orthogonal basis functions (optimally $\Sigma = q$).
 	\textbf{(A)}~The \ZOH based basis transformation matrix $\mat H$ is nearly orthogonal for all $N$.
 	\textbf{(B)}~The Euler based $\mat H'$ requires a twenty times larger $N$ to reach the same degree of orthogonality.
@@ -275,36 +274,6 @@ Still, $N$ remains slightly superlinear in $q$ (i.e., $N \approx q^{\frac{4}3}$)
 	\label{fig:modified_euler_stress}
 \end{figure}
 
-
-%\subsubsection{Exploiting LDN basis low-pass characteristics}
-%
-%This quadratic dependency between $N$ and $q$ negates some of the computational efficiency gains from switching to the $\mathcal{O}(q)$ update.
-%After all, processing an entire window of length $\theta$ now effectively requires $\mathcal{O}(q^3)$ operations.
-%
-%\begin{figure}
-%	\centering
-%	\includegraphics{media/chapters/04_temporal_tuning/04_04/ldn_spectrum.pdf}%
-%	{\phantomsubcaption\label{fig:ldn_spectrum_a}}%
-%	{\phantomsubcaption\label{fig:ldn_spectrum_b}}%
-%	{\phantomsubcaption\label{fig:ldn_spectrum_c}}%
-%	\caption[LDN basis power spectrum and low-pass characteristics]{LDN basis power spectrum and low-pass characteristics.
-%	\textbf{(A)} Power spectrum for different $q$ assuming $\theta = 1\,\mathrm{s}$. The LDN system acts as a strong low-pass filter.
-%	\textbf{(B)} Measuring the NRMSE $E$ when removing frequencies above $\hat f$ in a white noise test signal $u(t)$ before representing it in the LDN basis. Data are the mean over $1001$ test signals with $N = 1000$ samples. \textbf{(C)} Extracing the bandlimit frequencies~$\hat f$ for different $q$ from \emph{(B)} that result in a certain representation error $E$ (coloured lines).
-%	}
-%	\label{fig:ldn_spectrum}
-%\end{figure}
-%
-%Taking the low-pass characteristic of the LDN basis into account, we find that we can apply a hard bandlimit with cutoff $\hat f$ to the input without changing the representation much (\Cref{fig:ldn_spectrum_a,fig:ldn_spectrum_b}).%
-%\footnote{One could argue that the fact the the LDN is not a \emph{perfect} low-pass filter may be beneficial in machine learning applications; after all, some information about the higher frequencies is retained and could be extracted by the network.
-%However, our experiments below with the sliding Fourier spectrum---which acts as a perfect low-pass filter---suggest that the high frequencies likely play a lesser role.}
-%Crucially, the relationship between $q$ and $\hat f$ is \emph{sublinear} (\Cref{fig:ldn_spectrum_c}).
-%It can be more time efficient to low-pass filter the input signal, downsample to the Nyquist frequency, i.e., $N \geq 2 \hat f$, and to use the original $\mathcal{O}(q^2)$ ZOH state update.
-%Since $\hat f$, and thus $N$, are sublinear in $q$, we need fewer than $\mathcal{O}(q^3)$ operations to filter a window of length~$\theta$.
-%
-%One caveat of the downsampling technique is the inevitably introduced latency, making it less suited for realtime applications such as robotics.
-%However, as we discuss next, we can take this idea further to derive an---in theory---optimal sliding window transformation that is asymptotically optimal both with respect to memory and computation.
-
-
 \subsection{Efficient Sliding-Window Spectrum Transformations}
 \label{sec:efficient_sliding_window}
 
@@ -336,7 +305,7 @@ We compare these bases to other sliding transformations in the next section.
 \end{figure}
 
 One particular set of discrete basis functions (\Cref{def:discrete_function_basis}) famous for allowing efficient state updates are the \emph{Haar wavelets} depicted in \Cref{fig:haar_basis} \citep{haar1910zur}.
-Curiously, a discrete Haar transformation $\mat W \vec u$ with $\mat W \in \mathbb{R}^{q \times N}$ can be computed in $\mathcal{O}(N)$ \citep{kaiser1998fast}, and the sliding spectrum can be updated in $\mathcal{O}(q)$ per sample.
+A discrete Haar transformation $\mat W \vec u$ with $\mat W \in \mathbb{R}^{q \times N}$ can be computed in $\mathcal{O}(N)$ \citep{kaiser1998fast}, and the sliding spectrum can be updated in $\mathcal{O}(q)$ per sample.
 
 To see this, assume that we store both our current state $\vec m_t$ and the last $N$ input samples $\vec u_t = (u_{t - N + 1}, \ldots, u_{t})$ in memory.
 Sliding one of the discrete basis functions $W_i$ over $\vec u_t$, there are at most three samples in the input history that cross a transition point (arrows in the figure) and thus influence the value of $\vec m_t$.
@@ -363,7 +332,7 @@ Note the similarity to a harmonic oscillator \LTI system with an additional dela
 
 \begin{table}[p]
 	\caption[Time and space complexity of different sliding transformations]{Time and space complexity of different sliding transformations.
-	Memory requirements only take state retained state between updates into account; we exclude constant matrices and filters.
+	Memory requirements only take state retained between updates into account; we exclude constant matrices and filters.
 	The column \enquote{window $N$} describes the relationship between $N$ and $q$ (typically $N \geq q$).
 	Batch processing corresponds to computing the sliding window spectrum for every point in time for an entire recorded signal $\vec u$ of length $N$ in one go.
 	Any sliding-window transformation has a \FIR representation and can always fall back to one of the algorithms in the first three rows.
@@ -509,12 +478,12 @@ Therefore, the results for our $\mathcal{O}(N)$ memory transformations should be
 Our network architecture is similar to the setup used by \citet{voelker2019lmu}.
 We provide an overview of the model in \Cref{fig:psmnist_overview}; the code describing the network can be found in \Cref{app:lmu_code}.
 We apply a set of $q = 468$ \FIR filters to the $N = 784$ input samples.
-The filter output is passed through a 50\% dropout layer for regularisation \citep{hinton2012improving}, followed by $n = 346$ \ReLU neurons that non-linearly processes the temporal representation.
+The filter output is passed through a 50\% dropout layer for regularisation \citep{hinton2012improving}, followed by $n = 346$ \ReLU neurons that nonlinearly processes the temporal representation.
 The neural activities are linearly projected onto a one-hot coded output.
 Note that $q = 468$ is motivated by the amount of memory used by \citet{chandar2019nonsaturating}.
 
 As is customary, we split the MNIST dataset into $50\,000$ training and $10\,000$ validation samples.
-We use a categorical cross-entropy loss function and an Adam optimizer \citep{kingma2015adam} with default parameters over $100$ epochs at a batch size of $100$.
+We use a categorical cross-entropy loss function and an Adam optimiser \citep{kingma2015adam} with default parameters over $100$ epochs at a batch size of $100$.
 The reported test errors are computed for the epoch with the smallest validation error.
 For $q = 468$ the number of trainable parameters is $\approx\num{166000}$.
 Per default, the \FIR filters are fixed and initialised with one of the previously discussed discretised basis transformations with window length $N = 786$ (i.e., the number of pixels).
@@ -810,6 +779,7 @@ The sample length $117$ corresponds to the absolute width of the combined \FIR f
 		The absolute window of the \FIR filters in our network amounts to $117$ samples; samples older than this cannot \emph{possibly} affect the output. However, only the last $37$ samples \emph{effectively} influence the system.
 		The longer absolute window ensures that we account for ringing artefacts in the \LDN and modified Fourier system (cf.~\Cref{fig:lmu_mackey_glass_filters}).
 	}
+	\label{fig:mackey_glass}
 \end{figure}
 
 \paragraph{Methods}
@@ -827,11 +797,11 @@ Assuming that our sliding-transformation implements a perfect rectangle window, 
 The absolute window width stems from the impulse response of the \LDN and modified Fourier system technically extending beyond $N_i$.
 For good measure, we therefore extend the \FIR filters to be three times as long as the actual window width.
 
-As in the previous experiment, we compare fixed convolutions, including random initialisations, to a version of the network where the convolutions are initialized in the same way, but then trained during training.
+As in the previous experiment, we compare fixed convolutions, including random initialisations, to a version of the network where the convolutions are initialised in the same way, but then trained during training.
 Note that we do not train the extended filters.
-The total number parameters is $2750$; another $476$ parameters are added if the convolutions are trained.
+The total number of parameters is $2750$; another $476$ parameters are added if the convolutions are trained.
 
-We train the network for $100$ epochs with a batch size of $100$ using a standard Adam optimizer.
+We train the network for $100$ epochs with a batch size of $100$ using a standard Adam optimiser.
 The final test error is computed for the parameters in the epoch with the smallest validation error.
 Our training loss is the \MSE, we report the \NRMSE.
 Note that our results are not directly comparable to those in the literature due to using a different $\tau$ and normalisation of the Mackey-Glass dataset.
@@ -844,7 +814,7 @@ Our goal is merely to compare different \LMU variants.
 \includegraphics{media/chapters/04_temporal_tuning/04_04/mackey_glass_results.pdf}
 \caption[Prediction errors for the Mackey-Glass dataset using different sliding-window transformations]{Prediction errors for the Mackey-Glass dataset using different sliding-window transformations. See \Cref{fig:psmnist_results} for a description of the plot.
 Numerical values are given in \Cref{tbl:mackey_glass_results}.}
-\label{fig:mackey_glass}
+\label{fig:mackey_glass_results1}
 \end{figure}
 
 \begin{table}[p]
@@ -1095,10 +1065,10 @@ Numerical values are given in \Cref{tbl:mackey_glass_results}.}
 	\end{tabular}
 \end{table}
 
-Results are given in \Cref{fig:mackey_glass} and \Cref{tbl:mackey_glass_results}; see \Cref{fig:lmu_trajs} for learning curves.
+Results are given in \Cref{fig:mackey_glass_results1} and \Cref{tbl:mackey_glass_results}; see \Cref{fig:lmu_trajs} for learning curves.
 Overall, all bases perform similarly, with the \LDN outperforming the Fourier and modified Fourier bases.
 The modified Fourier basis performs worst.
-The random and identity initializations result in by far the highest errors, and the \LDN, cosine, and \DLOP filters result in the lowest error.
+The random and identity initialisations result in by far the highest errors, and the \LDN, cosine, and \DLOP filters result in the lowest error.
 Learning the convolution closes the performance-gap between the bases.
 
 \paragraph{Discussion}

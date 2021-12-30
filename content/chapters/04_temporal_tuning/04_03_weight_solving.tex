@@ -11,7 +11,6 @@ As we discuss in \Cref{chp:cerebellum}, we can for example build an adaptive fil
 
 Still, it can also be beneficial to solve for dense weight matrices that realise temporal tuning in networks of nonlinear neurons.
 First and foremost, this allows modellers to finely control the temporal properties of individual neurons.
-% and thus to model biological systems such as those described in \Cref{sec:temporal_tuning_biology}.
 Furthermore, the temporal tuning curve paradigm suggests a natural way to represent multi-dimensional quantities over time.
 Lastly, we can take heterogeneous synaptic filters into account, now at the level of individual synapses (cf.~\Cref{fig:nef_dynamics_neurons_b}).
 
@@ -40,31 +39,26 @@ While we continue to assume that $J_i$ is linear,%
 Remember that we saw in \Cref{sec:nef_decode_current} that we can usually decode biases directly from the pre-population.
 }
 the tuning-curve $\mathfrak{a}_j$ is now nonlinear in $\mathfrak{x}_k$ due to the neural response curve $G$.
-Additionally, each population now consists of hundreds of neurons, compared to the few dozen linear units in our above examples.
+Additionally, each population now consists of hundreds of neurons, compared to the few dozen linear units in our previous examples.
 
 This poses two new challenges.
 First, it is unclear how to assign temporal tuning curves to each neuron.
 Before, we had a one-to-one mapping between linear units and the impulse responses of the \LTI system we wanted to realise; we now need to assign $q$ impulse responses to $n$ neurons, where typically $n \gg q$.
-%For the orthonormal basis functions discussed above, $n$ must generally be much larger than $q$.
-%We analysed this in \Cref{sec:dendritic_computation_theory_numerical}, where we saw that a relatively large number of neurons is required to span a separate orthogonal dimension.
 Second, the selection of input signals $\mathfrak{x}_k$ is more difficult.
 Whereas the magnitude of $\mathfrak{x}_k$ played no role in linear networks, scaling $\mathfrak{x}_k$ in nonlinear networks profoundly impacts neural activities.
-%In the extreme, for LIF neurons, if $\mathfrak{x}_k$ is too small, we do not reach the firing threshold, and if $\mathfrak{x}_k$ is too large, the neural activity saturates.
 We must sample $\mathfrak{a}_j(\mathfrak{x}_k)$ densely enough to capture the curvature of the nonlinearity above its threshold.
-
-%Below, we discuss potential solutions to these challenges and perform experiments in which we determine how well we can realise simple LTI systems such as integrators, construct temporal bases, and represent multi-dimensional quantities over time.
 
 \subsubsection{Temporal encoding vectors}
 
 \begin{figure}
 	\includegraphics{media/chapters/04_temporal_tuning/vectorial_temporal_encoder.pdf}
-	\caption[Linearly combining impulse responses to obtain temporal encoders]{Linearly combining impulse responses to obtain temporal encoders. \textbf{(A)} Starting with a set impulse responses $\mathfrak{h}_i(t)$, we can generate temporal tuning for each neuron by linearly combining these basis functions using an encoding vector $\vec{e}^\mathrm{t}$.
+	\caption[Linearly combining impulse responses to obtain temporal encoders]{Linearly combining impulse responses to obtain temporal encoders. \textbf{(A)} Starting with a set of impulse responses $\mathfrak{h}_i(t)$, we can generate temporal tuning for each neuron by linearly combining these basis functions using an encoding vector $\vec{e}^\mathrm{t}$.
 	\textbf{(B)} When choosing normalised $\vec{e}^\mathrm{t}$ (e.g., $\| \vec{e}^\mathrm{t} \| = 1$), this vector is directly equivalent to the spatial encoder $\vec e$ when realising an \LTI system as multiple spatial dimensions in the \NEF; each \enquote{direction} corresponds to a different temporal encoding.
 	}
 	\label{fig:vectorial_temporal_encoder}
 \end{figure}
 
-One method for realising a $q$-dimensional \LTI system with state-space matrices $\mat A$, $\mat B$ in a non-linear network with $n$ neurons is to simply set each $\mathfrak{e}_i$ to a linear combination of the system impulse responses $\mathfrak{h}_j$ (cf.~\Cref{fig:vectorial_temporal_encoder}):
+One method for realising a $q$-dimensional \LTI system with state-space matrices $\mat A$, $\mat B$ in a nonlinear network with $n$ neurons is to simply set each $\mathfrak{e}_i$ to a linear combination of the system impulse responses $\mathfrak{h}_j$ (cf.~\Cref{fig:vectorial_temporal_encoder}):
 \begin{align}
 	\mathfrak{e}_i(t) &= \sum\nolimits_{j = 1}^q {e}^\mathrm{t}_j \exp(\mat A t) \mat B = \sum\nolimits_{j = 1}^q {e}^\mathrm{t}_j \mathfrak{h}_j(t)  = \langle \vec{e}_i^\mathrm{t}, \vec{\mathfrak{h}}(t) \rangle \,,
 	\label{eqn:temporal_encoding_vector}
@@ -170,7 +164,7 @@ Making the equivalence of linear temporal tuning to the \NEF dynamics principle 
 	Recurrent network of $n = 100$ spiking \LIF neurons with a first-order synaptic filter $\tau = \SI{100}{\milli\second}$.
 	\emph{Left:} Learned feedback signal.
 	\emph{Right:} System response to a rectangle input.
-	\textbf{(A)} Passing randomly generated signals $\mathfrak{x}_k$ (here with a small \RMS to exaggerate the effect) results in a non-linear feedback function.
+	\textbf{(A)} Passing randomly generated signals $\mathfrak{x}_k$ (here with a small \RMS to exaggerate the effect) results in a nonlinear feedback function.
 	\textbf{(B)} Using uniform activation sampling results in the expected linear functions (dotted lines).
 	}
 	\label{fig:signal_sampling_weights}
@@ -216,7 +210,7 @@ Similar to \citet{voelker2018improving}, we qualitatively compare the resulting 
 In the previous section, we saw that the modified Fourier system---both with Bartlett and rectangle windows---can outperform the \LDN system.
 While the \LDN has been constructed with spiking neural networks in mind \citep{voelker2018improving}, we have so far not tested the modified Fourier system in a neural network context.
 
-Correspondingly, we first ensure that the two Fourier systems can be mapped onto a spiking neural network with the architecture depicted in \cref{fig:nef_dynamics_neurons_a} using the \NEF dynamics principle.
+Correspondingly, we first ensure that the two Fourier systems can be mapped onto a spiking neural network with the architecture depicted in \Cref{fig:nef_dynamics_neurons_a} using the \NEF dynamics principle.
 Specifically, we assume first-order synaptic filters with $\tau = \SI{100}{\milli\second}$, and $n = 1000$ \LIF neurons with maximum rates between \SIrange{50}{100}{\per\second}.
 We obtain delay decoders $\vec d_{\theta'}$ by feeding a training signal $\mathfrak{x}(t)$ into the network, and solving for weights that project the spiking activity onto $\mathfrak{x}(t - \theta')$.
 We then compute the mean delay decoding error for a test signal.%
@@ -287,9 +281,9 @@ Analysing the differences more thoroughly, the weights obtained using the tempor
 Both the standard \NEF solver and uniform activation sampling likely generalise better to other input distributions, hence the higher errors compared to na\"ive sampling.
 However, we were not able to observe this in practice for synthetic input signals.
 
-Apart from this, all methods results in a rank $q$ feedback weight matrix (cf.~\Cref{fig:recurrent_synaptic_weights_freq_sweep_b}) with similar regularisation errors.\footnote{Regularisation factors were matched for the $L_2$ regularisation error $\|\mat{W}\|_\mathrm{F}^2$ to be approximately equal (about $4 \times 10^{-4}$ for the standard NEF and $5 \times 10^{-4}$ for the tuning-curve approach in the above example).}
+Apart from this, all methods result in a rank-$q$ feedback weight matrix (cf.~\Cref{fig:recurrent_synaptic_weights_freq_sweep_b}) with similar regularisation errors.\footnote{Regularisation factors were matched for the $L_2$ regularisation error $\|\mat{W}\|_\mathrm{F}^2$ to be approximately equal (about $4 \times 10^{-4}$ for the standard NEF and $5 \times 10^{-4}$ for the tuning-curve approach in the above example).}
 One culprit regarding the worse performance of the \NEF dynamics principle is the quality of the decoded linear functions, which are slightly smoother for the weight matrices obtained using our approaches (cf.~\Cref{fig:recurrent_synaptic_weights_freq_sweep_c}).
-This may be due different sampling (i.e., using Halton sequences for uniform activation sampling); however, the results in \Cref{fig:recurrent_synaptic_weights_freq_sweep_c} specifically are for $N = 100$ samples, whereas Nengo uses $N = 2500$, achieving a higher sampling density.
+This may be due to sampling $\mathfrak{x}$ from different distributions (i.e., using Halton sequences for uniform activation sampling); however, the results in \Cref{fig:recurrent_synaptic_weights_freq_sweep_c} specifically are for $N = 100$ samples, whereas Nengo uses $N = 2500$, achieving a higher sampling density.
 
 \subsubsection{Time cells}
 
@@ -351,14 +345,14 @@ Specifically, we compute $\tau'_{ij} = \exp(\lfloor 10 \log(\tau_{ij}) \rfloor /
 %Rounding in logarithmic space ensures that small time-constants are preserved with a higher resolution.
 %This is important when approximating differentials.
 }
-To account for the fact that compensating for heterogeneous synapses implicitly requires access to the input differential (cf.~\cref{app:heterogenous_time_constants}), we emulate a pre-population with diverse temporal tuning by passing the input signal through eleven different low-pass filters with $\tau$ between \SI{1}{\milli\second} to \SI{400}{\milli\second} (spaced logarithmically).
+To account for the fact that compensating for heterogeneous synapses implicitly requires access to the input differential (cf.~\Cref{app:heterogenous_time_constants}), we emulate a pre-population with diverse temporal tuning by passing the input signal through eleven different low-pass filters with $\tau$ between \SI{1}{\milli\second} to \SI{400}{\milli\second} (spaced logarithmically).
 
 Results for an experiment where we vary $\sigma_\tau$ are depicted in \Cref{fig:recurrent_synaptic_weights_heterogeneous}.
 Increasing $\sigma_\tau$ barely affects the solver loss.
 However, increasing $\sigma_\tau$ generally leads to an increase in \emph{tuning error}, the difference between the actual and expected spike rate.
 Importantly, when taking heterogeneous recurrent synapses into account, this increase is quite slow over a wide range of $\sigma_\tau$.
 For larger $\sigma_\tau$, the error approaches or even surpasses (for $q = 7$) the error for not taking heterogeneity into account.
-This error being surpassed is likely due to compensating for heterogeneous filters requiring larger weight magnitudes, amplifying noise in the system.
+The error being surpassed is likely due to compensating for heterogeneous filters requiring larger weight magnitudes, amplifying noise in the system.
 
 \subsection{Spatiotemporal Neuron Populations}
 \label{sec:spatiotemporal}
@@ -477,7 +471,7 @@ Our approach offers the advantage of biasing the weight solver towards portions 
 
 \begin{figure}
 	\includegraphics{media/chapters/04_temporal_tuning/path_integration.pdf}
-	\caption[Decoding the recently travelled distance distance from a spatiotemporal network]{Decoding the recently travelled distance distance from a spatiotemporal network. Same experimental setup as in \Cref{fig:spatio_temporal}, but decoding the distance travelled over the past second instead.
+	\caption[Decoding the recently travelled distance from a spatiotemporal network]{Decoding the recently travelled distance from a spatiotemporal network. Same experimental setup as in \Cref{fig:spatio_temporal}, but decoding the distance travelled over the past second instead.
 	\textbf{(A)} Random trajectory generated by integrating the input velocities in $x_1$- and $x_2$-direction.
 	Highlighted section (black line and coloured circles) corresponds to the time range displayed in \emph{(B)}.
 	\textbf{(B)} Input velocities $\dot x_1(t)$ and $\dot x_2(t)$ and the decoded windowed distance $d_{[t - \theta, t]}$.
@@ -562,7 +556,7 @@ Forced pendulums are found in most robotic actuators and can, under some conditi
 		\textbf{(A)} Illustration of the nonlinear pendulum system.
 		A point mass $m = \SI{1}{\kilogram}$ under the influence of gravity $\| \vec g \| = \SI{9.81}{\metre\per\square\second}$ is connected to a rotating joint through a rigid rod of length $L = \SI{1}{\metre}$.
 		A random torque $\tau(t)$ is applied to the joint; we measure the angle of the pendulum $\phi(t)$.
-		\textbf{(B)} The angle $\tau(t)$ and a delayed version of the angle $\phi(t - \theta')$ are fed into the full-rank spatiotemporal \NEF network from the previous subsection.
+		\textbf{(B)} The torque $\tau(t)$ and a delayed version of the angle $\phi(t - \theta')$ are fed into the full-rank spatiotemporal \NEF network from the previous subsection.
 		After passing the spikes through a short low-pass filter, we decode the angle at time $t$ using a decoding vector $\vec d$.
 		This decoding matrix is updated according to the delta rule; the network \emph{learns} the nonlinear pendulum dynamics.
 		\textbf{(C)}~Examples of the pendulum dynamics and prediction after different amounts of training.
@@ -667,7 +661,7 @@ This is similar to an approach described by \citet{duggins2017incorporating} tha
 
 \subsubsection{Accounting for \ALIF dynamics}
 $\Omega^{-1}(\mathfrak{a})$ is readily available for the adaptive leaky integrate-and-fire model (\ALIF).
-The \ALIF model accounts for firing-rate adaptation observed in biological neurons (cf.~\Cref{fig:izhikevich_whichmod_figure1f}) by increasing an exponentially decaying adaptation variable $n(t)$ by a constant amount $n_0$ every time the neuron spikes \citep{treves1993meanfield}.
+The \ALIF model accounts for firing-rate adaptation observed in biological neurons (cf.~\Cref{fig:izhikevich_whichmod_figure1f}) by increasing an exponentially decaying adaptation variable $n(t)$ by a constant amount $n_0$ every time the neuron generates a spike \citep{treves1993meanfield}.
 The specific \ALIF model discussed here applies this spike-triggered adaptation mechanism to a current-based \LIF neuron by subtracting the adaptation variable $n(t)$ from the input current $J(t)$.
 Despite its simplicity, this model can be made to fit empirical spike data from cortical pyramidal cells well \citep{camera2004minimal}.
 

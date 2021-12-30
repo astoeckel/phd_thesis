@@ -6,8 +6,8 @@
 The dendritic nonlinearity $H$ introduced in the last section maps some channel state $\vec g$ onto an average somatic current.
 While this mapping can always be established numerically, expressing $H$ in closed form has the potential to simplify the optimisation problem in \cref{eqn:decode_nonlinear_synapses}.
 
-In this section, we discuss a family of multi-compartment \LIF neurons that we refer to as \enquote{\nlif}.
-These neuron models are based on the multi-compartment neurons that we reviewed in \Cref{sec:comp}, and, as we discussed in the introduction of this chapter, were constructed with mathematical tractability in mind, rather than biological detail.
+In this section, we discuss a family of multi-compartment \LIF neurons that we refer to as \enquote{$n$-LIF}.
+These neurons are based on the multi-compartment neurons that we reviewed in \Cref{sec:comp}, and, as we discussed in the introduction of this chapter, were constructed with mathematical tractability in mind, rather than biological detail.
 While it is not possible to derive an exact dendritic nonlinearity $H$ for these neurons, we derive a closed-form \enquote{surrogate} model of $H$ that can be fit to numerical data.
 
 \subsection{Mathematical Description of $n$-LIF Neurons}
@@ -51,9 +51,8 @@ We discuss this model in more detail in the next section, and for now focus on \
 \end{figure}
 
 \subsubsection{Superthreshold dynamics}
-In contrast to the standard \LIF model (cf.~Section~2.2.3), the active \nlif compartment possess an explicit spike model.
-% TODO: Add correct reference
-As pointed out by \citet{capaday2006direct}, this is important in multi-compartment models, since the spike potential causes a substantial current to flow into the dendritic compartments (cf.~\Cref{fig:two_comp_lif_trace}).
+In contrast to the standard \LIF model (cf.~\Cref{sec:simplified_neuron_models}), the active \nlif compartment possess an explicit spike model.
+As pointed out by \citet{capaday2006direct}, this is important in multi-compartment models, since the spike potential causes a substantial current to backpropagate into the dendritic compartments (cf.~\Cref{fig:two_comp_lif_trace}).
 
 More precisely, we model the superthreshold dynamics as follows.
 Whenever the membrane potential \vMem surpasses the threshold $v_\mathrm{th}$, \vMem is clamped to a \enquote{spike potential} $v_\mathrm{spike}$ for a period $\tau_\mathrm{spike}$ and subsequently forced to $v_\mathrm{reset}$ for the refractory period $\tau_\mathrm{ref}$.
@@ -70,8 +69,7 @@ The dynamics of the $i$th compartment are
 \end{align}
 where \Cmi is the membrane capacitance of the compartment, $M_i$ and $N_i$ are the number of conductance- and current-based channels, respectively, $g_{k}^i(t)$ is the momentary conductance of the $k$th conductance-channel with reversal potential $E_{k}^i$, and $J_{k}^i(t)$ is the current injected into the current-based channel $j$.
 Finally, \cij is the coupling conductance between the $i$th and the $j$th compartment.
-The adjacency matrix of coupling conductances $\mat C$ must be symmetric, and the connectivity graph encoded by $\mat C$ must have exactly one connected component (cf.~our discussion in Section~2.2.3).
-%TODO: Correct reference
+The adjacency matrix of coupling conductances $\mat C$ must be symmetric, and the connectivity graph encoded by $\mat C$ must have exactly one connected component (cf.~our discussion in \Cref{sec:comp}).
 Some conductances $g_{k}^i(t)$ and currents $J_{k}^i(t)$ are constant, such as the static leak channels and bias currents.
 
 \begin{table}
@@ -143,7 +141,7 @@ We can rearrange \cref{eqn:nlif_single_compartment} to \emph{resemble} a canonic
 In general, \cref{eqn:nlif_matrix} is \emph{not} a linear dynamical system.
 However, there are two conditions under which this system is linear: either $\vng(t)$ is constant, or there are no product terms between $\vng(t)$ and $\vvMem(t)$.
 This is the case if the system has no conductance-based input channels and \mnAp is zero.
-Note that the constant offset \vnbp in \cref{eqn:nlif_matrix} does not make the dynamical system non-linear, but merely mandates one auxiliary dimension.
+Note that the constant offset \vnbp in \cref{eqn:nlif_matrix} does not make the dynamical system nonlinear, but merely mandates one auxiliary dimension.
 }
 Let $k$ be the number of non-static input channels, and $\vng \in \mathbb{R}^k$ a vector representing all input channel states, that is, all non-static conductances $g_{ij}$ and currents $J_{ij}$.
 This channel state is generally linear in the synaptic weights and the pre-activities (cf.~\Cref{sec:nef_nonlinear}).
@@ -151,7 +149,7 @@ We have
 \begin{align}
 	\frac{\mathrm{d}}{\mathrm{d}t} \vCm \circ \vvMem(t)
 	&= \mnA\bigl[\vng(t)\bigr] \vvMem(t) + \vnb\bigl[\vng(t)\bigr]
-	 = -\bigl[\mnL + \mathrm{diag}\bigl(\vnap + \mnAp \vng(t)\bigr)\bigr] \vvMem(t) + \big[\vnbp + \mnAp \vng(t)\big] \,.
+	 = -\bigl[\mnL + \mathrm{diag}\bigl(\vnap + \mnAp \vng(t)\bigr)\bigr] \vvMem(t) + \big[\vnbp + \mnBp \vng(t)\big] \,.
 	\label{eqn:nlif_matrix}
 \end{align}
 Here, $\vCm \in \mathbb{R}^n$ is a vector of membrane capacitances, \enquote{$\circ$} denotes elementwise multiplication, $\mnA[\vng(t)] \in \mathbb{R}^{n \times n}$ is the \enquote{voltage feedback matrix}, and $\vnb[\vng(t)] \in \mathbb{R}^n$ describes the input to the system.
@@ -159,7 +157,7 @@ We further decompose \mnA, \vnb into input-independent and input-dependent terms
 The Laplacian $\mnL \in \mathbb{R}^{n \times n}$ and the vectors $\vnap \in \mathbb{R}^n$, $\vnbp \in \mathbb{R}^n$ describe the input-independent portions of the system, whereas the matrices $\mnAp \in \mathbb{R}^{n \times k}$ and $\mnBp \in \mathbb{R}^{n \times k}$ describe its input-dependent parts.
 
 More specifically, the Laplacian \mnL is the difference between the weighted degree matrix and the adjacency matrix, and, in our case, is given as $\mnL = \diag(\mC \mat I) - \mC$.%
-\footnote{Indeed, the graph Laplacian is often motivated in textbooks with electrical networks similar to the one discussed here; in this context it is also referred to as the \enquote{Kirchhoff matrix} \citep[e.g.,][Chapter~2]{bollobas1998modern}.}
+\footnote{Indeed, the graph Laplacian is often motivated in textbooks with electrical networks similar to the one discussed here; in this context, it is also referred to as the \enquote{Kirchhoff matrix} \citep[e.g.,][Chapter~2]{bollobas1998modern}.}
 The vector \vnap consists of sums of static channel conductances for each channel (such as the leak conductance) and \vnbp contains the sums of the static channel conductances multiplied by their reversal potential.
 The matrix \mnAp contains one-entries for input-variables influencing a conductance-based channel in the corresponding compartment.
 \mnBp contains a \enquote{one} for each variable current-based channel in the corresponding compartment, and the reversal potential for each variable conductance-based channel in a compartment.
@@ -175,12 +173,12 @@ The system is generally stable and does not oscillate; in other words, the eigen
 More formally (see \Cref{app:thm_nlif_convergence} for a proof):
 \begin{restatable}{theorem}{ThmNlifConvergence}
 \label{thm:nlif_convergence}
-Consider an $n$-LIF neuron with at least one static conductance-based channel and any input vector \vng with non-negative entries for conductance-based input channels.
-In this case, the feedback matrix $\mnA[\vng] \diag(\vCm)^{-1}$ is negative definite.
+Consider an $n$-LIF neuron with at least one static conductance-based channel and any input vector \vng with nonnegative entries for conductance-based input channels.
+In this case, the feedback matrix $\mnA[\vng] \diag(\vCm)^{-1}$ is negative definite for any constant input vector $\vng$.
 \end{restatable}
 This is quite intuitive from a physical perspective.
-The \nlif neuron essentially is a resistor-capacitor network.
-When tying at least one point of the network to a voltage source, the capacitors will converge to some equilibrium potential $\vneq$.
+The \nlif neuron is a resistor-capacitor network.
+When tying at least one point of the network to a voltage source, the potential over the capacitors converges to an equilibrium $\vneq$.
 For constant \vng the dynamics are
 \begin{align}
 	{\vMem}(t)
@@ -214,14 +212,14 @@ Each compartment acts as a first-order low-pass filter; the response in compartm
 \label{sec:nlif_derive_h}
 
 As defined above (cf.~\Cref{def:dendritic_nonlinearity}), the dendritic nonlinearity $H$ maps a synaptic state $\vec g$ onto the synaptic current $J$ such that $G[J] = \mathscr{G}[\vec g]$, where $G[J]$ is a standard single-channel response curve and $\mathscr{G}[\vec g]$ is the response curve of the multi-channel neuron.
-If, for example, $G[J]$ is the \LIF response curve, then $H$ maps $\vec g$ into a \enquote{\LIF-equivalent} current.
+If, for example, $G[J]$ is the \LIF response curve, then $H$ maps $\vec g$ into an \enquote{\LIF-equivalent} current.
 
 Trivial cases aside, it is generally not possible to provide $H$ in closed form for \nlif neurons.
 This is due to the nonlinear interaction between the membrane potential and conductance-based input channels, as well as the influence of the nonlinear superthreshold dynamics on the dendritic compartments.
 Still, we can derive a parametrised \enquote{surrogate model} that approximates $H$ well and that we can fit to empirical data.
 
 \subsubsection{Subthreshold current}
-As a first step toward this model, consider the case where the neuron model is purely in its subthreshold regime.
+As a first step towards this model, consider the case where the neuron model is purely in its subthreshold regime.
 Without loss of generality, assume that the compartment with index $i = 1$ is the somatic compartment.
 Furthermore, assume that this compartment possesses a leak channel with conductance $g_\mathrm{L}$ and reversal potential $E_\mathrm{L}$.
 The current $H(\vec g; t)$ flowing into the somatic compartment at time $t$ for constant $\vec g$ is the differential of $v_1$ divided by the membrane capacitance, that is
@@ -246,7 +244,7 @@ As we discuss below, we propose using a parametrised version of $H$ that is fit 
 	\caption[Mean somatic membrane potential over the neuron output rate]{Mean somatic membrane potential $\vSom$ over the output rate for a current-based \LIF neuron. Lines correspond to the average potential for different pre-synaptic spike rates.
 	Mean post-synaptic currents are fixed in individual trials, so the spike rate purely corresponds to the amount of noise.
 	Data over 128 random Poisson spike-trains per 1000 individual mean post-synaptic currents.
-	Synaptic filter time constant is $5\,\mathrm{ms}$. Shaded areas correspond to 25/75\% percentiles, lines to the mean.
+	Synaptic filter time-constant is $5\,\mathrm{ms}$. Shaded areas correspond to 25/75\% percentiles, lines to the mean.
 	\textbf{(A)} Average membrane potential including the refractory and spike period.
 	\textbf{(B)} Average membrane potential excluding the refractory and spike period. Dotted line is a  linear model that takes the relative length of the spike and refractory phase into account.}
 	\label{fig:avg_vsom}
@@ -328,11 +326,9 @@ As we discuss below, we propose using a parametrised version of $H$ that is fit 
 For the purpose of building networks of spiking neurons, we are primarily interested in the superthreshold regime.
 Unfortunately, as mentioned above, the nonlinear superthreshold dynamics are notoriously difficult to analyse.
 
-We work around this by exploiting the fact that \nlif neurons are tonically spiking (cf.~Section~2.2.1).
-That is, the somatic compartment oscillates between the reset and threshold potential with a fixed frequency (cf.~Figure~2.20).
-%TODO Fix references
+We work around this by exploiting the fact that \nlif neurons are tonically spiking (cf.~\Cref{sec:simplified_neuron_models}).
+That is, the somatic compartment oscillates between the reset and threshold potential with a fixed frequency (cf.~\Cref{fig:izhikevich_whichmod_figure1}).
 We may thus assume that the somatic membrane potential is effectively clamped to some value $\vSom$ between reset and threshold potential; we discuss this in more detail in \citet{stockel2017point}.
-%TODO Use "clip" instead of "clamp" in the subthreshold description
 
 As is depicted in \Cref{fig:avg_vsom}, this assumption is reasonable for a wide range of output rates, as long as we ignore the spike and refractory period.
 This latter simplification is justified, since due to clamping, the current flowing into the somatic compartment during these periods has no direct influence on the output rate of the neuron.
@@ -342,7 +338,7 @@ Of course, in multi-compartment models, there is the smaller, indirect effect of
 To estimate the average current flowing into the somatic compartment, we replace the system from \cref{eqn:nlif_matrix} with a reduced system with vectors and matrices $\vec{\tilde a}'$, $\vec{\tilde b}'$, $\mat{\tilde A}'$, $\mat{\tilde B}'$, and $\mat{\tilde L}'$.
 These matrices describe a dynamical system of the form%
 \begin{align}
-	\frac{d}{dt} \vec{\tilde C}_\mathrm{m} \circ \vec{\tilde v}(t)
+	\frac{\D}{\D t} \vec{\tilde C}_\mathrm{m} \circ \vec{\tilde v}(t)
 	&= \mat{\tilde A}\big[\vec g(t)\big] \vec{\tilde v}(t) + \vec{\tilde b}\big[\vec g(t)\big]
 	 = -\big[\mat{\tilde L} + \mathrm{diag}\big(\vec{\tilde a'} + \mat{\tilde A'} \vec g(t)\big)\big] \vec v(t) + \big[\vec{\tilde b}' + \mat{\tilde B}' \vec g(t)\big] \,.
 	\label{eqn:nlif_matrix_reduced}
@@ -365,7 +361,7 @@ This reduced system is constructed such that, for non-somatic compartments, the 
 In the somatic compartment itself, the voltage difference $\tilde v^\mathrm{eq}_1 - \vSom$ is proportional to the current flowing into the compartment.
 Given a vector $\vec{\tilde c}$ of somatic coupling conductances with $\tilde c_1 = 1$, the average current $H(\vec g)$ flowing into the soma is then modelled as
 \begin{align}
-	H(\vec g) &= \lim_{T \to \infty} \frac{1}T \int_{0}^T H(\vec g; t) \,dt \approx \sum_{i = 1}^n \tilde c_i (\tilde v^\mathrm{eq}_i - \vSom) \,.
+	H(\vec g) &= \lim_{T \to \infty} \frac{1}T \int_{0}^T H(\vec g; t) \,\D t \approx \sum_{i = 1}^n \tilde c_i (\tilde v^\mathrm{eq}_i - \vSom) \,.
 	\label{eqn:h_model}
 \end{align}
 
@@ -377,12 +373,12 @@ As a word of warning, note that the reduced system as described here is conceptu
 We address this in \Cref{app:nlif_conditioning} by rescaling and offsetting the system such that $\mat{\tilde A}[\vec g]^{-1} \vec{\tilde b}[\vec g]$ directly represents currents instead of voltages.
 
 \subsubsection{Model parameters}
-\Cref{eqn:nlif_eq} is the result of major simplifications and as such unlikely to be accurate.
+\Cref{eqn:h_model} is the result of major simplifications and as such unlikely to be accurate.
 Specifically, we assumed that the somatic compartment is effectively clamped to a constant potential $\vSom$, that $\vec g$ is constant, and that spike generation has no effect on the dendritic compartments.
 These assumptions are readily violated in practice.
 The average somatic potential $\vSom$ depends on the pre-synaptic noise-level (cf.~\Cref{fig:avg_vsom}), the input $\vec g$ is seldom constant, and spike generation affects the dendritic membrane potentials (cf.~\Cref{fig:two_comp_lif_trace}).
 
-Thus, equation~(\ref{eqn:nlif_eq}) is better interpreted as a \enquote{template} for the overall mathematical shape of the dendritic nonlinearity.
+Thus, equation~(\ref{eqn:h_model}) is better interpreted as a \enquote{template} for the overall mathematical shape of the dendritic nonlinearity.
 That is, to at least partially compensate for the imprecisions in our derivation, we declare $\vec{\tilde a}'$, $\vec{\tilde b}'$, as well as the non-zero entries in $\mat{\tilde A}'$, $\mat{\tilde B}'$ to be free parameters.
 Keeping the graph Laplacian $\mat{\tilde L}$ and the zeros in $\mat{\tilde A'}$, $\mat{\tilde B'}$ fixed implies that we assume that the connectivity graph accurately describes the electrical network of the neuron.
 
@@ -407,7 +403,7 @@ Hence, we find it useful to at least provide the expanded dendritic nonlinearity
 \subsubsection{Single-compartment LIF neuron with current-based input}
 Expanding \cref{eqn:h_model} for the model depicted in \Cref{fig:nlif_a} using \Cref{tbl:nlif_matrices_reduced} yields 
 \begin{align*}
-	H(J_\mathrm{E}, J_\mathrm{I}) = J_\mathrm{E} - J_\mathrm{E} + g_\mathrm{L}(E_\mathrm{L} - \vSom) \,.
+	H(J_\mathrm{E}, J_\mathrm{I}) = J_\mathrm{E} - J_\mathrm{I} + g_\mathrm{L}(E_\mathrm{L} - \vSom) \,.
 \end{align*}
 This function is visualised in \Cref{fig:dendritic_nonlinearity_comparison_a}. To obtain the \LIF-equivalent current we subtract the leak current, as mentioned above.
 Using the fully parameterised version of the equations, and renaming the parameters for better readability, we obtain the following affine model:
@@ -448,7 +444,7 @@ Independent experiments by \citet{kiselev2020approximating} further support this
 Hence, single-compartment \LIF neurons with conductance-based synapses are rather uninteresting from a computational perspective.
 
 \subsubsection{Two-compartment LIF neuron}
-For the model depicted in \Cref{fig:nlif_b} we have
+For the model depicted in \Cref{fig:nlif_c} we have
 \begin{align}
 	H(g_\mathrm{E}, g_\mathrm{I}) = c_{12} \left(\frac{\vSom c_\mathrm{12} + E_\mathrm{L} g_\mathrm{L} + E_\mathrm{E} g_\mathrm{E} + E_\mathrm{I} g_\mathrm{I}}{c_\mathrm{12} + g_\mathrm{L} + g_\mathrm{E} + g_\mathrm{I}} - \vSom \right) + g_\mathrm{L}(E_\mathrm{L} - \vSom) \,.
 	\label{eqn:two_comp_lif_natural}
@@ -456,7 +452,7 @@ For the model depicted in \Cref{fig:nlif_b} we have
 Interestingly, in the limit of increasing the coupling conductance $c_{12}$ to infinity we obtain
 \begin{align*}
 	\lim_{c_{12} \to \infty} H(g_\mathrm{E}, g_\mathrm{I}) &= 
-		E_\mathrm{E} g_\mathrm{E} + E_\mathrm{I} g_\mathrm{I} + 2 g_\mathrm{L} (E_\mathrm{L} - \vSom) - \vSom (g_\mathrm{E} + g_\mathrm{I}) \,.
+		E_\mathrm{E} g_\mathrm{E} + E_\mathrm{I} g_\mathrm{I} + 2 g_\mathrm{L} (E_\mathrm{L} - \vSom) - \vSom (g_\mathrm{E} + g_\mathrm{I}) \,,
 \end{align*}
 that is, the two-compartment model reduces to an affine function if the two compartments are tightly coupled.
 The fully parameterised version of the model is given as
@@ -660,10 +656,10 @@ Still, and as we demonstrate in the next section, a single layer of two-compartm
 Input channels targeting different dendritic compartments interact multiplicatively (cf. eq.~\ref{eqn:three_comp_lif_long}).
 %As we discussed above, multiplication over all four quadrants in $[-1, 1]^2$ can be interpreted as a continuous version of the XOR function.
 However, exploiting the product terms to compute multiplication over all four quadrants is difficult for multiple reasons.
-First, conductance-based inputs are nonnegative, and can thus only cover the quadrant $[0, 1]^2$.
+First, conductance-based inputs are nonnegative, and can thus only cover one quadrant.
 While current-based channels can provide positive and negative input, there is at most one current-based input per product term.
 
-Second, the multiplicative terms are similar in magnitude to the linear terms---for example, all terms in the numerator in \cref{eqn:three_comp_lif_long} are the product of two conductances and one voltage, whereas all terms in the denominator at the product of two conductances.
+Second, the multiplicative terms are similar in magnitude to the linear terms---for example, all terms in the numerator in \cref{eqn:three_comp_lif_long} are the product of two conductances and one voltage, whereas all terms in the denominator are the product of two conductances.
 This implies that, to compute a function such as \XOR, we must find synaptic weights that compensate for the linear terms, while, at the same time, computing the desired nonlinear function.
 
 Lastly, there is a tradeoff between the coupling conductances $c_{ij}$ and the maximum somatic current that can be produced by a compartment.

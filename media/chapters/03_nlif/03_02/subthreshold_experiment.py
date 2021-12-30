@@ -19,7 +19,7 @@ def plot_and_setup_ax(ax, data, y0, y1, letter=None):
     boxprops = dict(linewidth=0.75)
     whiskerprops = dict(linewidth=0.75)
 
-    x_labels = ["Clamp"] + ["${:0.2f}$".format(th) for th in ths]
+    x_labels = ["Clip"] + ["${:0.2f}$".format(th) for th in ths]
 
     ax.axhline(0, linestyle=':', color='gray', linewidth=0.5)
     ax.boxplot(

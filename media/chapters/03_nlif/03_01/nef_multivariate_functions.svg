@@ -23,16 +23,16 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2.8284272"
-     inkscape:cx="232.24292"
-     inkscape:cy="98.622887"
+     inkscape:zoom="2.0000001"
+     inkscape:cx="313.02452"
+     inkscape:cy="122.60934"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="3840"
-     inkscape:window-height="2085"
+     inkscape:window-width="1920"
+     inkscape:window-height="1103"
      inkscape:window-x="0"
-     inkscape:window-y="38"
+     inkscape:window-y="27"
      inkscape:window-maximized="1"
      showguides="true"
      inkscape:guide-bbox="true"
@@ -3422,10 +3422,10 @@
       </g>
     </g>
     <g
-       id="g1223"
-       transform="translate(-52.087327,5.7571329)">
+       id="g3692"
+       transform="translate(0.77940888)">
       <g
-         transform="translate(20.808291,27.368607)"
+         transform="translate(-39.027178,33.12574)"
          id="g5053-1">
         <path
            inkscape:connector-curvature="0"
@@ -3446,7 +3446,7 @@
              style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.175px;font-family:'Linux Biolinum O';-inkscape-font-specification:'Linux Biolinum O';stroke-width:0.264583">Linear connection</tspan></text>
       </g>
       <g
-         transform="translate(24.315127,27.420495)"
+         transform="translate(-35.789866,33.177628)"
          id="g5048-2">
         <path
            inkscape:connector-curvature="0"
@@ -3464,28 +3464,31 @@
              id="tspan509-2-0-3"
              x="130.67693"
              y="-25.265434"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.175px;font-family:'Linux Biolinum O';-inkscape-font-specification:'Linux Biolinum O';stroke-width:0.264583">Inh. connection</tspan></text>
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.175px;font-family:'Linux Biolinum O';-inkscape-font-specification:'Linux Biolinum O';stroke-width:0.264583">Inhibitory connection</tspan></text>
       </g>
       <g
-         transform="translate(27.613196,27.420495)"
+         transform="translate(-24.474139,33.177628)"
          id="g5043-1">
-        <path
-           inkscape:connector-curvature="0"
-           id="path2356-3-5-9-6-1"
-           d="m 151.56272,-26.145146 h 4.46165"
-           style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#204a87;stroke-width:0.256269px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker15675);stop-color:#000000;stop-opacity:1"
-           sodipodi:nodetypes="cc" />
-        <text
-           xml:space="preserve"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.175px;line-height:1.25;font-family:'Linux Biolinum O';-inkscape-font-specification:'Linux Biolinum O';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-           x="157.69518"
-           y="-25.265434"
-           id="text511-1-7-6-9"><tspan
-             sodipodi:role="line"
-             id="tspan509-2-0-0-0"
+        <g
+           id="g3664">
+          <path
+             inkscape:connector-curvature="0"
+             id="path2356-3-5-9-6-1"
+             d="m 151.56272,-26.145146 h 4.46165"
+             style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#204a87;stroke-width:0.256269px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker15675);stop-color:#000000;stop-opacity:1"
+             sodipodi:nodetypes="cc" />
+          <text
+             xml:space="preserve"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.175px;line-height:1.25;font-family:'Linux Biolinum O';-inkscape-font-specification:'Linux Biolinum O';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
              x="157.69518"
              y="-25.265434"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.175px;font-family:'Linux Biolinum O';-inkscape-font-specification:'Linux Biolinum O';stroke-width:0.264583">Exc. connection</tspan></text>
+             id="text511-1-7-6-9"><tspan
+               sodipodi:role="line"
+               id="tspan509-2-0-0-0"
+               x="157.69518"
+               y="-25.265434"
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.175px;font-family:'Linux Biolinum O';-inkscape-font-specification:'Linux Biolinum O';stroke-width:0.264583">Excitatory connection</tspan></text>
+        </g>
       </g>
     </g>
     <text
