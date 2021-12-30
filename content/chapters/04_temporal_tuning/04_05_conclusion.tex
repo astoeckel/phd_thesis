@@ -45,9 +45,9 @@ While we argued that our recurrent networks will realise the desired dynamics \e
 We observe in practice that our networks are typically well-behaved (i.e., not asymptotically unstable); however, it would be interesting to augment our weight solver with techniques from system identification that guarantee stability \citep[cf.][]{verhaegen2007filtering}.
 
 Another aspect that we have only considered in the context of our adaptive filter experiment, is using the temporal tuning curve paradigm to realise nonlinear tuning.
-This is possible using the \NEF dynamics principle \citep[Chapter~8]{eliasmith2003neural} and also not a hard limitation of our temporal tuning curve approach.
+This is possible using the \NEF dynamics principle \citep[Chapter~8]{eliasmith2003neural} and also not a limitation of our temporal tuning curve approach.
 In fact, our general definition of a temporal tuning curve is oblivious to the specific type of dynamics (cf.~\Cref{def:temporal_tuning_curve}, \Cref{app:temporal_tuning_nonlinear}).
-Rather, the problem is one of finding a good mathematical formalisation; linear temporal encoders $\mathfrak{e}_i$ offer an intuitive parametrisation of temporal tuning curves that we would have to give.
+Rather, the problem is finding a good mathematical formalisation; linear temporal encoders $\mathfrak{e}_i$ offer an intuitive parametrisation of temporal tuning curves that we would have to give.
 
 Taking intrinsic neural dynamics into account is another aspect of the work presented here that requires further research.
 While linearly approximating neural dynamics was successful for the simple neuron models tested here, it would be interesting to extend this to more complex neuron models, potentially incorporating work by \citet{duggins2017incorporating}.
