@@ -1,16 +1,20 @@
 # Harnessing Neural Dynamics as a Computational Resource
-### PhD Thesis, Andreas Stöckel, 2021, University of Waterloo
+**PhD Thesis, Andreas Stöckel, 2021, University of Waterloo**
 
-## Downloads
-
-The official version of the thesis can be found on the University of Waterloo library website: http://hdl.handle.net/10012/17850
+Please find the official version of this thesis on the University of Waterloo website:  
+* **Official Download:** http://hdl.handle.net/10012/17850
 
 Unofficial, but potentially more up-to-date versions of the document are provided in the `pdfs/` folder on GitHub:
 
-**US Letter:** [`pdfs/astoeckel_phd_thesis_2021.pdf`](pdfs/astoeckel_phd_thesis_2021.pdf)
+* **US Letter:** [`pdfs/astoeckel_phd_thesis_2021.pdf`](pdfs/astoeckel_phd_thesis_2021.pdf)
 
-**A4 Paper:** [`pdfs/astoeckel_phd_thesis_2021_a4.pdf`](pdfs/astoeckel_phd_thesis_2021_a4.pdf)
+* **A4 Paper:** [`pdfs/astoeckel_phd_thesis_2021_a4.pdf`](pdfs/astoeckel_phd_thesis_2021_a4.pdf)
 
+Experiment data, and VM and docker container images are available at the Open Science Foundation (OSF):
+
+* https://osf.io/y64xu/
+
+![Some pages from the thesis](readme_header.jpg)
 
 ## Abstract
 
@@ -36,10 +40,6 @@ We find that one of our LTI systems derived through “information erasure” ma
 
 ## Building
 
-Experiment data, and VM and docker container images may be found at the Open Science Foundation (OSF):
-
-https://osf.io/y64xu/
-
 ### VM Image
 
 To build the PDF and to execute the experiments, download the `qcow2` Fedora 33 virtual machine image from OSF:
@@ -48,13 +48,16 @@ https://osf.io/qdxyf/
 
 This image is compatible with a standard KVM/QEMU VM (for example, use `virt-manager` or *Boxes* do create a new VM).
 
-The username and password are (you can log in via SSH)
+The username and password are (you can log in via SSH):
 ```
 thesis_user
 HTVwkwbxdBdcc4B
 ```
 
-Within the VM execute the `download_thesis_and_data.sh` to download the experiment data from OSF, this repository from `GitHub` and to build the thesis PDF. This will re-generate all figures, which requires some time (about 15-60 minutes depending on your machine) and a copious amount of RAM.
+Within the VM, execute the `download_thesis_and_data.sh` to download the experiment data from OSF, this repository from GitHub, and to build the thesis PDF.
+
+Note that this will re-generate all figures.
+This process requires some time (about 15-60 minutes depending on your machine) and a copious amount of RAM.
 
 ### Running the experiments
 
