@@ -57,7 +57,6 @@ HTVwkwbxdBdcc4B
 Note that the VM has `sshd` enabled, so you can log in via SSH and use `sshfs`/`sftp` to transfer files.
 
 Within the VM, execute the `download_thesis_and_data.sh` to download the experiment data from OSF, this repository from GitHub, and to build the thesis PDF.
-
 Note that this will re-generate all figures.
 This process requires some time (about 15-60 minutes depending on your machine) and a copious amount of RAM.
 
