@@ -60,7 +60,7 @@ To build the PDF and to execute the experiments, download the `qcow2` Fedora 33 
 
 https://osf.io/qdxyf/
 
-This image is compatible with a standard KVM/QEMU VM (for example, use `virt-manager` or *Boxes* do create a new VM).
+This image is compatible with a standard x86_64 KVM/QEMU VM (for example, use `virt-manager` or *Boxes* do create a new VM).
 
 The username and password are:
 ```
