@@ -17,12 +17,20 @@
 \setlength{\parskip}{0.5em}
 
 % Page layout
-\setlrmarginsandblock{2.83cm}{2.83cm}{*}
-\setheaderspaces{*}{0.75cm}{*}
-\setheadfoot{\baselineskip}{1.25cm}
-%\setulmarginsandblock{4.4cm}{4.5cm}{*}
-\setulmarginsandblock{3.4cm}{3.5cm}{*}
-\setmarginnotes{0.5cm}{2cm}{0em}
+\ifdim\paperheight=297mm\relax % A4 Paper
+	\setlrmarginsandblock{2.53cm}{2.53cm}{*}
+	\setheaderspaces{*}{1.2cm}{*}
+	\setheadfoot{\baselineskip}{1.5cm}
+	\setulmarginsandblock{4.3cm}{4.4cm}{*}
+	\setmarginnotes{0.5cm}{2cm}{0em}
+\else % Letter Paper
+	\setlrmarginsandblock{2.83cm}{2.83cm}{*}
+	\setheaderspaces{*}{0.75cm}{*}
+	\setheadfoot{\baselineskip}{1.25cm}
+	\setulmarginsandblock{3.4cm}{3.5cm}{*}
+	\setmarginnotes{0.5cm}{2cm}{0em}
+	\checkandfixthelayout
+\fi
 \checkandfixthelayout
 
 %\setsubsecheadstyle{\itshape\raggedright}
