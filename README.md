@@ -81,7 +81,7 @@ You can also re-generate the experiment data within the VM.
 All longer-runing experiments are executed within a Docker container and linked to a specific revision of this experiment.
 The experiments and generated files are listed under `code/Manifest.toml`.
 
-Executing the experiments requires Linux with Python and a working Docker installation (provided in the VM), as well as a computer with at least 16 CPU (32 with hyperthreading) cores and 128 GB of RAM.
+Executing the experiments requires Linux with Python and a working Docker installation (provided in the VM), as well as a computer with at least 16 CPU cores (32 with hyperthreading) and 128 GB of RAM.
 
 If you have downloaded the experiment data from OSF in the previous step, make sure to delete the `data/generated` folder.
 
