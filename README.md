@@ -1,20 +1,34 @@
 # Harnessing Neural Dynamics as a Computational Resource
-**PhD Thesis, Andreas Stöckel, 2021, University of Waterloo**
+**PhD Thesis, Andreas Stöckel, 2022, University of Waterloo**
 
 ![Some pages from the thesis](readme_header.jpg)
 
 Please find the official version of this thesis on the University of Waterloo website:  
-* **Official download:** [`http://hdl.handle.net/10012/17850`](http://hdl.handle.net/10012/17850)
+* 🎓 **Official download:** [`http://hdl.handle.net/10012/17850`](http://hdl.handle.net/10012/17850)
 
 Unofficial, but potentially more up-to-date versions of the document are provided in the `pdfs/` folder on GitHub:
-
-* **US letter paper:** [`pdfs/astoeckel_phd_thesis_2021.pdf`](pdfs/astoeckel_phd_thesis_2021.pdf)
-
-* **A4 paper:** [`pdfs/astoeckel_phd_thesis_2021_a4.pdf`](pdfs/astoeckel_phd_thesis_2021_a4.pdf)
+* 🌎 **US letter paper:** [`pdfs/astoeckel_phd_thesis_2021.pdf`](pdfs/astoeckel_phd_thesis_2021.pdf)
+* 🌍 **A4 paper:** [`pdfs/astoeckel_phd_thesis_2021_a4.pdf`](pdfs/astoeckel_phd_thesis_2021_a4.pdf)
 
 Experiment data, and VM and docker container images are available at the Open Science Foundation (OSF):
 
-* [`https://osf.io/y64xu/`](https://osf.io/y64xu/)
+* 📌 **OSF project page** [`https://osf.io/y64xu/`](https://osf.io/y64xu/)
+
+```
+@phdthesis{stoeckel2022,
+    title={Harnessing Neural Dynamics as a Computational Resource},
+    author={St\"ockel, Andreas},
+    type={PhD Thesis},
+    school={University of Waterloo},
+    address={Waterloo, ON},
+    year={2022},
+    publisher="UWSpace",
+    url={http://hdl.handle.net/10012/17850},
+}
+```
+
+Note that the thesis defense was December 2021, but due to the winter holidays, the final version of the thesis was only made available online in January 2022.
+Correspondingly, the thesis lists “2021” as a year, but the University (and the above BibTeX entry) use “2022”.
 
 ## Abstract
 
@@ -38,9 +52,9 @@ In machine learning, our spatiotemporal NEF populations map cleanly onto the Leg
 We find that one of our LTI systems derived through “information erasure” may serve as a computationally less expensive alternative to the LTI system commonly used in the LMU.
 
 
-## Building
+## Reproducing the Thesis
 
-### VM Image
+### 💻 Virtual Machine (VM) Image
 
 To build the PDF and to execute the experiments, download the `qcow2` Fedora 33 virtual machine image from OSF:
 
@@ -60,7 +74,7 @@ Within the VM, execute the `download_thesis_and_data.sh` to download the experim
 Note that this will re-generate all figures.
 This process requires some time (about 15-60 minutes depending on your machine) and a copious amount of RAM.
 
-### Running the experiments
+### 💡 Running the Experiments
 
 You can also re-generate the experiment data within the VM.
 
