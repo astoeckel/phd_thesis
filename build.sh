@@ -30,4 +30,7 @@ for STEX in *.synctex.gz; do
 done
 
 # Copy the output file back
-cp -f *.pdf *.log *.synctex.gz "$DIR"
+cp -f astoeckel_phd_thesis_2021.pdf "$DIR"
+cp -f astoeckel_phd_thesis_2021.log "$DIR"
+cp -f astoeckel_phd_thesis_2021.synctex.gz "$DIR"
+
