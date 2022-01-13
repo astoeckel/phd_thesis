@@ -1,6 +1,17 @@
 # Harnessing Neural Dynamics as a Computational Resource
 ### PhD Thesis, Andreas Stöckel, 2021, University of Waterloo
 
+## Downloads
+
+The official version of the thesis can be found on the University of Waterloo library website: http://hdl.handle.net/10012/17850
+
+Unofficial, but potentially more up-to-date versions of the document are provided in the `pdfs/` folder on GitHub:
+
+**US Letter:** [`pdfs/astoeckel_phd_thesis_2021.pdf`](pdfs/astoeckel_phd_thesis_2021.pdf)
+
+**A4 Paper:** [`pdfs/astoeckel_phd_thesis_2021_a4.pdf`](pdfs/astoeckel_phd_thesis_2021_a4.pdf)
+
+
 ## Abstract
 
 Researchers study nervous systems at levels of scale spanning several orders of magnitude, both in terms of time and space.
@@ -22,54 +33,45 @@ Outside the cognitive sciences, our work can help exploit resources available on
 In machine learning, our spatiotemporal NEF populations map cleanly onto the Legendre Memory Unit (LMU), a promising artificial neural network architecture for stream-to-stream processing that outperforms competing approaches.
 We find that one of our LTI systems derived through “information erasure” may serve as a computationally less expensive alternative to the LTI system commonly used in the LMU.
 
-## Compiling the document
 
-Make sure to have the following installed:
+## Building
 
-* `fuse-overlayfs`
-* A fully copy of TeX Live 2020
-* The following `pip` packages:
-  * `pygments`
-  * `numpy==1.19.4`
-  * `scipy==1.7.1`
-  * `sympy==1.7.1`
-  * `matplotlib==3.3.4`
-  * `h5py==3.1.0`
-  * `tqdm==4.59.0`
-  * `nengo==3.1.0`
-  * `nengo-extras==0.4.0`
-  * `cython==0.29.22`
-  * `brian2==2.4.2`
-  * `scikit-learn==0.24.2`
-  * `autograd==1.3`
-  * `cvxopt==1.2.6`
-* Revision `7a788b59f` of `libbioneuronqp` from https://github.com/astoeckel/libbioneuronqp
-* Revision `04e992684` of `nengo-bio` from https://github.com/astoeckel/nengo-bio
-* Our `srinivasa` colour scheme from `contrib/srinivasa` (install via `pip install -e .`)
+Experiment data, and VM and docker container images may be found at the Open Science Foundation (OSF):
 
-We will provide an operating system image with all prerequisites installed at a future point in time.
+https://osf.io/y64xu/
 
-Once all prerequisites are fulfilled, simply execute `./build.sh`.
+### VM Image
 
-## Pre-built datafiles and docker containers
+To build the PDF and to execute the experiments, download the `qcow2` Fedora 33 virtual machine image from OSF:
 
-In case you prefer not to re-run all experiments, an archive with all pre-built data files, figures, and docker container images may be found at
+https://osf.io/qdxyf/
 
-https://osf.io/y64xu/files/
+This image is compatible with a standard KVM/QEMU VM (for example, use `virt-manager` or *Boxes* do create a new VM).
 
+The username and password are (you can log in via SSH)
+```
+thesis_user
+HTVwkwbxdBdcc4B
+```
 
-## Running the experiments
+Within the VM execute the `download_thesis_and_data.sh` to download the experiment data from OSF, this repository from `GitHub` and to build the thesis PDF. This will re-generate all figures, which requires some time (about 15-60 minutes depending on your machine) and a copious amount of RAM.
+
+### Running the experiments
+
+You can also re-generate the experiment data within the VM.
 
 All longer-runing experiments are executed within a Docker container and linked to a specific revision of this experiment.
 The experiments and generated files are listed under `code/Manifest.toml`.
 
-Executing the experiments requires Linux with Python and a working Docker installation, as well as a computer with at least 32 CPU cores and 128 GB of RAM.
+Executing the experiments requires Linux with Python and a working Docker installation (provided in the VM), as well as a computer with at least 16 CPU (32 with hyperthreading) cores and 128 GB of RAM.
 
-Simply run the
+If you have downloaded the experiment data from OSF in the previous step, make sure to delete the `data/generated` folder.
+
+Then, simply run
 ```
 ./scripts/run_experiments.py
 ```
-script to re-run all experiments. This will take several weeks.
+to re-run all experiments. This will take several weeks.
 
 Use the `--help` argument to obtain list of available commands; use `--list` to list all experiments and their build status.
 
