@@ -1,6 +1,8 @@
 # Harnessing Neural Dynamics as a Computational Resource
 **PhD Thesis, Andreas Stöckel, 2021, University of Waterloo**
 
+![Some pages from the thesis](readme_header.jpg)
+
 Please find the official version of this thesis on the University of Waterloo website:  
 * **Official Download:** http://hdl.handle.net/10012/17850
 
@@ -13,8 +15,6 @@ Unofficial, but potentially more up-to-date versions of the document are provide
 Experiment data, and VM and docker container images are available at the Open Science Foundation (OSF):
 
 * https://osf.io/y64xu/
-
-![Some pages from the thesis](readme_header.jpg)
 
 ## Abstract
 
