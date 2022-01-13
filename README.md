@@ -4,13 +4,13 @@
 ![Some pages from the thesis](readme_header.jpg)
 
 Please find the official version of this thesis on the University of Waterloo website:  
-* **Official Download:** http://hdl.handle.net/10012/17850
+* **Official download:** http://hdl.handle.net/10012/17850
 
 Unofficial, but potentially more up-to-date versions of the document are provided in the `pdfs/` folder on GitHub:
 
-* **US Letter:** [`pdfs/astoeckel_phd_thesis_2021.pdf`](pdfs/astoeckel_phd_thesis_2021.pdf)
+* **US letter paper:** [`pdfs/astoeckel_phd_thesis_2021.pdf`](pdfs/astoeckel_phd_thesis_2021.pdf)
 
-* **A4 Paper:** [`pdfs/astoeckel_phd_thesis_2021_a4.pdf`](pdfs/astoeckel_phd_thesis_2021_a4.pdf)
+* **A4 paper:** [`pdfs/astoeckel_phd_thesis_2021_a4.pdf`](pdfs/astoeckel_phd_thesis_2021_a4.pdf)
 
 Experiment data, and VM and docker container images are available at the Open Science Foundation (OSF):
 
