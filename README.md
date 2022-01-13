@@ -48,11 +48,13 @@ https://osf.io/qdxyf/
 
 This image is compatible with a standard KVM/QEMU VM (for example, use `virt-manager` or *Boxes* do create a new VM).
 
-The username and password are (you can log in via SSH):
+The username and password are:
 ```
 thesis_user
 HTVwkwbxdBdcc4B
 ```
+
+Note that the VM has `sshd` enabled, so you can log in via SSH and use `sshfs`/`sftp` to transfer files.
 
 Within the VM, execute the `download_thesis_and_data.sh` to download the experiment data from OSF, this repository from GitHub, and to build the thesis PDF.
 
