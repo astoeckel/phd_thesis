@@ -13,6 +13,7 @@ Unofficial, but potentially more up-to-date versions of the document are provide
 Experiment data, and VM and docker container images are available at the Open Science Foundation (OSF):
 
 * 📌 **OSF project page** [`https://osf.io/y64xu/`](https://osf.io/y64xu/)
+* 📌 **GitHub repository** [`https://github.com/astoeckel/phd_thesis`](https://github.com/astoeckel/phd_thesis)
 
 ```
 @phdthesis{stoeckel2022,
