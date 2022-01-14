@@ -97,7 +97,7 @@ Use the `--help` argument to obtain list of available commands; use `--list` to 
 
 ## License
 
-* **Thesis** 
+* **Thesis**  
 The thesis *as a whole* is licensed under the [Creative Commons Attribution-NoDerivatives 4.0 International license](http://creativecommons.org/licenses/by-nd/4.0/). You may copy and distribute the thesis as it is, but you are not allowed to redistribute derivate works.
 
 * **Figures**  
