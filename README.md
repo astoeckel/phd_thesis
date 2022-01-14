@@ -97,9 +97,12 @@ Use the `--help` argument to obtain list of available commands; use `--list` to 
 
 ## License
 
-* **Thesis**  
+* **Thesis Document (PDF and LaTeX code)**  
 The thesis *as a whole* is licensed under the [Creative Commons Attribution-NoDerivatives 4.0 International license](http://creativecommons.org/licenses/by-nd/4.0/). You may copy and distribute the thesis as it is, but you are not allowed to redistribute derivate works without explicit permission.
 
 * **Figures**  
 All *figures and illustrations* are licensed under the [Creative Commons  Attribution 4.0 International](http://creativecommons.org/licenses/by/4.0/) license.
 You may copy, modify, and redistribute these figures, as long as you clearly reference this thesis as a source.
+
+* **Software Source Code**
+If not stated otherwise, all software included in this repository is licensed under the [GNU General Public License (GPL), version 3.0 or later](https://www.gnu.org/licenses/gpl-3.0.html).
