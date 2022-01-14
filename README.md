@@ -3,14 +3,14 @@
 
 ![Some pages from the thesis](readme_header.jpg)
 
-Please find the official version of this thesis on the University of Waterloo website:  
+The official version of this thesis can be downloaded from the University of Waterloo library:  
 * 🎓 **Official download:** [`http://hdl.handle.net/10012/17850`](http://hdl.handle.net/10012/17850)
 
 Unofficial, but potentially more up-to-date versions of the document are provided in the `pdfs/` folder on GitHub:
 * 🌎 **US letter paper:** [`pdfs/astoeckel_phd_thesis_2021.pdf`](pdfs/astoeckel_phd_thesis_2021.pdf)
 * 🌍 **A4 paper:** [`pdfs/astoeckel_phd_thesis_2021_a4.pdf`](pdfs/astoeckel_phd_thesis_2021_a4.pdf)
 
-Experiment data, and VM and docker container images are available at the Open Science Foundation (OSF):
+Experiment data, as well as VM and docker container images are hosted by the Open Science Foundation (OSF):
 
 * 📌 **OSF project page** [`https://osf.io/y64xu/`](https://osf.io/y64xu/)
 * 📌 **GitHub repository** [`https://github.com/astoeckel/phd_thesis`](https://github.com/astoeckel/phd_thesis)
@@ -28,7 +28,8 @@ Experiment data, and VM and docker container images are available at the Open Sc
 }
 ```
 
-Note that the thesis defense was December 2021, but due to the winter holidays, the final version of the thesis was only made available online in January 2022.
+Note that the thesis defense was December 2021.
+Due to the winter holidays, the final version of the thesis was only made available online in January 2022.
 Correspondingly, the thesis lists “2021” as a year, but the University (and the above BibTeX entry) use “2022”.
 
 ## Abstract
@@ -57,11 +58,11 @@ We find that one of our LTI systems derived through “information erasure” ma
 
 ### 💻 Virtual Machine (VM) Image
 
-To build the PDF and to execute the experiments, download the `qcow2` Fedora 33 virtual machine image from OSF:
+To build the PDF and to execute the experiments, download the Fedora 33 VM image from OSF:
 
 https://osf.io/qdxyf/
 
-This image is compatible with a standard x86_64 KVM/QEMU VM (for example, use `virt-manager` or *Boxes* do create a new VM).
+This image is in the `qcow2` format and compatible with a standard x86_64 KVM/QEMU VM (for example, use `virt-manager` or *Gnome Boxes* do create a new VM).
 
 The username and password are:
 ```
@@ -69,17 +70,17 @@ thesis_user
 HTVwkwbxdBdcc4B
 ```
 
-Note that the VM has `sshd` enabled, so you can log in via SSH and use `sshfs`/`sftp` to transfer files.
+Note that the VM has `sshd` enabled, so you can log in via SSH and use `sshfs` or `sftp` to transfer files.
 
-Within the VM, execute the `download_thesis_and_data.sh` to download the experiment data from OSF, this repository from GitHub, and to build the thesis PDF.
-Note that this will re-generate all figures.
-This process requires some time (about 15-60 minutes depending on your machine) and a copious amount of RAM.
+Within the VM, execute the `download_thesis_and_data.sh`.
+This will download the experiment data from OSF, this repository from GitHub, and attempts to build the thesis PDF.
+This will re-generate all figures and requires some time (about 15-60 minutes depending on your machine) and a copious amount of RAM.
 
 ### 💡 Running the Experiments
 
-You can also re-generate the experiment data within the VM.
+If you wish to do so, you can also re-run all experiments within the VM.
 
-All longer-runing experiments are executed within a Docker container and linked to a specific revision of this experiment.
+All longer-runing experiments are executed within a Docker container and linked to a specific revision of this repository.
 The experiments and generated files are listed under `code/Manifest.toml`.
 
 Executing the experiments requires Linux with Python and a working Docker installation (provided in the VM), as well as a computer with at least 16 CPU cores (32 with hyperthreading) and 128 GB of RAM.
