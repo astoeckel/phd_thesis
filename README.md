@@ -106,3 +106,25 @@ You may copy, modify, and redistribute these figures, as long as you clearly ref
 
 * **Software Source Code**  
 Unless stated otherwise, all software included in this repository is licensed under the [GNU General Public License (GPL), version 3.0 or later](https://www.gnu.org/licenses/gpl-3.0.html).
+
+## Patent notice
+
+Parts of this work related to the Legendre Delay Network, Legendre Memory Unit, or feed-forward Legendre Memory Unit are protected by copyright, patents and/or provisional patents owned by Applied Brain Research Inc. (ABR; see https://appliedbrainresearch.com/). Relevant patents include, but are not limited to:
+
+EP3796229A1, US11238337B2, CA2939561A1:  
+"Methods and systems for implementing dynamic neural networks"
+
+US20210342668A1:  
+"Methods And Systems For Efficient Processing Of Recurrent Neural Networks"
+
+US11238345B2:  
+"Legendre memory units in recurrent neural networks"
+
+63/313,676:  
+“Efficient Linear Systems for Neural Network Applications”
+
+The author of this repository (Andreas Stöckel) believes that the code in this repository only implements individual components, but not the complete systems described in these patents.
+
+Still, any non-exclusive patent rights potentially issued through the license of this repository do not apply to patents owned by ABR, even if the author may be listed as an inventor or co-inventor in current or future patents owned by ABR.
+
+Note that ABR grants a non-exclusive license to these patents for non-commercial or academic use. You can obtain a free license, or buy a license for commercial use at the following URL: https://appliedbrainresearch.com/store/
