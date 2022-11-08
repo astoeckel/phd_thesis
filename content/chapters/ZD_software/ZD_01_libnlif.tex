@@ -68,7 +68,7 @@ Other variants of the \enquote{simulate} method include \texttt{simulate\_poisso
 \subsubsection{Automatic simulator generation and compilation}
 Instantiating the \texttt{Simulator} class transparently generates a dynamically linked library that implements a specialised simulator.
 The library is based on a templated \citep[Chapter~23]{stroustrup2013programming} C++ simulator (cf.~\texttt{simulator.hpp});
-substituting in the specific system matrices and simulator options and compile-time maximises run-time performance.
+substituting in the specific system matrices and simulator options at compile-time maximises run-time performance.
 The code is compiled using a custom C++ build system (see \texttt{cmodule.py}) that calls out to the GNU Compiler Collection\footnote{See \url{https://gcc.gnu.org/} for more information.} and caches the generated object files according to their input file hashes.
 Reentrancy of the build system is ensured by employing an idempotency mechanism based on temporary target files and the atomic \enquote{rename} filesystem operation \citep[pp.~1816-1820]{2018ieee}.
 The compiled library is loaded via the Python \texttt{ctypes} foreign function interface; the C++ code directly operates on the memory regions that back the Numpy arrays.
